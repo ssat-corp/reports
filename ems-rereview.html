@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026 EMS 보급 지원사업 재검토 보고서 — 신성오토텍(주)</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Malgun Gothic', '맑은 고딕', Arial, sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+            line-height: 1.7;
+        }
+        .container {
+            max-width: 820px;
+            margin: 30px auto;
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4a4a4a, #6c6c6c);
+            color: #fff;
+            padding: 35px 40px;
+        }
+        .header .badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-bottom: 12px;
+        }
+        .header .badge-warn {
+            display: inline-block;
+            background: #e74c3c;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-bottom: 12px;
+            margin-left: 8px;
+            font-weight: bold;
+        }
+        .header h1 { font-size: 23px; margin-bottom: 6px; letter-spacing: -0.5px; }
+        .header .sub { font-size: 14px; opacity: 0.85; }
+
+        .content { padding: 35px 40px; }
+
+        .section-title {
+            font-size: 17px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin: 32px 0 15px;
+            padding-bottom: 8px;
+            border-bottom: 3px solid #7f8c8d;
+        }
+        .section-title:first-child { margin-top: 0; }
+
+        /* 결론 요약 */
+        .verdict {
+            background: linear-gradient(135deg, #fdf2f2, #fce4e4);
+            border: 2px solid #e74c3c;
+            border-radius: 12px;
+            padding: 25px 28px;
+            margin: 0 0 25px;
+        }
+        .verdict h2 { color: #c0392b; font-size: 18px; margin-bottom: 10px; }
+        .verdict .verdict-result { font-size: 22px; font-weight: bold; color: #e74c3c; margin-bottom: 12px; }
+        .verdict p { font-size: 14px; color: #555; line-height: 1.8; }
+        .verdict .sub-note {
+            margin-top: 12px; padding-top: 10px;
+            border-top: 1px dashed #e0a0a0; font-size: 13px; color: #888;
+        }
+
+        .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 15px 0; }
+        .summary-card {
+            background: #f8f9fa; border-radius: 8px; padding: 16px; border-left: 4px solid #7f8c8d;
+        }
+        .summary-card .label { font-size: 12px; color: #888; margin-bottom: 4px; }
+        .summary-card .value { font-size: 16px; font-weight: bold; color: #2c3e50; }
+
+        table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 14px; }
+        table th { background: #2c3e50; color: #fff; padding: 10px 14px; text-align: left; font-weight: 600; }
+        table td { padding: 10px 14px; border-bottom: 1px solid #eee; }
+        table tr:hover { background: #f8f9fa; }
+        table tr:last-child td { border-bottom: none; }
+
+        /* 출처 각주 */
+        .ref {
+            display: block;
+            margin-top: 8px;
+            padding: 8px 14px;
+            background: #f5f7fa;
+            border-left: 3px solid #aab7c4;
+            border-radius: 0 6px 6px 0;
+            font-size: 12px;
+            color: #7f8c8d;
+            line-height: 1.6;
+        }
+        .ref strong { color: #5d6d7e; }
+
+        .pros-cons { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 15px 0; }
+        .pros-box, .cons-box { border-radius: 10px; padding: 20px; }
+        .pros-box { background: #eafaf1; border: 1px solid #a9dfbf; }
+        .pros-box h3 { color: #27ae60; font-size: 15px; margin-bottom: 10px; }
+        .cons-box { background: #fdf2f2; border: 1px solid #f5b7b1; }
+        .cons-box h3 { color: #e74c3c; font-size: 15px; margin-bottom: 10px; }
+        .pros-box ul, .cons-box ul { padding-left: 18px; font-size: 13px; }
+        .pros-box li, .cons-box li { margin-bottom: 6px; }
+
+        .control-card {
+            background: #f8f9fa; border-radius: 10px; padding: 18px 22px;
+            margin: 10px 0; border-left: 4px solid #3498db;
+        }
+        .control-card h4 { font-size: 14px; color: #2c3e50; margin-bottom: 6px; }
+        .control-card p { font-size: 13px; color: #666; }
+        .control-card .tag {
+            display: inline-block; background: #d4e6f1; color: #2471a3;
+            font-size: 11px; padding: 2px 10px; border-radius: 10px; margin-top: 6px;
+        }
+        .control-card .tag-warn {
+            display: inline-block; background: #fde8e8; color: #c0392b;
+            font-size: 11px; padding: 2px 10px; border-radius: 10px; margin-top: 6px;
+        }
+
+        .burden-item {
+            display: flex; align-items: flex-start; gap: 14px;
+            background: #fff9f0; border-radius: 10px; padding: 16px 20px;
+            margin: 10px 0; border: 1px solid #f0d9b5;
+        }
+        .burden-icon { font-size: 28px; flex-shrink: 0; width: 40px; text-align: center; }
+        .burden-text h4 { font-size: 14px; color: #d35400; margin-bottom: 4px; }
+        .burden-text p { font-size: 13px; color: #666; }
+
+        .cost-box {
+            background: #f8f9fa; border-radius: 10px; padding: 22px 25px;
+            margin: 15px 0; border: 1px solid #ddd;
+        }
+        .cost-box h3 { color: #2c3e50; margin-bottom: 12px; font-size: 15px; }
+        .cost-row {
+            display: flex; justify-content: space-between; padding: 8px 0;
+            border-bottom: 1px dashed #ddd; font-size: 14px;
+        }
+        .cost-row:last-child { border-bottom: none; }
+        .cost-row.total {
+            font-weight: bold; font-size: 15px; color: #e74c3c;
+            border-top: 2px solid #e74c3c; border-bottom: none;
+            margin-top: 4px; padding-top: 12px;
+        }
+
+        .alt-box {
+            background: linear-gradient(135deg, #eaf2f8, #d4e6f1);
+            border-radius: 10px; padding: 22px 25px; margin: 15px 0; border: 1px solid #aed6f1;
+        }
+        .alt-box h3 { color: #2471a3; margin-bottom: 12px; font-size: 15px; }
+        .alt-box ul { padding-left: 20px; font-size: 14px; }
+        .alt-box li { margin-bottom: 8px; }
+
+        .conclusion {
+            background: linear-gradient(135deg, #4a4a4a, #6c6c6c);
+            color: #fff; border-radius: 10px; padding: 25px 30px; margin: 25px 0 10px;
+        }
+        .conclusion h3 { font-size: 17px; margin-bottom: 12px; }
+        .conclusion p { font-size: 14px; line-height: 1.8; opacity: 0.95; }
+        .conclusion .tag-hold {
+            display: inline-block; background: #f39c12; color: #fff;
+            padding: 6px 16px; border-radius: 20px; font-size: 14px;
+            font-weight: bold; margin-top: 12px;
+        }
+
+        .footer {
+            background: #f8f9fa; padding: 18px 40px; font-size: 12px;
+            color: #999; border-top: 1px solid #eee;
+        }
+
+        @media print {
+            body { background: #fff; }
+            .container { box-shadow: none; margin: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <!-- 헤더 -->
+        <div class="header">
+            <span class="badge">경영지원팀 내부 검토자료</span>
+            <span class="badge-warn">재검토</span>
+            <h1>2026 산업계 EMS 보급 지원사업 재검토 보고서</h1>
+            <div class="sub">신성오토텍(주) | 2026.03.23 작성 | 수원 본사 · 화성공장</div>
+        </div>
+
+        <div class="content">
+
+            <!-- 결론 먼저 -->
+            <div class="verdict">
+                <h2>검토 결론</h2>
+                <div class="verdict-result">현 시점 신청 보류 권고</div>
+                <p>
+                    신청 자격(500toe 이상)은 충족하나, <strong>제어 최적화의 실효성이 제조 현장 여건과 맞지 않고</strong>,
+                    투자비·관리 부담·인력 요건 등을 종합적으로 고려할 때 <strong>투입 대비 실익이 불분명</strong>합니다.<br>
+                    향후 에너지 사용량 증가 또는 사업 조건 변경 시 재검토를 권고합니다.
+                </p>
+                <div class="sub-note">
+                    * 본 보고서는 아래 원본 자료를 근거로 작성되었습니다.<br>
+                    [1] 첨부1_2026년산업계에너지관리시스템보급지원사업공고문.pdf<br>
+                    [2] 첨부2_2026년산업계에너지관리시스템보급지원사업운영지침.pdf<br>
+                    [3] 참고1_EMS제어유형.pdf
+                </div>
+            </div>
+
+            <!-- 1. 사업 개요 -->
+            <div class="section-title">1. 사업 개요</div>
+
+            <div class="summary-grid">
+                <div class="summary-card">
+                    <div class="label">사업명</div>
+                    <div class="value" style="font-size:14px;">2026 산업계 EMS 보급 지원사업</div>
+                </div>
+                <div class="summary-card">
+                    <div class="label">총 예산</div>
+                    <div class="value">55억 원 (정부지원금)</div>
+                </div>
+                <div class="summary-card">
+                    <div class="label">중소기업 지원율</div>
+                    <div class="value">70% (KEEP30 시 80%)</div>
+                </div>
+                <div class="summary-card">
+                    <div class="label">신청 마감</div>
+                    <div class="value">2026. 4. 30 (수) 18:00</div>
+                </div>
+            </div>
+
+            <table>
+                <tr><th>항목</th><th>내용</th></tr>
+                <tr>
+                    <td><strong>지원 대상</strong></td>
+                    <td>연간 에너지사용량 500toe 이상 중소·중견기업 (제조업 C, 광업 B, 전기가스 D)</td>
+                </tr>
+                <tr>
+                    <td><strong>지원 한도</strong></td>
+                    <td>500~2,000toe: 1억 / 2,000~10,000toe: 1.5억 / 10,000toe 이상: 2억</td>
+                </tr>
+                <tr>
+                    <td><strong>지원 범위</strong></td>
+                    <td>계측기, 제어설비, 에너지관리시스템 구축비 (VAT는 사업장 부담)</td>
+                </tr>
+                <tr>
+                    <td><strong>사후 의무</strong></td>
+                    <td>종료 후 2년간 성과보고서 + 5년간 유지관리보고서 제출</td>
+                </tr>
+            </table>
+            <span class="ref">
+                <strong>[출처]</strong> 공고문 p.1~3 — 사업 개요, 지원 내용, 지원 조건 표<br>
+                <strong>[출처]</strong> 공고문 p.3 — "부가가치세(VAT) 지원사업장 부담" 비고란<br>
+                <strong>[출처]</strong> 공고문 p.5 — 신청기간 "2026년 3월 20일(금) ~ 4월 30일(목), 18:00까지"
+            </span>
+
+            <!-- 2. 신청 자격 -->
+            <div class="section-title">2. 신성오토텍 신청 자격</div>
+
+            <table>
+                <tr><th>요건</th><th>충족 여부</th><th>비고</th></tr>
+                <tr>
+                    <td>업종 (제조업 C)</td>
+                    <td style="color:#27ae60; font-weight:bold;">충족</td>
+                    <td>자동차부품 제조 (도장/인쇄/사출)</td>
+                </tr>
+                <tr>
+                    <td>에너지사용량 500toe 이상</td>
+                    <td style="color:#27ae60; font-weight:bold;">충족 (확인됨)</td>
+                    <td>수원 계약전력 700kW, 피크 375kW, 수원+화성 합산</td>
+                </tr>
+                <tr>
+                    <td>중소기업 여부</td>
+                    <td style="color:#27ae60; font-weight:bold;">충족 (추정)</td>
+                    <td>중소기업확인서 보유 시 70% 지원</td>
+                </tr>
+                <tr>
+                    <td>전담인력/조직 구성</td>
+                    <td style="color:#e67e22; font-weight:bold;">부담</td>
+                    <td>시스템 운영 전담자 배치 <strong>필수</strong></td>
+                </tr>
+            </table>
+            <span class="ref">
+                <strong>[출처]</strong> 공고문 p.2 — "한국표준산업분류(KSIC)의 제조업(C)...에 해당하는 업종"<br>
+                <strong>[출처]</strong> 공고문 p.2 — "연간 에너지사용량이 500toe 이상인 중소·중견기업"<br>
+                <strong>[출처]</strong> 공고문 p.2 — "지원사업장 내 시스템 활용 및 관리 내부조직(또는 전담자) 구성 필수"<br>
+                <strong>[출처]</strong> 공고문 p.3 — 지원기준표: 중소기업 정부지원 70%, 민간부담 30%
+            </span>
+
+            <p style="font-size:14px; color:#666; margin-top:12px; background:#f8f9fa; padding:12px 16px; border-radius:8px;">
+                <strong>자격은 충족되나</strong>, 아래 실효성 분석에서 신청 실익이 제한적인 것으로 판단됩니다.
+            </p>
+
+            <!-- 3. 제어 최적화 설명 -->
+            <div class="section-title">3. 제어 최적화란? — 오해와 실제</div>
+
+            <p style="font-size:14px; color:#555; margin-bottom:15px;">
+                "전기를 끊는 것"은 아니지만, 중소 제조업 현장에서 적용 시 <strong>실효성에 한계</strong>가 있습니다.<br>
+                본 사업의 제어 인프라는 아래 4개 유형(유형1 모니터링 제외) 중 선택하여 구축해야 합니다.
+            </p>
+
+            <div class="control-card">
+                <h4>유형2. 설비 제어 — 유량·온도·압력 등을 자동 최적값 유지</h4>
+                <p>예: 공기비 제어, 냉각수 온도 관리, 배기팬 인버터 제어</p>
+                <span class="tag">유틸리티 설비에는 적용 가능</span>
+            </div>
+            <div class="control-card">
+                <h4>유형3. 대수 제어 — 설비 운전 대수를 상황에 맞게 조절</h4>
+                <p>예: 압축공기 시스템 대수 최적화, 냉동기 대수 제어</p>
+                <span class="tag-warn">사출기 24대 + 도장/인쇄 라인 → 생산 중 대수 축소 = 생산 차질</span>
+            </div>
+            <div class="control-card">
+                <h4>유형4. 변수 확장 제어 — 기존 제어에 변수(습도, pH 등) 추가</h4>
+                <p>예: 증류탑 환류비 최적화, Stripper 중단온도 제어</p>
+                <span class="tag-warn">석유화학 등 대형 장치산업 위주, 사출 공정에는 적용 사례 없음</span>
+            </div>
+            <div class="control-card">
+                <h4>유형5. 프로세스 제어 — 공정 표준운전 조건 데이터화</h4>
+                <p>예: 품종 변경 시 수소투입 RAMP 제어, Cooling-down 자동화</p>
+                <span class="tag">적용 가능하나 절감량 계측 증명이 까다로움</span>
+            </div>
+
+            <span class="ref">
+                <strong>[출처]</strong> 참고1_EMS제어유형.pdf p.1 — EMS 활용 절감기법 5개 유형 분류 및 정의<br>
+                <strong>[출처]</strong> 참고1_EMS제어유형.pdf p.2 — 22건 적용기술 상세표 (업종별·공정별 사례)<br>
+                <strong>[출처]</strong> 공고문 p.4 — "제어 인프라는 'EMS 활용 절감기법' 중 유형1(모니터링 관리)를 제외한 4개 유형 등을 적용"<br>
+                <strong>[출처]</strong> 공고문 p.4 — "에너지비용만을 줄이는 기술(최대수요전력제어 등) 또는 단순 에너지절감 기법(보온재 설치 등)은 본 사업의 제어 인프라로 인정되지 않음"
+            </span>
+
+            <!-- 4. 실효성 분석 -->
+            <div class="section-title">4. 신성오토텍 적용 시 실효성 분석</div>
+
+            <div class="pros-cons">
+                <div class="pros-box">
+                    <h3>기대할 수 있는 점</h3>
+                    <ul>
+                        <li>정부 지원금 70%로 <strong>자부담 적음</strong></li>
+                        <li>에어컴프레서, 냉각 칠러 등 <strong>유틸리티 설비 최적화</strong> 가능</li>
+                        <li>에너지 사용 현황 <strong>데이터 가시화</strong></li>
+                        <li>ESG 경영 실적으로 활용 가능</li>
+                    </ul>
+                </div>
+                <div class="cons-box">
+                    <h3>우려되는 점</h3>
+                    <ul>
+                        <li>사출기 24대·도장·인쇄 라인은 <strong>생산 중단 불가</strong> → 제어 적용 제한</li>
+                        <li>피크전력 제어(전기요금 절감)는 <strong>사업에서 인정 안 됨</strong></li>
+                        <li>자부담 + VAT + 원가검증 비용 등 <strong>숨은 비용</strong></li>
+                        <li>전담인력 배치 + <strong>5년간 사후관리 의무</strong></li>
+                        <li>최소 10일 이상 실측 데이터로 <strong>절감 효과 증명 필요</strong></li>
+                        <li>설비 <strong>5년 내 임의 처분 시 지원금 전액 환수</strong></li>
+                    </ul>
+                </div>
+            </div>
+            <span class="ref">
+                <strong>[출처]</strong> 공고문 p.4 — "에너지비용만을 줄이는 기술(최대수요전력제어 등)...인정되지 않음"<br>
+                <strong>[출처]</strong> 공고문 p.3 — "부가가치세(VAT) 지원사업장 부담"<br>
+                <strong>[출처]</strong> 공고문 p.17 — "인프라 구축 완료 후 10일 이상의 실제 데이터를 기반으로 산정된 에너지·온실가스 절감효과..."<br>
+                <strong>[출처]</strong> 공고문 p.12 별첨3 — "지원금에 의하여 취득한 중요 재산을 사업 종료연도 후 5년 이내에 공단 사전 승인 없이 양도...한 경우 → 사업 참여 제한 5년, 지원금 전액 환수"
+            </span>
+
+            <!-- 5. 부담 요소 상세 -->
+            <div class="section-title">5. 주요 부담 요소</div>
+
+            <div class="burden-item">
+                <div class="burden-icon">&#128176;</div>
+                <div class="burden-text">
+                    <h4>비용 부담 — 자부담 30% + VAT 전액 + 부대비용</h4>
+                    <p>총사업비 1억 기준: 자부담 약 3,000만원 + VAT 약 1,000만원 + 원가검증 수수료 별도.<br>
+                    실질 부담은 "30%"보다 훨씬 큼.</p>
+                </div>
+            </div>
+            <span class="ref">
+                <strong>[출처]</strong> 공고문 p.3 — 지원기준표: 중소 정부지원 70%, 민간부담 30%, "부가가치세(VAT) 지원사업장 부담"<br>
+                <strong>[출처]</strong> 공고문 p.15 별첨6 — "협약 체결 전 원가계산 용역기관에서 작성한 원가계산서를 공단에 제출...소요 비용은 지원사업장에서 부담"
+            </span>
+
+            <div class="burden-item">
+                <div class="burden-icon">&#128100;</div>
+                <div class="burden-text">
+                    <h4>인력 부담 — 시스템 전담자 또는 내부 조직 필수</h4>
+                    <p>공고문에 명시된 필수 요건. 중소기업에서 에너지 전담 인력을 별도 배치하기 어려움.<br>
+                    미구성 시 사업 선정 불가.</p>
+                </div>
+            </div>
+            <span class="ref">
+                <strong>[출처]</strong> 공고문 p.2 — "지원사업장 내 시스템 활용 및 관리 내부조직(또는 전담자) 구성 필수 * 시스템 운영 리스크 최소화 및 성과 유지의 지속성 확보 필요"
+            </span>
+
+            <div class="burden-item">
+                <div class="burden-icon">&#128203;</div>
+                <div class="burden-text">
+                    <h4>관리 부담 — 사후관리 5년, 보고서 의무 제출</h4>
+                    <p>사업 종료 후 2년간 성과활용보고서, 5년간 유지관리보고서 제출.<br>
+                    미제출 시 참여 제한 2년 + 현장실사 대응 필요.</p>
+                </div>
+            </div>
+            <span class="ref">
+                <strong>[출처]</strong> 공고문 p.7 추진절차표 12번 — "종료 후 2년: 사업 성과활용보고서 제출 / 종료 후 5년: 인프라 유지관리보고서 제출, 모니터링 및 사후관리(현장실사 등)"<br>
+                <strong>[출처]</strong> 공고문 p.19 별첨6 9항 — "성과 활용 보고서를 제출하지 않거나 허위 보고한 경우...별도의 조치를 취할 수 있음"<br>
+                <strong>[출처]</strong> 공고문 p.12 별첨3 — "연차별 사업 결과보고서 제출을 하지 않거나, 허위로 보고한 경우 → 사업 참여 제한 2년 이하"
+            </span>
+
+            <div class="burden-item">
+                <div class="burden-icon">&#128274;</div>
+                <div class="burden-text">
+                    <h4>설비 처분 제한 — 5년 내 양도·폐기 시 지원금 전액 환수</h4>
+                    <p>구축한 인프라를 5년 이내에 공단 승인 없이 처분하면<br>
+                    지원금 전액 환수 + 참여 제한 5년 조치.</p>
+                </div>
+            </div>
+            <span class="ref">
+                <strong>[출처]</strong> 공고문 p.12 별첨3 — "지원금에 의하여 취득하거나 그 효용이 증가된 중요 재산을 사업 종료연도 후 5년 이내에 공단 사전 승인 없이 양도·교환·대여 또는 담보로 제공하거나, 폐기 처분한 경우 → 사업 참여 제한 5년, 지원금 전액 환수"
+            </span>
+
+            <div class="burden-item">
+                <div class="burden-icon">&#128196;</div>
+                <div class="burden-text">
+                    <h4>서류 부담 — 신청 시 제출 서류 14종 이상</h4>
+                    <p>사업신청서, 사업계획서(xlsx), 적격확인서, 확약서, 개인정보동의서, 에너지사용량 증빙, 사업자등록증, 법인등기부등본, 신용평가서, 국세·지방세 완납증명서, 중소기업확인서, 법인인감증명서, 사용인감계, 표준재무제표증명원 등.</p>
+                </div>
+            </div>
+            <span class="ref">
+                <strong>[출처]</strong> 공고문 p.13 별첨4 — "사업신청 제출 서류 목록(신청사업장)" 16개 항목
+            </span>
+
+            <!-- 6. 비용 시뮬레이션 -->
+            <div class="section-title">6. 비용 시뮬레이션</div>
+
+            <div class="cost-box">
+                <h3>총사업비 1억 원 가정 시</h3>
+                <div class="cost-row">
+                    <span>총사업비 (계측기+제어설비+시스템+공사비)</span>
+                    <span>1억 원</span>
+                </div>
+                <div class="cost-row">
+                    <span>정부 지원금 (70%)</span>
+                    <span>7,000만 원</span>
+                </div>
+                <div class="cost-row">
+                    <span>자부담 (30%)</span>
+                    <span>3,000만 원</span>
+                </div>
+                <div class="cost-row">
+                    <span>VAT (전액 사업장 부담)</span>
+                    <span>~1,000만 원</span>
+                </div>
+                <div class="cost-row">
+                    <span>원가검증 수수료 (공인기관)</span>
+                    <span>~100~200만 원</span>
+                </div>
+                <div class="cost-row total">
+                    <span>실질 자부담 합계</span>
+                    <span>약 4,000~4,200만 원</span>
+                </div>
+            </div>
+
+            <table>
+                <tr><th>항목</th><th>낙관적</th><th>보수적</th></tr>
+                <tr>
+                    <td>연간 에너지 절감 기대액</td>
+                    <td style="color:#27ae60;">~1,000만 원/년</td>
+                    <td style="color:#e74c3c;">~300만 원/년</td>
+                </tr>
+                <tr>
+                    <td>투자 회수 기간 (자부담 기준)</td>
+                    <td style="color:#27ae60;">약 4년</td>
+                    <td style="color:#e74c3c;">14년 이상</td>
+                </tr>
+                <tr>
+                    <td>관리 인력 연간 비용 (겸직 기준)</td>
+                    <td colspan="2" style="text-align:center;">별도 산정 어려우나 업무 부담 발생</td>
+                </tr>
+            </table>
+            <span class="ref">
+                <strong>[출처]</strong> 공고문 p.3 — 지원기준표 (중소 70%, 한도 1억~1.5억)<br>
+                <strong>[출처]</strong> 공고문 p.3 — "인프라 구축 비용은 계측기와 제어 및 에너지관리시스템 구입비, 설치공사비, 감리비, 시운전비 등에 한함"<br>
+                * 절감 기대액은 유틸리티 설비(에어컴프레서, 냉각칠러) 위주 제어 적용 시 업계 일반 사례 기반 추정치
+            </span>
+
+            <!-- 7. 신청 vs 보류 -->
+            <div class="section-title">7. 신청 vs 보류 비교</div>
+
+            <table>
+                <tr>
+                    <th style="width:50%;">신청할 경우</th>
+                    <th>보류할 경우</th>
+                </tr>
+                <tr>
+                    <td>
+                        + 정부 지원금 최대 7,000만 원 확보<br>
+                        + 에너지 데이터 가시화<br>
+                        + ESG 실적 확보<br>
+                        <span style="color:#e74c3c;">
+                        - 실질 자부담 4,000만 원 이상<br>
+                        - 전담인력 배치 필요<br>
+                        - 5년 사후관리 의무<br>
+                        - 절감 효과 불확실 (유틸리티 한정)<br>
+                        - 서류 준비 부담 (14종 이상)
+                        </span>
+                    </td>
+                    <td>
+                        + 불필요한 투자 회피<br>
+                        + 관리 부담 없음<br>
+                        + 향후 조건 개선 시 재신청 가능<br>
+                        <span style="color:#888;">
+                        - 지원금 기회 상실<br>
+                        - 에너지 관리 체계 미구축 유지
+                        </span>
+                    </td>
+                </tr>
+            </table>
+
+            <!-- 8. 대안 제안 -->
+            <div class="section-title">8. 대안 제안</div>
+
+            <div class="alt-box">
+                <h3>EMS 사업 대신 검토 가능한 방안</h3>
+                <ul>
+                    <li><strong>한전 에너지효율향상 지원사업</strong> — 노후 설비 교체(인버터, 고효율 모터 등) 중심, 사후관리 부담 적음</li>
+                    <li><strong>KEEP30 참여</strong> — 에너지 절감 자발적 참여 프로그램, 향후 EMS 사업 신청 시 가점(1점) + 지원율 상향(80%)</li>
+                    <li><strong>자체 전력 모니터링 도입</strong> — 소규모 IoT 전력 계측기 자체 설치, 사후관리 의무 없이 데이터 확보</li>
+                    <li><strong>향후 재신청</strong> — 에너지 사용량 증가 또는 사업 조건 완화 시 재검토 (매년 공고)</li>
+                </ul>
+            </div>
+            <span class="ref">
+                <strong>[출처]</strong> 공고문 p.3 — "KEEP30 참여기업 및 협력사...정부지원 비율 10% 상향 신청 가능(중소 70→80%)"<br>
+                <strong>[출처]</strong> 공고문 p.9 별첨1 — 가점사항: "KEEP30 참여기업 또는 KEEP30 협력사업장 1점"
+            </span>
+
+            <!-- 결론 -->
+            <div class="conclusion">
+                <h3>종합 의견</h3>
+                <p>
+                    신성오토텍은 EMS 보급사업 <strong>신청 자격은 충족</strong>합니다.<br>
+                    그러나 제어 최적화의 핵심인 설비 운전 조건 조절이 <strong>사출기 24대·도장·인쇄·스핀들XY 등 연속 가동 라인에서는 적용이 제한적</strong>이며,
+                    피크전력 제어(전기요금 절감)도 본 사업에서 인정되지 않습니다.<br><br>
+                    자부담 비용(약 4,000만 원 이상), 전담인력 배치, 5년간 사후관리 의무, 14종 이상의 서류 준비 등을 고려하면
+                    <strong>현 시점에서 투입 대비 실익이 불분명</strong>합니다.<br><br>
+                    <strong>현 시점 신청 보류</strong>를 권고하며, KEEP30 참여 등으로 향후 유리한 조건(지원율 80%)을 확보한 뒤 재검토를 제안합니다.
+                </p>
+                <span class="tag-hold">권고: 2026년 신청 보류</span>
+            </div>
+
+        </div>
+
+        <!-- 푸터 -->
+        <div class="footer">
+            <strong>신성오토텍(주)</strong> 경영지원팀 내부 검토자료 | 2026.03.23<br>
+            사업 문의: 한국에너지공단 산업에너지처 052-920-0392, 0395<br>
+            근거 자료: 공고문(첨부1), 운영지침(첨부2), EMS제어유형(참고1) | 최종 판단은 경영진 결정에 따릅니다.
+        </div>
+    </div>
+</body>
+</html>
