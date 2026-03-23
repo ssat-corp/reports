@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>비밀유지계약서 내부 검토 보고서 | 신성오토텍</title>
+  <style>
+    :root {
+      --primary: #1a3a5c;
+      --primary-light: #2563a8;
+      --danger: #c0392b;
+      --warning: #d97706;
+      --ok: #16a34a;
+      --bg: #f4f6f9;
+      --card: #ffffff;
+      --border: #dde3ea;
+      --text: #1e293b;
+      --muted: #64748b;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Pretendard', 'Apple SD Gothic Neo', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 15px;
+      line-height: 1.7;
+    }
+    /* Header */
+    .page-header {
+      background: linear-gradient(135deg, var(--primary) 0%, #0f2640 100%);
+      color: #fff;
+      padding: 40px 0 36px;
+      text-align: center;
+    }
+    .page-header .badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 20px;
+      padding: 4px 14px;
+      font-size: 12px;
+      letter-spacing: 0.5px;
+      margin-bottom: 14px;
+    }
+    .page-header h1 {
+      font-size: 26px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .page-header .meta {
+      font-size: 13px;
+      color: rgba(255,255,255,0.7);
+    }
+    /* Layout */
+    .container { max-width: 900px; margin: 0 auto; padding: 32px 20px 60px; }
+    /* Summary box */
+    .summary-box {
+      background: #fff;
+      border: 1.5px solid #d1e4f7;
+      border-left: 5px solid var(--primary-light);
+      border-radius: 10px;
+      padding: 24px 28px;
+      margin-bottom: 28px;
+    }
+    .summary-box h2 {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .summary-box ul { padding-left: 0; list-style: none; }
+    .summary-box ul li {
+      padding: 6px 0 6px 22px;
+      position: relative;
+      border-bottom: 1px dashed #e8eff7;
+      font-size: 14px;
+    }
+    .summary-box ul li:last-child { border-bottom: none; }
+    .summary-box ul li::before {
+      content: "▶";
+      position: absolute;
+      left: 0;
+      color: var(--primary-light);
+      font-size: 11px;
+      top: 9px;
+    }
+    /* Section */
+    .section {
+      background: var(--card);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      margin-bottom: 24px;
+      overflow: hidden;
+    }
+    .section-header {
+      background: var(--primary);
+      color: #fff;
+      padding: 14px 22px;
+      font-size: 15px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-header .num {
+      background: rgba(255,255,255,0.2);
+      border-radius: 50%;
+      width: 26px; height: 26px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px;
+      flex-shrink: 0;
+    }
+    .section-body { padding: 20px 24px; }
+    /* Table */
+    table { width: 100%; border-collapse: collapse; font-size: 14px; margin-top: 4px; }
+    th {
+      background: #f0f5fb;
+      color: var(--primary);
+      font-weight: 700;
+      padding: 10px 12px;
+      text-align: left;
+      border-bottom: 2px solid var(--primary-light);
+      white-space: nowrap;
+    }
+    td {
+      padding: 10px 12px;
+      border-bottom: 1px solid #edf0f5;
+      vertical-align: middle;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #f9fbff; }
+    /* Severity badges */
+    .badge-danger, .badge-warning, .badge-ok {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .badge-danger { background: #fef2f2; color: var(--danger); border: 1px solid #fecaca; }
+    .badge-warning { background: #fffbeb; color: var(--warning); border: 1px solid #fde68a; }
+    .badge-ok { background: #f0fdf4; color: var(--ok); border: 1px solid #bbf7d0; }
+    /* Alert cards */
+    .alert {
+      border-radius: 9px;
+      padding: 18px 20px;
+      margin-bottom: 16px;
+      border-left: 4px solid;
+    }
+    .alert-danger {
+      background: #fff5f5;
+      border-color: var(--danger);
+    }
+    .alert-warning {
+      background: #fffcf0;
+      border-color: var(--warning);
+    }
+    .alert-info {
+      background: #f0f7ff;
+      border-color: var(--primary-light);
+    }
+    .alert h3 {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .alert-danger h3 { color: var(--danger); }
+    .alert-warning h3 { color: var(--warning); }
+    .alert-info h3 { color: var(--primary-light); }
+    .alert p, .alert ul { font-size: 14px; color: #374151; }
+    .alert ul { padding-left: 16px; margin-top: 6px; }
+    .alert ul li { margin-bottom: 4px; }
+    .suggest {
+      margin-top: 10px;
+      padding: 10px 14px;
+      background: rgba(255,255,255,0.7);
+      border-radius: 6px;
+      font-size: 13px;
+      color: #374151;
+      border: 1px dashed currentColor;
+    }
+    .alert-danger .suggest { border-color: #f87171; }
+    .alert-warning .suggest { border-color: #fbbf24; }
+    /* Checklist */
+    .checklist { list-style: none; padding: 0; margin-top: 4px; }
+    .checklist li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 9px 0;
+      border-bottom: 1px solid #f0f4f9;
+      font-size: 14px;
+    }
+    .checklist li:last-child { border-bottom: none; }
+    .check-box {
+      width: 18px; height: 18px;
+      border: 2px solid var(--primary-light);
+      border-radius: 4px;
+      flex-shrink: 0;
+      margin-top: 2px;
+      background: #fff;
+    }
+    /* Disclaimer */
+    .disclaimer {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 14px 18px;
+      font-size: 12.5px;
+      color: var(--muted);
+      margin-top: 28px;
+      display: flex;
+      gap: 8px;
+    }
+    .disclaimer span { flex-shrink: 0; font-size: 16px; }
+    /* Typo highlight */
+    .typo-orig { color: var(--danger); font-weight: 600; text-decoration: line-through; }
+    .typo-fix { color: var(--ok); font-weight: 600; }
+    /* Responsive */
+    @media (max-width: 640px) {
+      .page-header h1 { font-size: 20px; }
+      table { font-size: 13px; }
+      th, td { padding: 8px 8px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===== PAGE HEADER ===== -->
+<div class="page-header">
+  <div class="badge">🔒 내부 검토 — CONFIDENTIAL</div>
+  <h1>비밀유지계약서 검토 보고서</h1>
+  <div class="meta">
+    계약 당사자: 이씨아이 주식회사(ECI) ↔ 주식회사 신성오토텍㈜ &nbsp;|&nbsp;
+    계약일: 2026.03.12 &nbsp;|&nbsp; 검토일: 2026.03.23
+  </div>
+</div>
+
+<!-- ===== CONTAINER ===== -->
+<div class="container">
+
+  <!-- 핵심 요약 -->
+  <div class="summary-box">
+    <h2>📋 핵심 요약</h2>
+    <ul>
+      <li><strong>오탈자 6건</strong> 발견 — 제1조 "보고하기"(→보호하기)는 계약 목적 자체를 왜곡, 서명 전 수정 요청 필수</li>
+      <li><strong>크리티컬 불리 조항 3개</strong> — 제8조(보증 전면 배제), 제10조(즉시 반환 청구권), 제3조 2항(비밀유지의무 사실상 무기한화)</li>
+      <li><strong>관할(수원지법)</strong>은 신성오토텍에 유리 — ECI 소재지(천안)와 달리 당사 인근 법원으로 기재</li>
+      <li><strong>신성오토텍 서명란 공란</strong> — 사명·주소·대표자 모두 미기재로 서명 전 협상 여지 충분</li>
+    </ul>
+  </div>
+
+  <!-- 1. 오탈자 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="num">1</span>
+      오탈자 목록 (총 6건)
+    </div>
+    <div class="section-body">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>조항</th>
+            <th>원문 → 수정안</th>
+            <th>심각도</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>①</td>
+            <td>제1조</td>
+            <td>
+              "비밀정보"를 <span class="typo-orig">보고하기</span> 위하여
+              → <span class="typo-fix">보호하기</span>
+            </td>
+            <td><span class="badge-danger">🔴 Critical</span></td>
+          </tr>
+          <tr>
+            <td>②</td>
+            <td>제1조</td>
+            <td>
+              (이하 <span class="typo-orig">"이하 목적 사업"</span>)
+              → (이하 <span class="typo-fix">"목적 사업"</span>이라 한다) — "이하" 이중 기재
+            </td>
+            <td><span class="badge-warning">🟡 중간</span></td>
+          </tr>
+          <tr>
+            <td>③</td>
+            <td>제2조 3항</td>
+            <td>
+              <span class="typo-orig">공재</span> 장소
+              → <span class="typo-fix">공개</span> 장소
+            </td>
+            <td><span class="badge-warning">🟡 중간</span></td>
+          </tr>
+          <tr>
+            <td>④</td>
+            <td>제4조 2항</td>
+            <td>
+              <span class="typo-orig">서전</span> 서면 승인
+              → <span class="typo-fix">사전</span> 서면 승인
+            </td>
+            <td><span class="badge-warning">🟡 중간</span></td>
+          </tr>
+          <tr>
+            <td>⑤</td>
+            <td>제6조 1호</td>
+            <td>
+              <span class="typo-orig">정보제공자"</span>로부터
+              → <span class="typo-fix">"정보제공자"</span>로부터 — 앞 따옴표 누락
+            </td>
+            <td><span class="badge-ok">🟢 경미</span></td>
+          </tr>
+          <tr>
+            <td>⑥</td>
+            <td>제7조 2항</td>
+            <td>
+              상황이 <span class="typo-orig">발 생한</span> / 법 <span class="typo-orig">라</span> 요구
+              → <span class="typo-fix">발생한</span> / 법령에 <span class="typo-fix">따라</span> 요구
+            </td>
+            <td><span class="badge-ok">🟢 경미</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="alert alert-danger" style="margin-top:16px;">
+        <h3>⚠️ 제1조 "보고하기" — 즉시 수정 요청 필요</h3>
+        <p>계약의 목적이 "비밀정보를 <strong>보호</strong>하기 위한 것"이어야 하는데, "보고하기"로 기재되어 있어 분쟁 시 계약 목적 자체가 왜곡될 소지가 있습니다. 서명 전 ECI에 서면 수정 요청을 하십시오.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. 크리티컬 불리 조항 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="num">2</span>
+      크리티컬 불리 조항 (신성오토텍 관점)
+    </div>
+    <div class="section-body">
+
+      <div class="alert alert-danger">
+        <h3>🔴 [제8조] 보증 전면 배제 — 가장 위험</h3>
+        <p>ECI는 제공하는 비밀정보의 <strong>정확성·완전성·적합성·제3자 권리침해 여부에 대해 어떠한 보증도 하지 않는다</strong>고 명시되어 있습니다.</p>
+        <ul>
+          <li>신성오토텍이 ECI 기술 도면·공정 정보 기반으로 금형 제작이나 라인 투자를 진행했다가 정보가 부정확하거나 제3자 특허를 침해하는 경우 ECI에 책임을 물을 수 없음</li>
+          <li>피해는 전적으로 신성오토텍이 부담하는 구조</li>
+        </ul>
+        <div class="suggest">
+          💡 <strong>협상 권고:</strong> "정보제공자는 제공 정보가 자신의 정당한 권리 범위 내의 것임을 보증한다"는 최소한의 권리 합법성 보증 문구 삽입 요청
+        </div>
+      </div>
+
+      <div class="alert alert-danger">
+        <h3>🔴 [제10조] 언제든지 정보 즉시 반환·폐기 요구 가능</h3>
+        <p>ECI가 <strong>"언제라도 서면에 의하여 요구"</strong>하면 신성오토텍은 지체 없이 수령한 비밀정보 전부(원본·사본·파생 데이터)를 반환 또는 폐기하고, 10일 내 폐기 확인서까지 제출해야 합니다.</p>
+        <ul>
+          <li>ECI 기술정보 기반으로 금형 설계·시제품 제작 등 투자를 진행한 시점에 ECI가 반환 요구 시 투자비 회수 수단 없음</li>
+          <li>"비밀정보를 이용하여 생성한 서면, 자료, 데이터"까지 반환 대상에 포함 → 자체 작성 내부 문서도 해당될 수 있음</li>
+        </ul>
+        <div class="suggest">
+          💡 <strong>협상 권고:</strong> 반환 요구 시 최소 통보 기간(예: 30일) 설정 + 반환 요구 사유를 계약 종료 시점으로만 한정하는 조항 추가 요청
+        </div>
+      </div>
+
+      <div class="alert alert-warning">
+        <h3>🟠 [제3조 2항] 비밀유지의무 사실상 무기한화</h3>
+        <p>"그 성질상 계속하여 효력을 유지하여야 할 조항은 계약 종료 또는 비밀유지기간 만료 후에도 계속 유효"합니다. 계약기간 2년 + 비밀유지기간 3년(총 5년)이 기본이지만, 이 조항으로 인해 핵심 영업비밀성 정보에 대해서는 <strong>사실상 기간 제한 없는 의무</strong>가 발생할 수 있습니다.</p>
+        <div class="suggest">
+          💡 <strong>협상 권고:</strong> "그 성질상 계속 유효한 조항"의 범위를 명확히 열거하거나, 최장 유효기간(예: 10년)을 상한선으로 설정하는 문구 추가 요청
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 3. 추가 검토 사항 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="num">3</span>
+      추가 검토 사항 (경미 또는 양면적)
+    </div>
+    <div class="section-body">
+
+      <div class="alert alert-info">
+        <h3>📌 [제2조 1항] 비밀정보 범위 광범위</h3>
+        <p>"모든 노하우, 기술... 일체의 정보"로 정의되어 있어, 별도 비밀 표시 없이 제공된 정보도 분쟁 시 비밀정보로 주장될 소지가 있습니다.</p>
+        <div class="suggest">
+          💡 수령하는 정보에 "비밀" 표시 여부를 확인하는 내부 수령 대장 운영 권고
+        </div>
+      </div>
+
+      <div class="alert alert-info">
+        <h3>📌 [제11조 2항] 가처분 요건 사전 인정</h3>
+        <p>계약 위반 시 법원의 가처분(생산·사업 중단 명령 등) 발령 요건을 충족함을 사전에 "인정"하는 조항입니다. 분쟁 시 ECI가 가처분 신청을 통해 신성오토텍의 사업을 신속히 중단시킬 수 있는 법적 기반이 됩니다.</p>
+        <div class="suggest">
+          💡 삭제 또는 "양 당사자 동등"하게 적용됨을 명확히 하는 문구로 협상 가능
+        </div>
+      </div>
+
+      <div class="alert alert-info">
+        <h3>📌 [제5조] 홍보 금지 — 실무 주의</h3>
+        <p>ECI와의 거래 사실 자체도 외부에 공개 불가합니다. 고객사 레퍼런스, 정부지원사업 신청 서류, IATF16949 심사 대응 시 거래처 목록 제출이 필요한 경우 별도 서면 동의를 사전에 받아두어야 합니다.</p>
+      </div>
+
+      <div class="alert alert-info" style="background:#f0fdf4; border-color: var(--ok);">
+        <h3 style="color: var(--ok);">✅ [제14조] 관할(수원지법) — 신성오토텍에 유리</h3>
+        <p>ECI 소재지(천안)와 달리 수원지방법원을 전속 관할로 지정. 신성오토텍 인근 관할로 분쟁 발생 시 유리한 포지션입니다.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 4. 실행 체크리스트 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="num">4</span>
+      서명 전 실행 체크리스트
+    </div>
+    <div class="section-body">
+      <ul class="checklist">
+        <li><span class="check-box"></span>ECI에 오탈자 6건 수정 요청 — 특히 제1조 "보고하기" → "보호하기" 필수</li>
+        <li><span class="check-box"></span>제8조 보증 조항 — 최소한의 권리 합법성 보증 문구 삽입 협상</li>
+        <li><span class="check-box"></span>제10조 — 반환 요구 사유를 계약 종료로 한정 + 통보 기간(30일) 설정 협상</li>
+        <li><span class="check-box"></span>제3조 2항 — 사실상 무기한 의무 방지를 위한 상한 기간(예: 10년) 설정 협상</li>
+        <li><span class="check-box"></span>내부 수령 정보 관리 절차 수립 — "비밀" 표시 여부 확인 대장 운영</li>
+        <li><span class="check-box"></span>ECI와의 거래 사실이 외부 공개 필요한 경우(정부지원사업, IATF16949 심사 등) 별도 서면 동의서 사전 확보</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Disclaimer -->
+  <div class="disclaimer">
+    <span>⚠️</span>
+    <div>본 검토는 경영기획 실장의 내부 사전 검토 목적으로 작성된 것으로, 법률 자문에 해당하지 않습니다. 계약 체결 전 법무법인 또는 계약 전문 변호사의 최종 확인을 권고드립니다.</div>
+  </div>
+
+</div><!-- /container -->
+</body>
+</html>
