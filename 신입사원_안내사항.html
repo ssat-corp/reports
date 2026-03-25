@@ -29,7 +29,7 @@
 
     /* ── HERO ── */
     .hero {
-      background:linear-gradient(150deg,#ffffff 0%,#EFF6FF 55%,#DBEAFE 100%);
+      background:linear-gradient(to bottom,#ffffff 0%,#ffffff 30%,#EFF6FF 65%,#DBEAFE 100%);
       position:relative; overflow:hidden;
       border-bottom:3px solid var(--blue);
     }
@@ -53,6 +53,7 @@
       color:var(--blue); background:rgba(0,85,164,.1); border:1px solid rgba(0,85,164,.15);
       padding:3px 9px; border-radius:4px;
     }
+    @media(max-width:480px){ .hero-badge { display:none; } }
     .hero-h1 {
       font-size:clamp(20px,5vw,26px); font-weight:900; color:var(--dark);
       line-height:1.3; margin-bottom:6px;
@@ -264,7 +265,9 @@
     .sitem.personal {
       border-left:4px solid #F59E0B;
     }
-    .sitem .si { font-size:20px; flex-shrink:0; }
+    .sitem .si { display:none; }
+    .sitem .sn { word-break:keep-all; }
+    .sitem .st { word-break:keep-all; }
     .sitem .st { font-size:10px; font-weight:700; color:var(--blue); margin-bottom:1px; }
     .sitem .sn { font-size:12px; font-weight:600; }
     .sitem.personal { background:#FFFBEB; border-color:#FDE68A; }
@@ -376,6 +379,17 @@
     }
     .klist li:last-child { border-bottom:none; }
     .kbox { width:19px; height:19px; border-radius:5px; border:2px solid var(--blue); flex-shrink:0; }
+
+    .leg-txt { font-size:12px; font-weight:600; }
+    .fac-legend { display:flex; flex-direction:column; gap:8px; margin-top:12px; }
+    .fac-leg-item { display:flex; align-items:flex-start; gap:8px; font-size:12px; }
+    .leg-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; margin-top:2px; }
+    .fac-leg-item.main .leg-dot { background:var(--blue); }
+    .fac-leg-item.inject .leg-dot { background:var(--green); }
+    .fac-leg-item.assem .leg-dot { background:#EA7C1A; }
+    .fac-leg-item.emer .leg-dot { background:var(--red); }
+    .smoke-bar { display:flex; align-items:center; gap:8px; margin-top:12px; font-size:12px; padding:8px 12px; background:#FFF7ED; border-radius:8px; border-left:3px solid #F59E0B; }
+    .smoke-badge { font-size:11px; font-weight:700; background:#FEF3C7; border:1px solid #FDE68A; border-radius:4px; padding:2px 7px; flex-shrink:0; }
   </style>
 </head>
 <body>
@@ -425,8 +439,7 @@
       <div><div class="card-ttl">신성오토텍㈜ 소개</div><div class="card-sub">About Our Company</div></div>
     </div>
     <div class="intro-box">
-      신성오토텍㈜은 다양한 <strong>글로벌 브랜드의 자동차 내장 부품</strong>을 생산·납품하고 있습니다.<br>
-      플라스틱 사출 제조업을 바탕으로, <strong>사출 · 도장 · 조립 · 포장</strong> 등 전반에 걸친 통합 제조 시스템을 운영하는 자동차 부품 전문기업입니다.
+      신성오토텍㈜은 다양한 <strong>글로벌 브랜드의 자동차 내장 부품</strong>을 생산·납품하고 있습니다. 플라스틱 사출 제조업을 바탕으로, <strong>사출 · 도장 · 조립 · 포장</strong> 등 전반에 걸친 통합 제조 시스템을 운영하는 자동차 부품 전문기업입니다.
     </div>
   </div>
 
@@ -479,15 +492,15 @@
     <div class="fac-legend">
       <div class="fac-leg-item main">
         <div class="leg-dot"></div>
-        <div><strong class="leg-txt">회사 입구</strong><br><span style="font-size:11px;color:var(--muted);">정문 방향 · 일반 출퇴근 이용</span></div>
+        <div><strong class="leg-txt">회사 입구</strong><br><span style="font-size:11px;color:var(--muted);">정문 방향, 사무동 입구</span></div>
       </div>
       <div class="fac-leg-item inject">
         <div class="leg-dot"></div>
-        <div><strong class="leg-txt">사출팀 출입 메인</strong><br><span style="font-size:11px;color:var(--muted);">사출동 전용 출입구</span></div>
+        <div><strong class="leg-txt">사출팀 출입 메인</strong><br><span style="font-size:11px;color:var(--muted);">사출 생산 공간 전용 출입구</span></div>
       </div>
       <div class="fac-leg-item assem">
         <div class="leg-dot"></div>
-        <div><strong class="leg-txt">조립팀 출입 메인</strong><br><span style="font-size:11px;color:var(--muted);">조립동 전용 출입구</span></div>
+        <div><strong class="leg-txt">조립팀 출입 메인</strong><br><span style="font-size:11px;color:var(--muted);">조립팀 메인 이용 출입구 (생산동 오른쪽 끝 위치)</span></div>
       </div>
       <div class="fac-leg-item emer">
         <div class="leg-dot"></div>
@@ -497,7 +510,7 @@
 
     <div class="smoke-bar">
       <span class="smoke-badge">🚬 흡연</span>
-      <span>지정 흡연 장소 : <strong>주차장 입구 화단</strong> &nbsp;(지정 외 흡연 엄금)</span>
+      <span>지정 장소 : <strong>주차장 입구 화단</strong> &nbsp;(지정 외 흡연 엄금)</span>
     </div>
   </div>
 
@@ -512,7 +525,7 @@
       <li class="info"><span class="cico">👆</span><span><strong>지문 출퇴근 필수</strong> — 출퇴근 시 반드시 지문 인식기를 사용해 주세요.</span></li>
       <li class="warn"><span class="cico">📣</span><span><strong>자리 비움 · 시간 조정 보고</strong> — 반드시 <strong>조장 / 파트장</strong>에게 사전 보고해 주세요.</span></li>
       <li class="info"><span class="cico">🏖️</span><span><strong>휴가 신청</strong> — 조장 / 파트장과 사전 협의 후 모바일 휴가 신청 폼을 통해 신청해 주세요. (하단 '스마트 포털' 링크)</span></li>
-      <li class="warn"><span class="cico">📵</span><span><strong>근무 중 핸드폰 자제</strong> — 근무 시간 중 개인 핸드폰 사용은 자제 부탁드립니다.</span></li>
+      <li class="warn"><span class="cico">📵</span><span><strong>근무 중 핸드폰 자제</strong> — 근무 시간 중 개인 핸드폰 사용은 지양합니다.</span></li>
       <li class="danger"><span class="cico">⛑️</span><span><strong>안전 규정 준수</strong> — 안전 수칙을 반드시 숙지하고 철저히 준수해 주세요.</span></li>
     </ul>
   </div>
@@ -525,12 +538,11 @@
       <div><div class="card-ttl">지급품 안내</div><div class="card-sub">Company Provisions</div></div>
     </div>
     <div class="sgrid">
-      <div class="sitem"><span class="si">🥼</span><div class="st">조립팀</div><div class="sn">작업 앞치마</div></div>
-      <div class="sitem"><span class="si">🍱</span><div class="st">전 직원</div><div class="sn">식당 취식 카드</div></div>
-      <div class="sitem personal"><span class="si">🎒</span><div class="st">개인 지참</div><div class="sn">실내화 · 텀블러</div></div>
+      <div class="sitem"><div class="st">조립팀</div><div class="sn">작업 앞치마</div></div>
+      <div class="sitem"><div class="st">전 직원</div><div class="sn">식당 취식 카드</div></div>
+      <div class="sitem personal"><div class="st">개인 지참</div><div class="sn">실내화 · 텀블러</div></div>
     </div>
     <div class="safety-note">
-      <span class="safety-ico">🦺</span>
       <div class="safety-txt">
         <span class="safety-lbl">[사출팀] 안전보호구</span>
         안전모 · 안전화 · 장갑 등은 <strong>각 공정 내 구비</strong>되어 있습니다.
