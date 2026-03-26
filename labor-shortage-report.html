@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>인력 부족 현황 및 대응 방안 | 경영지원팀</title>
+  <style>
+    :root {
+      --primary: #1a2e4a;
+      --accent: #2563eb;
+      --accent-light: #eff6ff;
+      --warn: #ea580c;
+      --warn-light: #fff7ed;
+      --success: #16a34a;
+      --success-light: #f0fdf4;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #0f172a;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Pretendard', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    /* ── Header ── */
+    header {
+      background: var(--primary);
+      color: #fff;
+      padding: 48px 0 36px;
+    }
+    .header-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 32px;
+    }
+    .badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 4px;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      padding: 4px 10px;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+    }
+    header h1 {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+    header p.meta {
+      font-size: 14px;
+      color: rgba(255,255,255,0.6);
+    }
+
+    /* ── Layout ── */
+    main {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 32px 80px;
+    }
+
+    /* ── Key Stats ── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+    @media (max-width: 640px) {
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    .stat-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px 16px;
+      text-align: center;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    }
+    .stat-card .num {
+      font-size: 36px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .stat-card .label {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+    .stat-card.accent .num  { color: var(--accent); }
+    .stat-card.warn   .num  { color: var(--warn); }
+    .stat-card.success .num { color: var(--success); }
+
+    /* ── Sections ── */
+    section { margin-bottom: 40px; }
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 18px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--border);
+    }
+    .section-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      background: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .section-icon svg { width: 15px; height: 15px; fill: #fff; }
+
+    /* ── Activity Cards ── */
+    .activity-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+    @media (max-width: 560px) {
+      .activity-grid { grid-template-columns: 1fr; }
+    }
+    .activity-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+    .activity-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--accent-light);
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .activity-card h3 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+    .activity-card p  { font-size: 13px; color: var(--muted); }
+
+    /* ── Table ── */
+    .table-wrap {
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+      overflow: hidden;
+    }
+    table {
+      width: 100%;
+      table-layout: fixed;
+      border-collapse: collapse;
+      font-size: 12px;
+      background: var(--card);
+    }
+    thead tr { background: var(--primary); color: #fff; }
+    thead th {
+      padding: 10px 6px;
+      text-align: center;
+      font-weight: 600;
+      font-size: 11.5px;
+      word-break: keep-all;
+      line-height: 1.4;
+    }
+    tbody tr:nth-child(even) { background: #f8fafc; }
+    tbody tr:last-child { background: #eff6ff; font-weight: 700; }
+    tbody td {
+      padding: 9px 6px;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+    }
+    tbody td:first-child { text-align: left; font-weight: 600; padding-left: 10px; }
+    .pct { color: var(--warn); font-weight: 700; }
+
+    /* ── Issue Cards ── */
+    .issue-list { display: flex; flex-direction: column; gap: 14px; }
+    .issue-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--accent);
+      border-radius: 0 10px 10px 0;
+      padding: 18px 20px;
+    }
+    .issue-card.warn-border { border-left-color: var(--warn); }
+    .issue-num {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+    .issue-card.warn-border .issue-num { color: var(--warn); }
+    .issue-card h3 { font-size: 14px; font-weight: 700; margin-bottom: 8px; line-height: 1.5; }
+    .issue-card p  { font-size: 13px; color: var(--muted); line-height: 1.6; }
+    .bullet-list {
+      list-style: none;
+      padding: 0;
+      margin-top: 8px;
+    }
+    .bullet-list li {
+      font-size: 13px;
+      color: var(--muted);
+      padding-left: 18px;
+      position: relative;
+      margin-bottom: 4px;
+    }
+    .bullet-list li::before {
+      content: '–';
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+    }
+
+    /* ── Reason Summary ── */
+    .reason-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+    @media (max-width: 560px) { .reason-grid { grid-template-columns: 1fr; } }
+    .reason-card {
+      background: var(--warn-light);
+      border: 1px solid #fed7aa;
+      border-radius: 10px;
+      padding: 16px;
+    }
+    .reason-card h4 { font-size: 13px; font-weight: 700; color: var(--warn); margin-bottom: 6px; }
+    .reason-card p  { font-size: 12.5px; color: #7c3416; line-height: 1.5; }
+
+    /* ── Resign Table ── */
+    .resign-table-wrap {
+      overflow-x: auto;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+    .resign-table-wrap table tbody tr:last-child { background: #fff7ed; }
+
+    /* ── Action List ── */
+    .action-list { display: flex; flex-direction: column; gap: 10px; }
+    .action-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 18px;
+    }
+    .action-chk {
+      width: 22px;
+      height: 22px;
+      border: 2px solid var(--border);
+      border-radius: 4px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .action-item p { font-size: 14px; line-height: 1.5; }
+    .action-tbd {
+      display: inline-block;
+      background: #fef9c3;
+      color: #854d0e;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 4px;
+      margin-left: 8px;
+    }
+
+    /* ── Footer ── */
+    footer {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 32px 48px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    footer hr { border: none; border-top: 1px solid var(--border); margin-bottom: 16px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="badge">경영지원팀 보고</div>
+    <h1>인력 부족 현황 및 대응 방안</h1>
+    <p class="meta">2025년 12월 ~ 2026년 3월 &nbsp;·&nbsp; 작성: 경영지원팀</p>
+  </div>
+</header>
+
+<main>
+
+  <!-- Key Stats -->
+  <div class="stats-grid">
+    <div class="stat-card accent">
+      <div class="num">161</div>
+      <div class="label">총 이력서 접수 (건)</div>
+    </div>
+    <div class="stat-card warn">
+      <div class="num">70%</div>
+      <div class="label">입사 포기율</div>
+    </div>
+    <div class="stat-card warn">
+      <div class="num">35</div>
+      <div class="label">입사 후 퇴사자 (명)</div>
+    </div>
+    <div class="stat-card success">
+      <div class="num">14</div>
+      <div class="label">현재 재직 중인 신규 입사자</div>
+    </div>
+  </div>
+
+  <!-- 경영지원팀 활동 -->
+  <section>
+    <div class="section-title">
+      <div class="section-icon">
+        <svg viewBox="0 0 20 20"><path d="M9 4H5a1 1 0 00-1 1v10a1 1 0 001 1h10a1 1 0 001-1V9h-4a2 2 0 01-2-2V4zm2 0v3h3L11 4z"/></svg>
+      </div>
+      경영지원팀 활동
+    </div>
+    <div class="activity-grid">
+      <div class="activity-card">
+        <div class="activity-num">1</div>
+        <div>
+          <h3>용역업체 간담회 (3/3)</h3>
+          <p>업체 요청사항 수렴 및 현안 논의</p>
+        </div>
+      </div>
+      <div class="activity-card">
+        <div class="activity-num">2</div>
+        <div>
+          <h3>용역사 확대</h3>
+          <p>3개 업체 → 6개 업체로 확대<br/>일부 동일 이력서 중복 인입 중</p>
+        </div>
+      </div>
+      <div class="activity-card">
+        <div class="activity-num">3</div>
+        <div>
+          <h3>현장 채용 조건 완화 요청</h3>
+          <p>한국인/중국인, 나이, 경력, 야근 시간 등</p>
+        </div>
+      </div>
+      <div class="activity-card">
+        <div class="activity-num">4</div>
+        <div>
+          <h3>채용 진행 상황 추적</h3>
+          <p>이력서 → 입사 → 퇴사 전 과정 모니터링</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 채용 현황 테이블 -->
+  <section>
+    <div class="section-title">
+      <div class="section-icon">
+        <svg viewBox="0 0 20 20"><path d="M3 4a1 1 0 000 2h14a1 1 0 100-2H3zm0 4a1 1 0 000 2h14a1 1 0 100-2H3zm0 4a1 1 0 000 2h7a1 1 0 100-2H3z"/></svg>
+      </div>
+      채용 진행 현황 (12월 ~ 3월)
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>팀명</th>
+            <th>기존인원</th>
+            <th>이력서 전달</th>
+            <th>입사포기 등</th>
+            <th>비율</th>
+            <th>입사</th>
+            <th>퇴사</th>
+            <th>현인원</th>
+            <th>계속 근로자</th>
+            <th>비율</th>
+            <th>인원계획</th>
+            <th>TO</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>조립팀</td>
+            <td>29</td>
+            <td>136</td>
+            <td>95</td>
+            <td class="pct">70%</td>
+            <td>41</td>
+            <td>33</td>
+            <td>37</td>
+            <td>8</td>
+            <td class="pct">20%</td>
+            <td>45</td>
+            <td>8</td>
+          </tr>
+          <tr>
+            <td>사출팀</td>
+            <td>32</td>
+            <td>25</td>
+            <td>17</td>
+            <td class="pct">68%</td>
+            <td>8</td>
+            <td>2</td>
+            <td>38</td>
+            <td>6</td>
+            <td class="pct">75%</td>
+            <td>41</td>
+            <td>3</td>
+          </tr>
+          <tr>
+            <td>합계</td>
+            <td>61</td>
+            <td>161</td>
+            <td>112</td>
+            <td class="pct">70%</td>
+            <td>49</td>
+            <td>35</td>
+            <td>75</td>
+            <td>14</td>
+            <td class="pct">29%</td>
+            <td>86</td>
+            <td>11</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 요약 정리 -->
+  <section>
+    <div class="section-title">
+      <div class="section-icon">
+        <svg viewBox="0 0 20 20"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      </div>
+      입사 포기 사유 분석
+    </div>
+    <div class="reason-grid">
+      <div class="reason-card">
+        <h4>① 개인 사유</h4>
+        <p>22시까지 잔업 및 입식근무 부담, 회사 평판·커뮤니티 소문 등</p>
+      </div>
+      <div class="reason-card">
+        <h4>② 자사 채용 거부</h4>
+        <p>조건 미달 (면접자별 상세 사유 확인 미진행)</p>
+      </div>
+      <div class="reason-card">
+        <h4>③ 서류 탈락</h4>
+        <p>국적·나이·경력 등 조건 미달, 한번에 다수 채용 시 교육 어려움 토로</p>
+      </div>
+    </div>
+
+    <!-- 퇴사 사유 테이블 -->
+    <div class="resign-table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="text-align:left">퇴사 사유</th>
+            <th>조립팀</th>
+            <th>사출팀</th>
+            <th>합계</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>개인</td><td>8</td><td>1</td><td>9</td></tr>
+          <tr><td>해고</td><td>5</td><td>–</td><td>5</td></tr>
+          <tr><td>업무 부담</td><td>6</td><td>–</td><td>6</td></tr>
+          <tr><td>작업 환경</td><td>7</td><td>1</td><td>8</td></tr>
+          <tr><td>작업 시간</td><td>3</td><td>–</td><td>3</td></tr>
+          <tr><td><strong>합계</strong></td><td><strong>29</strong></td><td><strong>2</strong></td><td><strong>31</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:12px;color:#94a3b8;margin-top:10px;">* 이력서 제출자 대비 최종 재직 비율 9% / 입사자 대비 최종 재직 비율 29%</p>
+  </section>
+
+  <!-- 용역업체 간담회 -->
+  <section>
+    <div class="section-title">
+      <div class="section-icon">
+        <svg viewBox="0 0 20 20"><path d="M18 10c0 3.866-3.582 7-8 7a8.842 8.842 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7z"/></svg>
+      </div>
+      용역업체 간담회 주요 발언 요약 (3/3)
+    </div>
+    <div class="issue-list">
+      <div class="issue-card">
+        <div class="issue-num">Issue 01</div>
+        <h3>신입사원 초기 잔업 적용 완화 요청</h3>
+        <ul class="bullet-list">
+          <li>입사 당일부터 22시 잔업 적용 → 1주 적응 후 20시까지로 조정 요청</li>
+          <li>기존 인원 피로 누적 & 신입 부적응 상충 → 조립팀 시프트 근무 설정 검토 필요</li>
+        </ul>
+      </div>
+      <div class="issue-card warn-border">
+        <div class="issue-num">Issue 02</div>
+        <h3>사명(신성오토텍) 기피 현상 심각 — 조직 문화 개선 필수</h3>
+        <ul class="bullet-list">
+          <li>구직자가 사명만 들어도 지원 포기하는 사례 다수</li>
+          <li>채용 설명 시 상황 충분히 안내, 입사 당일 OJT 실시 후 업무 투입 필요</li>
+          <li>장기적으로 기초 작업 교육 프로그램 구축 필요</li>
+          <li>타사 대비 신입 퇴사가 잦고 빠른 점도 이슈로 지적</li>
+        </ul>
+      </div>
+      <div class="issue-card">
+        <div class="issue-num">Issue 03</div>
+        <h3>신입사원 온보딩 동행 문화 필요</h3>
+        <ul class="bullet-list">
+          <li>식당·시설 위치 파악 어려움 → 2~3일 기존 인원 동행 문화 필요</li>
+          <li>배치 조의 기존 직원과 멘토/멘티 매칭 제도 도입 권고</li>
+        </ul>
+      </div>
+      <div class="issue-card">
+        <div class="issue-num">Issue 04</div>
+        <h3>기존 근무 이력자 재입사 허용 요청</h3>
+        <ul class="bullet-list">
+          <li>업무 수행에 문제가 없었던 경력자라면 재입사 허용 검토</li>
+        </ul>
+      </div>
+      <div class="issue-card warn-border">
+        <div class="issue-num">Issue 05</div>
+        <h3>사출팀 경력자 구인 난항</h3>
+        <ul class="bullet-list">
+          <li>2~3년 경력자 구인 자체가 어려운 시장 상황</li>
+          <li>일부 미충족 경력자에 대해 OJT 후 투입하는 내부 교육 프로그램 필요</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 최종 논의 필요사항 -->
+  <section>
+    <div class="section-title">
+      <div class="section-icon">
+        <svg viewBox="0 0 20 20"><path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/><path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"/></svg>
+      </div>
+      최종 논의 필요사항 (Action Items)
+    </div>
+    <div class="action-list">
+      <div class="action-item">
+        <div class="action-chk"></div>
+        <p>신입사원 오리엔테이션 시간 마련 및 교육 진행 (모아서 한번에 실시)</p>
+      </div>
+      <div class="action-item">
+        <div class="action-chk"></div>
+        <p>입사 즉시 야근 지양 — 적응 기간 부여 후 단계적으로 잔업 시간 확대</p>
+      </div>
+      <div class="action-item">
+        <div class="action-chk"></div>
+        <p>신입사원 채용 조건 완화 논의 (한국인 여부, 나이, 경력 기준 재검토)</p>
+      </div>
+      <div class="action-item">
+        <div class="action-chk"></div>
+        <p>멘토제도 운영 — 현장 수용 문화 형성 위해 공장장 안내 선행 필요</p>
+      </div>
+      <div class="action-item">
+        <div class="action-chk"></div>
+        <p>시장 내 실질적 인재 부족 현실 인지 및 경영진 공감대 형성</p>
+      </div>
+      <div class="action-item">
+        <div class="action-chk"></div>
+        <p>직원 추천 채용 프로그램 시행 — 신입 1개월 이상 근무 시 추천자에게 10만원 지급<span class="action-tbd">TBD</span></p>
+      </div>
+      <div class="action-item">
+        <div class="action-chk"></div>
+        <p>기타 추가 논의사항</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <hr/>
+  <p>본 보고서는 경영지원팀 내부 공유용으로 작성되었습니다. &nbsp;|&nbsp; 생성일: 2026년 3월 25일</p>
+</footer>
+
+</body>
+</html>

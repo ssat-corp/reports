@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>신성오토텍 일간 업무보고</title>
+  <style>
+    :root {
+      --primary: #1a2e4a; --accent: #2563eb;
+      --green:#16a34a; --green-bg:#f0fdf4; --green-bd:#bbf7d0;
+      --yellow:#d97706; --yellow-bg:#fffbeb; --yellow-bd:#fde68a;
+      --red:#dc2626; --red-bg:#fef2f2; --red-bd:#fecaca;
+      --blue-bg:#eff6ff; --blue-bd:#bfdbfe;
+      --gray:#64748b; --bg:#f1f5f9; --card:#fff; --border:#e2e8f0; --text:#0f172a;
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Apple SD Gothic Neo','Malgun Gothic',sans-serif;background:var(--bg);color:var(--text);font-size:13px;}
+
+    /* ── Header ── */
+    header{background:var(--primary);color:#fff;padding:18px 24px 0;}
+    .hd-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+    header h1{font-size:17px;font-weight:700;}
+    header .sub{font-size:11px;color:rgba(255,255,255,.5);margin-top:2px;}
+    .date-tabs{display:flex;gap:4px;overflow-x:auto;}
+    .dtab{padding:7px 16px;border-radius:8px 8px 0 0;border:none;cursor:pointer;
+      font-size:12px;font-weight:600;white-space:nowrap;color:rgba(255,255,255,.55);
+      background:rgba(255,255,255,.08);transition:.15s;}
+    .dtab.active{background:var(--bg);color:var(--primary);}
+    .dtab:hover:not(.active){background:rgba(255,255,255,.16);color:#fff;}
+
+    /* ── Layout ── */
+    main{max-width:1280px;margin:0 auto;padding:20px 16px 60px;}
+    .day-panel{display:none;}
+    .day-panel.active{display:block;}
+
+    /* ── Summary Bar ── */
+    .summary{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;}
+    .sm-card{background:var(--card);border:1px solid var(--border);border-radius:8px;
+      padding:10px 16px;display:flex;align-items:center;gap:10px;}
+    .sm-num{font-size:22px;font-weight:800;line-height:1;}
+    .sm-lbl{font-size:11px;color:var(--gray);}
+    .sm-card.red .sm-num{color:var(--red);}
+    .sm-card.yellow .sm-num{color:var(--yellow);}
+    .sm-card.green .sm-num{color:var(--green);}
+    .sm-card.blue .sm-num{color:var(--accent);}
+
+    /* ── Team Grid ── */
+    .team-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+    @media(max-width:1000px){.team-grid{grid-template-columns:repeat(2,1fr);}}
+    @media(max-width:600px){.team-grid{grid-template-columns:1fr;}}
+
+    /* ── Team Card ── */
+    .tc{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+    .tc-head{
+      padding:12px 14px;display:flex;align-items:center;justify-content:space-between;
+      border-bottom:1px solid var(--border);
+    }
+    .tc-left{display:flex;align-items:center;gap:7px;}
+    .dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+    .dot.green{background:var(--green);}
+    .dot.yellow{background:var(--yellow);}
+    .dot.red{background:var(--red);}
+    .dot.gray{background:#94a3b8;}
+    .tc-name{font-size:13px;font-weight:700;}
+    .hc{font-size:11px;color:var(--gray);background:#f1f5f9;padding:2px 7px;border-radius:20px;margin-left:4px;}
+    .ibadge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;
+      background:var(--red-bg);color:var(--red);border:1px solid var(--red-bd);}
+    .ibadge.ok{background:var(--green-bg);color:var(--green);border-color:var(--green-bd);}
+
+    /* ── KPI Strip ── */
+    .kpi-strip{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--border);}
+    .kpi-cell{background:var(--card);padding:8px 12px;text-align:center;}
+    .kv{font-size:15px;font-weight:800;line-height:1;margin-bottom:2px;}
+    .kv.red{color:var(--red);}
+    .kv.yellow{color:var(--yellow);}
+    .kv.green{color:var(--green);}
+    .kv.normal{color:var(--text);}
+    .kl{font-size:10px;color:var(--gray);}
+
+    /* ── Expand ── */
+    .xbtn{width:100%;padding:7px;border:none;background:none;color:var(--accent);
+      font-size:11px;font-weight:600;cursor:pointer;border-top:1px solid var(--border);}
+    .xbtn:hover{background:var(--blue-bg);}
+    .tc-detail{display:none;border-top:1px solid var(--border);background:#fafbfc;}
+    .tc-detail.open{display:block;}
+
+    /* ── Section ── */
+    .dsec{padding:10px 14px 4px;}
+    .dsec-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;
+      color:var(--gray);margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid var(--border);}
+
+    /* ── Work Item Table ── */
+    .wit{width:100%;border-collapse:collapse;margin-bottom:8px;}
+    .wit td{padding:5px 8px;vertical-align:top;border-bottom:1px solid #f1f5f9;font-size:12px;}
+    .wit tr:last-child td{border-bottom:none;}
+    .wit tr:hover td{background:#f8fafc;}
+
+    /* Customer / Model tags */
+    .tag{display:inline-block;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;white-space:nowrap;}
+    .tag.cust{background:#e0f2fe;color:#0369a1;}   /* 고객사 — 파랑 */
+    .tag.model{background:#f3e8ff;color:#7e22ce;}  /* 모델 — 보라 */
+    .tag.team{background:#dcfce7;color:#15803d;}   /* 관련팀 — 초록 */
+
+    /* Status pill */
+    .st{display:inline-block;border-radius:20px;padding:1px 8px;font-size:10px;font-weight:700;white-space:nowrap;}
+    .st.done{background:var(--green-bg);color:var(--green);border:1px solid var(--green-bd);}
+    .st.wip {background:var(--blue-bg);color:var(--accent);border:1px solid var(--blue-bd);}
+    .st.issue{background:var(--red-bg);color:var(--red);border:1px solid var(--red-bd);}
+    .st.plan{background:#f8fafc;color:var(--gray);border:1px solid var(--border);}
+    .st.warn{background:var(--yellow-bg);color:var(--yellow);border:1px solid var(--yellow-bd);}
+
+    /* Mini KPI table */
+    .mkt{width:100%;border-collapse:collapse;font-size:11px;margin-bottom:8px;}
+    .mkt th{background:var(--primary);color:#fff;padding:4px 7px;text-align:center;font-size:10.5px;}
+    .mkt td{padding:4px 7px;text-align:center;border-bottom:1px solid var(--border);}
+    .mkt tr:last-child td{font-weight:700;background:var(--blue-bg);}
+    .mkt td:first-child{text-align:left;}
+    .rc{color:var(--red);font-weight:700;}
+    .gc{color:var(--green);font-weight:700;}
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="hd-top">
+    <div>
+      <h1>신성오토텍 일간 업무보고</h1>
+      <div class="sub">즉시 실행합시다.</div>
+    </div>
+  </div>
+  <div class="date-tabs" id="dateTabs"></div>
+</header>
+<main id="mainContent"></main>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════
+//  📋 REPORT DATA  ·  매일 새 날짜 블록을 복사해서 추가하세요
+// ═══════════════════════════════════════════════════════════════════
+const REPORTS = {
+
+"2025-02-24": {
+
+  "생산관리팀": {
+    status:"yellow", headcount:"8/8명",
+    kpi:[
+      {label:"월 달성율(매입)",  val:"102%",  color:"green"},
+      {label:"월 달성율(비율)",  val:"116%",  color:"green"},
+      {label:"일 달성율(매입)",  val:"82%",   color:"red"},
+      {label:"일 달성율(비율)",  val:"72%",   color:"red"},
+    ],
+    sections:[
+      { title:"생산계획",
+        items:[
+          {cust:"LG전자", model:"PDPE2 PANEL (CSKD)",      action:"02/25 D-0 생산예정, 수원 PANEL 811EA 증착입고 / DECO 540EA 인쇄품 보유",           status:"wip"},
+          {cust:"LG전자", model:"BC3 PE REAR LHD (CSKD)",   action:"02/25 D-0 생산예정, REAR LHD 355EA 도장품 보유 → 2K 도장 후 이동예정",             status:"wip"},
+          {cust:"LG전자", model:"BC3 PE (CSKD) 볼룸·동국", action:"03/04 D-6 생산예정, 1로트 2,700EA 중 1,031EA 잔량",                                 status:"plan"},
+          {cust:"MTX",    model:"MTX_US4PE 천장모니터",     action:"100SET 접수, 개발팀 납품 일정연기 / 1벌 HOUSING MAIN 2/24 시사출 예정",              status:"issue"},
+          {cust:"LG전자", model:"하이루프 REAR T3",         action:"2/24 오전 시사출 중",                                                               status:"wip"},
+        ]
+      },
+      { title:"외주수급 이슈",
+        items:[
+          {cust:"송현테크", model:"JK1PE KNOB RING", action:"일반/북미향 유분 다량 발생 → 사출 재고투입 불가 회신. 책임소재 협의 중, 도장 샘플 테스트 후 결정", status:"issue"},
+        ]
+      },
+      { title:"견적 대응",
+        items:[
+          {cust:"모트렉스", model:"Pioneer 7인치 외주도장 BK HIGH GLOSSY", action:"주은테크·신소재산업 견적 접수 완료, 영업팀 전달 완료", status:"done"},
+        ]
+      },
+    ],
+    kpiTable:{
+      headers:["구분","매입금액(원)","매입비율(%)","CI금액(원)","반품금액(원)","재고금액(원)"],
+      rows:[
+        ["02월 목표","379,197,525","22.0%","45,522,031","24,726,511","531,090,356"],
+        ["02월 실적","388,125,565","25.6%","55,954,969","16,442,608","310,174,177"],
+        ["진도율",   "102%",       "116%", "123%",       "66%",       "58%"],
+        ["일일 목표","18,959,876", "1.1%", "2,276,102",  "1,236,326", "-"],
+        ["일일 실적","23,185,295", "1.5%", "3,842,277",  "1,557,289", "-"],
+        ["달성율",   "82%",        "72%",  "169%",       "79%",       "171%"],
+      ]
+    }
+  },
+
+  "후가공": {
+    status:"red", headcount:null,
+    kpi:[
+      {label:"XY 달성율",       val:"123%",   color:"green"},
+      {label:"SPINDLE 달성율",  val:"22%",    color:"red"},
+      {label:"인쇄 달성율",     val:"100%",   color:"green"},
+      {label:"SPINDLE LOSS",    val:"7HR",    color:"red"},
+    ],
+    sections:[
+      { title:"공정 이슈",
+        items:[
+          {cust:"LG전자", model:"BC3 REAR",          action:"미도장, 얼룩 미흡으로 구동속도 210RPM → XY UPH 미달",                                     status:"issue"},
+          {cust:"내부",   model:"SPINDLE LINE",       action:"감속기 샤프트 베어링 파손 → 7HR LOSS, 달성율 22%. 전문업체 수리 비용 품의 예정",           status:"issue"},
+          {cust:"LG전자", model:"VP2NG_COVER REAR",   action:"급기 히터 고장(32°C→30°C 설정) → 돌출이·이물 불량 증가. 분사량 하상도 조정 완료",        status:"warn"},
+          {cust:"LG전자", model:"BC3_REAR",           action:"상단 웰드 현상 50% 수준 → 사포후 도장 진행, 사출팀 개선 요청",                            status:"warn"},
+        ]
+      },
+      { title:"금일(2/25) 조치",
+        items:[
+          {cust:"LG전자", model:"XY FE_FRONT",        action:"웰드 눌림 확인 후 도장 예정",                                                             status:"plan"},
+          {cust:"LG전자", model:"SPINDLE BL7M_DATC",  action:"버튼 건조로 온도 측정 및 GAS 현상 확인 후 도장 예정",                                     status:"plan"},
+        ]
+      },
+      { title:"인원현황",
+        items:[
+          {cust:"-", model:"-", action:"황이은 오전 반차", status:"plan"},
+        ]
+      },
+    ],
+    kpiTable:{
+      headers:["구분","가동율","생산(EA)","불량(EA)","불량률(PPM)","UPH","UPPH","폐기(EA)"],
+      rows:[
+        ["XY 목표",       "75.6%","10,100","137","13,538","477","68","10"],
+        ["XY 실적",       "93.1%","10,503","124","11,806","419","70","1"],
+        ["XY 월간누계",   "79.1%","122,688","1,171","9,545","429","71","33"],
+        ["SPINDLE 목표",  "91.1%","24,890","925","37,169","6,339","820","461"],
+        ["SPINDLE 실적",  "20.0%","11,790","320","27,142","318","790","197"],
+        ["인쇄 실적",     "68.9%","1,603","-","-","377","126","-"],
+      ]
+    }
+  },
+
+  "사출팀": {
+    status:"yellow", headcount:"A조 9/9 · B조 10/10",
+    kpi:[
+      {label:"종합효율",    val:"94.6%",    color:"yellow"},
+      {label:"공정불량률",  val:"7,578ppm", color:"red"},
+      {label:"생산수량",    val:"868,623EA",color:"normal"},
+      {label:"TRY 금형",   val:"33벌",     color:"normal"},
+    ],
+    sections:[
+      { title:"설비 이슈",
+        items:[
+          {cust:"내부",    model:"1호기",                   action:"사출속도 저하 → 노즐입구 협소/변형, LS엠트론 내방 가공·맞춤 완료, 정상회복. 실린더 노즐 Spare 품의 예정(461,000원)", status:"warn"},
+          {cust:"내부",    model:"1호기 시험사출",           action:"HIGROOF REAR, US4PE 노즐 R값 상이 → 수지누출 발생",                                status:"issue"},
+        ]
+      },
+      { title:"금형 현황",
+        items:[
+          {cust:"LG전자", model:"PDPE2 DECO FRONT",         action:"하단 파팅 눌림부 사상/합형 부족검점 진행중",                                        status:"wip"},
+          {cust:"LG전자", model:"PDFE DECO FRONT",          action:"하단 파팅 눌림 BURR 수리 예정",                                                    status:"plan"},
+        ]
+      },
+      { title:"업무 진행",
+        items:[
+          {cust:"LG전자",  model:"(전체)",                  action:"견적대응 3종",                                                                      status:"wip"},
+          {cust:"우리산업", model:"(전체)",                  action:"견적대응 11종",                                                                     status:"wip"},
+          {cust:"내부",    model:"JK1PE DEMPER 조립 JIG",   action:"실리콘 입고품 가공불가 → 백그라이트 판 샘플가공 진행, 공압JIG TEST 예정",            status:"wip"},
+          {cust:"내부",    model:"SQ 자체검점",             action:"지적사항 검토/대책수립 진행",                                                       status:"wip"},
+        ]
+      },
+    ],
+    kpiTable:{
+      headers:["구분","설비가동률","시간가동률","성능가동률","종합효율","불량률(PPM)","생산(EA)","TRY(벌)"],
+      rows:[
+        ["2월 목표",  "-",     "95.5%","102.6%","97.3%","7,000","-","34.5"],
+        ["02/21",     "53.23%","97.5%","103.0%","99.6%","6,149","58,677","1"],
+        ["2월 실적",  "46.43%","95.2%","100.1%","94.6%","7,578","868,623","33"],
+        ["달성율",    "99.7%", "97.6%","97.2%", "-",    "92.4%","-",      "95.5%"],
+      ]
+    }
+  },
+
+  "개발팀": {
+    status:"yellow", headcount:null,
+    kpi:[
+      {label:"총 개발 금형", val:"38종",  color:"normal"},
+      {label:"LGE",          val:"28종",  color:"normal"},
+      {label:"MTX",          val:"10종",  color:"normal"},
+      {label:"지연/이슈",    val:"2건",   color:"yellow"},
+    ],
+    sections:[
+      { title:"금형 개발 진행 현황 (LGE)",
+        items:[
+          {cust:"LG전자(GV90)", model:"JG 팝업모니터",                 action:"COVER OUTER LHD 도장일정 확인, 2/25 납품차편 이동예정. COVER OUTER 금형수정 문제점 검토 요청", status:"wip"},
+          {cust:"LG전자(GV90)", model:"CONNECT WIDE P-OIP JG",         action:"2월 4주차내 양산이관회의 준비 진행예정",                                                        status:"plan"},
+          {cust:"LG전자(GV90)", model:"슬림형 JG CCRC",                action:"ccRC US4 PE VIP 모델 PV생산 확인 후 COVER FRONT 자재 준비 요청",                              status:"wip"},
+          {cust:"LG전자",       model:"JG 코치도어 팝업모니터",        action:"COVER SIDE 금형수정품 전치수측정 확인 진행",                                                   status:"wip"},
+          {cust:"LG전자",       model:"NH2 CCRC(넥쏘)",                action:"PV 단계",                                                                                      status:"wip"},
+          {cust:"LG전자",       model:"한라캐스트 토요타 밴더블",      action:"T4 단계",                                                                                      status:"wip"},
+          {cust:"LG전자(LX3)", model:"HIGHROOF CCRC",                  action:"LT3 단계",                                                                                     status:"wip"},
+        ]
+      },
+      { title:"금형 개발 진행 현황 (MTX)",
+        items:[
+          {cust:"MTX(타타대우)", model:"TDM 27MY",                     action:"DV 단계",                                                                                      status:"wip"},
+          {cust:"MTX(스타리아)", model:"US4 PE VIP BUTTON MODULE",      action:"P2(T2) 단계, 이벤트 대응 2/23~",                                                             status:"wip"},
+          {cust:"MTX(스타리아)", model:"US4 PE VIP ROOF MONITOR",       action:"P2(T2) 단계, 이벤트 대응 2/23~",                                                             status:"wip"},
+        ]
+      },
+    ],
+    kpiTable:null
+  },
+
+  "영업구매실": {
+    status:"yellow", headcount:null,
+    kpi:[
+      {label:"신규 견적",   val:"5건",  color:"normal"},
+      {label:"이번주 미팅", val:"3건",  color:"normal"},
+      {label:"진행중 업무", val:"2건",  color:"yellow"},
+      {label:"지시사항",    val:"3건",  color:"yellow"},
+    ],
+    sections:[
+      { title:"견적 대응",
+        items:[
+          {cust:"HKMC(유라코퍼레이션)",  model:"XV1 사출4종·이종사출2종(도장2종)", action:"SOP 28년, TYW 김병대팀장 3/12 내방 후 2차 미팅 예정",   status:"wip"},
+          {cust:"BH EVS",               model:"Boston Dynamics",                  action:"2/24 10시 견적 검토. SOP 2031년~, 250~5K/월",            status:"wip"},
+          {cust:"HKMC(42DOT)",          model:"IOX RFQ 금형비·재료비",            action:"2/26 오전 검토. SOP 27년 12월, 140만대/년",               status:"plan"},
+          {cust:"도요타",               model:"밴더볼 디스플레이",                action:"한라캐스트 조립단가 관련 재검토 요청",                    status:"wip"},
+          {cust:"동국실업",             model:"양산이관 가격검토",                action:"2/25까지 유무 회신. TK1: 16형(100~150T), SW1: 28형(50~350T)", status:"plan"},
+        ]
+      },
+      { title:"일정",
+        items:[
+          {cust:"LG전자",   model:"-", action:"2/25(수) 김준연팀장·전사영파트장 미팅 (마곡, 이환돈팀장 소개 외)",  status:"plan"},
+          {cust:"내부",     model:"-", action:"2/27(금) 김대수팀장 오후반차, 김성진부장 연차 승인",               status:"done"},
+        ]
+      },
+      { title:"진행중 업무",
+        items:[
+          {cust:"내부",     model:"영업/구매 팀별 RPA 제안",            action:"3월 1건씩 검토중 (3/3 완료목표)",                                    status:"wip"},
+          {cust:"내부",     model:"원재료/소모품 BOM 생성",             action:"상세구분 및 미등록 BOM 생성. 구매~3/7, 영업 납품박스~3/14, 개발~3/21", status:"wip"},
+        ]
+      },
+    ],
+    kpiTable:null
+  },
+
+  "구매팀": {
+    status:"yellow", headcount:null,
+    kpi:[
+      {label:"월 달성율(구매금액)", val:"104.8%", color:"green"},
+      {label:"일 달성율(구매금액)", val:"71.5%",  color:"red"},
+      {label:"일 달성율(비율)",     val:"45.7%",  color:"red"},
+      {label:"일 달성율(CI금액)",   val:"105.9%", color:"green"},
+    ],
+    sections:[
+      { title:"구매 주요 업무",
+        items:[
+          {cust:"현대차",    model:"XVI외 11차종 RESIN 9가지",      action:"단가 정보취합 中 — 금호석유화학 2건·롯데케미칼 1건 회신 요청",             status:"wip"},
+          {cust:"동아전기",  model:"3월 확정 발주",                 action:"과부족 확인 후 주문 발행 예정 (지연중)",                                   status:"warn"},
+          {cust:"동국실업",  model:"JA PE AMT RHD",                action:"3월 물량 증가, 유니크에 RHD PCB 540EA 추가주문 → 3월 2주 입고 예정",       status:"wip"},
+          {cust:"한라캐스트",model:"CCRC FRAME LCD",               action:"600개 입고 완료",                                                          status:"done"},
+          {cust:"HKMC",     model:"BC3 PANEL REAR",                action:"트루키에 주당 4K 대응 필요(향후 3주) — 한빌티엔아이에 9K 기 발주+3K 추가",  status:"warn"},
+          {cust:"모트렉스",  model:"JK1 PE",                       action:"3월 W/O 투입 예정",                                                        status:"plan"},
+          {cust:"동아전기",  model:"D-CLIP",                       action:"3만개(MOQ) 유상사급 요청",                                                 status:"wip"},
+        ]
+      },
+      { title:"기타 업무",
+        items:[
+          {cust:"내부",       model:"라미백 포장지",                 action:"지급 수급 / 에스엘아이앤디 안전재고 17,000장 자가인수 완료",              status:"done"},
+          {cust:"내부",       model:"인팩일렉스 완제품",             action:"인프라일렉 자재창고 9팔레트 임시보관 中. 내일 CKD BOX 입고 혼란 예상",   status:"warn"},
+          {cust:"내부",       model:"법정의무교육",                  action:"수강 지연 중",                                                            status:"warn"},
+          {cust:"내부",       model:"MES 구매마감",                  action:"이병훈사원 지정운영으로 매일 석식 후 마감정리",                           status:"wip"},
+        ]
+      },
+    ],
+    kpiTable:{
+      headers:["구분","구매금액(원)","구매비율(%)","CI금액(원)","재고금액(원)","추가운임(원)"],
+      rows:[
+        ["01월 목표","298,200,000","21.0","2,870,000","159,579,600","500,000"],
+        ["01월 실적","312,406,334","20.3","3,757,367","-","590,000"],
+        ["월 달성율","104.8%","96.5%","130.9%","-","118%"],
+        ["일일 목표","17,541,176","1.24","168,824","159,579,600","29,412"],
+        ["일일 실적","24,533,545","2.70","178,858","232,282,111","45,000"],
+        ["일 달성율","71.5%","45.7%","105.9%","69%","65%"],
+      ]
+    }
+  },
+
+  "품질보증팀": {
+    status:"yellow", headcount:null,
+    kpi:[
+      {label:"고객불만(일)",   val:"0건",  color:"green"},
+      {label:"내부NCR(일)",    val:"0건",  color:"green"},
+      {label:"고객 ISSUE",     val:"5건",  color:"yellow"},
+      {label:"내부 ISSUE",     val:"3건",  color:"yellow"},
+    ],
+    sections:[
+      { title:"고객 ISSUE",
+        items:[
+          {cust:"금문산업",    model:"DN8 PE 금형이관",               action:"자체공정평가 점검 — 요청자료 제출",                                       status:"wip"},
+          {cust:"LG전자(폴란드)", model:"BC3 COVER REAR",            action:"칠뭉침 개선대책 수립 (2/27 제출 요청)",                                   status:"warn"},
+          {cust:"모트렉스",    model:"JK1 PE PANEL LHD",             action:"치수검토 — 생산 LOT별 8POINT 측정 OK",                                    status:"done"},
+          {cust:"모트렉스",    model:"JK1 PE DAMPER 부품",           action:"경도 측정 시 세팅값 대해 문의, 담당자 확인 예정",                          status:"wip"},
+          {cust:"성무일렉스",  model:"모바이스 부품(조립업체)",       action:"각인위치 기준서 제출",                                                    status:"done"},
+          {cust:"내부",        model:"25년 협력사 우수사례",          action:"정성품질 개선 우수사례 2건 자체선정 → PPT 작성 회신 (~3/4)",              status:"plan"},
+        ]
+      },
+      { title:"내부 ISSUE",
+        items:[
+          {cust:"내부",  model:"SK3 PE SEESAW 버튼",                  action:"레이저 색상 편차 발생 (원재료 다름, 분취시 SK3(AC) 혼입) → 회수 후 반환",status:"issue"},
+          {cust:"LG전자",model:"SQ 사후심사 사전점검",               action:"사출/도장 공정 체크시트 리뷰 및 보완 (2/27 제출)",                        status:"wip"},
+          {cust:"내부",  model:"IATF 16949 내부심사원",              action:"양성과정 교육 2/25~2/27 (키워코리아, 서시 금천구)",                       status:"plan"},
+        ]
+      },
+    ],
+    kpiTable:null
+  },
+
+  "생산실": {
+    status:"green", headcount:null,
+    kpi:[
+      {label:"공정자동화 단계",   val:"사후관리", color:"green"},
+      {label:"최종평가 보완",     val:"3건",      color:"yellow"},
+      {label:"보완 마감",         val:"3/6(금)",  color:"yellow"},
+      {label:"EPVINA 컨설팅",    val:"3/16~",    color:"normal"},
+    ],
+    sections:[
+      { title:"제조기반 공정자동화 지원사업",
+        items:[
+          {cust:"정부",   model:"공정자동화(바심)",  action:"4·5단계 과제 병행 완료. 컨베이어·협동로봇 화성공장 설치완료·시운전·디버깅. 현재 사후관리 단계", status:"done"},
+          {cust:"정부",   model:"최종평가",          action:"보완요청 3건 → 3/6(금)까지 홈페이지 등록 필요",                                             status:"warn"},
+          {cust:"내부",   model:"3차 점검",          action:"3/12(목) 오후 협의중 (조규생책임)",                                                          status:"plan"},
+        ]
+      },
+      { title:"신성EPVINA 5차 생산성향상 컨설팅",
+        items:[
+          {cust:"신성EPVINA", model:"5차 컨설팅", action:"3/16(월)~3/19(목) 정덕문위원님 / 3/16~3/20 강한철B. 티켓팅 완료",                             status:"wip"},
+        ]
+      },
+    ],
+    kpiTable:null
+  },
+
+},
+
+// ── 새 날짜 추가 시 여기에 같은 구조로 복사 ──
+// "2025-02-25": { ... }
+
+};
+// ═══════════════════════════════════════════════════════════════════
+
+
+// ── 렌더 엔진 ──
+
+const DAYS = ['일','월','화','수','목','금','토'];
+const ST_LABEL = {done:'완료', wip:'진행중', issue:'이슈', plan:'예정', warn:'주의'};
+
+function stPill(s){ return `<span class="st ${s}">${ST_LABEL[s]||s}</span>`; }
+function tag(cls,txt){ return txt&&txt!=='-'?`<span class="tag ${cls}">${txt}</span>`:''; }
+
+function buildSummary(data){
+  const ts=Object.values(data);
+  const r=ts.filter(t=>t.status==='red').length;
+  const y=ts.filter(t=>t.status==='yellow').length;
+  const g=ts.filter(t=>t.status==='green').length;
+  const iss=ts.reduce((s,t)=>s+(t.sections||[]).reduce((a,sec)=>a+sec.items.filter(i=>i.status==='issue').length,0),0);
+  return `<div class="summary">
+    <div class="sm-card red"><div class="sm-num">${r}</div><div class="sm-lbl">위험 팀</div></div>
+    <div class="sm-card yellow"><div class="sm-num">${y}</div><div class="sm-lbl">주의 팀</div></div>
+    <div class="sm-card green"><div class="sm-num">${g}</div><div class="sm-lbl">정상 팀</div></div>
+    <div class="sm-card ${iss>0?'red':'green'}"><div class="sm-num">${iss}</div><div class="sm-lbl">이슈 항목</div></div>
+  </div>`;
+}
+
+function buildCard(name, t, dkey){
+  const uid = (dkey+'-'+name).replace(/[\s()]/g,'_');
+  const issueCnt = (t.sections||[]).reduce((a,s)=>a+s.items.filter(i=>i.status==='issue').length,0);
+  const badge = issueCnt>0
+    ? `<span class="ibadge">${issueCnt}건 이슈</span>`
+    : `<span class="ibadge ok">이상없음</span>`;
+  const hcHtml = t.headcount?`<span class="hc">${t.headcount}</span>`:'';
+
+  // KPI strip
+  const kpiHtml = (t.kpi||[]).map(k=>`
+    <div class="kpi-cell">
+      <div class="kv ${k.color}">${k.val}</div>
+      <div class="kl">${k.label}</div>
+    </div>`).join('');
+
+  // Sections
+  let secHtml = '';
+  for(const sec of (t.sections||[])){
+    const rows = sec.items.map(item=>`
+      <tr>
+        <td style="width:80px">${tag('cust',item.cust)}</td>
+        <td style="width:120px">${tag('model',item.model)}</td>
+        <td>${item.action}</td>
+        <td style="width:60px;text-align:center">${stPill(item.status)}</td>
+      </tr>`).join('');
+    secHtml += `<div class="dsec">
+      <div class="dsec-title">${sec.title}</div>
+      <table class="wit"><tbody>${rows}</tbody></table>
+    </div>`;
+  }
+
+  // KPI Table
+  let kpiTableHtml = '';
+  if(t.kpiTable){
+    const ths = t.kpiTable.headers.map(h=>`<th>${h}</th>`).join('');
+    const trs = t.kpiTable.rows.map(row=>{
+      const tds = row.map((c,i)=>{
+        let cls='';
+        if(typeof c==='string'&&c.endsWith('%')){
+          const n=parseFloat(c);
+          if(!isNaN(n)) cls = n>=100?'gc':n<70?'rc':'';
+        }
+        return `<td class="${cls}">${c}</td>`;
+      }).join('');
+      return `<tr>${tds}</tr>`;
+    }).join('');
+    kpiTableHtml=`<div class="dsec">
+      <div class="dsec-title">실적 데이터</div>
+      <div style="overflow-x:auto">
+        <table class="mkt"><thead><tr>${ths}</tr></thead><tbody>${trs}</tbody></table>
+      </div>
+    </div>`;
+  }
+
+  return `<div class="tc">
+    <div class="tc-head">
+      <div class="tc-left">
+        <div class="dot ${t.status}"></div>
+        <span class="tc-name">${name}</span>${hcHtml}
+      </div>
+      ${badge}
+    </div>
+    <div class="kpi-strip">${kpiHtml}</div>
+    <button class="xbtn" onclick="toggleDetail('${uid}',this)">▼ 상세 보기</button>
+    <div class="tc-detail" id="${uid}">${secHtml}${kpiTableHtml}</div>
+  </div>`;
+}
+
+function buildDay(dkey, data){
+  const cards = Object.entries(data).map(([n,t])=>buildCard(n,t,dkey)).join('');
+  return `<div class="day-panel" id="panel-${dkey}">
+    ${buildSummary(data)}
+    <div class="team-grid">${cards}</div>
+  </div>`;
+}
+
+function toggleDetail(id,btn){
+  const el=document.getElementById(id);
+  el.classList.toggle('open');
+  btn.textContent=el.classList.contains('open')?'▲ 닫기':'▼ 상세 보기';
+}
+
+function switchDate(dkey){
+  document.querySelectorAll('.day-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.dtab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('panel-'+dkey)?.classList.add('active');
+  const dates=Object.keys(REPORTS).sort((a,b)=>b.localeCompare(a));
+  document.querySelectorAll('.dtab')[dates.indexOf(dkey)]?.classList.add('active');
+}
+
+function init(){
+  const dates=Object.keys(REPORTS).sort((a,b)=>b.localeCompare(a));
+  const tabsEl=document.getElementById('dateTabs');
+  const mainEl=document.getElementById('mainContent');
+  dates.forEach((d,i)=>{
+    const dt=new Date(d);
+    const btn=document.createElement('button');
+    btn.className='dtab'+(i===0?' active':'');
+    btn.textContent=`${dt.getMonth()+1}/${dt.getDate()}(${DAYS[dt.getDay()]})`;
+    btn.onclick=()=>switchDate(d);
+    tabsEl.appendChild(btn);
+    mainEl.innerHTML+=buildDay(d,REPORTS[d]);
+  });
+  if(dates.length) switchDate(dates[0]);
+}
+init();
+</script>
+</body>
+</html>
