@@ -1,0 +1,1797 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SSAT IATF 16949 — 승인 과정 종합 가이드</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Malgun Gothic','맑은 고딕',sans-serif;background:#F4F6FA;color:#1A202C;display:flex;min-height:100vh;}
+
+/* ── 사이드바 ── */
+.sidebar{width:220px;min-height:100vh;background:#1B2A4A;color:#fff;display:flex;flex-direction:column;flex-shrink:0;position:sticky;top:0;height:100vh;overflow-y:auto;}
+.sb-logo{padding:22px 20px 16px;border-bottom:1px solid rgba(255,255,255,.1);}
+.sb-logo .co{font-size:11px;color:rgba(255,255,255,.5);margin-bottom:4px;}
+.sb-logo .title{font-size:13px;font-weight:700;line-height:1.4;color:#fff;}
+.sb-logo .badge{display:inline-block;background:#3B82F6;border-radius:4px;padding:2px 8px;font-size:9px;margin-top:6px;font-weight:600;}
+.sb-section{padding:14px 20px 4px;font-size:9px;text-transform:uppercase;color:rgba(255,255,255,.35);letter-spacing:1px;font-weight:600;}
+.sb-item{display:flex;align-items:center;gap:10px;padding:9px 20px;font-size:12px;color:rgba(255,255,255,.7);cursor:pointer;transition:all .18s;border-left:3px solid transparent;}
+.sb-item:hover{background:rgba(255,255,255,.07);color:#fff;}
+.sb-item.active{background:rgba(59,130,246,.18);color:#60A5FA;border-left-color:#3B82F6;font-weight:600;}
+.sb-item .ic{width:16px;text-align:center;font-size:13px;}
+.sb-footer{margin-top:auto;padding:14px 20px;font-size:9px;color:rgba(255,255,255,.3);border-top:1px solid rgba(255,255,255,.07);}
+
+/* ── 메인 ── */
+.main{flex:1;display:flex;flex-direction:column;min-width:0;}
+.topbar{background:#fff;border-bottom:1px solid #E2E8F0;padding:0 32px;display:flex;align-items:center;gap:12px;height:52px;flex-shrink:0;}
+.topbar h1{font-size:15px;font-weight:700;color:#1B2A4A;}
+.topbar .sub{font-size:11px;color:#64748B;margin-left:4px;}
+.tb-badge{border-radius:20px;padding:3px 12px;font-size:10px;font-weight:700;color:#fff;}
+.content{padding:28px 32px;overflow-y:auto;}
+
+/* ── 섹션 ── */
+.section{display:none;}
+.section.active{display:block;}
+.sec-title{font-size:16px;font-weight:700;color:#1B2A4A;border-left:4px solid #3B82F6;padding-left:12px;margin-bottom:20px;}
+.sec-sub{font-size:13px;font-weight:700;color:#1B2A4A;margin:20px 0 10px;}
+
+/* ── KPI 카드 ── */
+.kpi-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:22px;}
+.kc{flex:1;min-width:130px;background:#fff;border-radius:10px;padding:16px 14px;box-shadow:0 1px 6px rgba(0,0,0,.07);border-top:4px solid;}
+.kc-num{font-size:26px;font-weight:700;margin:6px 0 2px;}
+.kc-lbl{font-size:10px;color:#64748B;}
+.kc-sub{font-size:9px;color:#94A3B8;margin-top:2px;}
+
+/* ── 테이블 ── */
+.tbl{width:100%;border-collapse:collapse;font-size:11px;background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 1px 6px rgba(0,0,0,.07);}
+.tbl th{padding:9px 12px;background:#1B2A4A;color:#fff;text-align:left;white-space:nowrap;font-size:10px;}
+.tbl td{padding:8px 12px;border-bottom:1px solid #F1F5F9;vertical-align:top;}
+.tbl tr:last-child td{border-bottom:none;}
+.tbl tr:nth-child(even) td{background:#FAFBFD;}
+
+/* ── 뱃지 ── */
+.tag{display:inline-block;border-radius:4px;padding:1px 7px;font-size:9px;font-weight:600;margin:1px;}
+.tag-red{background:#FEE2E2;color:#B91C1C;}
+.tag-orange{background:#FFEDD5;color:#C2410C;}
+.tag-blue{background:#DBEAFE;color:#1D4ED8;}
+.tag-green{background:#DCFCE7;color:#15803D;}
+.tag-purple{background:#EDE9FE;color:#6D28D9;}
+.tag-gray{background:#F1F5F9;color:#475569;}
+.tag-yellow{background:#FEF9C3;color:#854D0E;}
+.st-crit{background:#FEE2E2;color:#B91C1C;font-weight:700;}
+.st-warn{background:#FEF9C3;color:#854D0E;font-weight:700;}
+.st-ok  {background:#DCFCE7;color:#15803D;font-weight:700;}
+.st-new {background:#EDE9FE;color:#6D28D9;font-weight:700;}
+
+/* ── 카드 그리드 ── */
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin-bottom:20px;}
+.card{background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 1px 6px rgba(0,0,0,.07);}
+.card-head{padding:12px 16px;color:#fff;font-weight:700;font-size:12px;display:flex;align-items:center;gap:8px;}
+.card-body{padding:14px 16px;font-size:11px;line-height:1.75;}
+.card-body ul{padding-left:16px;}
+.card-body li{margin-bottom:3px;}
+.card-tags{margin-top:10px;padding-top:8px;border-top:1px dashed #E2E8F0;}
+
+/* ── 흐름도 ── */
+.flow-wrap{display:flex;flex-direction:column;gap:0;}
+.flow-phase{background:#fff;border-radius:10px;margin-bottom:8px;overflow:hidden;box-shadow:0 1px 6px rgba(0,0,0,.07);}
+.flow-head{padding:13px 18px;color:#fff;font-weight:700;font-size:13px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;}
+.flow-body{padding:14px 18px;display:flex;flex-wrap:wrap;gap:10px;}
+.doc-card{border-radius:8px;padding:12px 14px;font-size:11px;flex:1;min-width:200px;border-left:4px solid;box-shadow:0 1px 4px rgba(0,0,0,.06);}
+.doc-num{font-weight:700;font-size:12px;margin-bottom:3px;}
+.doc-name{font-weight:600;margin-bottom:3px;}
+.doc-info{opacity:.75;font-size:10px;line-height:1.5;}
+.arrow-dn{text-align:center;font-size:22px;color:#94A3B8;margin:4px 0;}
+
+/* ── 타임라인 ── */
+.tl{position:relative;padding:10px 0;}
+.tl::before{content:'';position:absolute;left:50%;top:0;bottom:0;width:3px;background:linear-gradient(to bottom,#1B2A4A,#3B82F6);transform:translateX(-50%);}
+.tl-item{display:flex;justify-content:flex-end;padding-right:calc(50% + 22px);margin-bottom:20px;position:relative;}
+.tl-item.r{justify-content:flex-start;padding-right:0;padding-left:calc(50% + 22px);}
+.tl-dot{position:absolute;left:50%;top:10px;width:14px;height:14px;border-radius:50%;background:#3B82F6;border:3px solid #fff;box-shadow:0 0 0 3px #BFDBFE;transform:translateX(-50%);}
+.tl-dot.red{background:#EF4444;box-shadow:0 0 0 3px #FECACA;}
+.tl-dot.purple{background:#7C3AED;box-shadow:0 0 0 3px #DDD6FE;}
+.tl-card{background:#fff;border-radius:10px;padding:13px 15px;max-width:360px;box-shadow:0 2px 8px rgba(0,0,0,.08);font-size:11px;line-height:1.65;}
+.tl-month{font-weight:700;font-size:13px;margin-bottom:5px;}
+.tl-badge{display:inline-block;border-radius:10px;padding:1px 8px;font-size:9px;font-weight:700;color:#fff;margin:1px;}
+
+/* ── 경고 박스 ── */
+.alert{border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:11px;line-height:1.6;}
+.alert-red{background:#FFF1F1;border-left:4px solid #EF4444;}
+.alert-yellow{background:#FFFBEB;border-left:4px solid #F59E0B;}
+.alert-blue{background:#EFF6FF;border-left:4px solid #3B82F6;}
+.alert-green{background:#F0FDF4;border-left:4px solid #22C55E;}
+.alert-purple{background:#F5F3FF;border-left:4px solid #7C3AED;}
+
+/* ── 스텝 ── */
+.steps{display:flex;flex-direction:column;gap:0;}
+.step{display:flex;gap:14px;padding:14px 0;border-bottom:1px dashed #E2E8F0;}
+.step:last-child{border-bottom:none;}
+.step-num{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:12px;flex-shrink:0;margin-top:2px;}
+.step-body{flex:1;font-size:11px;line-height:1.7;}
+.step-title{font-weight:700;font-size:13px;margin-bottom:4px;}
+
+/* ── 반응형 ── */
+@media(max-width:768px){
+  .sidebar{display:none;}
+  .content{padding:16px;}
+  .tl::before{left:18px;}
+  .tl-item,.tl-item.r{justify-content:flex-start;padding-left:44px;padding-right:0;}
+  .tl-dot{left:18px;}
+}
+</style>
+</head>
+<body>
+
+<!-- 사이드바 -->
+<nav class="sidebar">
+  <div class="sb-logo">
+    <div class="co">신성오토텍 | 경영기획팀</div>
+    <div class="title">IATF 16949:2016<br>승인 과정 종합 가이드</div>
+    <span class="badge">2026년 기준</span>
+  </div>
+
+  <div class="sb-section">메인 메뉴</div>
+  <div class="sb-item active" onclick="nav('overview',this)"><span class="ic">🏠</span> 개요 &amp; 인증 구조</div>
+  <div class="sb-item" onclick="nav('process',this)"><span class="ic">🔄</span> 인증 과정 흐름도</div>
+  <div class="sb-item" onclick="nav('docs',this)"><span class="ic">📄</span> 필수 서류 체계</div>
+  <div class="sb-item" onclick="nav('roles',this)"><span class="ic">👥</span> 담당자 역할 분장</div>
+  <div class="sb-item" onclick="nav('coretools',this)"><span class="ic">🔧</span> Core Tools 6종</div>
+  <div class="sb-item" onclick="nav('audit',this)"><span class="ic">🔍</span> 내부심사 절차</div>
+  <div class="sb-item" onclick="nav('presubmit',this)"><span class="ic">📬</span> 사전 제출 자료</div>
+  <div class="sb-item" onclick="nav('nc',this)"><span class="ic">⚠️</span> 부적합 대응 절차</div>
+  <div class="sb-item" onclick="nav('lecture',this)"><span class="ic">📚</span> 강의 핵심 요약</div>
+
+  <div class="sb-section">문서 관리</div>
+  <div class="sb-item" onclick="nav('docstatus',this)"><span class="ic">📊</span> 문서 현황 관리</div>
+  <div class="sb-item" onclick="nav('gap',this)"><span class="ic">🔴</span> 갭 분석 (신규·개정)</div>
+  <div class="sb-item" onclick="nav('action',this)"><span class="ic">⚡</span> 긴급 조치 계획</div>
+  <div class="sb-item" onclick="nav('checklist',this)"><span class="ic">📅</span> 월별 체크리스트</div>
+
+  <div class="sb-footer">
+    인증기관: NKU (구 Kiwa Korea)<br>
+    최종 업데이트: 2026-03-27
+  </div>
+</nav>
+
+<!-- 메인 -->
+<div class="main">
+  <div class="topbar">
+    <h1>IATF 16949:2016 승인 과정 종합 가이드</h1>
+    <span class="sub">신성오토텍</span>
+    <span class="tb-badge" style="background:#EF4444">감시심사 목표: 2026년 10월</span>
+    <span class="tb-badge" style="background:#7C3AED">인증기관 변경: Kiwa → NKU</span>
+  </div>
+
+  <div class="content">
+
+    <!-- ══════════ 1. 개요 ══════════ -->
+    <div id="sec-overview" class="section active">
+      <div class="sec-title">🏠 IATF 16949:2016 — 개요 &amp; 인증 구조</div>
+
+      <div class="alert alert-red">
+        <strong>🚨 2026년 인증기관 변경 공지:</strong> 기존 <strong>Kiwa Korea</strong>가 NQA를 합병하면서 IATF 사업부 명칭이 <strong>NKU(NQA + Kiwa United)</strong>로 변경되었습니다. 향후 인증서는 NKU 명의로 발급됩니다. IATF 홈페이지(iatf-oversight.org)에서 Kiwa 항목이 NKU로 표시됩니다.
+      </div>
+
+      <div class="kpi-row">
+        <div class="kc" style="border-color:#3B82F6">
+          <div class="kc-lbl">현재 보유 프로세스 문서</div>
+          <div class="kc-num" style="color:#3B82F6">20종</div>
+          <div class="kc-sub">2025 심사 파일 기준</div>
+        </div>
+        <div class="kc" style="border-color:#EF4444">
+          <div class="kc-lbl">누락 문서 (즉시 작성 필요)</div>
+          <div class="kc-num" style="color:#EF4444">8종</div>
+          <div class="kc-sub">Core Tools 포함</div>
+        </div>
+        <div class="kc" style="border-color:#F59E0B">
+          <div class="kc-lbl">긴급 개정 필요</div>
+          <div class="kc-num" style="color:#F59E0B">6종</div>
+          <div class="kc-sub">8년+ 미개정</div>
+        </div>
+        <div class="kc" style="border-color:#22C55E">
+          <div class="kc-lbl">다음 외부심사까지</div>
+          <div class="kc-num" style="color:#22C55E">~7개월</div>
+          <div class="kc-sub">2026년 10월 목표</div>
+        </div>
+        <div class="kc" style="border-color:#7C3AED">
+          <div class="kc-lbl">인증 유효 주기</div>
+          <div class="kc-num" style="color:#7C3AED">3년</div>
+          <div class="kc-sub">매년 감시심사 필수</div>
+        </div>
+      </div>
+
+      <div class="sec-sub">📌 IATF 16949란?</div>
+      <div class="alert alert-blue">
+        자동차 부품 공급사가 <strong>"품질을 체계적으로 관리하고 있다"</strong>는 것을 증명하는 국제 인증 표준. <strong>ISO 9001:2015</strong>에 자동차 산업 특화 요구사항을 추가한 규격. GM·Ford·BMW 등 완성차 OEM 납품 자격 요건이며, 인증 상실 시 납품 계약 즉시 중단 위기에 처합니다.
+      </div>
+
+      <div class="sec-sub">📐 인증 유형 3가지</div>
+      <table class="tbl" style="margin-bottom:20px;">
+        <thead><tr>
+          <th>유형</th><th>설명</th><th>주기</th><th>소요 기간</th><th>주요 확인 사항</th>
+        </tr></thead>
+        <tbody>
+          <tr><td><span class="tag tag-red">신규 인증</span></td><td>최초 IATF 인증 취득</td><td>최초 1회</td><td>6개월~1년</td><td>전 조항 문서+현장 심사, Stage 1(문서) + Stage 2(현장)</td></tr>
+          <tr><td><span class="tag tag-yellow">감시심사</span></td><td>인증 유지 확인 (연 1회)</td><td>매년</td><td>1~2일</td><td>전년 지적사항 CAR 완료, 주요 변경사항, Core Tools 실행 여부</td></tr>
+          <tr><td><span class="tag tag-blue">갱신심사</span></td><td>3년 인증 갱신</td><td>3년마다</td><td>2~3일</td><td>전체 재심사 (신규 인증과 동일 수준)</td></tr>
+        </tbody>
+      </table>
+
+      <div class="sec-sub">🏗️ QMS 문서 4단계 피라미드</div>
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-head" style="background:#1B2A4A">L1 — 품질 매뉴얼</div>
+          <div class="card-body">회사의 품질 철학·정책 선언. 최상위 문서.<br><span class="tag tag-gray">조항 4~10 전체 커버</span> <span class="tag tag-blue">프로세스 맵 포함</span></div>
+        </div>
+        <div class="card">
+          <div class="card-head" style="background:#1D4ED8">L2 — 프로세스 절차서</div>
+          <div class="card-body">업무 수행 방법 규정. 신성오토텍 현재 20종 보유.<br><span class="tag tag-green">COP 8종</span> <span class="tag tag-blue">MP 5종</span> <span class="tag tag-gray">SP 6종</span></div>
+        </div>
+        <div class="card">
+          <div class="card-head" style="background:#EF4444">L3 — Core Tools 문서</div>
+          <div class="card-body">FMEA·CP·MSA·SPC 실제 실행 문서.<br><span class="tag tag-red">신성오토텍 현재 0종 → 8종 신규 작성 必</span></div>
+        </div>
+        <div class="card">
+          <div class="card-head" style="background:#22C55E">L4 — 기록·양식</div>
+          <div class="card-body">실제 작업 증거. 체크리스트·검사성적서·교육일지 등.<br><span class="tag tag-green">심사 시 실물 증거로 제출</span></div>
+        </div>
+      </div>
+
+      <div class="sec-sub">🔄 프로세스 3종 구조 (COP / MP / SP)</div>
+      <table class="tbl">
+        <thead><tr><th>유형</th><th>명칭</th><th>설명</th><th>해당 프로세스 예시</th></tr></thead>
+        <tbody>
+          <tr><td><span class="tag tag-blue">COP</span></td><td>핵심 프로세스 (Core Process)</td><td>고객 가치를 직접 창출하는 프로세스. <strong>효과성 지수</strong>로 측정 (고객 중심)</td><td>영업관리, 개발업무, 생산관리, 검사, 제품보존·인도, 고객만족, 고객불만처리</td></tr>
+          <tr><td><span class="tag tag-purple">MP</span></td><td>경영 프로세스 (Management Process)</td><td>전략·방향 설정 및 자원 결정. <strong>효율성 지수</strong>로 측정 (조직 중심)</td><td>리스크관리, 경영검토, 사업계획, 내부심사, 데이터분석·지속개선</td></tr>
+          <tr><td><span class="tag tag-gray">SP</span></td><td>지원 프로세스 (Support Process)</td><td>COP·MP를 지원하는 인프라 프로세스</td><td>문서관리, 기록관리, 도면관리, 인적자원관리, 변경관리, 구매관리</td></tr>
+        </tbody>
+      </table>
+
+      <div class="alert alert-yellow" style="margin-top:16px;">
+        <strong>💡 효과성 vs 효율성:</strong> IATF는 두 지표를 구분 관리합니다. <strong>효과성(Effectiveness)</strong> = 계획된 결과 달성 여부 (고객 중심). <strong>효율성(Efficiency)</strong> = 결과 대비 투입 자원 최소화 (조직 중심). KPI 설정 시 두 관점 모두 반영 필요.
+      </div>
+    </div>
+
+    <!-- ══════════ 2. 인증 과정 흐름도 ══════════ -->
+    <div id="sec-process" class="section">
+      <div class="sec-title">🔄 인증 과정 흐름도 — 감시심사 기준 (2026년)</div>
+
+      <div class="alert alert-yellow">
+        <strong>⚠️ 현재 우리 회사 상태:</strong> 감시심사(Surveillance Audit) 대응 체계. 3년 주기 인증 유지 중. 매년 10월 NKU 감시심사 예정. Core Tools 문서 미비 상태로 Major NC 위험 높음.
+      </div>
+
+      <div class="tl">
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-card">
+            <div class="tl-month">🗂️ 1월 — 연간 QMS 기반 구축</div>
+            <span class="tl-badge" style="background:#6D28D9">경영팀</span>
+            <ul style="padding-left:16px;margin-top:6px;">
+              <li>연간 경영검토 실시 (전년도 결산)</li>
+              <li>품질방침·목표 재확인 및 전사 공표</li>
+              <li>리스크·기회 등록부 갱신</li>
+              <li>연간 내부심사 계획 수립</li>
+              <li>연간 교육 계획 수립 확정</li>
+            </ul>
+            <div style="margin-top:8px;font-size:10px;color:#64748B">📄 경영검토보고서 · 품질목표계획 · 교육계획서</div>
+          </div>
+        </div>
+        <div class="tl-item r">
+          <div class="tl-dot"></div>
+          <div class="tl-card">
+            <div class="tl-month">📐 2~3월 — Core Tools 검토 &amp; 공정 감사</div>
+            <span class="tl-badge" style="background:#1D4ED8">품질팀</span>
+            <ul style="padding-left:16px;margin-top:6px;">
+              <li><strong>PFMEA 연간 검토</strong> 및 갱신 (AIAG-VDA 4판)</li>
+              <li>관리계획서(CP) 전면 검토·개정</li>
+              <li>1분기 공정 감사 실시</li>
+              <li>측정장비 상반기 교정 계획 실행</li>
+              <li><strong>비상계획(Contingency Plan) 검토</strong></li>
+            </ul>
+            <div style="margin-top:8px;font-size:10px;color:#64748B">📄 PFMEA 개정본 · CP 개정본 · 공정감사보고서</div>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-card">
+            <div class="tl-month">🔍 4~5월 — 1차 내부심사 + 교육</div>
+            <span class="tl-badge" style="background:#1D4ED8">품질팀</span>
+            <span class="tl-badge" style="background:#15803D">인사팀</span>
+            <ul style="padding-left:16px;margin-top:6px;">
+              <li><strong>1차 내부심사 실시</strong> (전 부서·조항)</li>
+              <li>내부심사원 양성 교육 (2박 3일 과정)</li>
+              <li>PFMEA/관리계획서 교육 실시</li>
+              <li>공급업체 정기 평가 (상반기)</li>
+              <li>CAR 발행 및 시정조치 추적</li>
+            </ul>
+            <div style="margin-top:8px;font-size:10px;color:#64748B">📄 내부심사보고서 · CAR · 내부심사원 자격증</div>
+          </div>
+        </div>
+        <div class="tl-item r">
+          <div class="tl-dot"></div>
+          <div class="tl-card">
+            <div class="tl-month">📊 6~7월 — 상반기 경영검토 &amp; MSA</div>
+            <span class="tl-badge" style="background:#6D28D9">경영팀</span>
+            <span class="tl-badge" style="background:#1D4ED8">품질팀</span>
+            <ul style="padding-left:16px;margin-top:6px;">
+              <li><strong>상반기 경영검토</strong> 실시</li>
+              <li>상반기 품질목표 달성도 점검</li>
+              <li><strong>MSA 전체 공정 실시</strong> (Gage R&amp;R)</li>
+              <li>고객만족도 조사 (상반기)</li>
+              <li>SPC 핵심 공정 관리도 분석</li>
+            </ul>
+            <div style="margin-top:8px;font-size:10px;color:#64748B">📄 경영검토보고서 · MSA 보고서 · 고객만족도결과</div>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-card">
+            <div class="tl-month">🔍 8~9월 — 2차 내부심사 + 외부심사 준비</div>
+            <span class="tl-badge" style="background:#1D4ED8">품질팀</span>
+            <ul style="padding-left:16px;margin-top:6px;">
+              <li><strong>2차 내부심사 실시</strong> (외부심사 사전 점검)</li>
+              <li><strong>모의심사(Mock Audit) 실시</strong></li>
+              <li>모든 문서·기록 현행화 완료</li>
+              <li>CAR 완료 확인, 미결 이슈 처리</li>
+              <li>공급업체 하반기 평가</li>
+              <li><strong>NKU 심사 일정 최종 확인</strong></li>
+              <li><strong>사전 제출 자료 1개월 전 NKU 제출</strong></li>
+            </ul>
+            <div style="margin-top:8px;font-size:10px;color:#64748B">📄 내부심사보고서 · 모의심사결과 · 문서현행화확인서</div>
+          </div>
+        </div>
+        <div class="tl-item r">
+          <div class="tl-dot red"></div>
+          <div class="tl-card" style="border-left:4px solid #EF4444;">
+            <div class="tl-month" style="color:#B91C1C">⭐ 10월 — NKU 외부 감시심사 (핵심!)</div>
+            <span class="tl-badge" style="background:#B91C1C">전사 대응</span>
+            <ul style="padding-left:16px;margin-top:6px;">
+              <li><strong>NKU 외부 감시심사 실시</strong></li>
+              <li>대표이사 오프닝/클로징 미팅 참석</li>
+              <li>각 부서 심사원 동행 대응</li>
+              <li>지적사항(부적합) 현장 확인</li>
+              <li>심사 직후 시정조치 계획 수립</li>
+            </ul>
+            <div style="margin-top:8px;padding:8px;background:#FFF5F5;border-radius:6px;font-size:10px;color:#B91C1C;">
+              <strong>⚠️ 부적합 대응:</strong> 중결함(Major) → 90일 내 CAR 완료<br>
+              경결함(Minor) → 다음 심사 전 완료 / NKU 즉시 보고
+            </div>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-card">
+            <div class="tl-month">✅ 11~12월 — 후속 조치 &amp; 연간 결산</div>
+            <span class="tl-badge" style="background:#1D4ED8">품질팀</span>
+            <span class="tl-badge" style="background:#6D28D9">경영팀</span>
+            <ul style="padding-left:16px;margin-top:6px;">
+              <li>외부심사 지적사항 <strong>CAR 완료 확인</strong></li>
+              <li>효과성 검증 및 NKU 보고</li>
+              <li>연간 KPI 분석 및 개선 과제 선정</li>
+              <li><strong>연간 경영검토</strong> (QMS 전체 결산)</li>
+              <li>내년도 품질목표·계획 확정</li>
+            </ul>
+            <div style="margin-top:8px;font-size:10px;color:#64748B">📄 CAR완료확인서 · 연간경영검토보고서 · 내년계획</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ 3. 필수 서류 체계 ══════════ -->
+    <div id="sec-docs" class="section">
+      <div class="sec-title">📄 필수 서류 체계 — Phase별 작성 순서</div>
+
+      <div class="alert alert-blue">
+        <strong>📌 작성 원칙:</strong> 문서관리절차서 → 품질방침/목표 → 품질매뉴얼 순서로 최상위 문서부터 수립. 이후 절차서 → Core Tools → 양식 순으로 진행. 모든 문서는 <strong>개정번호·이력·승인자</strong> 관리 필수.
+      </div>
+
+      <div class="flow-wrap">
+        <div class="flow-phase">
+          <div class="flow-head" style="background:#B91C1C" onclick="toggleFlow(this)">PHASE 1 — 즉시 착수 (0~4주) · 인증 기반 문서 <span>▼</span></div>
+          <div class="flow-body">
+            <div class="doc-card" style="background:#FFF5F5;border-color:#EF4444">
+              <div class="doc-num" style="color:#B91C1C">① 문서 및 기록 관리 절차서</div>
+              <div class="doc-name">Document &amp; Record Control</div>
+              <div class="doc-info">조항 7.5 | 담당: 품질팀 | 2주<br>모든 문서의 근간. <strong>가장 먼저 제정</strong></div>
+            </div>
+            <div class="doc-card" style="background:#FFF5F5;border-color:#EF4444">
+              <div class="doc-num" style="color:#B91C1C">② 품질 방침</div>
+              <div class="doc-name">Quality Policy</div>
+              <div class="doc-info">조항 5.2 | 담당: 경영팀 | 1주<br><strong>대표이사 서명</strong> 필수. 전사 게시·교육</div>
+            </div>
+            <div class="doc-card" style="background:#FFF5F5;border-color:#EF4444">
+              <div class="doc-num" style="color:#B91C1C">③ QMS 적용 범위 선언서</div>
+              <div class="doc-name">Scope of QMS</div>
+              <div class="doc-info">조항 4.3 | 담당: 경영/품질팀 | 1주<br>사출 공정 범위, 제외 조항 근거 기술</div>
+            </div>
+            <div class="doc-card" style="background:#FFF5F5;border-color:#EF4444">
+              <div class="doc-num" style="color:#B91C1C">④ 품질 목표 및 KPI 계획서</div>
+              <div class="doc-name">Quality Objectives &amp; KPI</div>
+              <div class="doc-info">조항 6.2 | 담당: 경영팀 | 2주<br>측정 가능한 수치 목표 설정 필수</div>
+            </div>
+            <div class="doc-card" style="background:#FFF5F5;border-color:#EF4444">
+              <div class="doc-num" style="color:#B91C1C">⑤ 내부심사 절차서</div>
+              <div class="doc-name">Internal Audit Procedure</div>
+              <div class="doc-info">조항 9.2 | 담당: 품질팀 | 2주<br>심사원 자격 기준, 연 2회 이상 주기 명시</div>
+            </div>
+            <div class="doc-card" style="background:#FFF5F5;border-color:#EF4444">
+              <div class="doc-num" style="color:#B91C1C">⑥ 시정조치 절차서 (8D)</div>
+              <div class="doc-name">Corrective Action (8D)</div>
+              <div class="doc-info">조항 10.2 | 담당: 품질팀 | 2주<br>8D 방식. 근본원인 분석 방법 포함</div>
+            </div>
+          </div>
+        </div>
+        <div class="arrow-dn">↓</div>
+
+        <div class="flow-phase">
+          <div class="flow-head" style="background:#C2410C" onclick="toggleFlow(this)">PHASE 2 — 1~3개월 · QMS 운영 절차서 <span>▼</span></div>
+          <div class="flow-body">
+            <div class="doc-card" style="background:#FFF8F0;border-color:#FB923C">
+              <div class="doc-num" style="color:#C2410C">⑦ 품질 매뉴얼</div>
+              <div class="doc-name">Quality Manual (ISO+IATF 통합)</div>
+              <div class="doc-info">조항 4~10 | 담당: 경영/품질팀 | 4~6주</div>
+            </div>
+            <div class="doc-card" style="background:#FFF8F0;border-color:#FB923C">
+              <div class="doc-num" style="color:#C2410C">⑧ 리스크·기회 등록부</div>
+              <div class="doc-name">Risk &amp; Opportunity Register</div>
+              <div class="doc-info">조항 6.1 | 담당: 경영팀 | 2주<br>공정별·고객별·법규별 리스크 식별</div>
+            </div>
+            <div class="doc-card" style="background:#FFF8F0;border-color:#FB923C">
+              <div class="doc-num" style="color:#C2410C">⑨ 비상계획 절차서 ★신규</div>
+              <div class="doc-name">Contingency Plan</div>
+              <div class="doc-info">조항 6.1.2.3 | 담당: 경영/생산팀 | 2주<br><strong>전 세계 부적합 Top 10 항목!</strong> 화재·홍수·설비고장·공급 중단 시나리오 포함 필수</div>
+            </div>
+            <div class="doc-card" style="background:#FFF8F0;border-color:#FB923C">
+              <div class="doc-num" style="color:#C2410C">⑩ 생산 공정 관리 절차서</div>
+              <div class="doc-name">Production Process Control</div>
+              <div class="doc-info">조항 8.5 | 담당: 생산팀 | 3주<br>PFD(공정흐름도) 포함 필수</div>
+            </div>
+            <div class="doc-card" style="background:#FFF8F0;border-color:#FB923C">
+              <div class="doc-num" style="color:#C2410C">⑪ 부적합품 관리 절차서</div>
+              <div class="doc-name">Nonconforming Product Procedure</div>
+              <div class="doc-info">조항 8.7 | 담당: 품질팀 | 2주<br>격리·식별·특채·폐기 흐름 포함</div>
+            </div>
+            <div class="doc-card" style="background:#FFF8F0;border-color:#FB923C">
+              <div class="doc-num" style="color:#C2410C">⑫ 측정장비 교정 절차서</div>
+              <div class="doc-name">Calibration Control Procedure</div>
+              <div class="doc-info">조항 7.1.5.1 | 담당: 품질팀 | 2주<br>교정 주기, 불합격 시 처리 방법 포함</div>
+            </div>
+            <div class="doc-card" style="background:#FFF8F0;border-color:#FB923C">
+              <div class="doc-num" style="color:#C2410C">⑬ 교육훈련 관리 절차서</div>
+              <div class="doc-name">Training Management Procedure</div>
+              <div class="doc-info">조항 7.2 | 담당: 인사팀 | 2주<br>역량 요건, 내부심사원 자격 기준 포함</div>
+            </div>
+            <div class="doc-card" style="background:#FFF8F0;border-color:#FB923C">
+              <div class="doc-num" style="color:#C2410C">⑭ 경영검토 절차서</div>
+              <div class="doc-name">Management Review Procedure</div>
+              <div class="doc-info">조항 9.3 | 담당: 경영팀 | 2주<br>입력 9항목, 출력 기준, 주기(연2회↑) 명시</div>
+            </div>
+            <div class="doc-card" style="background:#FFF8F0;border-color:#FB923C">
+              <div class="doc-num" style="color:#C2410C">⑮ 공급업체 관리 절차서</div>
+              <div class="doc-name">Supplier Management Procedure</div>
+              <div class="doc-info">조항 8.4 | 담당: 구매팀 | 3주<br>선정 기준, 평가 주기, 현장 감사 기준</div>
+            </div>
+          </div>
+        </div>
+        <div class="arrow-dn">↓</div>
+
+        <div class="flow-phase">
+          <div class="flow-head" style="background:#15803D" onclick="toggleFlow(this)">PHASE 3 — 3~6개월 · Core Tools 문서 (★긴급) <span>▼</span></div>
+          <div class="flow-body">
+            <div class="doc-card" style="background:#F0FDF4;border-color:#22C55E">
+              <div class="doc-num" style="color:#15803D">⑯ PFMEA (AIAG-VDA 4판)</div>
+              <div class="doc-name">Process FMEA</div>
+              <div class="doc-info">조항 8.5.1.2 | 담당: 품질/생산팀 | 4~6주<br>전 공정 대상. 공정변경시 즉시 갱신. AP 방식</div>
+            </div>
+            <div class="doc-card" style="background:#F0FDF4;border-color:#22C55E">
+              <div class="doc-num" style="color:#15803D">⑰ 관리계획서 (Control Plan)</div>
+              <div class="doc-name">Control Plan (수입/제조/출하 3종)</div>
+              <div class="doc-info">조항 8.5.1.2 | 담당: 품질/생산팀 | 3~4주<br>PFMEA 연계 필수</div>
+            </div>
+            <div class="doc-card" style="background:#F0FDF4;border-color:#22C55E">
+              <div class="doc-num" style="color:#15803D">⑱ MSA 계획서 &amp; 결과 보고서</div>
+              <div class="doc-name">Measurement System Analysis</div>
+              <div class="doc-info">조항 7.1.5.1.1 | 담당: 품질팀 | 2~3주<br>%GRR ≤ 10% 목표. 연 2회 이상</div>
+            </div>
+            <div class="doc-card" style="background:#F0FDF4;border-color:#22C55E">
+              <div class="doc-num" style="color:#15803D">⑲ SPC 관리계획 및 관리도</div>
+              <div class="doc-name">Statistical Process Control</div>
+              <div class="doc-info">조항 8.5.1.1 | 담당: 품질/생산팀 | 3~4주<br>Cp/Cpk ≥ 1.67 목표</div>
+            </div>
+            <div class="doc-card" style="background:#F0FDF4;border-color:#22C55E">
+              <div class="doc-num" style="color:#15803D">⑳ APQP 절차서</div>
+              <div class="doc-name">Advanced Product Quality Planning</div>
+              <div class="doc-info">조항 8.3 | 담당: 품질/개발팀 | 4주<br>5단계 + 게이트 리뷰. PPAP 연계</div>
+            </div>
+            <div class="doc-card" style="background:#F0FDF4;border-color:#22C55E">
+              <div class="doc-num" style="color:#15803D">㉑ 설비·금형 예방보전 절차서</div>
+              <div class="doc-name">Preventive Maintenance Procedure</div>
+              <div class="doc-info">조항 8.5.1.5 | 담당: 생산팀 | 3주<br>PM 주기·항목·기록 양식 포함</div>
+            </div>
+          </div>
+        </div>
+        <div class="arrow-dn">↓</div>
+
+        <div class="flow-phase">
+          <div class="flow-head" style="background:#1D4ED8" onclick="toggleFlow(this)">PHASE 4 — 6개월 이후 · 지속 유지 관리 <span>▼</span></div>
+          <div class="flow-body">
+            <div class="doc-card" style="background:#EFF6FF;border-color:#3B82F6">
+              <div class="doc-num" style="color:#1D4ED8">㉒ PPAP 서류 패키지 (Level 3)</div>
+              <div class="doc-name">Production Part Approval Process (18종)</div>
+              <div class="doc-info">조항 8.3.4.4 | 신규 고객·제품 수주 시 즉시</div>
+            </div>
+            <div class="doc-card" style="background:#EFF6FF;border-color:#3B82F6">
+              <div class="doc-num" style="color:#1D4ED8">㉓ 고객만족 모니터링 절차서</div>
+              <div class="doc-name">Customer Satisfaction Monitoring</div>
+              <div class="doc-info">조항 9.1.2 | 연 2회 이상 조사</div>
+            </div>
+            <div class="doc-card" style="background:#EFF6FF;border-color:#3B82F6">
+              <div class="doc-num" style="color:#1D4ED8">㉔ 작업지도서 (전 공정)</div>
+              <div class="doc-name">Work Instructions</div>
+              <div class="doc-info">조항 8.5.1 | CP 연계. 현장 비치 필수</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ 4. 담당자 역할 분장 ══════════ -->
+    <div id="sec-roles" class="section">
+      <div class="sec-title">👥 담당자 역할 분장 — RACI 기준</div>
+
+      <table class="tbl" style="margin-bottom:20px;">
+        <thead><tr>
+          <th>팀</th><th>핵심 역할</th><th>주요 책임</th><th>담당 산출물</th><th>관련 조항</th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td><strong style="color:#6D28D9">👔 경영팀</strong><br><small>대표·경영기획실장</small></td>
+            <td>QMS 전략 방향·최종 의사결정</td>
+            <td>품질방침·목표 승인 및 공표<br>경영검토 주관 (연 2회↑)<br>자원 배분·투자 결정<br>리스크·기회 관리 총괄<br><strong>IATF 심사 시 최고 대응자</strong></td>
+            <td><span class="tag tag-purple">품질방침</span><span class="tag tag-purple">경영검토보고서</span><span class="tag tag-purple">품질목표KPI</span><span class="tag tag-purple">리스크등록부</span></td>
+            <td>5.1 / 5.2 / 6.1 / 6.2 / 9.3</td>
+          </tr>
+          <tr>
+            <td><strong style="color:#1D4ED8">🔍 품질팀</strong><br><small>품질관리자</small></td>
+            <td>QMS 문서 유지·심사·시정조치 총괄</td>
+            <td>QMS 전체 문서 체계 유지<br>내부심사 계획·실시·보고<br>Core Tools 관리 (PFMEA/CP/MSA/SPC)<br>측정장비 교정 관리<br>부적합품 처리 총괄<br><strong>외부심사 준비 실무 주관</strong></td>
+            <td><span class="tag tag-blue">내부심사보고서</span><span class="tag tag-blue">PFMEA</span><span class="tag tag-blue">Control Plan</span><span class="tag tag-blue">MSA보고서</span><span class="tag tag-blue">CAR</span></td>
+            <td>7.5 / 8.5.1 / 8.7 / 9.2 / 10.2</td>
+          </tr>
+          <tr>
+            <td><strong style="color:#15803D">🏭 생산팀</strong><br><small>생산관리자</small></td>
+            <td>공정 실행 및 관리</td>
+            <td>생산계획 수립·실행<br>작업표준·작업지도서 작성·유지<br>관리계획서 현장 적용<br>설비·금형 예방보전(PM) 실시<br>SPC 데이터 수집·기록</td>
+            <td><span class="tag tag-green">작업지도서</span><span class="tag tag-green">PM계획/기록</span><span class="tag tag-green">공정기록</span><span class="tag tag-green">설비점검표</span></td>
+            <td>8.1 / 8.5.1 / 8.5.1.5</td>
+          </tr>
+          <tr>
+            <td><strong style="color:#C2410C">🛒 구매팀</strong><br><small>구매관리자</small></td>
+            <td>공급망 품질 관리</td>
+            <td>공급업체 선정·등록·평가<br>협력업체 현장 감사 (연 2회)<br>자재 입고 품질 관리 (IQC)<br>공급업체 시정조치 요청·추적</td>
+            <td><span class="tag tag-orange">공급업체평가표</span><span class="tag tag-orange">협력사감사보고서</span><span class="tag tag-orange">자재성적서</span></td>
+            <td>8.4.1 / 8.4.2 / 8.4.3</td>
+          </tr>
+          <tr>
+            <td><strong style="color:#374151">👨‍👩‍👧 인사팀</strong><br><small>인사관리자</small></td>
+            <td>역량·교육 관리</td>
+            <td>연간 교육훈련 계획 수립·실행<br><strong>내부심사원 양성·자격 관리</strong><br>Core Tools 교육 이수 관리<br>신규 입사자 QMS 기초 교육<br>직무 역량 평가·기록 관리</td>
+            <td><span class="tag tag-gray">연간교육계획</span><span class="tag tag-gray">교육훈련기록</span><span class="tag tag-gray">내부심사원자격증</span></td>
+            <td>7.2 / 7.3</td>
+          </tr>
+          <tr>
+            <td><strong style="color:#B91C1C">📦 영업팀</strong><br><small>영업관리자</small></td>
+            <td>고객 인터페이스</td>
+            <td>고객 요구사항(CSR) 파악·전달<br>고객만족도 조사·분석 (연 2회)<br>고객 불만 접수·처리 1차 대응<br><strong>OEM 특별 요구사항 관리</strong><br>PPAP 고객 제출 창구</td>
+            <td><span class="tag tag-red">CSR검토서</span><span class="tag tag-red">고객만족도결과</span><span class="tag tag-red">불만접수대장</span></td>
+            <td>5.1.2 / 8.2.1 / 9.1.2</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="alert alert-purple">
+        <strong>💡 내부심사원 자격 기준 (강의 내용 반영):</strong> 내부심사원은 IATF 내부심사원 양성 교육(2박3일 이상) 이수 후 자격 취득. <strong>심사 대상 부서와 독립성 필수</strong> (자기 부서 심사 금지). 자격 유지를 위해 정기 재교육 권장.
+      </div>
+    </div>
+
+    <!-- ══════════ 5. Core Tools ══════════ -->
+    <div id="sec-coretools" class="section">
+      <div class="sec-title">🔧 Core Tools 6종 — IATF 16949 핵심 도구</div>
+
+      <div class="alert alert-red">
+        <strong>🚨 신성오토텍 현황:</strong> Core Tools 관련 절차서가 전무한 상태입니다. 다음 NKU 감시심사에서 Major NC 지적 가능성이 매우 높습니다. 즉시 작성 착수 필요.
+      </div>
+
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-head" style="background:#6D28D9">① APQP — 사전 제품 품질 계획</div>
+          <div class="card-body">
+            <strong>목적:</strong> 신규 제품·공정 개발 시 품질 위험 사전 예방<br>
+            <strong>5단계:</strong> 기획 → 제품설계 → 공정설계 → 유효성확인 → 피드백<br>
+            <strong>핵심 산출물:</strong> 설계목표, DFMEA, 공정흐름도, PFMEA, 관리계획서<br>
+            <strong>담당:</strong> 품질팀/개발팀 | <strong>시점:</strong> 신규 수주 즉시
+            <div class="card-tags"><span class="tag tag-purple">조항 8.3</span> <span class="tag tag-gray">PPAP 연계</span></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head" style="background:#B91C1C">② FMEA — 고장 유형 및 영향 분석</div>
+          <div class="card-body">
+            <strong>목적:</strong> 공정 고장 모드 사전 식별 및 예방 조치<br>
+            <strong>최신 기준:</strong> AIAG-VDA 4판 — RPN → <strong>AP(Action Priority)</strong> 방식 전환<br>
+            <strong>AP 기준:</strong> H(높음) / M(중간) / L(낮음)<br>
+            <strong>담당:</strong> 품질팀/생산팀 | <strong>주기:</strong> 연1회 + 공정변경 시
+            <div class="card-tags"><span class="tag tag-red">조항 8.5.1.2</span> <span class="tag tag-red">전 세계 부적합 Top 10</span></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head" style="background:#1D4ED8">③ 관리계획서 (Control Plan)</div>
+          <div class="card-body">
+            <strong>목적:</strong> 품질 특성 관리 방법 표준화<br>
+            <strong>3종류:</strong> 시작(Prototype) / 출시(Launch) / 양산(Production)<br>
+            <strong>핵심 내용:</strong> 특성·사양·측정방법·관리방법·반응계획<br>
+            <strong>담당:</strong> 품질팀/생산팀 | <strong>PFMEA 연계 필수</strong>
+            <div class="card-tags"><span class="tag tag-blue">조항 8.5.1.2</span> <span class="tag tag-blue">3종 작성</span></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head" style="background:#15803D">④ MSA — 측정 시스템 분석</div>
+          <div class="card-body">
+            <strong>목적:</strong> 측정 오차 정량화 및 측정 신뢰성 확인<br>
+            <strong>Gage R&amp;R 기준:</strong> %GRR ≤ 10% 합격 / 10~30% 조건부 / &gt;30% 불합격<br>
+            <strong>ndc ≥ 5</strong> 권장 (데이터 구분 능력)<br>
+            <strong>담당:</strong> 품질팀 | <strong>주기:</strong> 연 2회 이상
+            <div class="card-tags"><span class="tag tag-green">조항 7.1.5.1.1</span></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head" style="background:#C2410C">⑤ SPC — 통계적 공정 관리</div>
+          <div class="card-body">
+            <strong>목적:</strong> 공정 변동 실시간 모니터링 및 이상 조기 감지<br>
+            <strong>목표 수준:</strong> Cp/Cpk ≥ 1.67 (신규공정) / ≥ 1.33 (기존공정)<br>
+            <strong>Ppk/Pp:</strong> 초기 공정 능력. Cpk와 구분 관리<br>
+            <strong>담당:</strong> 품질/생산팀 | <strong>주기:</strong> 지속적(실시간)
+            <div class="card-tags"><span class="tag tag-orange">조항 8.5.1.1</span> <span class="tag tag-orange">전 세계 부적합 Top 10</span></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head" style="background:#374151">⑥ PPAP — 생산 부품 승인 프로세스</div>
+          <div class="card-body">
+            <strong>목적:</strong> 고객에게 제조 공정의 품질 적합성 증명<br>
+            <strong>5가지 제출 레벨:</strong> Level 1(선언서) ~ Level 5(전수검사)<br>
+            <strong>18가지 서류:</strong> 설계문서·PFMEA·CP·MSA결과·검사성적서 등<br>
+            <strong>담당:</strong> 품질팀/개발팀 | <strong>시점:</strong> 신규/변경 납품 전
+            <div class="card-tags"><span class="tag tag-gray">조항 8.3.4.4</span> <span class="tag tag-gray">Level 3 기준</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="alert alert-blue">
+        <strong>💡 Core Tools 연계 구조:</strong>
+        APQP(기획) → DFMEA/PFMEA(위험분석) → CP(관리방법) → MSA(측정검증) → SPC(실시간관리) → PPAP(고객승인).
+        각 도구는 독립적이 아닌 <strong>하나의 품질 사슬</strong>로 연결. 앞 단계 미흡 시 뒤 단계에 반드시 영향 발생.
+      </div>
+    </div>
+
+    <!-- ══════════ 6. 내부심사 절차 ══════════ -->
+    <div id="sec-audit" class="section">
+      <div class="sec-title">🔍 내부심사 절차 — 계획에서 완료까지</div>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-num" style="background:#3B82F6">1</div>
+          <div class="step-body">
+            <div class="step-title">내부심사 계획 수립</div>
+            심사 범위·일정·심사원·조항 배정 결정. <strong>모든 조항 및 모든 부서</strong>를 연간 커버해야 함. 심사원은 심사 대상 부서와 독립 필수.
+            <div style="margin-top:6px;"><span class="tag tag-blue">산출물: 내부심사계획서</span></div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num" style="background:#3B82F6">2</div>
+          <div class="step-body">
+            <div class="step-title">심사 전 준비</div>
+            체크리스트 작성, 이전 심사 지적사항 확인, 해당 부서 문서·기록 사전 검토.
+            <div style="margin-top:6px;"><span class="tag tag-blue">산출물: 내부심사체크리스트</span></div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num" style="background:#22C55E">3</div>
+          <div class="step-body">
+            <div class="step-title">심사 실시 (오프닝 → 현장 확인 → 클로징)</div>
+            오프닝 미팅 → 문서 검토 → 현장 인터뷰 → 기록 확인 → 클로징 미팅. 부적합 발견 시 해당 부서 <strong>동의</strong> 후 부적합 보고서 작성.
+            <div style="margin-top:6px;"><span class="tag tag-green">산출물: 내부심사보고서, 부적합 보고서</span></div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num" style="background:#F59E0B">4</div>
+          <div class="step-body">
+            <div class="step-title">CAR (시정조치 요청서) 발행</div>
+            부적합 유형 분류 (중결함/경결함/관찰사항). 8D 방식으로 근본원인 분석. <strong>심각 부적합: 90일 내 / 경미: 다음 심사 전 완료</strong>.
+            <div style="margin-top:6px;"><span class="tag tag-yellow">산출물: CAR(8D), 원인분석서</span></div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num" style="background:#EF4444">5</div>
+          <div class="step-body">
+            <div class="step-title">시정조치 완료 및 효과성 검증</div>
+            조치 완료 후 효과성 검증 필수. 재발 방지 수평 전개 (유사 공정·제품 적용). 검증 결과를 다음 경영검토 입력으로 활용.
+            <div style="margin-top:6px;"><span class="tag tag-red">산출물: 효과성검증보고서, 수평전개기록</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sec-sub">📊 내부심사 유형 (강의 내용 반영)</div>
+      <table class="tbl">
+        <thead><tr><th>심사 유형</th><th>대상</th><th>주기</th><th>담당자</th><th>핵심 포인트</th></tr></thead>
+        <tbody>
+          <tr><td><span class="tag tag-blue">시스템 심사</span></td><td>QMS 전반 (조항별)</td><td>연 2회</td><td>내부심사원</td><td>문서·절차·기록의 적합성 확인</td></tr>
+          <tr><td><span class="tag tag-green">공정 심사</span></td><td>생산 공정 전반</td><td>연 1회↑</td><td>내부심사원</td><td>현장 실행 여부, CP 준수 여부</td></tr>
+          <tr><td><span class="tag tag-orange">제품 심사</span></td><td>완성품 샘플</td><td>필요 시</td><td>품질팀</td><td>고객 요구사항 충족 여부</td></tr>
+          <tr><td><span class="tag tag-purple">공급업체 심사</span></td><td>주요 협력사</td><td>연 2회</td><td>구매/품질팀</td><td>공급업체 QMS 수준 확인</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ══════════ 7. 사전 제출 자료 ══════════ -->
+    <div id="sec-presubmit" class="section">
+      <div class="sec-title">📬 외부심사 사전 제출 자료 — 심사 1개월 전 NKU 제출</div>
+
+      <div class="alert alert-yellow">
+        <strong>⏰ 제출 기한:</strong> 외부심사 일정 확정 후 <strong>심사 1개월 전까지</strong> NKU에 제출. 미제출 또는 지연 시 심사 일정 변경 또는 즉시 지적 대상.
+      </div>
+
+      <table class="tbl">
+        <thead><tr><th>No.</th><th>제출 서류</th><th>내용</th><th>담당팀</th><th>비고</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>KPI 실적 자료</td><td>품질목표 달성 현황, 불량률·납기율·고객만족 지수</td><td>경영/품질</td><td>연간 누적 데이터</td></tr>
+          <tr><td>2</td><td>프로세스 변경 이력</td><td>전 심사 이후 변경된 프로세스 목록 및 내용</td><td>품질팀</td><td>변경관리대장 기준</td></tr>
+          <tr><td>3</td><td>내부심사 결과 보고서</td><td>연간 내부심사 실시 결과, CAR 현황</td><td>품질팀</td><td>2회 이상 실시 증빙</td></tr>
+          <tr><td>4</td><td>경영검토 보고서</td><td>최근 경영검토 실시 결과 (입력 9항목 포함)</td><td>경영팀</td><td>1년 이내 실시 필수</td></tr>
+          <tr><td>5</td><td>고객 불만 처리 현황</td><td>고객 불만 접수·처리·CAR 완료 현황</td><td>영업/품질</td><td>10.2.3.1 조항 핵심</td></tr>
+          <tr><td>6</td><td>공급업체 성과 평가 결과</td><td>공급업체 평가 결과 및 조치 사항</td><td>구매팀</td><td>상하반기 각 1회</td></tr>
+          <tr><td>7</td><td>교육훈련 기록</td><td>연간 교육 계획 대비 이수 현황</td><td>인사팀</td><td>내부심사원 자격 포함</td></tr>
+          <tr><td>8</td><td>시정조치 (CAR) 완료 현황</td><td>이전 심사 지적사항 시정조치 완료 증빙</td><td>품질팀</td><td><strong>미완료 시 즉시 지적</strong></td></tr>
+        </tbody>
+      </table>
+
+      <div class="alert alert-red" style="margin-top:16px;">
+        <strong>🚨 전 세계 부적합 Top 10 — 우리 회사 취약 항목 (IATF 홈페이지 2주 업데이트):</strong><br>
+        1위 <strong>10.2.3.1 고객 불만 시정조치</strong> — 조치 후 효과성 검증 누락이 가장 많음<br>
+        2위 <strong>비상계획 (6.1.2.3)</strong> — 시나리오 미작성, 훈련 기록 없음<br>
+        3위 <strong>MSA (7.1.5.1.1)</strong> — Gage R&amp;R 실시 결과 없음<br>
+        4위 <strong>관리계획서 (8.5.1.2)</strong> — 현행 공정 반영 미흡<br>
+        5위 <strong>공정 능력 조사 (8.5.1.1)</strong> — Cp/Cpk 미관리
+      </div>
+    </div>
+
+    <!-- ══════════ 8. 부적합 대응 ══════════ -->
+    <div id="sec-nc" class="section">
+      <div class="sec-title">⚠️ 부적합 대응 절차 — 발견에서 종결까지</div>
+
+      <div class="sec-sub">📋 부적합 유형 및 대응 기한</div>
+      <table class="tbl" style="margin-bottom:20px;">
+        <thead><tr><th>유형</th><th>정의</th><th>대응 기한</th><th>보고 방법</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><span class="tag tag-red">중결함 (Major NC)</span></td>
+            <td>시스템 전체 미구축, 요구사항 전혀 미충족</td>
+            <td><strong>90일 이내 CAR 완료</strong></td>
+            <td>NKU에 서면 보고 + 증빙 제출</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-yellow">경결함 (Minor NC)</span></td>
+            <td>시스템 부분 미흡, 단순 누락</td>
+            <td><strong>다음 심사 전까지</strong></td>
+            <td>다음 심사 시 완료 확인</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-gray">관찰사항 (OFI)</span></td>
+            <td>잠재적 위험 또는 개선 권고</td>
+            <td>자체 일정에 따라</td>
+            <td>자체 개선 계획 수립</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="sec-sub">🔄 8D 시정조치 절차</div>
+      <div class="steps">
+        <div class="step"><div class="step-num" style="background:#3B82F6">D1</div><div class="step-body"><div class="step-title">팀 구성</div>문제 해결을 위한 팀 구성. 관련 부서 전문가 포함.</div></div>
+        <div class="step"><div class="step-num" style="background:#3B82F6">D2</div><div class="step-body"><div class="step-title">문제 기술</div>5W1H 방식으로 문제를 명확히 정의. "무엇이, 언제, 어디서, 어떻게" 발생했는가.</div></div>
+        <div class="step"><div class="step-num" style="background:#22C55E">D3</div><div class="step-body"><div class="step-title">즉각 봉쇄 조치</div>고객 영향 최소화를 위한 임시 조치. 재고 격리, 출하 보류 등.</div></div>
+        <div class="step"><div class="step-num" style="background:#22C55E">D4</div><div class="step-body"><div class="step-title">근본원인 분석</div>5-Why 또는 특성요인도(Fishbone) 활용. <strong>진짜 원인</strong>을 찾아야 재발 방지 가능.</div></div>
+        <div class="step"><div class="step-num" style="background:#F59E0B">D5</div><div class="step-body"><div class="step-title">영구 시정조치 선정</div>근본원인을 제거하는 영구 조치 선정. 효과성 검증 방법도 함께 결정.</div></div>
+        <div class="step"><div class="step-num" style="background:#F59E0B">D6</div><div class="step-body"><div class="step-title">영구 시정조치 실행</div>조치 실행 및 기록. PFMEA/CP/작업지도서 등 관련 문서 동시 개정.</div></div>
+        <div class="step"><div class="step-num" style="background:#EF4444">D7</div><div class="step-body"><div class="step-title">재발 방지 (수평 전개)</div>유사 공정·제품에 동일 조치 적용. 표준화 및 절차 반영.</div></div>
+        <div class="step"><div class="step-num" style="background:#EF4444">D8</div><div class="step-body"><div class="step-title">팀 노하우 공유 &amp; 종결</div>개선 내용 문서화, 팀 기여도 인정, 공식 종결 처리.</div></div>
+      </div>
+
+      <div class="alert alert-purple" style="margin-top:16px;">
+        <strong>💡 부적합 보고서 작성 핵심 (강의 14강 반영):</strong> 부적합 보고서 작성 시 <strong>해당 조직(부서)의 동의</strong>를 반드시 받아야 합니다. 조항 번호를 명확히 기입하고, 요구사항 대비 현황을 객관적 사실로 기술. 의견이나 추측이 아닌 <strong>근거(증거)</strong> 중심으로 작성.
+      </div>
+    </div>
+
+    <!-- ══════════ 9. 강의 핵심 요약 ══════════ -->
+    <div id="sec-lecture" class="section">
+      <div class="sec-title">📚 내부심사원 양성 과정 — 14강 핵심 요약 (2026.02.25~27)</div>
+
+      <div class="alert alert-blue">
+        강의 일자: 2026년 2월 25일(수)~27일(금) · 2박 3일 과정 · 강사: 외부 전문 심사원
+      </div>
+
+      <table class="tbl">
+        <thead><tr><th>강의</th><th>일시</th><th>핵심 주제</th><th>실무 적용 포인트</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><span class="tag tag-blue">1강</span></td>
+            <td>2/25 오전</td>
+            <td>IATF 인증기관 구조 &amp; 홈페이지 활용</td>
+            <td>Kiwa → <strong>NKU</strong> 명칭 변경. iatf-oversight.org에서 Top 10 부적합 조항 2주 단위 확인 가능</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-blue">2강</span></td>
+            <td>2/25 오후1</td>
+            <td>IATF 16949 전체 구조 개요</td>
+            <td>자동차 업계 요구 시스템. ISO 9001 + 자동차 특화 요구사항. 요구사항이 매우 방대함</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-blue">3강</span></td>
+            <td>2/25 오후2</td>
+            <td>효과성 vs 효율성 KPI</td>
+            <td>효과성(고객중심·COP) vs 효율성(조직관리·MP)으로 KPI 구분 설계 필요</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-gray">4강</span></td>
+            <td>2/25 오후3</td>
+            <td>(휴식/간담회)</td>
+            <td>약 6분 강의. 실질 내용 없음</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-blue">5강</span></td>
+            <td>2/25 오후4</td>
+            <td>프로세스 접근법 (COP / MP / SP)</td>
+            <td>프로세스 입력→활동→출력 구조. COP(핵심)/MP(경영)/SP(지원) 3종 분류. 프로세스 내부 요소 분석법</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-blue">6강</span></td>
+            <td>2/25 오후5</td>
+            <td>요구사항 조항 개요 (PDCA 구조)</td>
+            <td>IATF 요구사항은 PDCA 사이클로 구성. 4장(조직상황)~10장(개선) 흐름 파악</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-green">7강</span></td>
+            <td>2/26 오전1</td>
+            <td>조항 4장 — 조직의 상황 분석</td>
+            <td>내외부 이슈 파악 + 이해관계자 요구사항이 6.1 리스크 분석으로 연결됨. 명문화 필수</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-green">8강</span></td>
+            <td>2/26 오전2</td>
+            <td>조항 6.1 — 리스크·기회, 비상계획</td>
+            <td><strong>비상계획</strong>이 전 세계 Top 10 부적합. 화재·홍수·주요설비고장·공급중단 시나리오 + 훈련 기록 필수</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-green">9강</span></td>
+            <td>2/26 오후1</td>
+            <td>심사 접근법 &amp; 문서 vs 기록 구분</td>
+            <td>문서(규정·절차) vs 기록(업무수행 증거) 명확 구분. 심사원은 시스템+공정+제품 심사 수행</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-green">10강</span></td>
+            <td>2/26 오후2</td>
+            <td>조항 8장 — 운영 (APQP 중심)</td>
+            <td>APQP 5단계가 설계·개발 프로세스의 실체. 개발 서류 단계별 체크 구조</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-green">11강</span></td>
+            <td>2/26 오후3</td>
+            <td>FMEA 상세 (AIAG-VDA 4판)</td>
+            <td>AIAG-VDA 4판 적용 시 RPN → AP로 전환. 기존 RPN 방식 그대로 사용 시 지적 대상</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-green">12강</span></td>
+            <td>2/26 오후4</td>
+            <td>Core Tools 종합 정리</td>
+            <td>Core Tools 상호 연계 구조 확인. 개별 도구 이해 + 전체 흐름에서의 위치 파악</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-purple">13강</span></td>
+            <td>2/27 오후1</td>
+            <td>조항 9.3 — 경영검토</td>
+            <td>경영검토 입력 9항목 필수 포함. 심사 1개월 전 사전 제출 자료에 경영검토 보고서 포함</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-purple">14강</span></td>
+            <td>2/27 오후2</td>
+            <td>부적합 보고서 작성 실습</td>
+            <td>조항 찾기 → 요구사항 확인 → 현황 기술 → 부서 동의 → 서명 순서. 사실 기반 객관적 기술 필수</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="sec-sub">🔑 강의를 통해 확인된 우리 회사 긴급 보완 사항</div>
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-head" style="background:#B91C1C">🚨 즉시 조치 필요</div>
+          <div class="card-body">
+            <ul>
+              <li>비상계획 절차서 미작성 → 전 세계 Top 10 부적합</li>
+              <li>FMEA AIAG-VDA 4판 전환 미완료 (RPN→AP)</li>
+              <li>Core Tools 절차서 8종 전무</li>
+              <li>10.2.3.1 고객불만 시정조치 효과성 검증 기록 부재</li>
+            </ul>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head" style="background:#F59E0B">⚠️ 3개월 내 완료</div>
+          <div class="card-body">
+            <ul>
+              <li>2017년 미개정 프로세스 6종 현행화</li>
+              <li>조항 4장 조직 상황 분석 문서화</li>
+              <li>KPI 효과성/효율성 구분 재설계</li>
+              <li>MSA Gage R&amp;R 실시 및 기록</li>
+            </ul>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head" style="background:#1D4ED8">📌 지속 관리</div>
+          <div class="card-body">
+            <ul>
+              <li>iatf-oversight.org 부적합 Top 10 월 1회 확인</li>
+              <li>내부심사원 자격 유지 (재교육)</li>
+              <li>경영검토 연 2회 이상 실시 기록</li>
+              <li>인증기관 NKU로 변경 인식 전파</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ══════════ 10. 문서 현황 관리 ══════════ -->
+    <div id="sec-docstatus" class="section">
+      <div class="sec-title">📊 문서 현황 관리 — 유무 · 관리주기 · 서류 포맷</div>
+
+      <div class="kpi-row">
+        <div class="kc" style="border-color:#22C55E"><div class="kc-lbl">보유 문서</div><div class="kc-num" style="color:#22C55E">20</div><div class="kc-sub">현재 관리 중</div></div>
+        <div class="kc" style="border-color:#EF4444"><div class="kc-lbl">신규 작성 필요</div><div class="kc-num" style="color:#EF4444">8</div><div class="kc-sub">코어툴 4종 포함</div></div>
+        <div class="kc" style="border-color:#F59E0B"><div class="kc-lbl">긴급 개정 필요</div><div class="kc-num" style="color:#F59E0B">6</div><div class="kc-sub">8년 이상 미개정</div></div>
+        <div class="kc" style="border-color:#3B82F6"><div class="kc-lbl">검토 권고</div><div class="kc-num" style="color:#3B82F6">6</div><div class="kc-sub">4~6년 미개정</div></div>
+        <div class="kc" style="border-color:#8B5CF6"><div class="kc-lbl">목표 관리 문서</div><div class="kc-num" style="color:#8B5CF6">28</div><div class="kc-sub">완성 시 전체 체계</div></div>
+      </div>
+
+      <div class="sec-sub">📋 보유 문서 현황 (20종)</div>
+      <table class="tbl">
+        <thead>
+          <tr>
+            <th style="width:4%">No</th><th style="width:7%">구분</th><th style="width:18%">문서명</th><th style="width:11%">문서코드</th>
+            <th style="width:6%">유무</th><th style="width:8%">최근개정</th><th style="width:14%">관리주기</th><th style="width:10%">서류포맷</th>
+            <th style="width:8%">현재상태</th><th style="width:7%">담당팀</th><th>비고</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="text-align:center;font-weight:700">1</td>
+            <td><span class="tag tag-yellow">매뉴얼</span></td>
+            <td style="font-weight:600">품질경영매뉴얼</td>
+            <td style="text-align:center;font-size:10px">SSATQ-01</td>
+            <td style="text-align:center"><span class="tag tag-green">✅ 보유</span></td>
+            <td style="text-align:center">2022.12</td>
+            <td style="font-size:10px">연 1회 정기검토<br>변경 시 수시</td>
+            <td style="font-size:10px"><span class="tag tag-blue">Word</span></td>
+            <td style="text-align:center"><span class="tag st-ok">현행</span></td>
+            <td style="text-align:center;font-size:10px">경영팀</td>
+            <td style="font-size:10px">이해관계자 요구사항 갱신 여부 재검토 권장</td>
+          </tr>
+          <tr style="background:#FAFBFD">
+            <td style="text-align:center;font-weight:700">2</td>
+            <td><span class="tag tag-blue">COP</span></td>
+            <td style="font-weight:600">영업관리프로세스</td>
+            <td style="text-align:center;font-size:10px">SSAT-COP-01</td>
+            <td style="text-align:center"><span class="tag tag-green">✅ 보유</span></td>
+            <td style="text-align:center">2021.03</td>
+            <td style="font-size:10px">연 1회 정기검토<br>(매년 12월)</td>
+            <td style="font-size:10px"><span class="tag tag-blue">Word</span> + 양식</td>
+            <td style="text-align:center"><span class="tag st-warn">검토</span></td>
+            <td style="text-align:center;font-size:10px">영업팀</td>
+            <td style="font-size:10px">CSR·특수특성 최신 반영 확인</td>
+          </tr>
+          <tr>
+            <td style="text-align:center;font-weight:700">3</td>
+            <td><span class="tag tag-blue">COP</span></td>
+            <td style="font-weight:600">개발업무프로세스</td>
+            <td style="text-align:center;font-size:10px">SSAT-COP-02</td>
+            <td style="text-align:center"><span class="tag tag-green">✅ 보유</span></td>
+            <td style="text-align:center">2019.06</td>
+            <td style="font-size:10px">연 1회 정기검토<br>변경 시 수시</td>
+            <td style="font-size:10px"><span class="tag tag-blue">Word</span></td>
+            <td style="text-align:center"><span class="tag st-crit" style="font-size:9px">🔴개정</span></td>
+            <td style="text-align:center;font-size:10px">개발+품질</td>
+            <td style="font-size:10px">APQP 현행화·AIAG-VDA FMEA 4판 반영 필요</td>
+          </tr>
+          <tr style="background:#FAFBFD">
+            <td style="text-align:center;font-weight:700">4</td>
+            <td><span class="tag tag-blue">COP</span></td>
+            <td style="font-weight:600">생산관리프로세스</td>
+            <td style="text-align:center;font-size:10px">SSAT-COP-03</td>
+            <td style="text-align:center"><span class="tag tag-green">✅ 보유</span></td>
+            <td style="text-align:center">2017.04</td>
+            <td style="font-size:10px">연 1회 정기검토<br>변경 시 수시</td>
+            <td style="font-size:10px"><span class="tag tag-blue">Word</span></td>
+            <td style="text-align:center"><span class="tag st-crit">🚨긴급</span></td>
+            <td style="text-align:center;font-size:10px">생산+품질</td>
+            <td style="font-size:10px">8년! IATF:2016 생산 강화 요구사항 전혀 미반영</td>
+          </tr>
+          <tr>
+            <td style="text-align:center;font-weight:700">5</td>
+            <td><span class="tag tag-blue">COP</span></td>
+            <td style="font-weight:600">검사업무프로세스</td>
+            <td style="text-align:center;font-size:10px">SSAT-COP-04</td>
+            <td style="text-align:center"><span class="tag tag-green">✅ 보유</span></td>
+            <td style="text-align:center">2020.11</td>
+            <td style="font-size:10px">연 1회 정기검토</td>
+            <td style="font-size:10px"><span class="tag tag-blue">Word</span> + Excel 기록</td>
+            <td style="text-align:center"><span class="tag st-warn">검토</span></td>
+            <td style="text-align:center;font-size:10px">품질팀</td>
+            <td style="font-size:10px">MES 연계 절차·MSA/SPC 연계 보강 필요</td>
+          </tr>
+          <tr style="background:#FAFBFD">
+            <td style="text-align:center;font-weight:700">6</td>
+            <td><span class="tag tag-blue">COP</span></td>
+            <td style="font-weight:600">제품보존및인도관리</td>
+            <td style="text-align:center;font-size:10px">SSAT-COP-05</td>
+            <td style="text-align:center"><span class="tag tag-green">✅ 보유</span></td>
+            <td style="text-align:center">2017.04</td>
+            <td style="font-size:10px">연 1회 정기검토</td>
+            <td style="font-size:10px"><span class="tag tag-blue">Word</span></td>
+            <td style="text-align:center"><span class="tag st-crit">🚨긴급</span></td>
+            <td style="text-align:center;font-size:10px">생산+물류</td>
+            <td style="font-size:10px">8년! 취급/보관/출하 IATF:2016 변경사항 미반영</td>
+          </tr>
+          <tr>
+            <td style="text-align:center;font-weight:700">7</td>
+            <td><span class="tag tag-blue">COP</span></td>
+            <td style="font-weight:600">자금관리프로세스</td>
+            <td style="text-align:center;font-size:10px">SSAT-COP-06</td>
+            <td style="text-align:center"><span class="tag tag-green">✅ 보유</span></td>
+            <td style="text-align:center">2021.01</td>
+            <td style="font-size:10px">연 1회 정기검토</td>
+            <td style="font-size:10px"><span class="tag tag-blue">Word</span></td>
+            <td style="text-align:center"><span class="tag st-warn">검토</span></td>
+            <td style="text-align:center;font-size:10px">경영팀</td>
+            <td style="font-size:10px">IATF 직접 조항 없음. 최신성 검토 권장</td>
+          </tr>
+          <tr style="background:#FAFBFD">
+            <td style="text-align:center;font-weight:700">8</td>
+            <td><span class="tag tag-blue">COP</span></td>
+            <td style="font-weight:600">고객만족도프로세스</td>
+            <td style="text-align:center;font-size:10px">SSAT-COP-07</td>
+            <td style="text-align:center"><span class="tag tag-green">✅ 보유</span></td>
+            <td style="text-align:center">2017.04</td>
+            <td style="font-size:10px">연 1회 정기검토<br>조사: 연 2회</td>
+            <td style="font-size:10px"><span class="tag tag-blue">Word</span> + Excel 조사양식</td>
+            <td style="text-align:center"><span class="tag st-crit">🚨긴급</span></td>
+            <td style="text-align:center;font-size:10px">영업팀</td>
+            <td style="font-size:10px">8년! 9.1.2.1 보충사항·고객점수표 미반영</td>
+          </tr>
+          <tr>
+            <td style="text-align:center;font-weight:700">9</td>
+            <td><span class="tag tag-blue">COP</span></td>
+            <td style="font-weight:600">고객불만처리프로세스</td>
+            <td style="text-align:center;font-size:10px">SSAT-COP-08</td>
+            <td style="text-align:center"><span class="tag tag-green">✅ 보유</span></td>
+            <td style="text-align:center">2020.11</td>
+            <td style="font-size:10px">연 1회 정기검토<br>발생 시 수시</td>
+            <td style="font-size:10px"><span class="tag tag-blue">Word</span> + 8D양식</td>
+            <td style="text-align:center"><span class="tag st-warn">검토</span></td>
+            <td style="text-align:center;font-size:10px">품질팀</td>
+            <td style="font-size:10px">8D 방식 명시·고객 특별 보고 요구 확인</td>
+          </tr>
+          <tr style="background:#FAFBFD">
+            <td style="text-align:center;font-weight:700">10</td>
+            <td><span class="tag tag-purple">MP</span></td>
+            <td style="font-weight:600">리스크관리및예방조치</td>
+            <td style="text-align:center;font-size:10px">SSAT-MP-01</td>
+            <td style="text-align:center"><span class="tag tag-green">✅ 보유</span></td>
+            <td style="text-align:center">2024.01</td>
+            <td style="font-size:10px">연 1회 이상<br>경영검토 전 갱신</td>
+            <td style="font-size:10px"><span class="tag tag-blue">Word</span> + Excel 등록부</td>
+            <td style="text-align:center"><span class="tag st-ok">최신</span></td>
+            <td style="text-align:center;font-size:10px">경영팀</td>
+            <td style="font-size:10px">2024 개선본. SWOT·이해관계자 포함. 우수</td>
+          </tr>
+          <tr>
+            <td style="text-align:center;font-weight:700">11</td>
+            <td><span class="tag tag-purple">MP</span></td>
+            <td style="font-weight:600">경영검토프로세스</td>
+            <td style="text-align:center;font-size:10px">SSAT-MP-02</td>
+            <td style="text-align:center"><span class="tag tag-green">✅ 보유</span></td>
+            <td style="text-align:center">2017.04</td>
+            <td style="font-size:10px">연 2회 이상 실시<br>보고서 기록 유지</td>
+            <td style="font-size:10px"><span class="tag tag-blue">Word</span> + PPT 보고서</td>
+            <td style="text-align:center"><span class="tag st-crit">🚨긴급</span></td>
+            <td style="text-align:center;font-size:10px">경영팀</td>
+            <td style="font-size:10px">8년! IATF 9.3.2 전체 21개 입력항목 미반영</td>
+          </tr>
+          <tr style="background:#FAFBFD">
+            <td style="text-align:center;font-weight:700">12</td>
+            <td><span class="tag tag-purple">MP</span></td>
+            <td style="font-weight:600">사업계획운영프로세스</td>
+            <td style="text-align:center;font-size:10px">SSAT-MP-03</td>
+            <td style="text-align:center"><span class="tag tag-green">✅ 보유</span></td>
+            <td style="text-align:center">2017.04</td>
+            <td style="font-size:10px">연 1회 정기검토<br>(매년 12월)</td>
+            <td style="font-size:10px"><span class="tag tag-blue">Word</span></td>
+            <td style="text-align:center"><span class="tag st-crit" style="font-size:9px">🔴개정</span></td>
+            <td style="text-align:center;font-size:10px">경영팀</td>
+            <td style="font-size:10px">사업목표-품질목표 연계 체계 부재</td>
+          </tr>
+          <tr>
+            <td style="text-align:center;font-weight:700">13</td>
+            <td><span class="tag tag-purple">MP</span></td>
+            <td style="font-weight:600">내부심사프로세스</td>
+            <td style="text-align:center;font-size:10px">SSAT-MP-04</td>
+            <td style="text-align:center"><span class="tag tag-green">✅ 보유</span></td>
+            <td style="text-align:center">2020.12</td>
+            <td style="font-size:10px">연 1회 정기검토<br>심사: 연 2회 이상</td>
+            <td style="font-size:10px"><span class="tag tag-blue">Word</span> + Excel 체크리스트</td>
+            <td style="text-align:center"><span class="tag st-warn">검토</span></td>
+            <td style="text-align:center;font-size:10px">품질팀</td>
+            <td style="font-size:10px">공정심사·제품심사 포함 여부·심사원 자격 확인</td>
+          </tr>
+          <tr style="background:#FAFBFD">
+            <td style="text-align:center;font-weight:700">14</td>
+            <td><span class="tag tag-purple">MP</span></td>
+            <td style="font-weight:600">DATA분석및지속적개선</td>
+            <td style="text-align:center;font-size:10px">SSAT-MP-05</td>
+            <td style="text-align:center"><span class="tag tag-green">✅ 보유</span></td>
+            <td style="text-align:center">2017.04</td>
+            <td style="font-size:10px">연 1회 정기검토</td>
+            <td style="font-size:10px"><span class="tag tag-blue">Word</span></td>
+            <td style="text-align:center"><span class="tag st-crit">🚨긴급</span></td>
+            <td style="text-align:center;font-size:10px">품질팀</td>
+            <td style="font-size:10px">8년! IATF 10.3.1 지속적개선 보충사항 미반영</td>
+          </tr>
+          <tr>
+            <td style="text-align:center;font-weight:700">15</td>
+            <td><span class="tag tag-green">SP</span></td>
+            <td style="font-weight:600">문서관리프로세스</td>
+            <td style="text-align:center;font-size:10px">SSAT-SP-01</td>
+            <td style="text-align:center"><span class="tag tag-green">✅ 보유</span></td>
+            <td style="text-align:center">2022.11</td>
+            <td style="font-size:10px">연 1회 정기검토</td>
+            <td style="font-size:10px"><span class="tag tag-blue">Word</span></td>
+            <td style="text-align:center"><span class="tag st-ok">현행</span></td>
+            <td style="text-align:center;font-size:10px">경영팀</td>
+            <td style="font-size:10px">전자문서 관리 현행화 검토</td>
+          </tr>
+          <tr style="background:#FAFBFD">
+            <td style="text-align:center;font-weight:700">16</td>
+            <td><span class="tag tag-green">SP</span></td>
+            <td style="font-weight:600">기록관리프로세스</td>
+            <td style="text-align:center;font-size:10px">SSAT-SP-02</td>
+            <td style="text-align:center"><span class="tag tag-green">✅ 보유</span></td>
+            <td style="text-align:center">2023.11</td>
+            <td style="font-size:10px">연 1회 정기검토<br>보관기간 관리</td>
+            <td style="font-size:10px"><span class="tag tag-blue">Word</span> + 기록 대장</td>
+            <td style="text-align:center"><span class="tag st-ok">최신</span></td>
+            <td style="text-align:center;font-size:10px">경영팀</td>
+            <td style="font-size:10px">2023 최신 개정. 보관기간 기준 양호</td>
+          </tr>
+          <tr>
+            <td style="text-align:center;font-weight:700">17</td>
+            <td><span class="tag tag-green">SP</span></td>
+            <td style="font-weight:600">도면관리프로세스</td>
+            <td style="text-align:center;font-size:10px">SSAT-SP-03</td>
+            <td style="text-align:center"><span class="tag tag-green">✅ 보유</span></td>
+            <td style="text-align:center">2017.04</td>
+            <td style="font-size:10px">연 1회 정기검토<br>발행 시 수시</td>
+            <td style="font-size:10px"><span class="tag tag-blue">Word</span> + 도면 대장</td>
+            <td style="text-align:center"><span class="tag st-crit">🚨긴급</span></td>
+            <td style="text-align:center;font-size:10px">개발+품질</td>
+            <td style="font-size:10px">8년! CAD/3D 데이터 관리 절차 전혀 미반영</td>
+          </tr>
+          <tr style="background:#FAFBFD">
+            <td style="text-align:center;font-weight:700">18</td>
+            <td><span class="tag tag-green">SP</span></td>
+            <td style="font-weight:600">인적자원관리프로세스</td>
+            <td style="text-align:center;font-size:10px">SSAT-SP-04</td>
+            <td style="text-align:center"><span class="tag tag-green">✅ 보유</span></td>
+            <td style="text-align:center">2022.11</td>
+            <td style="font-size:10px">연 1회 정기검토<br>교육: 연간 계획 실시</td>
+            <td style="font-size:10px"><span class="tag tag-blue">Word</span> + 교육 기록</td>
+            <td style="text-align:center"><span class="tag st-warn">검토</span></td>
+            <td style="text-align:center;font-size:10px">인사팀</td>
+            <td style="font-size:10px">내부심사원 자격 요건 연계. 화학물질 교육 확인</td>
+          </tr>
+          <tr>
+            <td style="text-align:center;font-weight:700">19</td>
+            <td><span class="tag tag-green">SP</span></td>
+            <td style="font-weight:600">변경관리프로세스</td>
+            <td style="text-align:center;font-size:10px">SSAT-SP-05</td>
+            <td style="text-align:center"><span class="tag tag-green">✅ 보유</span></td>
+            <td style="text-align:center">2020.11</td>
+            <td style="font-size:10px">연 1회 정기검토<br>변경 발생 시 수시</td>
+            <td style="font-size:10px"><span class="tag tag-blue">Word</span> + 변경 신청서</td>
+            <td style="text-align:center"><span class="tag st-warn">검토</span></td>
+            <td style="text-align:center;font-size:10px">품질팀</td>
+            <td style="font-size:10px">8.5.6 변경관리 요구사항 전체 반영 여부</td>
+          </tr>
+          <tr style="background:#FAFBFD">
+            <td style="text-align:center;font-weight:700">20</td>
+            <td><span class="tag tag-green">SP</span></td>
+            <td style="font-weight:600">구매관리프로세스</td>
+            <td style="text-align:center;font-size:10px">SSAT-SP-06</td>
+            <td style="text-align:center"><span class="tag tag-green">✅ 보유</span></td>
+            <td style="text-align:center">2020.12</td>
+            <td style="font-size:10px">연 1회 정기검토<br>공급업체평가: 연 2회</td>
+            <td style="font-size:10px"><span class="tag tag-blue">Word</span> + Excel 평가표</td>
+            <td style="text-align:center"><span class="tag st-warn">검토</span></td>
+            <td style="text-align:center;font-size:10px">구매팀</td>
+            <td style="font-size:10px">공급업체 감사 주기·외주공정 관리 포함 여부</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="sec-sub" style="margin-top:24px">🆕 신규 작성 필요 문서 (8종)</div>
+      <table class="tbl">
+        <thead>
+          <tr>
+            <th style="width:4%">No</th><th style="width:7%">구분</th><th style="width:18%">문서명(예정)</th><th style="width:11%">예정코드</th>
+            <th style="width:6%">유무</th><th style="width:8%">작성기한</th><th style="width:14%">관리주기</th><th style="width:10%">서류포맷</th>
+            <th style="width:8%">우선순위</th><th style="width:7%">담당팀</th><th>핵심 포인트</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="text-align:center;font-weight:700">21</td>
+            <td><span class="tag tag-orange">CT</span></td>
+            <td style="font-weight:600">PFMEA 절차서</td>
+            <td style="text-align:center;font-size:10px">SSAT-CT-01 (신규)</td>
+            <td style="text-align:center"><span class="tag tag-red">❌ 없음</span></td>
+            <td style="text-align:center;font-weight:700;color:#B91C1C">1월 말</td>
+            <td style="font-size:10px">전 공정 대상<br>연 1회 이상 검토</td>
+            <td style="font-size:10px"><span class="tag tag-green">Excel</span> + Word절차</td>
+            <td style="text-align:center"><span class="tag st-crit">🚨즉시</span></td>
+            <td style="text-align:center;font-size:10px">품질팀</td>
+            <td style="font-size:10px">AIAG-VDA 4판. AP(High/Medium/Low) 방식. 경영검토 PFMEA 자료 활용</td>
+          </tr>
+          <tr style="background:#FAFBFD">
+            <td style="text-align:center;font-weight:700">22</td>
+            <td><span class="tag tag-orange">CT</span></td>
+            <td style="font-weight:600">관리계획서(CP) 절차서</td>
+            <td style="text-align:center;font-size:10px">SSAT-CT-02 (신규)</td>
+            <td style="text-align:center"><span class="tag tag-red">❌ 없음</span></td>
+            <td style="text-align:center;font-weight:700;color:#B91C1C">2월 말</td>
+            <td style="font-size:10px">PFMEA 연계<br>공정 변경 시 수시</td>
+            <td style="font-size:10px"><span class="tag tag-green">Excel</span> + Word절차</td>
+            <td style="text-align:center"><span class="tag st-crit">🚨즉시</span></td>
+            <td style="text-align:center;font-size:10px">품질팀</td>
+            <td style="font-size:10px">수입검사/공정/출하 3단계 CP. 관리 특성·측정 방법·주기 명시</td>
+          </tr>
+          <tr>
+            <td style="text-align:center;font-weight:700">23</td>
+            <td><span class="tag tag-orange">CT</span></td>
+            <td style="font-weight:600">MSA 측정시스템분석 절차서</td>
+            <td style="text-align:center;font-size:10px">SSAT-CT-03 (신규)</td>
+            <td style="text-align:center"><span class="tag tag-red">❌ 없음</span></td>
+            <td style="text-align:center;font-weight:700;color:#B91C1C">2월 말</td>
+            <td style="font-size:10px">Gage R&amp;R: 연 2회<br>절차서: 연 1회 검토</td>
+            <td style="font-size:10px"><span class="tag tag-green">Excel</span> (계산시트) + Word절차</td>
+            <td style="text-align:center"><span class="tag st-crit">🚨즉시</span></td>
+            <td style="text-align:center;font-size:10px">품질팀</td>
+            <td style="font-size:10px">%GRR≤10% 합격기준 명시. 핵심 치수 목록 포함. COP-04 연계</td>
+          </tr>
+          <tr style="background:#FAFBFD">
+            <td style="text-align:center;font-weight:700">24</td>
+            <td><span class="tag tag-orange">CT</span></td>
+            <td style="font-weight:600">SPC 통계적공정관리 절차서</td>
+            <td style="text-align:center;font-size:10px">SSAT-CT-04 (신규)</td>
+            <td style="text-align:center"><span class="tag tag-red">❌ 없음</span></td>
+            <td style="text-align:center;font-weight:700;color:#B91C1C">2월 말</td>
+            <td style="font-size:10px">공정 운영 중 상시<br>절차서: 연 1회 검토</td>
+            <td style="font-size:10px"><span class="tag tag-green">Excel</span> (관리도) + Word절차</td>
+            <td style="text-align:center"><span class="tag st-crit">🚨즉시</span></td>
+            <td style="text-align:center;font-size:10px">품질팀</td>
+            <td style="font-size:10px">특수 특성 공정 Cp/Cpk≥1.67 목표. Xbar-R 관리도 체계</td>
+          </tr>
+          <tr>
+            <td style="text-align:center;font-weight:700">25</td>
+            <td><span class="tag tag-green">SP</span></td>
+            <td style="font-weight:600">설비·금형 예방보전 절차서</td>
+            <td style="text-align:center;font-size:10px">SSAT-SP-07 (신규)</td>
+            <td style="text-align:center"><span class="tag tag-red">❌ 없음</span></td>
+            <td style="text-align:center;font-weight:700;color:#E65100">2월 말</td>
+            <td style="font-size:10px">PM 주기별 실시<br>절차서: 연 1회 검토</td>
+            <td style="font-size:10px"><span class="tag tag-blue">Word</span> + Excel PM일지</td>
+            <td style="text-align:center"><span class="tag st-crit" style="font-size:9px">🔴단기</span></td>
+            <td style="text-align:center;font-size:10px">생산팀</td>
+            <td style="font-size:10px">IATF 8.5.1.5. PM 주기·항목 체크리스트·기록. 긴급 고장 대응 절차</td>
+          </tr>
+          <tr style="background:#FAFBFD">
+            <td style="text-align:center;font-weight:700">26</td>
+            <td><span class="tag tag-green">SP</span></td>
+            <td style="font-weight:600">측정장비 교정 절차서</td>
+            <td style="text-align:center;font-size:10px">SSAT-SP-08 (신규)</td>
+            <td style="text-align:center"><span class="tag tag-red">❌ 없음</span></td>
+            <td style="text-align:center;font-weight:700;color:#E65100">5월 말</td>
+            <td style="font-size:10px">교정 주기에 따라<br>(보통 연 1~2회)</td>
+            <td style="font-size:10px"><span class="tag tag-blue">Word</span> + Excel 교정대장</td>
+            <td style="text-align:center"><span class="tag st-crit" style="font-size:9px">🔴단기</span></td>
+            <td style="text-align:center;font-size:10px">품질팀</td>
+            <td style="font-size:10px">교정 주기·기관 선정 기준. 불합격 시 처리 절차. COP-04 연계</td>
+          </tr>
+          <tr>
+            <td style="text-align:center;font-weight:700">27</td>
+            <td><span class="tag tag-green">SP</span></td>
+            <td style="font-weight:600">부적합품 관리 절차서</td>
+            <td style="text-align:center;font-size:10px">SSAT-SP-09 (신규)</td>
+            <td style="text-align:center"><span class="tag tag-red">❌ 없음</span></td>
+            <td style="text-align:center;font-weight:700;color:#E65100">5월 말</td>
+            <td style="font-size:10px">부적합 발생 시 수시<br>절차서: 연 1회 검토</td>
+            <td style="font-size:10px"><span class="tag tag-blue">Word</span> + 부적합 보고서 양식</td>
+            <td style="text-align:center"><span class="tag st-crit" style="font-size:9px">🔴단기</span></td>
+            <td style="text-align:center;font-size:10px">품질팀</td>
+            <td style="font-size:10px">8.7 전체. 식별·격리·특채·폐기 흐름도. 고객 통보 기준 명시</td>
+          </tr>
+          <tr style="background:#FAFBFD">
+            <td style="text-align:center;font-weight:700">28</td>
+            <td><span class="tag tag-green">SP</span></td>
+            <td style="font-weight:600">시정조치 절차서 (8D)</td>
+            <td style="text-align:center;font-size:10px">SSAT-SP-10 (신규)</td>
+            <td style="text-align:center"><span class="tag tag-red">❌ 없음</span></td>
+            <td style="text-align:center;font-weight:700;color:#2563EB">9월 말</td>
+            <td style="font-size:10px">부적합·고객불만 발생 시<br>절차서: 연 1회 검토</td>
+            <td style="font-size:10px"><span class="tag tag-blue">Word</span> + 8D 양식 (Excel)</td>
+            <td style="text-align:center"><span class="tag st-warn">권고</span></td>
+            <td style="text-align:center;font-size:10px">품질팀</td>
+            <td style="font-size:10px">10.2 전체. 8D 양식. 근본원인분석 방법. 효과성 검증 기준 포함</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="sec-sub" style="margin-top:24px">📌 서류 포맷 기준 안내</div>
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-head" style="background:#1D4ED8">📄 Word (.docx) — 절차서·매뉴얼</div>
+          <div class="card-body">
+            <ul>
+              <li>품질경영매뉴얼, 전 프로세스 절차서</li>
+              <li>목적·적용범위·정의·책임과권한·절차흐름 포함</li>
+              <li>회사 표준 양식 헤더/푸터 적용 필수</li>
+              <li>개정이력 테이블 포함 (버전·날짜·변경내용)</li>
+              <li>승인란: 작성 → 검토 → 승인 서명</li>
+            </ul>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head" style="background:#22C55E">📊 Excel (.xlsx) — 기록·양식·분석</div>
+          <div class="card-body">
+            <ul>
+              <li>PFMEA, CP, MSA, SPC 데이터시트</li>
+              <li>내부심사 체크리스트, 공급업체 평가표</li>
+              <li>PM 점검 일지, 교정 대장, 부적합 기록</li>
+              <li>경영검토 KPI 집계표, 연간 교육 계획</li>
+              <li>수식·계산 항목이 있는 모든 기록 양식</li>
+            </ul>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head" style="background:#8B5CF6">🗂️ 기록 보관 기준</div>
+          <div class="card-body">
+            <ul>
+              <li>최소 보관기간: 제품 수명 + 1년 이상</li>
+              <li>고객 요구 시: 고객 요구 기간 준수</li>
+              <li>일반 QMS 기록: 3년 이상</li>
+              <li>PPAP/APQP 관련: 양산 종료 후 15년</li>
+              <li>기록관리 절차 (SSAT-SP-02) 기준 적용</li>
+            </ul>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head" style="background:#F59E0B">⚡ 관리주기 요약</div>
+          <div class="card-body">
+            <ul>
+              <li><strong>연 1회:</strong> 절차서 전체 정기검토 (매년 12월)</li>
+              <li><strong>연 2회:</strong> 경영검토, MSA Gage R&amp;R, 고객만족도 조사</li>
+              <li><strong>수시:</strong> 공정변경·불만발생·부적합 시 즉시 갱신</li>
+              <li><strong>심사 전:</strong> 외부심사 1개월 전 전수 현행화</li>
+              <li><strong>5년 이상:</strong> 전면 재검토 및 개정 강력 권고</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ 11. 갭 분석 ══════════ -->
+    <div id="sec-gap" class="section">
+      <div class="sec-title">🔴 갭 분석 — 신규 작성 · 긴급 개정 대상</div>
+
+      <div class="kpi-row">
+        <div class="kc" style="border-color:#EF4444"><div class="kc-lbl">신규 문서 (없음)</div><div class="kc-num" style="color:#EF4444">8종</div><div class="kc-sub">즉시~단기 작성 필요</div></div>
+        <div class="kc" style="border-color:#F59E0B"><div class="kc-lbl">긴급 개정 (8년)</div><div class="kc-num" style="color:#F59E0B">6종</div><div class="kc-sub">IATF:2016 이전 문서</div></div>
+        <div class="kc" style="border-color:#3B82F6"><div class="kc-lbl">검토 권고 (4~6년)</div><div class="kc-num" style="color:#3B82F6">6종</div><div class="kc-sub">부분 보완 권장</div></div>
+        <div class="kc" style="border-color:#22C55E"><div class="kc-lbl">현행 유지 (최신)</div><div class="kc-num" style="color:#22C55E">4종</div><div class="kc-sub">이상 없음</div></div>
+      </div>
+
+      <div class="sec-sub">🚨 신규 작성 필요 문서 (코어툴 4종 포함)</div>
+      <div class="card-grid">
+        <div class="card" style="border-left:4px solid #B91C1C">
+          <div class="card-head" style="background:#B91C1C">🚨 PFMEA 절차서 — 즉시 (1월 말)</div>
+          <div class="card-body">
+            AIAG-VDA 4판 기준. AP(High/Medium/Low) 방식 적용. 전 공정 대상.<br>기존 PFMEA 자료(경영검토 파일)를 활용하여 빠르게 절차화.<br><strong>심사 부적합 최고위험 문서.</strong>
+            <div class="card-tags"><span class="tag tag-red">조항 8.5.1.2</span><span class="tag tag-red">AIAG-VDA 4판</span></div>
+          </div>
+        </div>
+        <div class="card" style="border-left:4px solid #B91C1C">
+          <div class="card-head" style="background:#B91C1C">🚨 관리계획서(CP) 절차서 — 즉시 (2월 말)</div>
+          <div class="card-body">
+            PFMEA와 반드시 연계 작성. 수입검사/공정/출하 3단계 CP 작성 의무.<br>관리 특성·측정 방법·주기 명시 필요.
+            <div class="card-tags"><span class="tag tag-red">조항 8.5.1.2</span><span class="tag tag-red">3단계 CP</span></div>
+          </div>
+        </div>
+        <div class="card" style="border-left:4px solid #B91C1C">
+          <div class="card-head" style="background:#B91C1C">🚨 MSA 측정시스템분석 절차서 — 즉시 (2월 말)</div>
+          <div class="card-body">
+            Gage R&amp;R 기준 명시(%GRR≤10% 합격). 핵심 치수 목록 포함.<br>연 2회 이상 실시 계획. 검사프로세스(COP-04)와 연계.
+            <div class="card-tags"><span class="tag tag-red">조항 7.1.5.1.1</span><span class="tag tag-red">%GRR≤10%</span></div>
+          </div>
+        </div>
+        <div class="card" style="border-left:4px solid #B91C1C">
+          <div class="card-head" style="background:#B91C1C">🚨 SPC 통계적공정관리 절차서 — 즉시 (2월 말)</div>
+          <div class="card-body">
+            특수 특성 공정 Cp/Cpk ≥ 1.67 관리 목표. Ppk vs Cpk 구분 명시.<br>관리도 종류(Xbar-R 등) 선정 기준 포함.
+            <div class="card-tags"><span class="tag tag-red">조항 8.5.1.1</span><span class="tag tag-red">Cpk≥1.67</span></div>
+          </div>
+        </div>
+        <div class="card" style="border-left:4px solid #E65100">
+          <div class="card-head" style="background:#E65100">🔴 설비·금형 예방보전 절차서 — 단기 (2월 말)</div>
+          <div class="card-body">
+            COP-03 생산관리 개정 시 연계 작성. PM 주기·항목 체크리스트·기록 양식 포함.<br>긴급 고장 대응 절차 포함.
+            <div class="card-tags"><span class="tag tag-orange">조항 8.5.1.5</span></div>
+          </div>
+        </div>
+        <div class="card" style="border-left:4px solid #E65100">
+          <div class="card-head" style="background:#E65100">🔴 측정장비 교정 절차서 — 단기 (5월 말)</div>
+          <div class="card-body">
+            교정 주기·기관 선정 기준. 불합격 시 처리 절차. 교정 대장 양식 연계.<br>COP-04 검사업무와 연계.
+            <div class="card-tags"><span class="tag tag-orange">조항 7.1.5.1</span></div>
+          </div>
+        </div>
+        <div class="card" style="border-left:4px solid #E65100">
+          <div class="card-head" style="background:#E65100">🔴 부적합품 관리 절차서 — 단기 (5월 말)</div>
+          <div class="card-body">
+            식별·격리·특채·폐기 흐름도 포함. 고객 통보 기준 명시.<br>COP-04와 연계. 스크랩/재작업 기록 체계.
+            <div class="card-tags"><span class="tag tag-orange">조항 8.7</span></div>
+          </div>
+        </div>
+        <div class="card" style="border-left:4px solid #F59E0B">
+          <div class="card-head" style="background:#F59E0B">⚠️ 시정조치 절차서 (8D) — 권고 (9월 말)</div>
+          <div class="card-body">
+            COP-08 고객불만처리와 연계 또는 통합. 8D 방식. 근본원인분석 방법 명시.<br>효과성 검증 기준 포함.
+            <div class="card-tags"><span class="tag tag-yellow">조항 10.2</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sec-sub" style="margin-top:8px">⚠️ 긴급 개정 필요 문서 (8년 이상 미개정 6종)</div>
+      <table class="tbl">
+        <thead>
+          <tr><th>문서명</th><th>코드</th><th>최근개정</th><th>경과</th><th>주요 문제점</th><th>IATF 조항</th><th>개정기한</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="font-weight:600">생산관리프로세스</td>
+            <td style="text-align:center;font-size:10px">SSAT-COP-03</td>
+            <td style="text-align:center">2017.04</td>
+            <td style="text-align:center"><span class="tag tag-red">8년</span></td>
+            <td style="font-size:10px">IATF:2016 생산 강화 요구사항 전혀 미반영. 설비PM, 작업지도서 체계 부재</td>
+            <td style="text-align:center;font-size:10px">8.5.1</td>
+            <td style="text-align:center;font-weight:700;color:#B91C1C">2월 말</td>
+          </tr>
+          <tr style="background:#FAFBFD">
+            <td style="font-weight:600">고객만족도프로세스</td>
+            <td style="text-align:center;font-size:10px">SSAT-COP-07</td>
+            <td style="text-align:center">2017.04</td>
+            <td style="text-align:center"><span class="tag tag-red">8년</span></td>
+            <td style="font-size:10px">9.1.2.1 보충사항 미반영. 고객점수표 검토 절차 부재. KPI 미현행화</td>
+            <td style="text-align:center;font-size:10px">9.1.2.1</td>
+            <td style="text-align:center;font-weight:700;color:#E65100">6월 말</td>
+          </tr>
+          <tr>
+            <td style="font-weight:600">제품보존및인도관리</td>
+            <td style="text-align:center;font-size:10px">SSAT-COP-05</td>
+            <td style="text-align:center">2017.04</td>
+            <td style="text-align:center"><span class="tag tag-red">8년</span></td>
+            <td style="font-size:10px">취급/보관/포장 IATF:2016 변경사항 미반영. 고객 특별 요구사항 미포함</td>
+            <td style="text-align:center;font-size:10px">8.5.4</td>
+            <td style="text-align:center;font-weight:700;color:#2563EB">8월 말</td>
+          </tr>
+          <tr style="background:#FAFBFD">
+            <td style="font-weight:600">경영검토프로세스</td>
+            <td style="text-align:center;font-size:10px">SSAT-MP-02</td>
+            <td style="text-align:center">2017.04</td>
+            <td style="text-align:center"><span class="tag tag-red">8년</span></td>
+            <td style="font-size:10px">IATF 9.3.2 전체 21개 입력항목 미반영. KPI·저품질비용 체계화 필요</td>
+            <td style="text-align:center;font-size:10px">9.3</td>
+            <td style="text-align:center;font-weight:700;color:#B91C1C">2월 말</td>
+          </tr>
+          <tr>
+            <td style="font-weight:600">DATA분석및지속적개선</td>
+            <td style="text-align:center;font-size:10px">SSAT-MP-05</td>
+            <td style="text-align:center">2017.04</td>
+            <td style="text-align:center"><span class="tag tag-red">8년</span></td>
+            <td style="font-size:10px">10.3.1 지속적개선 보충사항 미반영. 파레토·특성요인도 도구 미명시</td>
+            <td style="text-align:center;font-size:10px">10.3.1</td>
+            <td style="text-align:center;font-weight:700;color:#E65100">3월 말</td>
+          </tr>
+          <tr style="background:#FAFBFD">
+            <td style="font-weight:600">도면관리프로세스</td>
+            <td style="text-align:center;font-size:10px">SSAT-SP-03</td>
+            <td style="text-align:center">2017.04</td>
+            <td style="text-align:center"><span class="tag tag-red">8년</span></td>
+            <td style="font-size:10px">CAD/3D 데이터 관리 절차 전혀 미반영. 유효본 배포 체계 미흡</td>
+            <td style="text-align:center;font-size:10px">7.5</td>
+            <td style="text-align:center;font-weight:700;color:#E65100">6월 말</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ══════════ 12. 긴급 조치 계획 ══════════ -->
+    <div id="sec-action" class="section">
+      <div class="sec-title">⚡ 긴급 조치 계획 — Phase별 문서화 로드맵</div>
+
+      <div style="background:#FEF9C3;border:1px solid #F59E0B;border-radius:8px;padding:14px;margin-bottom:20px;font-size:12px">
+        <strong>📌 전략:</strong> 외부심사(10월) 기준으로 역산하여 Phase별로 집중 추진. Phase 0~1 (Core Tools 신규 4종 + 8년 문서 긴급개정)을 1분기 내 완료하는 것이 핵심.
+      </div>
+
+      <!-- Phase 0 -->
+      <div style="margin-bottom:16px">
+        <div style="background:#B91C1C;color:#fff;padding:11px 16px;border-radius:8px 8px 0 0;font-size:13px;font-weight:700">PHASE 0 — 즉시 착수 (0~4주) · Core Tools 4종 신규 작성</div>
+        <table class="tbl" style="border-radius:0 0 8px 8px">
+          <thead><tr><th style="width:4%">No</th><th style="width:22%">조치 내용</th><th style="width:15%">대상 문서</th><th style="width:9%">담당팀</th><th style="width:9%">완료기한</th><th style="width:7%">소요</th><th>핵심 포인트</th></tr></thead>
+          <tbody>
+            <tr><td style="text-align:center;font-weight:700;color:#B91C1C">1</td><td style="font-weight:600">PFMEA 절차서 신규 작성</td><td style="text-align:center;font-size:10px">SSAT-CT-01 (신규)</td><td style="text-align:center">품질팀</td><td style="text-align:center;font-weight:700;color:#B91C1C">1월 말</td><td style="text-align:center">4~6주</td><td style="font-size:10px;color:#475569">AIAG-VDA 4판. AP방식. 전공정. 경영검토 PFMEA자료 활용</td></tr>
+            <tr style="background:#FAFBFD"><td style="text-align:center;font-weight:700;color:#B91C1C">2</td><td style="font-weight:600">관리계획서(CP) 절차서 신규 작성</td><td style="text-align:center;font-size:10px">SSAT-CT-02 (신규)</td><td style="text-align:center">품질팀</td><td style="text-align:center;font-weight:700;color:#B91C1C">2월 말</td><td style="text-align:center">3~4주</td><td style="font-size:10px;color:#475569">PFMEA연계 필수. 수입/공정/출하 3단계</td></tr>
+            <tr><td style="text-align:center;font-weight:700;color:#B91C1C">3</td><td style="font-weight:600">MSA 절차서 신규 작성</td><td style="text-align:center;font-size:10px">SSAT-CT-03 (신규)</td><td style="text-align:center">품질팀</td><td style="text-align:center;font-weight:700;color:#B91C1C">2월 말</td><td style="text-align:center">2~3주</td><td style="font-size:10px;color:#475569">%GRR≤10% 합격기준 명시. 연2회 이상</td></tr>
+            <tr style="background:#FAFBFD"><td style="text-align:center;font-weight:700;color:#B91C1C">4</td><td style="font-weight:600">SPC 절차서 신규 작성</td><td style="text-align:center;font-size:10px">SSAT-CT-04 (신규)</td><td style="text-align:center">품질팀</td><td style="text-align:center;font-weight:700;color:#B91C1C">2월 말</td><td style="text-align:center">3~4주</td><td style="font-size:10px;color:#475569">Cp/Cpk≥1.67 목표. 특수특성 관리도 체계</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Phase 1 -->
+      <div style="margin-bottom:16px">
+        <div style="background:#E65100;color:#fff;padding:11px 16px;border-radius:8px 8px 0 0;font-size:13px;font-weight:700">PHASE 1 — 1~2개월 · 긴급 개정 1단계 (8년 문서)</div>
+        <table class="tbl" style="border-radius:0 0 8px 8px">
+          <thead><tr><th style="width:4%">No</th><th style="width:22%">조치 내용</th><th style="width:15%">대상 문서</th><th style="width:9%">담당팀</th><th style="width:9%">완료기한</th><th style="width:7%">소요</th><th>핵심 포인트</th></tr></thead>
+          <tbody>
+            <tr><td style="text-align:center;font-weight:700;color:#E65100">5</td><td style="font-weight:600">COP-03 생산관리프로세스 전면 개정</td><td style="text-align:center;font-size:10px">SSAT-COP-03</td><td style="text-align:center">생산+품질</td><td style="text-align:center;font-weight:700;color:#E65100">2월 말</td><td style="text-align:center">4~5주</td><td style="font-size:10px;color:#475569">8.5.1 전체 반영. MES 연계 현행화. 설비PM 내용 포함</td></tr>
+            <tr style="background:#FAFBFD"><td style="text-align:center;font-weight:700;color:#E65100">6</td><td style="font-weight:600">MP-02 경영검토프로세스 전면 개정</td><td style="text-align:center;font-size:10px">SSAT-MP-02</td><td style="text-align:center">경영팀</td><td style="text-align:center;font-weight:700;color:#E65100">2월 말</td><td style="text-align:center">3~4주</td><td style="font-size:10px;color:#475569">IATF 9.3.2 전체 21개 입력항목. KPI·PFMEA·저품질비용 체계화</td></tr>
+            <tr><td style="text-align:center;font-weight:700;color:#E65100">7</td><td style="font-weight:600">MP-05 DATA분석개선프로세스 전면 개정</td><td style="text-align:center;font-size:10px">SSAT-MP-05</td><td style="text-align:center">품질팀</td><td style="text-align:center;font-weight:700;color:#E65100">3월 말</td><td style="text-align:center">3주</td><td style="font-size:10px;color:#475569">10.3.1 지속적개선 보충사항. 파레토·특성요인도 도구 명시</td></tr>
+            <tr style="background:#FAFBFD"><td style="text-align:center;font-weight:700;color:#E65100">8</td><td style="font-weight:600">설비·금형 예방보전 절차서 신규 작성</td><td style="text-align:center;font-size:10px">SSAT-SP-07 (신규)</td><td style="text-align:center">생산팀</td><td style="text-align:center;font-weight:700;color:#E65100">2월 말</td><td style="text-align:center">3주</td><td style="font-size:10px;color:#475569">IATF 8.5.1.5 전체. PM주기·항목체크리스트·기록체계</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Phase 2 -->
+      <div style="margin-bottom:16px">
+        <div style="background:#15803D;color:#fff;padding:11px 16px;border-radius:8px 8px 0 0;font-size:13px;font-weight:700">PHASE 2 — 2~3개월 · 긴급 개정 2단계</div>
+        <table class="tbl" style="border-radius:0 0 8px 8px">
+          <thead><tr><th style="width:4%">No</th><th style="width:22%">조치 내용</th><th style="width:15%">대상 문서</th><th style="width:9%">담당팀</th><th style="width:9%">완료기한</th><th style="width:7%">소요</th><th>핵심 포인트</th></tr></thead>
+          <tbody>
+            <tr><td style="text-align:center;font-weight:700;color:#15803D">9</td><td style="font-weight:600">COP-07 고객만족도프로세스 전면 개정</td><td style="text-align:center;font-size:10px">SSAT-COP-07</td><td style="text-align:center">영업팀</td><td style="text-align:center;font-weight:700;color:#15803D">6월 말</td><td style="text-align:center">2~3주</td><td style="font-size:10px;color:#475569">9.1.2.1 보충사항. 고객점수표 검토 절차 추가. 고객별 KPI 현행화</td></tr>
+            <tr style="background:#FAFBFD"><td style="text-align:center;font-weight:700;color:#15803D">10</td><td style="font-weight:600">SP-03 도면관리프로세스 전면 개정</td><td style="text-align:center;font-size:10px">SSAT-SP-03</td><td style="text-align:center">개발+품질</td><td style="text-align:center;font-weight:700;color:#15803D">6월 말</td><td style="text-align:center">2~3주</td><td style="font-size:10px;color:#475569">CAD·3D 데이터 관리 절차. 유효본 배포 체계. 고객도면 보안</td></tr>
+            <tr><td style="text-align:center;font-weight:700;color:#15803D">11</td><td style="font-weight:600">측정장비 교정 절차서 신규 작성</td><td style="text-align:center;font-size:10px">SSAT-SP-08 (신규)</td><td style="text-align:center">품질팀</td><td style="text-align:center;font-weight:700;color:#15803D">5월 말</td><td style="text-align:center">2주</td><td style="font-size:10px;color:#475569">7.1.5.1 전체. 교정주기표. 불합격처리 기준</td></tr>
+            <tr style="background:#FAFBFD"><td style="text-align:center;font-weight:700;color:#15803D">12</td><td style="font-weight:600">부적합품 관리 절차서 신규 작성</td><td style="text-align:center;font-size:10px">SSAT-SP-09 (신규)</td><td style="text-align:center">품질팀</td><td style="text-align:center;font-weight:700;color:#15803D">5월 말</td><td style="text-align:center">2주</td><td style="font-size:10px;color:#475569">8.7 전체. 식별·격리·특채·폐기 흐름도. 고객통보기준</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Phase 3 -->
+      <div style="margin-bottom:16px">
+        <div style="background:#1D4ED8;color:#fff;padding:11px 16px;border-radius:8px 8px 0 0;font-size:13px;font-weight:700">PHASE 3 — 3~6개월 · 추가 개정 + PPAP</div>
+        <table class="tbl" style="border-radius:0 0 8px 8px">
+          <thead><tr><th style="width:4%">No</th><th style="width:22%">조치 내용</th><th style="width:15%">대상 문서</th><th style="width:9%">담당팀</th><th style="width:9%">완료기한</th><th style="width:7%">소요</th><th>핵심 포인트</th></tr></thead>
+          <tbody>
+            <tr><td style="text-align:center;font-weight:700;color:#1D4ED8">13</td><td style="font-weight:600">COP-05 제품보존및인도 전면 개정</td><td style="text-align:center;font-size:10px">SSAT-COP-05</td><td style="text-align:center">생산+물류</td><td style="text-align:center;font-weight:700;color:#1D4ED8">8월 말</td><td style="text-align:center">2~3주</td><td style="font-size:10px;color:#475569">8.5.4 취급/보관/포장. 고객 특별 요구사항 포함</td></tr>
+            <tr style="background:#FAFBFD"><td style="text-align:center;font-weight:700;color:#1D4ED8">14</td><td style="font-weight:600">COP-02 개발업무프로세스 개정</td><td style="text-align:center;font-size:10px">SSAT-COP-02</td><td style="text-align:center">개발+품질</td><td style="text-align:center;font-weight:700;color:#1D4ED8">9월 말</td><td style="text-align:center">4주</td><td style="font-size:10px;color:#475569">APQP 5단계 현행화. AIAG-VDA FMEA 4판 연계</td></tr>
+            <tr><td style="text-align:center;font-weight:700;color:#1D4ED8">15</td><td style="font-weight:600">시정조치 절차서 (8D) 신규 작성</td><td style="text-align:center;font-size:10px">SSAT-SP-10 (신규)</td><td style="text-align:center">품질팀</td><td style="text-align:center;font-weight:700;color:#1D4ED8">9월 말</td><td style="text-align:center">2주</td><td style="font-size:10px;color:#475569">10.2 전체. 8D양식. 근본원인분석. 효과성검증기준</td></tr>
+            <tr style="background:#FAFBFD"><td style="text-align:center;font-weight:700;color:#1D4ED8">16</td><td style="font-weight:600">PPAP 서류 절차서 신규 작성</td><td style="text-align:center;font-size:10px">SSAT-CT-05 (신규)</td><td style="text-align:center">품질+개발</td><td style="text-align:center;font-weight:700;color:#1D4ED8">11월 말</td><td style="text-align:center">4주</td><td style="font-size:10px;color:#475569">8.3.4.4. Level 1~5 기준. 18종 서류목록</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Phase 4 -->
+      <div style="margin-bottom:16px">
+        <div style="background:#374151;color:#fff;padding:11px 16px;border-radius:8px 8px 0 0;font-size:13px;font-weight:700">PHASE 4 — 유지 관리 · 검토 문서 갱신</div>
+        <table class="tbl" style="border-radius:0 0 8px 8px">
+          <thead><tr><th style="width:4%">No</th><th style="width:22%">조치 내용</th><th style="width:15%">대상 문서</th><th style="width:9%">담당팀</th><th style="width:9%">완료기한</th><th style="width:7%">소요</th><th>핵심 포인트</th></tr></thead>
+          <tbody>
+            <tr><td style="text-align:center;font-weight:700;color:#374151">17</td><td style="font-weight:600">COP-01 영업관리프로세스 검토 완료</td><td style="text-align:center;font-size:10px">SSAT-COP-01</td><td style="text-align:center">영업팀</td><td style="text-align:center;font-weight:700;color:#374151">6월 말</td><td style="text-align:center">1~2주</td><td style="font-size:10px;color:#475569">CSR 최신 반영. 안전관련 부품 특별 관리 기준 추가</td></tr>
+            <tr style="background:#FAFBFD"><td style="text-align:center;font-weight:700;color:#374151">18</td><td style="font-weight:600">COP-04 검사업무프로세스 검토 완료</td><td style="text-align:center;font-size:10px">SSAT-COP-04</td><td style="text-align:center">품질팀</td><td style="text-align:center;font-weight:700;color:#374151">6월 말</td><td style="text-align:center">2주</td><td style="font-size:10px;color:#475569">MSA·SPC 신규절차 연계. MES 전산관리 현행화</td></tr>
+            <tr><td style="text-align:center;font-weight:700;color:#374151">19</td><td style="font-weight:600">MP-04 내부심사프로세스 검토 완료</td><td style="text-align:center;font-size:10px">SSAT-MP-04</td><td style="text-align:center">품질팀</td><td style="text-align:center;font-weight:700;color:#374151">6월 말</td><td style="text-align:center">2주</td><td style="font-size:10px;color:#475569">공정심사·제품심사 포함 여부. 심사원 자격 기준</td></tr>
+            <tr style="background:#FAFBFD"><td style="text-align:center;font-weight:700;color:#374151">20</td><td style="font-weight:600">SP-06 구매관리프로세스 검토 완료</td><td style="text-align:center;font-size:10px">SSAT-SP-06</td><td style="text-align:center">구매팀</td><td style="text-align:center;font-weight:700;color:#374151">6월 말</td><td style="text-align:center">2주</td><td style="font-size:10px;color:#475569">8.4.2 모니터링 기준. 협력업체 감사 절차. 긴급수급</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ══════════ 13. 월별 체크리스트 ══════════ -->
+    <div id="sec-checklist" class="section">
+      <div class="sec-title">📅 월별 핵심 체크리스트 (2026년)</div>
+
+      <div style="background:#EFF6FF;border:1px solid #BFDBFE;border-radius:8px;padding:12px;margin-bottom:20px;font-size:12px">
+        📌 범례: <span style="background:#EDE9FE;color:#6D28D9;padding:1px 6px;border-radius:3px;font-size:10px">🆕 신규 문서 작성</span> &nbsp;
+        <span style="background:#DBEAFE;color:#1D4ED8;padding:1px 6px;border-radius:3px;font-size:10px">▲ 심사·점검·측정</span> &nbsp;
+        <span style="background:#DCFCE7;color:#15803D;padding:1px 6px;border-radius:3px;font-size:10px">◎ 교육</span> &nbsp;
+        <span style="background:#F3E5F5;color:#6D28D9;padding:1px 6px;border-radius:3px;font-size:10px">◉ 경영검토</span> &nbsp;
+        <span style="background:#FEF9C3;color:#854D0E;padding:1px 6px;border-radius:3px;font-size:10px">■ 계획·보고</span> &nbsp;
+        <span style="background:#FEE2E2;color:#B91C1C;padding:1px 6px;border-radius:3px;font-size:10px">◆ 외부심사</span>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:12px">
+
+        <div style="background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 1px 6px rgba(0,0,0,.07)">
+          <div style="background:#B91C1C;color:#fff;padding:10px 14px;font-weight:700;font-size:12px">1월 핵심 체크리스트</div>
+          <div style="padding:12px 16px;font-size:11px;line-height:2.1">
+            <div>☐ 🆕 PFMEA 절차서 작성 즉시 착수 (최우선)</div>
+            <div>☐ 🆕 MP-02 경영검토프로세스 전면 개정 착수</div>
+            <div>☐ ◉ 연간 경영 검토 실시 (MP-01 리스크 등록부 갱신 포함)</div>
+            <div>☐ ■ 품질 방침·목표 재확인 및 전사 공표</div>
+            <div>☐ ■ 연간 PM·교육·내부심사 계획서 확정</div>
+            <div>☐ ■ 문서 현행화 계획 수립 (긴급개정 6종 일정 확정)</div>
+          </div>
+        </div>
+
+        <div style="background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 1px 6px rgba(0,0,0,.07)">
+          <div style="background:#B91C1C;color:#fff;padding:10px 14px;font-weight:700;font-size:12px">2월 핵심 체크리스트</div>
+          <div style="padding:12px 16px;font-size:11px;line-height:2.1">
+            <div>☐ 🆕 관리계획서(CP) 절차서 작성 완료</div>
+            <div>☐ 🆕 MSA 절차서 작성 완료</div>
+            <div>☐ 🆕 SPC 절차서 작성 완료</div>
+            <div>☐ 🆕 COP-03 생산관리프로세스 전면 개정 완료</div>
+            <div>☐ 🆕 MP-02 경영검토프로세스 전면 개정 완료</div>
+            <div>☐ 🆕 설비·금형 예방보전(PM) 절차서 완료</div>
+            <div>☐ ▲ 측정장비 상반기 교정 착수</div>
+          </div>
+        </div>
+
+        <div style="background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 1px 6px rgba(0,0,0,.07)">
+          <div style="background:#E65100;color:#fff;padding:10px 14px;font-weight:700;font-size:12px">3월 핵심 체크리스트</div>
+          <div style="padding:12px 16px;font-size:11px;line-height:2.1">
+            <div>☐ 🆕 MP-05 DATA분석개선 전면 개정 완료</div>
+            <div>☐ ◎ 코어 툴 교육 실시 (PFMEA·CP 신규 절차 기반)</div>
+            <div>☐ ▲ 1분기 공정 감사 실시 (COP-04 기반)</div>
+            <div>☐ ■ 작업 지도서 전면 검토·현행화 (CP 연계)</div>
+            <div>☐ ▲ 측정장비 상반기 교정 완료</div>
+            <div>☐ ■ 1분기 KPI 집계 및 보고 (개정 MP-02 양식)</div>
+          </div>
+        </div>
+
+        <div style="background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 1px 6px rgba(0,0,0,.07)">
+          <div style="background:#15803D;color:#fff;padding:10px 14px;font-weight:700;font-size:12px">4월 핵심 체크리스트</div>
+          <div style="padding:12px 16px;font-size:11px;line-height:2.1">
+            <div>☐ ▲ 1차 내부 심사 실시 (전 조항 — 신규 문서 4종 포함)</div>
+            <div>☐ ◎ 내부 심사원 양성 교육 실시 (2일 과정)</div>
+            <div>☐ ▲ MSA 1차 실시 (신규 MSA 절차 기반 Gage R&amp;R)</div>
+            <div>☐ ■ CAR 발행 및 시정 조치 추적 관리</div>
+            <div>☐ ▲ 공급업체 상반기 평가 착수 (SP-06 기반)</div>
+          </div>
+        </div>
+
+        <div style="background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 1px 6px rgba(0,0,0,.07)">
+          <div style="background:#15803D;color:#fff;padding:10px 14px;font-weight:700;font-size:12px">5월 핵심 체크리스트</div>
+          <div style="padding:12px 16px;font-size:11px;line-height:2.1">
+            <div>☐ 🆕 측정장비 교정 절차서 신규 작성 완료</div>
+            <div>☐ 🆕 부적합품 관리 절차서 신규 작성 완료</div>
+            <div>☐ ▲ 협력사 현장 감사 1차 실시 (SP-06)</div>
+            <div>☐ ■ CAR 시정 조치 이행 추적</div>
+            <div>☐ ■ 설비 상반기 PM 실시 (PM 절차 기반)</div>
+          </div>
+        </div>
+
+        <div style="background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 1px 6px rgba(0,0,0,.07)">
+          <div style="background:#6D28D9;color:#fff;padding:10px 14px;font-weight:700;font-size:12px">6월 핵심 체크리스트</div>
+          <div style="padding:12px 16px;font-size:11px;line-height:2.1">
+            <div>☐ 🆕 COP-07 고객만족도프로세스 전면 개정 완료</div>
+            <div>☐ ▲ 고객 만족도 조사 실시 (개정 COP-07 기반)</div>
+            <div>☐ ◉ 상반기 경영 검토 (개정 MP-02 기반, IATF 9.3 전체)</div>
+            <div>☐ ■ 상반기 KPI 달성 평가·보고</div>
+            <div>☐ ■ PFMEA 연간 검토·갱신 완료</div>
+            <div>☐ ■ SP-06·COP-01·COP-04·MP-04 검토 완료</div>
+          </div>
+        </div>
+
+        <div style="background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 1px 6px rgba(0,0,0,.07)">
+          <div style="background:#1D4ED8;color:#fff;padding:10px 14px;font-weight:700;font-size:12px">7월 핵심 체크리스트</div>
+          <div style="padding:12px 16px;font-size:11px;line-height:2.1">
+            <div>☐ ▲ MSA 2차 실시 (전체 공정 대상)</div>
+            <div>☐ ◎ SPC·MSA 교육 실시 (생산팀 대상)</div>
+            <div>☐ ▲ 협력사 현장 감사 2차 실시</div>
+            <div>☐ 🆕 COP-05 제품보존관리 개정 착수</div>
+            <div>☐ ■ SPC 2분기 분석·이상 원인 조치</div>
+          </div>
+        </div>
+
+        <div style="background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 1px 6px rgba(0,0,0,.07)">
+          <div style="background:#1D4ED8;color:#fff;padding:10px 14px;font-weight:700;font-size:12px">8월 핵심 체크리스트</div>
+          <div style="padding:12px 16px;font-size:11px;line-height:2.1">
+            <div>☐ ▲ 2차 내부 심사 실시 (외부심사 최종 사전 점검)</div>
+            <div>☐ ▲ 측정장비 하반기 교정 착수</div>
+            <div>☐ ■ 외부심사 대비 모든 문서·기록 현행화 시작</div>
+            <div>☐ 🆕 COP-02 개발업무프로세스 개정 착수</div>
+            <div>☐ ■ 공급업체 하반기 평가 착수</div>
+          </div>
+        </div>
+
+        <div style="background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 1px 6px rgba(0,0,0,.07)">
+          <div style="background:#E65100;color:#fff;padding:10px 14px;font-weight:700;font-size:12px">9월 핵심 체크리스트</div>
+          <div style="padding:12px 16px;font-size:11px;line-height:2.1">
+            <div>☐ ▲ 모의 심사(Mock Audit) 실시 — 전 부서</div>
+            <div>☐ ■ 전 문서·기록 현행화 완료 최종 확인</div>
+            <div>☐ ■ CAR 미결 건 전수 처리 완료</div>
+            <div>☐ ▲ 하반기 교정 완료</div>
+            <div>☐ 🆕 시정조치 8D 절차서 완성</div>
+            <div>☐ ■ NKU(구 Kiwa Korea) 외부심사 일정 최종 확인</div>
+            <div>☐ ■ 3분기 KPI 점검 및 보고</div>
+          </div>
+        </div>
+
+        <div style="background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 1px 6px rgba(0,0,0,.07);border:2px solid #B91C1C">
+          <div style="background:#B91C1C;color:#fff;padding:10px 14px;font-weight:700;font-size:12px">10월 ⭐ — IATF 외부심사</div>
+          <div style="padding:12px 16px;font-size:11px;line-height:2.1">
+            <div>☐ [D-1] 심사 장소·서류 최종 준비</div>
+            <div>☐ [D-Day] IATF 외부 감시심사 실시 (NKU)</div>
+            <div>☐ [D-Day] 대표이사 오프닝·클로징 미팅 참석</div>
+            <div>☐ [D-Day] 각 팀 담당자 심사 동행 대응</div>
+            <div>☐ [D+3] 부적합 시정 조치 계획 수립</div>
+            <div>☐ [D+14] CAR 제출 (Major 부적합 발생 시)</div>
+            <div>☐ ◉ 연간 경영 검토 (10월 또는 11월)</div>
+          </div>
+        </div>
+
+        <div style="background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 1px 6px rgba(0,0,0,.07)">
+          <div style="background:#1D4ED8;color:#fff;padding:10px 14px;font-weight:700;font-size:12px">11월 핵심 체크리스트</div>
+          <div style="padding:12px 16px;font-size:11px;line-height:2.1">
+            <div>☐ ■ 외부심사 지적 CAR 완료 확인·효과성 검증</div>
+            <div>☐ 🆕 PPAP 절차서 신규 작성 완료</div>
+            <div>☐ ▲ 내부 심사원 보수 교육 실시</div>
+            <div>☐ ■ 연간 KPI 분석 및 개선 과제 도출</div>
+            <div>☐ ■ 내년 교육 훈련 계획 초안 수립</div>
+          </div>
+        </div>
+
+        <div style="background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 1px 6px rgba(0,0,0,.07)">
+          <div style="background:#1B2A4A;color:#fff;padding:10px 14px;font-weight:700;font-size:12px">12월 핵심 체크리스트</div>
+          <div style="padding:12px 16px;font-size:11px;line-height:2.1">
+            <div>☐ ◉ 연간 경영 검토 (QMS 전체 결산 — 개정 MP-02 기반)</div>
+            <div>☐ ■ 연간 품질 목표 달성도 최종 평가</div>
+            <div>☐ ■ 폐기 문서 처리·기록 정리</div>
+            <div>☐ ■ 내년도 품질 방침·목표·계획 확정</div>
+            <div>☐ ■ 내년 IATF 심사 일정 NKU 협의</div>
+            <div>☐ ▲ 고객 만족도 연간 분석 보고 (COP-07)</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<script>
+function nav(id, el) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.sb-item').forEach(s => s.classList.remove('active'));
+  document.getElementById('sec-' + id).classList.add('active');
+  el.classList.add('active');
+}
+function toggleFlow(header) {
+  const body = header.nextElementSibling;
+  const arrow = header.querySelector('span');
+  if (body.style.display === 'none') { body.style.display = 'flex'; arrow.textContent = '▼'; }
+  else { body.style.display = 'none'; arrow.textContent = '▶'; }
+}
+</script>
+</body>
+</html>
