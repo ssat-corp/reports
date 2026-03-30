@@ -125,6 +125,16 @@ body{font-family:'Malgun Gothic','맑은 고딕',sans-serif;background:#F4F5F7;c
 .fc-btn:hover{background:#E5E7EB;}
 .fc-btn.fc-active{background:#2563EB;color:#fff;border-color:#2563EB;}
 
+
+/* ── 업무 흐름 체크 ── */
+.fi{margin-bottom:9px;padding:8px 10px;background:#fff;border:1px solid #E2E8F0;border-radius:7px;transition:all .2s}
+.fi label{display:flex;align-items:flex-start;gap:7px;cursor:pointer;font-size:11px;line-height:1.4}
+.fi input[type=checkbox]{margin-top:2px;cursor:pointer;accent-color:#2563EB;width:13px;height:13px;flex-shrink:0}
+.fi.done{opacity:.55;background:#F0FDF4;border-color:#86EFAC}
+.fi.done span{text-decoration:line-through;color:#6B7280}
+.fi-team{font-size:9px;color:#94A3B8;margin-top:3px;margin-left:20px}
+.flow-week{transition:box-shadow .2s}
+.flow-week:hover{box-shadow:0 4px 12px rgba(0,0,0,.08)}
 </style>
 </head>
 <body>
@@ -152,8 +162,9 @@ body{font-family:'Malgun Gothic','맑은 고딕',sans-serif;background:#F4F5F7;c
   <div class="sb-item" onclick="nav('filecheck',this)"><span class="ic">📊</span> 파일·탭 현황 통합</div>
   <div class="sb-item" onclick="nav('missing',this)"><span class="ic">🗂️</span> 누락 문서 안내</div>
   <div class="sb-item" onclick="nav('gap',this)"><span class="ic">🔴</span> 갭 분석 (신규·개정)</div>
-  <div class="sb-item" onclick="nav('action',this)"><span class="ic">⚡</span> 긴급 조치 계획</div>
+  <div class="sb-item" onclick="nav('action',this)"><span class="ic">⚡</span> 4주 팀별 실행 계획</div>
   <div class="sb-item" onclick="nav('checklist',this)"><span class="ic">📅</span> 월별 체크리스트</div>
+  <div class="sb-item" onclick="nav('glossary',this)"><span class="ic">📖</span> 용어·약어 사전</div>
 
   <div class="sb-footer">
     인증기관: NKU (구 Kiwa Korea)<br>
@@ -1202,6 +1213,69 @@ function renderFCTable(){
   }).join('');
 }
 document.addEventListener('DOMContentLoaded',renderFCTable);
+
+// ── 업무 흐름 체크 로직 ──
+(function(){
+  const TOTAL = 20;
+  const TEAM_MAP = {
+    w1t1:'경영기획실',w1t2:'경영기획실',w1t3:'경영기획실',w1t4:'영업팀',
+    w2t1:'품질팀',w2t2:'품질팀',w2t3:'개발팀',w2t4:'개발팀',w2t5:'생산팀',
+    w3t1:'품질팀',w3t2:'생산·품질팀',w3t3:'생산팀',w3t4:'경영기획실',w3t5:'품질팀',w3t6:'영업팀',
+    w4t1:'개발팀',w4t2:'경영기획실',w4t3:'품질팀',w4t4:'개발팀',w4t5:'생산팀',w4t6:'생산팀',w4t7:'영업팀'
+  };
+  const TEAM_COLOR = {'경영기획실':'#1D4ED8','품질팀':'#92400E','개발팀':'#5B21B6','생산팀':'#166534','영업팀':'#9D174D','생산·품질팀':'#059669'};
+
+  function getState(){try{return JSON.parse(localStorage.getItem('iatf_flow')||'{}')}catch(e){return {}}}
+  function saveState(s){try{localStorage.setItem('iatf_flow',JSON.stringify(s))}catch(e){}}
+
+  function updateProgress(){
+    const s = getState();
+    const done = Object.values(s).filter(Boolean).length;
+    const pct = Math.round(done/TOTAL*100);
+    const bar = document.getElementById('progress-bar');
+    const lbl = document.getElementById('progress-label');
+    const teams = document.getElementById('progress-teams');
+    if(bar) bar.style.width = pct+'%';
+    if(lbl) lbl.textContent = done+' / '+TOTAL+' 완료 ('+pct+'%)';
+    if(teams){
+      const tc = {};
+      Object.entries(s).forEach(([id,v])=>{if(v){const t=TEAM_MAP[id]||'기타';tc[t]=(tc[t]||0)+1}});
+      teams.innerHTML = Object.entries(tc).map(([t,n])=>`<span style="background:${TEAM_COLOR[t]||'#64748B'}22;color:${TEAM_COLOR[t]||'#374151'};padding:2px 8px;border-radius:10px;border:1px solid ${TEAM_COLOR[t]||'#CBD5E1'}40;font-weight:600">${t} ${n}건 완료</span>`).join('');
+    }
+  }
+
+  function showGuide(msg){
+    const panel = document.getElementById('next-guide');
+    const txt = document.getElementById('next-guide-text');
+    if(panel && txt){txt.textContent = msg; panel.style.display='block'; panel.scrollIntoView({behavior:'smooth',block:'nearest'});}
+  }
+
+  function init(){
+    const s = getState();
+    document.querySelectorAll('.fc').forEach(cb=>{
+      const id = cb.dataset.id;
+      cb.checked = !!s[id];
+      if(cb.checked) cb.closest('.fi').classList.add('done');
+      cb.addEventListener('change',function(){
+        const ns = getState();
+        ns[id] = this.checked;
+        saveState(ns);
+        const fi = this.closest('.fi');
+        fi.classList.toggle('done', this.checked);
+        if(this.checked){
+          const parent = fi.closest('[data-id]') || fi;
+          const nextMsg = fi.dataset.msg || '';
+          if(nextMsg) showGuide(nextMsg);
+        }
+        updateProgress();
+      });
+    });
+    updateProgress();
+  }
+
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',init);}else{init();}
+})();
+
 </script>
 
     <!-- ══════════ 11. 갭 분석 ══════════ -->
@@ -1459,83 +1533,429 @@ document.addEventListener('DOMContentLoaded',renderFCTable);
     </div>
 
     <div id="sec-action" class="section">
-      <div class="sec-title">⚡ 긴급 조치 계획 — Phase별 문서화 로드맵</div>
+      <div class="sec-title">⚡ 4주 팀별 실행 계획 — 2026년 3월 31일 ~ 4월 30일</div>
 
-      <div style="background:#FEF9C3;border:1px solid #F59E0B;border-radius:8px;padding:14px;margin-bottom:20px;font-size:12px">
-        <strong>📌 전략:</strong> 외부심사(10월) 기준으로 역산하여 Phase별로 집중 추진. Phase 0~1 (Core Tools 신규 4종 + 8년 문서 긴급개정)을 1분기 내 완료하는 것이 핵심.
+
+      <!-- ══ 업무 흐름표 (인터랙티브 체크) ══ -->
+      <div class="sec-sub" style="margin-top:0">🗂️ 업무 흐름 체크표 — 완료 체크 시 다음 업무 안내</div>
+      <div class="alert" style="background:#F0FDF4;border:1px solid #86EFAC;margin-bottom:16px;font-size:11px">
+        ✅ 업무를 완료하면 <strong>체크박스를 클릭</strong>하세요. 다음 연계 업무가 자동으로 안내됩니다. 체크 상태는 이 기기에 저장됩니다.
       </div>
 
-      <!-- Phase 0 -->
-      <div style="margin-bottom:16px">
-        <div style="background:#B91C1C;color:#fff;padding:11px 16px;border-radius:8px 8px 0 0;font-size:13px;font-weight:700">PHASE 0 — 즉시 착수 (0~4주) · Core Tools 4종 신규 작성</div>
-        <table class="tbl" style="border-radius:0 0 8px 8px">
-          <thead><tr><th style="width:4%">No</th><th style="width:22%">조치 내용</th><th style="width:15%">대상 문서</th><th style="width:9%">담당팀</th><th style="width:9%">완료기한</th><th style="width:7%">소요</th><th>핵심 포인트</th></tr></thead>
+      <!-- 흐름 체크 UI -->
+      <div id="flow-board" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px">
+
+        <!-- W1 -->
+        <div class="flow-week" style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:10px;padding:14px">
+          <div style="font-size:11px;font-weight:700;color:#1B2A4A;margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid #1B2A4A">📅 Week 1 · 3/31~4/4 &nbsp;<span style="font-weight:400;color:#64748B">기반 정리</span></div>
+          <div class="fi" data-id="w1t1" data-next="w1t2" data-msg="다음: 폴더 구조를 재정비해 주세요 (4/4까지)">
+            <label><input type="checkbox" class="fc" data-id="w1t1"> <span>🟢 중복 파일 3개 Archive 이동</span></label>
+            <div class="fi-team">경영기획실 · 4/2</div>
+          </div>
+          <div class="fi" data-id="w1t2" data-next="w1t3" data-msg="다음: 팀별 담당 파일 목록을 공식 배포해 주세요 (4/4까지)">
+            <label><input type="checkbox" class="fc" data-id="w1t2"> <span>🟢 폴더 구조 재정비</span></label>
+            <div class="fi-team">경영기획실 · 4/4</div>
+          </div>
+          <div class="fi" data-id="w1t3" data-next="w2t1,w2t3,w1t4" data-msg="Week 2 착수: ① MSA 계획서 작성 (품질팀) ② PPAP 양식 작성 (개발팀) ③ COP-03 생산관리 개정 착수 (생산팀)">
+            <label><input type="checkbox" class="fc" data-id="w1t3"> <span>🟢 팀별 담당 파일 목록 배포</span></label>
+            <div class="fi-team">경영기획실 · 4/4</div>
+          </div>
+          <div class="fi" data-id="w1t4" data-next="w2t4" data-msg="다음: 영업팀에서 고객 PPAP Level 확인 후 개발팀에 공유해 주세요 (4/7까지)">
+            <label><input type="checkbox" class="fc" data-id="w1t4"> <span>🟢 PPAP Level 파악 요청 (영업팀)</span></label>
+            <div class="fi-team">영업팀 · 4/7</div>
+          </div>
+        </div>
+
+        <!-- W2 -->
+        <div class="flow-week" style="background:#FFF5F5;border:1px solid #FECACA;border-radius:10px;padding:14px">
+          <div style="font-size:11px;font-weight:700;color:#B91C1C;margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid #B91C1C">📅 Week 2 · 4/7~4/11 &nbsp;<span style="font-weight:400;color:#64748B">누락 착수</span></div>
+          <div class="fi" data-id="w2t1" data-next="w3t1" data-msg="다음: 4/13까지 MSA 계획서를 최종 확정하고 SP-13에 탭을 추가해 주세요">
+            <label><input type="checkbox" class="fc" data-id="w2t1"> <span>🔴 MSA 실시 계획서 초안 (품질팀)</span></label>
+            <div class="fi-team">품질팀 · 4/11</div>
+          </div>
+          <div class="fi" data-id="w2t2" data-next="w3t2" data-msg="다음: 4/13까지 SPC 대상 공정에서 데이터 수집을 시작해 주세요 (생산팀과 협업)">
+            <label><input type="checkbox" class="fc" data-id="w2t2"> <span>🔴 SPC 대상 공정 선정 + 양식 확정 (품질팀)</span></label>
+            <div class="fi-team">품질팀 · 4/11</div>
+          </div>
+          <div class="fi" data-id="w2t3" data-next="w4t4" data-msg="다음: PPAP 체크리스트 양식을 완성하고 4/30까지 COP-02에 탭을 추가해 주세요">
+            <label><input type="checkbox" class="fc" data-id="w2t3"> <span>🔴 PPAP 체크리스트 양식 초안 (개발팀)</span></label>
+            <div class="fi-team">개발팀 · 4/11</div>
+          </div>
+          <div class="fi" data-id="w2t4" data-next="w4t1" data-msg="다음: 개발팀 COP-02 개정 계획서를 접수하고, 4월 30일 PPAP 탭 추가를 확인해 주세요">
+            <label><input type="checkbox" class="fc" data-id="w2t4"> <span>🟡 COP-02 개정 계획서 제출 (개발팀)</span></label>
+            <div class="fi-team">개발팀 · 4/11</div>
+          </div>
+          <div class="fi" data-id="w2t5" data-next="w3t3" data-msg="다음: SP-08 설비보전관리 개정 착수 (4/14 목표)">
+            <label><input type="checkbox" class="fc" data-id="w2t5"> <span>🟡 COP-03 생산관리 개정 착수 (생산팀)</span></label>
+            <div class="fi-team">생산팀 · 4/7</div>
+          </div>
+        </div>
+
+        <!-- W3 -->
+        <div class="flow-week" style="background:#FFFBEB;border:1px solid #FDE68A;border-radius:10px;padding:14px">
+          <div style="font-size:11px;font-weight:700;color:#D97706;margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid #D97706">📅 Week 3 · 4/14~4/18 &nbsp;<span style="font-weight:400;color:#64748B">1차 마감</span></div>
+          <div class="fi" data-id="w3t1" data-next="w4t3" data-msg="다음: MSA 계획서 최종 확정 완료(4/18)! SP-13에 탭 추가 후 5~6월 실측 일정 확정하세요">
+            <label><input type="checkbox" class="fc" data-id="w3t1"> <span>🔴 MSA 계획서 최종 확정 (품질팀)</span></label>
+            <div class="fi-team">품질팀 · 4/13</div>
+          </div>
+          <div class="fi" data-id="w3t2" data-next="w4t5" data-msg="다음: 데이터가 3개월 누적되면 (7월) 관리도 분석 및 결과 보고서 작성으로 이어집니다">
+            <label><input type="checkbox" class="fc" data-id="w3t2"> <span>🔴 SPC 데이터 수집 시작 (생산·품질팀)</span></label>
+            <div class="fi-team">생산팀·품질팀 · 4/13</div>
+          </div>
+          <div class="fi" data-id="w3t3" data-next="w4t6" data-msg="다음: SP-09 금형관리 개정 착수 (4/21 시작)">
+            <label><input type="checkbox" class="fc" data-id="w3t3"> <span>🟡 SP-08 설비보전관리 개정 착수 (생산팀)</span></label>
+            <div class="fi-team">생산팀 · 4/14</div>
+          </div>
+          <div class="fi" data-id="w3t4" data-next="w4t2" data-msg="다음: MP-03(33탭)은 5월로 이동! MP-02 완료 직후 MP-03 착수 → 5/16 목표. 4월 남은 기간은 QM 검토에 집중하세요">
+            <label><input type="checkbox" class="fc" data-id="w3t4"> <span>🟡 MP-02 경영검토 개정 완료 (경영기획실)</span></label>
+            <div class="fi-team">경영기획실 · 4/18</div>
+          </div>
+          <div class="fi" data-id="w3t5" data-next="w4t3" data-msg="다음: SP-16 검사구관리 개정, SP-13 MSA 탭 추가를 4/25까지 완료해 주세요">
+            <label><input type="checkbox" class="fc" data-id="w3t5"> <span>🟡 SP-14 시험실관리 개정 완료 (품질팀)</span></label>
+            <div class="fi-team">품질팀 · 4/18</div>
+          </div>
+          <div class="fi" data-id="w3t6" data-next="w4t7" data-msg="다음: SP-11 고객재산관리 개정을 4/25까지 완료해 주세요">
+            <label><input type="checkbox" class="fc" data-id="w3t6"> <span>🟡 COP-07 고객만족도 개정 완료 (영업팀)</span></label>
+            <div class="fi-team">영업팀 · 4/18</div>
+          </div>
+        </div>
+
+        <!-- W4 -->
+        <div class="flow-week" style="background:#F0FDF4;border:1px solid #86EFAC;border-radius:10px;padding:14px">
+          <div style="font-size:11px;font-weight:700;color:#15803D;margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid #15803D">📅 Week 4 · 4/21~4/30 &nbsp;<span style="font-weight:400;color:#64748B">최종 마감</span></div>
+          <div class="fi" data-id="w4t1" data-next="done" data-msg="🏁 4월 목표 완료! → 5~6월: COP-02 전면 개정 완료, MSA 실측 진행으로 이어집니다">
+            <label><input type="checkbox" class="fc" data-id="w4t1"> <span>🔴 COP-02 내 PPAP 탭 추가 (개발팀)</span></label>
+            <div class="fi-team">개발팀 · 4/30</div>
+          </div>
+          <div class="fi" data-id="w4t2" data-next="done" data-msg="🏁 경영기획실 5월 목표 완료! → 6~7월: 상반기 경영검토 실시로 이어집니다">
+            <label><input type="checkbox" class="fc" data-id="w4t2"> <span>🗓️ MP-03·05 개정 완료 (경영기획실 — 5월 목표)</span></label>
+            <div class="fi-team">경영기획실 · 4/25</div>
+          </div>
+          <div class="fi" data-id="w4t3" data-next="done" data-msg="🏁 4월 품질팀 목표 완료! → 5~6월: MSA 실측 + SPC 관리도 3개월 데이터 누적으로 이어집니다">
+            <label><input type="checkbox" class="fc" data-id="w4t3"> <span>🟡 SP-16 검사구관리 개정 + SP-13 MSA 탭 (품질팀)</span></label>
+            <div class="fi-team">품질팀 · 4/25</div>
+          </div>
+          <div class="fi" data-id="w4t4" data-next="w4t1" data-msg="다음: PPAP 체크리스트를 COP-02에 탭으로 추가해 주세요 (4/30)">
+            <label><input type="checkbox" class="fc" data-id="w4t4"> <span>🔴 PPAP 체크리스트 양식 최종 확정 (개발팀)</span></label>
+            <div class="fi-team">개발팀 · 4/25</div>
+          </div>
+          <div class="fi" data-id="w4t5" data-next="done" data-msg="⏳ 7월까지 3개월 데이터 누적 → 관리 한계선 분석 → 8~9월 내부심사 증빙으로 활용">
+            <label><input type="checkbox" class="fc" data-id="w4t5"> <span>📊 SPC 데이터 수집 중 (생산팀 지속)</span></label>
+            <div class="fi-team">생산팀 · 계속</div>
+          </div>
+          <div class="fi" data-id="w4t6" data-next="done" data-msg="🏁 생산팀 4월 착수 완료! → 5월: SP-09 금형관리·SP-10 JIG관리 개정 완료, COP-03 완료 목표">
+            <label><input type="checkbox" class="fc" data-id="w4t6"> <span>🟡 SP-09 금형관리 개정 착수 (생산팀)</span></label>
+            <div class="fi-team">생산팀 · 4/21 착수</div>
+          </div>
+          <div class="fi" data-id="w4t7" data-next="done" data-msg="🏁 4월 영업팀 목표 완료! → 6~7월: 고객만족도 상반기 조사 실시로 이어집니다">
+            <label><input type="checkbox" class="fc" data-id="w4t7"> <span>🟡 SP-11 고객재산관리 개정 완료 (영업팀)</span></label>
+            <div class="fi-team">영업팀 · 4/25</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 다음 업무 안내 패널 -->
+      <div id="next-guide" style="display:none;background:linear-gradient(135deg,#1B2A4A,#2563EB);color:#fff;border-radius:10px;padding:18px 22px;margin-bottom:20px">
+        <div style="font-size:11px;font-weight:600;opacity:.7;margin-bottom:6px">✅ 완료! — 다음 업무 안내</div>
+        <div id="next-guide-text" style="font-size:13px;font-weight:600;line-height:1.6"></div>
+        <button onclick="document.getElementById('next-guide').style.display='none'" style="margin-top:10px;background:rgba(255,255,255,.15);border:none;color:#fff;padding:4px 12px;border-radius:6px;font-size:10px;cursor:pointer">닫기</button>
+      </div>
+
+      <!-- 전체 진행률 -->
+      <div style="background:#fff;border:1px solid #E2E8F0;border-radius:10px;padding:16px;margin-bottom:20px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <span style="font-size:12px;font-weight:600;color:#1B2A4A">📊 4월 전체 진행률</span>
+          <span id="progress-label" style="font-size:12px;font-weight:700;color:#2563EB">0 / 20 완료</span>
+        </div>
+        <div style="background:#E2E8F0;border-radius:999px;height:10px">
+          <div id="progress-bar" style="background:linear-gradient(90deg,#2563EB,#22C55E);height:10px;border-radius:999px;width:0%;transition:width .4s"></div>
+        </div>
+        <div id="progress-teams" style="display:flex;gap:12px;margin-top:10px;flex-wrap:wrap;font-size:10px"></div>
+      </div>
+
+      <div style="margin-bottom:4px;border-top:1px solid #E2E8F0;padding-top:18px"></div>
+
+      <div class="alert alert-red" style="margin-bottom:18px">
+        <strong>🎯 4월 목표:</strong> 완전 누락 3건(MSA·SPC·PPAP) <strong>양식·계획서 수준 완성</strong> + 2017년 긴급 파일 <strong>팀당 1~2개 개정 완료</strong> + 파일 정리·폴더 재구성. 완성이 아닌 "착수·양식 확정·계획 수립"이 4월의 핵심입니다.
+      </div>
+
+      <!-- 범례 -->
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px;font-size:10px;align-items:center">
+        <span style="font-weight:600;color:#64748B">담당팀:</span>
+        <span style="background:#EFF6FF;color:#1D4ED8;padding:2px 8px;border-radius:12px;font-weight:600">경영기획실</span>
+        <span style="background:#FEF3C7;color:#92400E;padding:2px 8px;border-radius:12px;font-weight:600">품질팀</span>
+        <span style="background:#EDE9FE;color:#5B21B6;padding:2px 8px;border-radius:12px;font-weight:600">개발팀</span>
+        <span style="background:#DCFCE7;color:#166534;padding:2px 8px;border-radius:12px;font-weight:600">생산팀</span>
+        <span style="background:#FCE7F3;color:#9D174D;padding:2px 8px;border-radius:12px;font-weight:600">영업팀</span>
+        &nbsp;|&nbsp;
+        <span style="background:#FEE2E2;color:#B91C1C;padding:2px 8px;border-radius:12px;font-weight:600">🔴 신규 작성</span>
+        <span style="background:#FEF9C3;color:#78350F;padding:2px 8px;border-radius:12px;font-weight:600">🟡 개정</span>
+        <span style="background:#F0FDF4;color:#166534;padding:2px 8px;border-radius:12px;font-weight:600">🟢 정리·검토</span>
+      </div>
+
+      <!-- ══ WEEK 1 ══ -->
+      <div style="margin-bottom:20px">
+        <div style="background:#1B2A4A;color:#fff;padding:12px 18px;border-radius:8px 8px 0 0;font-size:13px;font-weight:700;display:flex;justify-content:space-between;align-items:center">
+          <span>📅 Week 1 — 3월 31일(월) ~ 4월 4일(금)</span>
+          <span style="font-size:10px;font-weight:400;opacity:.8">기반 정리 주간 · 경영기획실 주도</span>
+        </div>
+        <table class="tbl" style="border-radius:0 0 8px 8px;margin-bottom:0">
+          <thead>
+            <tr><th style="width:13%">마감</th><th style="width:14%">담당팀</th><th style="width:30%">업무 내용</th><th style="width:20%">산출물</th><th>비고</th></tr>
+          </thead>
           <tbody>
-            <tr><td style="text-align:center;font-weight:700;color:#B91C1C">1</td><td style="font-weight:600">PFMEA 절차서 신규 작성</td><td style="text-align:center;font-size:10px">SSAT-CT-01 (신규)</td><td style="text-align:center">품질팀</td><td style="text-align:center;font-weight:700;color:#B91C1C">1월 말</td><td style="text-align:center">4~6주</td><td style="font-size:10px;color:#475569">AIAG-VDA 4판. AP방식. 전공정. 경영검토 PFMEA자료 활용</td></tr>
-            <tr style="background:#FAFBFD"><td style="text-align:center;font-weight:700;color:#B91C1C">2</td><td style="font-weight:600">관리계획서(CP) 절차서 신규 작성</td><td style="text-align:center;font-size:10px">SSAT-CT-02 (신규)</td><td style="text-align:center">품질팀</td><td style="text-align:center;font-weight:700;color:#B91C1C">2월 말</td><td style="text-align:center">3~4주</td><td style="font-size:10px;color:#475569">PFMEA연계 필수. 수입/공정/출하 3단계</td></tr>
-            <tr><td style="text-align:center;font-weight:700;color:#B91C1C">3</td><td style="font-weight:600">MSA 절차서 신규 작성</td><td style="text-align:center;font-size:10px">SSAT-CT-03 (신규)</td><td style="text-align:center">품질팀</td><td style="text-align:center;font-weight:700;color:#B91C1C">2월 말</td><td style="text-align:center">2~3주</td><td style="font-size:10px;color:#475569">%GRR≤10% 합격기준 명시. 연2회 이상</td></tr>
-            <tr style="background:#FAFBFD"><td style="text-align:center;font-weight:700;color:#B91C1C">4</td><td style="font-weight:600">SPC 절차서 신규 작성</td><td style="text-align:center;font-size:10px">SSAT-CT-04 (신규)</td><td style="text-align:center">품질팀</td><td style="text-align:center;font-weight:700;color:#B91C1C">2월 말</td><td style="text-align:center">3~4주</td><td style="font-size:10px;color:#475569">Cp/Cpk≥1.67 목표. 특수특성 관리도 체계</td></tr>
+            <tr>
+              <td style="text-align:center;font-weight:700;color:#B91C1C">4/2(수)</td>
+              <td><span style="background:#EFF6FF;color:#1D4ED8;padding:1px 6px;border-radius:10px;font-size:10px;font-weight:600">경영기획실</span></td>
+              <td style="font-weight:600">🟢 중복 파일 3개 Archive 이동</td>
+              <td style="font-size:10px">검사구·생산관리·설비보전 번호없는 파일 → _Archive 폴더</td>
+              <td style="font-size:10px">정본은 번호 있는 파일로 통일</td>
+            </tr>
+            <tr style="background:#FAFBFD">
+              <td style="text-align:center;font-weight:700;color:#B91C1C">4/4(금)</td>
+              <td><span style="background:#EFF6FF;color:#1D4ED8;padding:1px 6px;border-radius:10px;font-size:10px;font-weight:600">경영기획실</span></td>
+              <td style="font-weight:600">🟢 폴더 구조 재정비</td>
+              <td style="font-size:10px">00_QM / 01_COP / 02_MP / 03_SP / 04_EM / 05_CoreTools_신규 / _Archive</td>
+              <td style="font-size:10px">팀원 접근 경로 공유</td>
+            </tr>
+            <tr>
+              <td style="text-align:center;font-weight:700;color:#B91C1C">4/4(금)</td>
+              <td><span style="background:#EFF6FF;color:#1D4ED8;padding:1px 6px;border-radius:10px;font-size:10px;font-weight:600">경영기획실</span></td>
+              <td style="font-weight:600">🟢 팀별 담당 파일 목록 공식 배포</td>
+              <td style="font-size:10px">팀별 업무 요청 이메일/메신저 발송</td>
+              <td style="font-size:10px">이 페이지 링크 함께 공유</td>
+            </tr>
+            <tr style="background:#FAFBFD">
+              <td style="text-align:center;font-weight:700;color:#B91C1C">4/4(금)</td>
+              <td><span style="background:#EFF6FF;color:#1D4ED8;padding:1px 6px;border-radius:10px;font-size:10px;font-weight:600">경영기획실</span></td>
+              <td style="font-weight:600">🟢 팀장 IATF 브리핑 (30분)</td>
+              <td style="font-size:10px">MSA·SPC·PPAP 개념 + 4월 업무 방향 공유</td>
+              <td style="font-size:10px">처음 접하는 팀원이 있을 경우 필수. 질문 시간 포함</td>
+            </tr>
+            <tr>
+              <td style="text-align:center;font-weight:700;color:#E65100">4/7(월) ⚠️필수선행</td>
+              <td><span style="background:#FCE7F3;color:#9D174D;padding:1px 6px;border-radius:10px;font-size:10px;font-weight:600">영업팀</span></td>
+              <td style="font-weight:600">🟢 고객사 PPAP 요구 Level 확인</td>
+              <td style="font-size:10px">고객별 PPAP Level 목록 → 개발팀 공유</td>
+              <td style="font-size:10px;color:#B91C1C"><strong>⚠️ 이게 늦으면 개발팀 4/11 초안 불가.</strong> 이번 주 안에 미리 공지 필요</td>
+            </tr>
+            <tr>
+              <td style="text-align:center;font-weight:700;color:#E65100">4/7(월)</td>
+              <td><span style="background:#DCFCE7;color:#166534;padding:1px 6px;border-radius:10px;font-size:10px;font-weight:600">생산팀</span></td>
+              <td style="font-weight:600">🟡 COP-03 생산관리 개정 착수</td>
+              <td style="font-size:10px">개정 범위 확인 + 담당자 지정</td>
+              <td style="font-size:10px">2017년 이후 미개정 (9년). 5월 완료 목표</td>
+            </tr>
           </tbody>
         </table>
       </div>
 
-      <!-- Phase 1 -->
-      <div style="margin-bottom:16px">
-        <div style="background:#E65100;color:#fff;padding:11px 16px;border-radius:8px 8px 0 0;font-size:13px;font-weight:700">PHASE 1 — 1~2개월 · 긴급 개정 1단계 (8년 문서)</div>
-        <table class="tbl" style="border-radius:0 0 8px 8px">
-          <thead><tr><th style="width:4%">No</th><th style="width:22%">조치 내용</th><th style="width:15%">대상 문서</th><th style="width:9%">담당팀</th><th style="width:9%">완료기한</th><th style="width:7%">소요</th><th>핵심 포인트</th></tr></thead>
+      <!-- ══ WEEK 2 ══ -->
+      <div style="margin-bottom:20px">
+        <div style="background:#B91C1C;color:#fff;padding:12px 18px;border-radius:8px 8px 0 0;font-size:13px;font-weight:700;display:flex;justify-content:space-between;align-items:center">
+          <span>📅 Week 2 — 4월 7일(월) ~ 4월 11일(금)</span>
+          <span style="font-size:10px;font-weight:400;opacity:.8">누락 문서 착수 주간 · 품질·개발팀 주도</span>
+        </div>
+        <table class="tbl" style="border-radius:0 0 8px 8px;margin-bottom:0">
+          <thead>
+            <tr><th style="width:13%">마감</th><th style="width:14%">담당팀</th><th style="width:30%">업무 내용</th><th style="width:20%">산출물</th><th>비고</th></tr>
+          </thead>
           <tbody>
-            <tr><td style="text-align:center;font-weight:700;color:#E65100">5</td><td style="font-weight:600">COP-03 생산관리프로세스 전면 개정</td><td style="text-align:center;font-size:10px">SSAT-COP-03</td><td style="text-align:center">생산+품질</td><td style="text-align:center;font-weight:700;color:#E65100">2월 말</td><td style="text-align:center">4~5주</td><td style="font-size:10px;color:#475569">8.5.1 전체 반영. MES 연계 현행화. 설비PM 내용 포함</td></tr>
-            <tr style="background:#FAFBFD"><td style="text-align:center;font-weight:700;color:#E65100">6</td><td style="font-weight:600">MP-02 경영검토프로세스 전면 개정</td><td style="text-align:center;font-size:10px">SSAT-MP-02</td><td style="text-align:center">경영팀</td><td style="text-align:center;font-weight:700;color:#E65100">2월 말</td><td style="text-align:center">3~4주</td><td style="font-size:10px;color:#475569">IATF 9.3.2 전체 21개 입력항목. KPI·PFMEA·저품질비용 체계화</td></tr>
-            <tr><td style="text-align:center;font-weight:700;color:#E65100">7</td><td style="font-weight:600">MP-05 DATA분석개선프로세스 전면 개정</td><td style="text-align:center;font-size:10px">SSAT-MP-05</td><td style="text-align:center">품질팀</td><td style="text-align:center;font-weight:700;color:#E65100">3월 말</td><td style="text-align:center">3주</td><td style="font-size:10px;color:#475569">10.3.1 지속적개선 보충사항. 파레토·특성요인도 도구 명시</td></tr>
-            <tr style="background:#FAFBFD"><td style="text-align:center;font-weight:700;color:#E65100">8</td><td style="font-weight:600">설비·금형 예방보전 절차서 신규 작성</td><td style="text-align:center;font-size:10px">SSAT-SP-07 (신규)</td><td style="text-align:center">생산팀</td><td style="text-align:center;font-weight:700;color:#E65100">2월 말</td><td style="text-align:center">3주</td><td style="font-size:10px;color:#475569">IATF 8.5.1.5 전체. PM주기·항목체크리스트·기록체계</td></tr>
+            <tr>
+              <td style="text-align:center;font-weight:700;color:#B91C1C">4/11(금)</td>
+              <td><span style="background:#FEF3C7;color:#92400E;padding:1px 6px;border-radius:10px;font-size:10px;font-weight:600">품질팀</span></td>
+              <td style="font-weight:600">🔴 MSA 실시 계획서 초안 작성</td>
+              <td style="font-size:10px">대상 게이지·공정, 실시 일정, 담당자 명시</td>
+              <td style="font-size:10px">IATF 7.1.5.1.1. 실측은 5~6월 가능</td>
+            </tr>
+            <tr style="background:#FAFBFD">
+              <td style="text-align:center;font-weight:700;color:#B91C1C">4/11(금)</td>
+              <td><span style="background:#FEF3C7;color:#92400E;padding:1px 6px;border-radius:10px;font-size:10px;font-weight:600">품질팀</span></td>
+              <td style="font-weight:600">🔴 SPC 대상 공정 선정</td>
+              <td style="font-size:10px">핵심 공정 2~3개 선정 + 관리도 종류 결정</td>
+              <td style="font-size:10px">X̄-R 또는 p관리도. 특수특성 공정 우선</td>
+            </tr>
+            <tr>
+              <td style="text-align:center;font-weight:700;color:#B91C1C">4/11(금)</td>
+              <td><span style="background:#EDE9FE;color:#5B21B6;padding:1px 6px;border-radius:10px;font-size:10px;font-weight:600">개발팀</span></td>
+              <td style="font-weight:600">🔴 PPAP 체크리스트 양식 초안</td>
+              <td style="font-size:10px">18가지 요소 체크리스트 양식 파일 작성</td>
+              <td style="font-size:10px">고객 Level 확인 후 Level 3 기준 기본 작성</td>
+            </tr>
+            <tr style="background:#FAFBFD">
+              <td style="text-align:center;font-weight:700;color:#B91C1C">4/11(금)</td>
+              <td><span style="background:#EDE9FE;color:#5B21B6;padding:1px 6px;border-radius:10px;font-size:10px;font-weight:600">개발팀</span></td>
+              <td style="font-weight:600">🟡 COP-02 개정 계획서 제출</td>
+              <td style="font-size:10px">개정 범위·담당자·일정 1페이지 계획서</td>
+              <td style="font-size:10px">45탭 규모. 전체 완료는 5~6월 목표</td>
+            </tr>
+            <tr>
+              <td style="text-align:center;font-weight:700;color:#E65100">4/14(월)</td>
+              <td><span style="background:#DCFCE7;color:#166534;padding:1px 6px;border-radius:10px;font-size:10px;font-weight:600">생산팀</span></td>
+              <td style="font-weight:600">🟡 SP-08 설비보전관리 개정 착수</td>
+              <td style="font-size:10px">개정 범위 확인 + 담당자 지정</td>
+              <td style="font-size:10px">2017년 미개정. 설비 PM 주기 현행화 필수</td>
+            </tr>
           </tbody>
         </table>
       </div>
 
-      <!-- Phase 2 -->
-      <div style="margin-bottom:16px">
-        <div style="background:#15803D;color:#fff;padding:11px 16px;border-radius:8px 8px 0 0;font-size:13px;font-weight:700">PHASE 2 — 2~3개월 · 긴급 개정 2단계</div>
-        <table class="tbl" style="border-radius:0 0 8px 8px">
-          <thead><tr><th style="width:4%">No</th><th style="width:22%">조치 내용</th><th style="width:15%">대상 문서</th><th style="width:9%">담당팀</th><th style="width:9%">완료기한</th><th style="width:7%">소요</th><th>핵심 포인트</th></tr></thead>
+      <!-- ══ WEEK 3 ══ -->
+      <div style="margin-bottom:20px">
+        <div style="background:#D97706;color:#fff;padding:12px 18px;border-radius:8px 8px 0 0;font-size:13px;font-weight:700;display:flex;justify-content:space-between;align-items:center">
+          <span>📅 Week 3 — 4월 14일(월) ~ 4월 18일(금)</span>
+          <span style="font-size:10px;font-weight:400;opacity:.8">1차 마감 주간 · 경영기획실·품질·영업팀</span>
+        </div>
+        <table class="tbl" style="border-radius:0 0 8px 8px;margin-bottom:0">
+          <thead>
+            <tr><th style="width:13%">마감</th><th style="width:14%">담당팀</th><th style="width:30%">업무 내용</th><th style="width:20%">산출물</th><th>비고</th></tr>
+          </thead>
           <tbody>
-            <tr><td style="text-align:center;font-weight:700;color:#15803D">9</td><td style="font-weight:600">COP-07 고객만족도프로세스 전면 개정</td><td style="text-align:center;font-size:10px">SSAT-COP-07</td><td style="text-align:center">영업팀</td><td style="text-align:center;font-weight:700;color:#15803D">6월 말</td><td style="text-align:center">2~3주</td><td style="font-size:10px;color:#475569">9.1.2.1 보충사항. 고객점수표 검토 절차 추가. 고객별 KPI 현행화</td></tr>
-            <tr style="background:#FAFBFD"><td style="text-align:center;font-weight:700;color:#15803D">10</td><td style="font-weight:600">SP-03 도면관리프로세스 전면 개정</td><td style="text-align:center;font-size:10px">SSAT-SP-03</td><td style="text-align:center">개발+품질</td><td style="text-align:center;font-weight:700;color:#15803D">6월 말</td><td style="text-align:center">2~3주</td><td style="font-size:10px;color:#475569">CAD·3D 데이터 관리 절차. 유효본 배포 체계. 고객도면 보안</td></tr>
-            <tr><td style="text-align:center;font-weight:700;color:#15803D">11</td><td style="font-weight:600">측정장비 교정 절차서 신규 작성</td><td style="text-align:center;font-size:10px">SSAT-SP-08 (신규)</td><td style="text-align:center">품질팀</td><td style="text-align:center;font-weight:700;color:#15803D">5월 말</td><td style="text-align:center">2주</td><td style="font-size:10px;color:#475569">7.1.5.1 전체. 교정주기표. 불합격처리 기준</td></tr>
-            <tr style="background:#FAFBFD"><td style="text-align:center;font-weight:700;color:#15803D">12</td><td style="font-weight:600">부적합품 관리 절차서 신규 작성</td><td style="text-align:center;font-size:10px">SSAT-SP-09 (신규)</td><td style="text-align:center">품질팀</td><td style="text-align:center;font-weight:700;color:#15803D">5월 말</td><td style="text-align:center">2주</td><td style="font-size:10px;color:#475569">8.7 전체. 식별·격리·특채·폐기 흐름도. 고객통보기준</td></tr>
+            <tr>
+              <td style="text-align:center;font-weight:700;color:#B91C1C">4/18(금)</td>
+              <td><span style="background:#FEF3C7;color:#92400E;padding:1px 6px;border-radius:10px;font-size:10px;font-weight:600">품질팀</span></td>
+              <td style="font-weight:600">🔴 MSA 계획서 최종 + SPC 양식 확정</td>
+              <td style="font-size:10px">MSA 계획서 파일 + SPC 관리도 양식 파일</td>
+              <td style="font-size:10px">초안(4/11) 검토 후 1주 수정 → 최종 확정. SP-13 탭 추가</td>
+            </tr>
+            <tr style="background:#FAFBFD">
+              <td style="text-align:center;font-weight:700;color:#B91C1C">4/13(일)</td>
+              <td><span style="background:#DCFCE7;color:#166534;padding:1px 6px;border-radius:10px;font-size:10px;font-weight:600">생산팀</span></td>
+              <td style="font-weight:600">🔴 SPC 데이터 수집 시작</td>
+              <td style="font-size:10px">품질팀과 협업. 선정 공정 측정값 기록 시작</td>
+              <td style="font-size:10px">3개월 데이터가 심사 전 필요</td>
+            </tr>
+            <tr>
+              <td style="text-align:center;font-weight:700;color:#B91C1C">4/18(금)</td>
+              <td><span style="background:#EFF6FF;color:#1D4ED8;padding:1px 6px;border-radius:10px;font-size:10px;font-weight:600">경영기획실</span></td>
+              <td style="font-weight:600">🟡 MP-02 경영검토 프로세스 개정 완료</td>
+              <td style="font-size:10px">IATF 9.3.2 입력 9항목 반영된 개정본</td>
+              <td style="font-size:10px">2017년 이후 미개정. KPI·리스크 연계 필수</td>
+            </tr>
+            <tr style="background:#FAFBFD">
+              <td style="text-align:center;font-weight:700;color:#B91C1C">4/18(금)</td>
+              <td><span style="background:#FEF3C7;color:#92400E;padding:1px 6px;border-radius:10px;font-size:10px;font-weight:600">품질팀</span></td>
+              <td style="font-weight:600">🟡 SP-14 시험실관리 개정 완료</td>
+              <td style="font-size:10px">SPC·MSA 연계 항목 추가된 개정본</td>
+              <td style="font-size:10px">2017년 이후 미개정</td>
+            </tr>
+            <tr>
+              <td style="text-align:center;font-weight:700;color:#B91C1C">4/18(금)</td>
+              <td><span style="background:#FCE7F3;color:#9D174D;padding:1px 6px;border-radius:10px;font-size:10px;font-weight:600">영업팀</span></td>
+              <td style="font-weight:600">🟡 COP-07 고객만족도 개정 완료</td>
+              <td style="font-size:10px">고객만족 조사 양식 현행화 포함</td>
+              <td style="font-size:10px">2017년 이후 미개정. 연 2회 실시 기록 확인</td>
+            </tr>
+            <tr style="background:#FAFBFD">
+              <td style="text-align:center;font-weight:700;color:#E65100">4/21(월)</td>
+              <td><span style="background:#DCFCE7;color:#166534;padding:1px 6px;border-radius:10px;font-size:10px;font-weight:600">생산팀</span></td>
+              <td style="font-weight:600">🟡 SP-09 금형관리 개정 착수</td>
+              <td style="font-size:10px">개정 범위 확인 + 금형 현황 반영</td>
+              <td style="font-size:10px">2017년 이후 미개정</td>
+            </tr>
           </tbody>
         </table>
       </div>
 
-      <!-- Phase 3 -->
-      <div style="margin-bottom:16px">
-        <div style="background:#1D4ED8;color:#fff;padding:11px 16px;border-radius:8px 8px 0 0;font-size:13px;font-weight:700">PHASE 3 — 3~6개월 · 추가 개정 + PPAP</div>
-        <table class="tbl" style="border-radius:0 0 8px 8px">
-          <thead><tr><th style="width:4%">No</th><th style="width:22%">조치 내용</th><th style="width:15%">대상 문서</th><th style="width:9%">담당팀</th><th style="width:9%">완료기한</th><th style="width:7%">소요</th><th>핵심 포인트</th></tr></thead>
+      <!-- ══ WEEK 4 ══ -->
+      <div style="margin-bottom:20px">
+        <div style="background:#15803D;color:#fff;padding:12px 18px;border-radius:8px 8px 0 0;font-size:13px;font-weight:700;display:flex;justify-content:space-between;align-items:center">
+          <span>📅 Week 4 — 4월 21일(월) ~ 4월 30일(목)</span>
+          <span style="font-size:10px;font-weight:400;opacity:.8">최종 마감 주간 · 품질·개발·영업·생산팀 (경영기획실은 MP-02 완료 후 MP-03 착수)</span>
+        </div>
+        <table class="tbl" style="border-radius:0 0 8px 8px;margin-bottom:0">
+          <thead>
+            <tr><th style="width:13%">마감</th><th style="width:14%">담당팀</th><th style="width:30%">업무 내용</th><th style="width:20%">산출물</th><th>비고</th></tr>
+          </thead>
           <tbody>
-            <tr><td style="text-align:center;font-weight:700;color:#1D4ED8">13</td><td style="font-weight:600">COP-05 제품보존및인도 전면 개정</td><td style="text-align:center;font-size:10px">SSAT-COP-05</td><td style="text-align:center">생산+물류</td><td style="text-align:center;font-weight:700;color:#1D4ED8">8월 말</td><td style="text-align:center">2~3주</td><td style="font-size:10px;color:#475569">8.5.4 취급/보관/포장. 고객 특별 요구사항 포함</td></tr>
-            <tr style="background:#FAFBFD"><td style="text-align:center;font-weight:700;color:#1D4ED8">14</td><td style="font-weight:600">COP-02 개발업무프로세스 개정</td><td style="text-align:center;font-size:10px">SSAT-COP-02</td><td style="text-align:center">개발+품질</td><td style="text-align:center;font-weight:700;color:#1D4ED8">9월 말</td><td style="text-align:center">4주</td><td style="font-size:10px;color:#475569">APQP 5단계 현행화. AIAG-VDA FMEA 4판 연계</td></tr>
-            <tr><td style="text-align:center;font-weight:700;color:#1D4ED8">15</td><td style="font-weight:600">시정조치 절차서 (8D) 신규 작성</td><td style="text-align:center;font-size:10px">SSAT-SP-10 (신규)</td><td style="text-align:center">품질팀</td><td style="text-align:center;font-weight:700;color:#1D4ED8">9월 말</td><td style="text-align:center">2주</td><td style="font-size:10px;color:#475569">10.2 전체. 8D양식. 근본원인분석. 효과성검증기준</td></tr>
-            <tr style="background:#FAFBFD"><td style="text-align:center;font-weight:700;color:#1D4ED8">16</td><td style="font-weight:600">PPAP 서류 절차서 신규 작성</td><td style="text-align:center;font-size:10px">SSAT-CT-05 (신규)</td><td style="text-align:center">품질+개발</td><td style="text-align:center;font-weight:700;color:#1D4ED8">11월 말</td><td style="text-align:center">4주</td><td style="font-size:10px;color:#475569">8.3.4.4. Level 1~5 기준. 18종 서류목록</td></tr>
+            <tr style="background:#F0FDF4">
+              <td style="text-align:center;font-weight:700;color:#15803D">→ 5/16</td>
+              <td><span style="background:#EFF6FF;color:#1D4ED8;padding:1px 6px;border-radius:10px;font-size:10px;font-weight:600">경영기획실</span></td>
+              <td style="font-weight:600;color:#6B7280">🗓️ MP-03 사업계획운영 개정 (5월 이동)</td>
+              <td style="font-size:10px;color:#9CA3AF">33탭 대형 파일 — MP-02 완료 후 5월 착수</td>
+              <td style="font-size:10px;color:#15803D">MP-02 완료(4/18) 직후 착수. 5/16 완료 목표</td>
+            </tr>
+            <tr style="background:#F0FDF4">
+              <td style="text-align:center;font-weight:700;color:#15803D">→ 5/23</td>
+              <td><span style="background:#EFF6FF;color:#1D4ED8;padding:1px 6px;border-radius:10px;font-size:10px;font-weight:600">경영기획실</span></td>
+              <td style="font-weight:600;color:#6B7280">🗓️ MP-05 DATA분석·개선 개정 (5월 이동)</td>
+              <td style="font-size:10px;color:#9CA3AF">MP-03 완료 후 연속 작업</td>
+              <td style="font-size:10px;color:#15803D">5/23 완료 목표</td>
+            </tr>
+            <tr>
+              <td style="text-align:center;font-weight:700;color:#B91C1C">4/25(금)</td>
+              <td><span style="background:#FEF3C7;color:#92400E;padding:1px 6px;border-radius:10px;font-size:10px;font-weight:600">품질팀</span></td>
+              <td style="font-weight:600">🟡 SP-16 검사구관리 개정 완료</td>
+              <td style="font-size:10px">개정본 파일 저장</td>
+              <td style="font-size:10px">2017년 이후 미개정</td>
+            </tr>
+            <tr style="background:#FAFBFD">
+              <td style="text-align:center;font-weight:700;color:#B91C1C">4/25(금)</td>
+              <td><span style="background:#FEF3C7;color:#92400E;padding:1px 6px;border-radius:10px;font-size:10px;font-weight:600">품질팀</span></td>
+              <td style="font-weight:600">🟡 SP-13 계측장비관리 MSA 탭 추가</td>
+              <td style="font-size:10px">MSA 계획·결과 기록 탭 추가</td>
+              <td style="font-size:10px">2020년 파일, MSA 탭 완전 누락 상태</td>
+            </tr>
+            <tr>
+              <td style="text-align:center;font-weight:700;color:#B91C1C">4/25(fri)</td>
+              <td><span style="background:#EDE9FE;color:#5B21B6;padding:1px 6px;border-radius:10px;font-size:10px;font-weight:600">개발팀</span></td>
+              <td style="font-weight:600">🟡 SP-03 도면관리 개정 완료</td>
+              <td style="font-size:10px">CAD/3D 데이터 관리 절차 현행화</td>
+              <td style="font-size:10px">2017년 이후 미개정</td>
+            </tr>
+            <tr style="background:#FAFBFD">
+              <td style="text-align:center;font-weight:700;color:#B91C1C">4/25(fri)</td>
+              <td><span style="background:#FCE7F3;color:#9D174D;padding:1px 6px;border-radius:10px;font-size:10px;font-weight:600">영업팀</span></td>
+              <td style="font-weight:600">🟡 SP-11 고객재산관리 개정 완료</td>
+              <td style="font-size:10px">개정본 파일 저장</td>
+              <td style="font-size:10px">2017년 이후 미개정</td>
+            </tr>
+            <tr>
+              <td style="text-align:center;font-weight:700;color:#B91C1C">4/30(목)</td>
+              <td><span style="background:#EDE9FE;color:#5B21B6;padding:1px 6px;border-radius:10px;font-size:10px;font-weight:600">개발팀</span></td>
+              <td style="font-weight:600">🔴 COP-02 내 PPAP 탭 추가</td>
+              <td style="font-size:10px">PPAP 체크리스트 탭 COP-02에 삽입</td>
+              <td style="font-size:10px">체크리스트 양식 완성 후 탭 추가</td>
+            </tr>
+            <tr style="background:#FAFBFD">
+              <td style="text-align:center;font-weight:700;color:#B91C1C">4/30(목)</td>
+              <td><span style="background:#EFF6FF;color:#1D4ED8;padding:1px 6px;border-radius:10px;font-size:10px;font-weight:600">경영기획실</span></td>
+              <td style="font-weight:600">🟢 품질매뉴얼(QM) 검토 완료</td>
+              <td style="font-size:10px">2022년 개정본 → 2026 반영 필요 항목 목록화</td>
+              <td style="font-size:10px">전면 개정은 6~7월 목표</td>
+            </tr>
           </tbody>
         </table>
       </div>
 
-      <!-- Phase 4 -->
-      <div style="margin-bottom:16px">
-        <div style="background:#374151;color:#fff;padding:11px 16px;border-radius:8px 8px 0 0;font-size:13px;font-weight:700">PHASE 4 — 유지 관리 · 검토 문서 갱신</div>
-        <table class="tbl" style="border-radius:0 0 8px 8px">
-          <thead><tr><th style="width:4%">No</th><th style="width:22%">조치 내용</th><th style="width:15%">대상 문서</th><th style="width:9%">담당팀</th><th style="width:9%">완료기한</th><th style="width:7%">소요</th><th>핵심 포인트</th></tr></thead>
-          <tbody>
-            <tr><td style="text-align:center;font-weight:700;color:#374151">17</td><td style="font-weight:600">COP-01 영업관리프로세스 검토 완료</td><td style="text-align:center;font-size:10px">SSAT-COP-01</td><td style="text-align:center">영업팀</td><td style="text-align:center;font-weight:700;color:#374151">6월 말</td><td style="text-align:center">1~2주</td><td style="font-size:10px;color:#475569">CSR 최신 반영. 안전관련 부품 특별 관리 기준 추가</td></tr>
-            <tr style="background:#FAFBFD"><td style="text-align:center;font-weight:700;color:#374151">18</td><td style="font-weight:600">COP-04 검사업무프로세스 검토 완료</td><td style="text-align:center;font-size:10px">SSAT-COP-04</td><td style="text-align:center">품질팀</td><td style="text-align:center;font-weight:700;color:#374151">6월 말</td><td style="text-align:center">2주</td><td style="font-size:10px;color:#475569">MSA·SPC 신규절차 연계. MES 전산관리 현행화</td></tr>
-            <tr><td style="text-align:center;font-weight:700;color:#374151">19</td><td style="font-weight:600">MP-04 내부심사프로세스 검토 완료</td><td style="text-align:center;font-size:10px">SSAT-MP-04</td><td style="text-align:center">품질팀</td><td style="text-align:center;font-weight:700;color:#374151">6월 말</td><td style="text-align:center">2주</td><td style="font-size:10px;color:#475569">공정심사·제품심사 포함 여부. 심사원 자격 기준</td></tr>
-            <tr style="background:#FAFBFD"><td style="text-align:center;font-weight:700;color:#374151">20</td><td style="font-weight:600">SP-06 구매관리프로세스 검토 완료</td><td style="text-align:center;font-size:10px">SSAT-SP-06</td><td style="text-align:center">구매팀</td><td style="text-align:center;font-weight:700;color:#374151">6월 말</td><td style="text-align:center">2주</td><td style="font-size:10px;color:#475569">8.4.2 모니터링 기준. 협력업체 감사 절차. 긴급수급</td></tr>
-          </tbody>
-        </table>
+      <!-- 4월 이후 계획 요약 -->
+      <div class="sec-sub">📆 4월 이후 남은 일정 (5~10월)</div>
+      <table class="tbl" style="margin-bottom:20px">
+        <thead><tr><th style="width:12%">시기</th><th style="width:28%">주요 과제</th><th style="width:15%">담당</th><th>비고</th></tr></thead>
+        <tbody>
+          <tr><td><span class="tag tag-yellow">5월 초</span></td><td><strong>MP-03 사업계획운영 개정 완료</strong> (4월에서 이동)</td><td>경영기획실</td><td>33탭 대형 파일. MP-02 완료 직후 착수 → 5/16 목표</td></tr>
+          <tr style="background:#FAFBFD"><td><span class="tag tag-yellow">5월 중</span></td><td><strong>MP-05 DATA분석·개선 개정 완료</strong> (4월에서 이동)</td><td>경영기획실</td><td>MP-03 완료 후 연속 작업. 5/23 목표</td></tr>
+          <tr><td><span class="tag tag-yellow">5~6월</span></td><td>MSA Gage R&R 실시 + 결과 보고서 작성</td><td>품질팀</td><td>4/18 계획서 완성 후 실측 진행. 연 2회 기준 1차</td></tr>
+          <tr style="background:#FAFBFD"><td><span class="tag tag-yellow">5~6월</span></td><td>COP-02 개발업무프로세스 전면 개정 완료</td><td>개발팀</td><td>45탭 규모. APQP 5단계·FMEA 4판 연계</td></tr>
+          <tr><td><span class="tag tag-yellow">5~6월</span></td><td>COP-03·SP-08~10 생산 관련 파일 개정 완료</td><td>생산팀</td><td>착수는 4월, 완료는 5~6월</td></tr>
+          <tr style="background:#FAFBFD"><td><span class="tag tag-yellow">6~7월</span></td><td>상반기 경영검토 실시 + 기록 작성</td><td>경영기획실</td><td>IATF 9.3 입력 9항목 완비 필수</td></tr>
+          <tr><td><span class="tag tag-yellow">7~8월</span></td><td>SPC 3개월 누적 데이터 완성 + 관리도 분석</td><td>품질+생산팀</td><td>4월 13일 수집 시작 기준 → 7월 중 3개월분</td></tr>
+          <tr style="background:#FAFBFD"><td><span class="tag tag-yellow">8~9월</span></td><td>내부심사 실시 (전 조항 대상)</td><td>품질팀·전팀</td><td>심사 지적사항 → CAR 완료까지 심사 전 마감</td></tr>
+          <tr><td><span class="tag tag-red">9~10월</span></td><td>외부심사 사전 제출 자료 패키지 준비</td><td>경영기획실</td><td>심사 1개월 전 인증기관(NKU) 제출</td></tr>
+          <tr style="background:#FAFBFD"><td><span class="tag tag-red">10월</span></td><td>🏆 외부 감시심사 (NKU)</td><td>전팀</td><td>목표: 부적합 0건 또는 Minor 1건 이내</td></tr>
+        </tbody>
+      </table>
+
+      <div class="alert alert-blue">
+        <strong>💡 4월을 마감하기 위한 경영기획실 체크포인트</strong><br>
+        ① 중복 파일 3개 정리 완료 여부 ② 팀장 브리핑 실시 여부 ③ 팀별 업무 배포 완료 여부<br>
+        ④ MSA 계획서 최종 수령(4/18) 여부 ⑤ SPC 데이터 수집 시작 여부 ⑥ PPAP 체크리스트 양식 수령 여부<br>
+        ⑦ <strong>MP-02 개정 완료</strong> 여부 (MP-03·05는 5월로 이동 — 괜찮음)<br>
+        <span style="font-size:11px;color:#64748B">※ 5월 첫째 주에 팀장 점검 회의 실시 권고</span>
       </div>
     </div>
 
+    <!-- ══════════ 13. 월별 체크리스트 ══════════ -->
     <!-- ══════════ 13. 월별 체크리스트 ══════════ -->
     <div id="sec-checklist" class="section">
       <div class="sec-title">📅 월별 핵심 체크리스트 (2026년)</div>
@@ -1713,5 +2133,89 @@ function toggleFlow(header) {
   else { body.style.display = 'none'; arrow.textContent = '▶'; }
 }
 </script>
+    <!-- ══════════ 용어·약어 사전 ══════════ -->
+    <div id="sec-glossary" class="section">
+      <div class="sec-title">📖 용어·약어 사전 — IATF 16949 핵심 약어 총정리</div>
+
+      <div class="alert alert-blue" style="margin-bottom:18px">
+        이 페이지에서 사용하는 모든 약어와 전문 용어를 한 곳에 정리했습니다. 팀원들이 처음 접하는 용어를 빠르게 확인할 수 있습니다.
+      </div>
+
+      <!-- 인증 표준 -->
+      <div class="sec-sub">📋 인증 표준 & 규격</div>
+      <table class="tbl" style="margin-bottom:20px">
+        <thead><tr><th style="width:12%">약어</th><th style="width:28%">영문 전체</th><th style="width:20%">한국어</th><th>설명</th></tr></thead>
+        <tbody>
+          <tr><td style="font-weight:700;color:#1D4ED8">IATF</td><td>International Automotive Task Force</td><td>국제자동차태스크포스</td><td>자동차 산업 품질 표준 IATF 16949:2016을 관장하는 국제 기구. GM·Ford·BMW·현대 등 완성차 OEM이 참여.</td></tr>
+          <tr style="background:#FAFBFD"><td style="font-weight:700;color:#1D4ED8">ISO</td><td>International Organization for Standardization</td><td>국제표준화기구</td><td>IATF 16949는 ISO 9001:2015 기반에 자동차 특화 요구사항을 추가한 규격.</td></tr>
+          <tr><td style="font-weight:700;color:#1D4ED8">QMS</td><td>Quality Management System</td><td>품질경영시스템</td><td>조직이 품질을 체계적으로 관리하기 위한 전체 문서·프로세스·기록 체계.</td></tr>
+          <tr style="background:#FAFBFD"><td style="font-weight:700;color:#1D4ED8">NKU</td><td>NQA + Kiwa United</td><td>NQA·키와 통합 인증기관</td><td>2026년 기준 신성오토텍의 IATF 인증기관. 기존 Kiwa Korea가 NQA를 합병하여 NKU로 변경.</td></tr>
+          <tr><td style="font-weight:700;color:#1D4ED8">CAR</td><td>Corrective Action Request</td><td>시정조치 요청서</td><td>심사에서 부적합 발견 시 인증기관이 발행하는 시정조치 요청서. 정해진 기한 내 완료 필수.</td></tr>
+        </tbody>
+      </table>
+
+      <!-- 프로세스 구분 -->
+      <div class="sec-sub">🔄 프로세스 구분 (COP / MP / SP / EM)</div>
+      <table class="tbl" style="margin-bottom:20px">
+        <thead><tr><th style="width:12%">약어</th><th style="width:28%">영문 전체</th><th style="width:20%">한국어</th><th>설명</th></tr></thead>
+        <tbody>
+          <tr><td style="font-weight:700;color:#22C55E">COP</td><td>Core (Business) Process</td><td>핵심 프로세스</td><td>고객 가치를 직접 창출하는 프로세스. 신성오토텍 8종 (영업·개발·생산·검사·보존인도·자금·고객만족·고객불만). <strong>효과성(Effectiveness)</strong>으로 측정.</td></tr>
+          <tr style="background:#FAFBFD"><td style="font-weight:700;color:#7C3AED">MP</td><td>Management Process</td><td>경영 프로세스</td><td>전략·방향 설정 및 자원 배분. 신성오토텍 5종 (리스크관리·경영검토·사업계획·내부심사·데이터분석). <strong>효율성(Efficiency)</strong>으로 측정.</td></tr>
+          <tr><td style="font-weight:700;color:#6B7280">SP</td><td>Support Process</td><td>지원 프로세스</td><td>COP·MP를 지원하는 인프라 프로세스. 신성오토텍 18종 (문서관리·기록관리·도면관리 등).</td></tr>
+          <tr style="background:#FAFBFD"><td style="font-weight:700;color:#059669">EM</td><td>Environmental Management</td><td>환경 관리</td><td>ISO 14001 환경경영 관련 문서. 신성오토텍 PPT 4개 (2005년 작성, 현행화 필요).</td></tr>
+          <tr><td style="font-weight:700;color:#B91C1C">QM</td><td>Quality Manual</td><td>품질 매뉴얼</td><td>QMS 최상위 문서(L1). 회사 품질 철학·정책 선언. IATF 전 조항(4~10) 커버. 신성오토텍: SSATQ-01 (2022년 개정).</td></tr>
+        </tbody>
+      </table>
+
+      <!-- Core Tools -->
+      <div class="sec-sub">🔧 Core Tools 6종</div>
+      <table class="tbl" style="margin-bottom:20px">
+        <thead><tr><th style="width:12%">약어</th><th style="width:28%">영문 전체</th><th style="width:20%">한국어</th><th>설명</th></tr></thead>
+        <tbody>
+          <tr><td style="font-weight:700;color:#1D4ED8">APQP</td><td>Advanced Product Quality Planning</td><td>사전 제품 품질 계획</td><td>신제품 개발 5단계 계획 프로세스. ① 계획 → ② 제품설계 → ③ 공정설계 → ④ 제품·공정 유효성 확인 → ⑤ 피드백·시정 조치. IATF 8.3 대응.</td></tr>
+          <tr style="background:#FAFBFD"><td style="font-weight:700;color:#1D4ED8">FMEA</td><td>Failure Mode and Effects Analysis</td><td>잠재적 고장형태 영향 분석</td><td>설계·공정의 잠재 고장을 사전에 찾아 대책을 세우는 도구. DFMEA(설계)·PFMEA(공정)로 구분. AIAG-VDA 4판(AP 방식) 적용 권고.</td></tr>
+          <tr><td style="font-weight:700;color:#1D4ED8">CP</td><td>Control Plan</td><td>관리 계획서</td><td>수입검사·공정·출하 3단계별 관리 방법 명시 문서. 특수특성(SC/CC) 반드시 포함. PFMEA와 연계 필수.</td></tr>
+          <tr style="background:#FAFBFD"><td style="font-weight:700;color:#DC2626">MSA</td><td>Measurement System Analysis</td><td>측정시스템 분석</td><td>측정 장비·방법의 신뢰성을 통계적으로 검증. Gage R&R이 핵심 기법. 합격 기준: %GRR ≤ 10%. IATF 7.1.5.1.1. <strong>신성오토텍 현재 완전 누락.</strong></td></tr>
+          <tr><td style="font-weight:700;color:#DC2626">SPC</td><td>Statistical Process Control</td><td>통계적 공정 관리</td><td>관리도를 이용해 공정 변동을 실시간 감시하는 기법. X̄-R 관리도가 가장 일반적. 목표: Cpk ≥ 1.33 (특수특성 1.67). IATF 8.3.3.1. <strong>신성오토텍 현재 완전 누락.</strong></td></tr>
+          <tr style="background:#FAFBFD"><td style="font-weight:700;color:#DC2626">PPAP</td><td>Production Part Approval Process</td><td>양산 부품 승인 프로세스</td><td>신규·변경 부품을 고객에게 납품하기 전 18가지 서류를 제출·승인받는 절차. Level 1~5로 제출 범위 구분. IATF 8.6.6. <strong>신성오토텍 현재 완전 누락.</strong></td></tr>
+        </tbody>
+      </table>
+
+      <!-- 품질 용어 -->
+      <div class="sec-sub">📊 품질·통계 용어</div>
+      <table class="tbl" style="margin-bottom:20px">
+        <thead><tr><th style="width:12%">약어/용어</th><th style="width:25%">영문/원어</th><th style="width:20%">한국어</th><th>설명</th></tr></thead>
+        <tbody>
+          <tr><td style="font-weight:700">Gage R&R</td><td>Gage Repeatability & Reproducibility</td><td>게이지 반복성·재현성</td><td>MSA의 핵심 기법. 같은 사람이 반복 측정(반복성)·다른 사람이 측정(재현성)의 변동을 분석. %GRR ≤ 10%: 합격, 10~30%: 조건부, >30%: 불합격.</td></tr>
+          <tr style="background:#FAFBFD"><td style="font-weight:700">Cpk</td><td>Process Capability Index</td><td>공정 능력 지수</td><td>공정이 규격 내에서 얼마나 중심을 유지하며 산포 없이 생산하는지 나타내는 지수. Cpk ≥ 1.33: 적합, 특수특성은 1.67 이상 요구.</td></tr>
+          <tr><td style="font-weight:700">RPN → AP</td><td>Risk Priority Number → Action Priority</td><td>위험 우선순위 → 조치 우선순위</td><td>구 FMEA의 RPN(심각도×발생도×검출도 점수)을 AIAG-VDA 4판에서 AP(High/Medium/Low) 방식으로 전환. RPN 방식 유지 시 심사 지적 대상.</td></tr>
+          <tr style="background:#FAFBFD"><td style="font-weight:700">SC / CC</td><td>Significant / Critical Characteristics</td><td>중요/핵심 특성</td><td>고객 또는 법규가 지정한 특별 관리 특성. SC는 기능·성능에 중요, CC는 안전·법규에 직결. CP에 반드시 표시 필요.</td></tr>
+          <tr><td style="font-weight:700">8D</td><td>Eight Disciplines</td><td>8단계 문제해결</td><td>부적합 발생 시 근본 원인 분석·재발 방지 8단계 방법론. D1(팀 구성)~D8(우수 사례 공유). CAR 대응 시 표준 양식.</td></tr>
+          <tr style="background:#FAFBFD"><td style="font-weight:700">CSR</td><td>Customer Specific Requirements</td><td>고객 특별 요구사항</td><td>각 완성차 OEM이 IATF 표준에 추가하는 자사 고유 요구사항. GM·현대 등 고객별로 내용이 다름. PPAP Level도 CSR로 결정.</td></tr>
+          <tr><td style="font-weight:700">PFMEA</td><td>Process Failure Mode and Effects Analysis</td><td>공정 FMEA</td><td>공정(제조) 단계에서의 잠재 고장 분석. 신성오토텍 COP-02 내 관련 탭 보유. AIAG-VDA 4판 전환 필요.</td></tr>
+          <tr style="background:#FAFBFD"><td style="font-weight:700">PM</td><td>Preventive Maintenance</td><td>예방 보전</td><td>설비 고장 전에 계획적으로 점검·교체하는 유지보수. IATF 8.5.1.5 요구. 주기·항목·기록 체계 필수.</td></tr>
+        </tbody>
+      </table>
+
+      <!-- 프로세스 약어 -->
+      <div class="sec-sub">📁 신성오토텍 사내 파일 코드</div>
+      <table class="tbl" style="margin-bottom:20px">
+        <thead><tr><th style="width:12%">코드</th><th style="width:30%">파일명 예시</th><th>설명</th></tr></thead>
+        <tbody>
+          <tr><td style="font-weight:700">SSATQ-01</td><td>SSATQ-01 품질경영매뉴얼</td><td>품질 매뉴얼 (L1 문서)</td></tr>
+          <tr style="background:#FAFBFD"><td style="font-weight:700">SSAT-COP-XX</td><td>COP-02 개발업무프로세스</td><td>핵심 프로세스 절차서. COP-01(영업)~COP-08(고객불만). 총 8종.</td></tr>
+          <tr><td style="font-weight:700">SSAT-MP-XX</td><td>MP-02 경영검토프로세스</td><td>경영 프로세스 절차서. MP-01(리스크)~MP-05(데이터분석). 총 5종.</td></tr>
+          <tr style="background:#FAFBFD"><td style="font-weight:700">SSAT-SP-XX</td><td>SP-13 계측장비관리프로세스</td><td>지원 프로세스 절차서. SP-01(문서관리)~SP-18(안전보건). 총 18종.</td></tr>
+          <tr><td style="font-weight:700">SSAT-EM-XX</td><td>EM-02 환경법규파악및등록</td><td>환경 관리 관련 문서 (ISO 14001 연계). PPT 형식 4종.</td></tr>
+          <tr style="background:#FAFBFD"><td style="font-weight:700">SSAT-CT-XX</td><td>CT-01 PFMEA절차서 (신규)</td><td>Core Tools 전용 문서. 현재 미작성, 신규 생성 예정.</td></tr>
+        </tbody>
+      </table>
+
+      <div class="alert" style="background:#F0FDF4;border:1px solid #86EFAC">
+        <strong>💡 약어 추가 요청:</strong> 이 목록에 없는 용어가 있으면 경영기획실로 요청하시면 추가하겠습니다.
+        <span style="font-size:10px;color:#64748B">(최종 업데이트: 2026-03-30)</span>
+      </div>
+    </div>
+
 </body>
 </html>
