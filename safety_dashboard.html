@@ -1,0 +1,1921 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>산업안전보건 관리 시스템</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Malgun Gothic','Apple SD Gothic Neo',sans-serif;background:#f0f4f8;color:#1a202c;display:flex;min-height:100vh;}
+/* SIDEBAR */
+#sidebar{width:240px;min-height:100vh;background:#1a2744;color:#fff;position:fixed;top:0;left:0;z-index:100;display:flex;flex-direction:column;}
+#sidebar .logo{padding:20px 16px;border-bottom:1px solid rgba(255,255,255,0.1);}
+#sidebar .logo h1{font-size:15px;font-weight:700;color:#60a5fa;line-height:1.4;}
+#sidebar .logo p{font-size:11px;color:#94a3b8;margin-top:2px;}
+#sidebar nav{flex:1;padding:12px 0;overflow-y:auto;}
+#sidebar nav a{display:flex;align-items:center;gap:10px;padding:10px 16px;color:#cbd5e1;text-decoration:none;font-size:13px;transition:all 0.2s;cursor:pointer;border:none;background:none;width:100%;}
+#sidebar nav a:hover{background:rgba(255,255,255,0.08);color:#fff;}
+#sidebar nav a.active{background:#2563eb;color:#fff;}
+#sidebar nav a .icon{font-size:16px;width:20px;text-align:center;}
+#sidebar nav .section-title{padding:16px 16px 6px;font-size:10px;color:#64748b;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;}
+#sidebar .footer{padding:12px 16px;border-top:1px solid rgba(255,255,255,0.1);font-size:11px;color:#64748b;}
+/* MAIN */
+#main{margin-left:240px;flex:1;min-height:100vh;}
+.topbar{background:#fff;border-bottom:1px solid #e2e8f0;padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;}
+.topbar h2{font-size:17px;font-weight:700;color:#1a202c;}
+.topbar .actions{display:flex;gap:8px;align-items:center;}
+.content{padding:24px;}
+/* CARDS */
+.card{background:#fff;border-radius:12px;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,0.08);}
+.card-title{font-size:14px;font-weight:700;color:#374151;margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
+.grid-4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:16px;}
+/* STAT CARDS */
+.stat-card{background:#fff;border-radius:12px;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,0.08);}
+.stat-card .label{font-size:12px;color:#6b7280;margin-bottom:6px;}
+.stat-card .value{font-size:28px;font-weight:700;}
+.stat-card .sub{font-size:11px;color:#9ca3af;margin-top:4px;}
+.stat-card.blue .value{color:#2563eb;}
+.stat-card.green .value{color:#16a34a;}
+.stat-card.red .value{color:#dc2626;}
+.stat-card.orange .value{color:#ea580c;}
+/* BADGE */
+.badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600;}
+.badge.green{background:#dcfce7;color:#16a34a;}
+.badge.red{background:#fee2e2;color:#dc2626;}
+.badge.yellow{background:#fef9c3;color:#ca8a04;}
+.badge.blue{background:#dbeafe;color:#2563eb;}
+.badge.gray{background:#f3f4f6;color:#6b7280;}
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;border:none;cursor:pointer;transition:all 0.2s;}
+.btn-primary{background:#2563eb;color:#fff;}
+.btn-primary:hover{background:#1d4ed8;}
+.btn-success{background:#16a34a;color:#fff;}
+.btn-success:hover{background:#15803d;}
+.btn-danger{background:#dc2626;color:#fff;}
+.btn-danger:hover{background:#b91c1c;}
+.btn-outline{background:#fff;color:#374151;border:1px solid #d1d5db;}
+.btn-outline:hover{background:#f9fafb;}
+.btn-sm{padding:5px 10px;font-size:12px;}
+/* FORM */
+.form-group{margin-bottom:14px;}
+.form-group label{display:block;font-size:12px;font-weight:600;color:#374151;margin-bottom:5px;}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:8px 12px;border:1px solid #d1d5db;border-radius:8px;font-size:13px;font-family:inherit;transition:border 0.2s;}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,0.1);}
+.form-group textarea{resize:vertical;min-height:80px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+/* TABLE */
+.table-wrap{overflow-x:auto;border-radius:8px;border:1px solid #e5e7eb;}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+table th{background:#f8fafc;padding:10px 12px;text-align:left;font-size:12px;font-weight:600;color:#6b7280;border-bottom:1px solid #e5e7eb;}
+table td{padding:10px 12px;border-bottom:1px solid #f1f5f9;vertical-align:middle;}
+table tr:last-child td{border-bottom:none;}
+table tr:hover td{background:#f8fafc;}
+/* CHECKBOX LIST */
+.check-item{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid #f1f5f9;}
+.check-item:last-child{border-bottom:none;}
+.check-item input[type=checkbox]{width:16px;height:16px;margin-top:2px;accent-color:#2563eb;cursor:pointer;flex-shrink:0;}
+.check-item label{font-size:13px;color:#374151;cursor:pointer;flex:1;}
+.check-item .check-note{font-size:11px;color:#9ca3af;margin-top:2px;}
+/* SECTION HIDDEN */
+.section{display:none;}
+.section.active{display:block;}
+/* PROGRESS */
+.progress-bar{background:#e5e7eb;border-radius:20px;height:8px;overflow:hidden;}
+.progress-fill{height:100%;border-radius:20px;transition:width 0.3s;}
+.progress-fill.blue{background:#2563eb;}
+.progress-fill.green{background:#16a34a;}
+.progress-fill.orange{background:#ea580c;}
+/* ALERT */
+.alert{padding:12px 16px;border-radius:8px;font-size:13px;margin-bottom:12px;display:flex;gap:10px;align-items:flex-start;}
+.alert.warning{background:#fffbeb;border-left:4px solid #f59e0b;color:#92400e;}
+.alert.danger{background:#fef2f2;border-left:4px solid #ef4444;color:#991b1b;}
+.alert.success{background:#f0fdf4;border-left:4px solid #22c55e;color:#166534;}
+.alert.info{background:#eff6ff;border-left:4px solid #3b82f6;color:#1e40af;}
+/* TABS */
+.tabs{display:flex;gap:4px;margin-bottom:16px;background:#f1f5f9;padding:4px;border-radius:8px;}
+.tab{padding:6px 14px;border-radius:6px;font-size:13px;cursor:pointer;border:none;background:none;color:#64748b;font-weight:500;transition:all 0.2s;}
+.tab.active{background:#fff;color:#1a202c;font-weight:700;box-shadow:0 1px 2px rgba(0,0,0,0.1);}
+/* PATROL ZONE */
+.zone-card{border:2px solid #e5e7eb;border-radius:10px;margin-bottom:16px;overflow:hidden;}
+.zone-header{padding:12px 16px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;user-select:none;}
+.zone-header.ok{background:#f0fdf4;border-bottom:2px solid #bbf7d0;}
+.zone-header.warn{background:#fffbeb;border-bottom:2px solid #fde68a;}
+.zone-header.fail{background:#fef2f2;border-bottom:2px solid #fecaca;}
+.zone-header.default{background:#f8fafc;border-bottom:1px solid #e5e7eb;}
+.zone-body{padding:16px;}
+.zone-title{font-size:14px;font-weight:700;}
+.zone-score{font-size:12px;font-weight:600;}
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;display:none;align-items:center;justify-content:center;}
+.modal-overlay.show{display:flex;}
+.modal{background:#fff;border-radius:12px;padding:24px;width:90%;max-width:560px;max-height:85vh;overflow-y:auto;}
+.modal-title{font-size:16px;font-weight:700;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;}
+.modal-close{background:none;border:none;font-size:20px;cursor:pointer;color:#9ca3af;}
+/* PRINT */
+@media print{#sidebar,#topbar-print-hide{display:none!important;}#main{margin-left:0!important;}}
+/* RESPONSIVE */
+@media(max-width:768px){#sidebar{transform:translateX(-100%);}#main{margin-left:0;}}
+/* NOTICE */
+.notice-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:6px;}
+.notice-dot.red{background:#ef4444;}
+.notice-dot.green{background:#22c55e;}
+.notice-dot.yellow{background:#f59e0b;}
+/* CONNECTION STATUS */
+.conn-status{display:flex;align-items:center;gap:6px;padding:8px 16px;font-size:11px;border-top:1px solid rgba(255,255,255,0.1);margin-top:4px;}
+.conn-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.conn-dot.connected{background:#22c55e;box-shadow:0 0 6px #22c55e;}
+.conn-dot.disconnected{background:#ef4444;}
+.conn-dot.local{background:#f59e0b;}
+.realtime-badge{position:fixed;bottom:16px;right:16px;background:#16a34a;color:#fff;padding:6px 12px;border-radius:20px;font-size:12px;font-weight:700;z-index:90;display:none;}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div id="sidebar">
+  <div class="logo">
+    <h1>🏭 산업안전보건<br>관리 시스템</h1>
+    <p id="company-name-display">회사명 설정 필요</p>
+  </div>
+  <nav>
+    <div class="section-title">메인</div>
+    <a class="active" onclick="showSection('dashboard')"><span class="icon">📊</span> 대시보드</a>
+    <div class="section-title">일일관리</div>
+    <a onclick="showSection('tbm')"><span class="icon">🌅</span> TBM 일지</a>
+    <a onclick="showSection('patrol')"><span class="icon">🔍</span> 패트롤 체크리스트</a>
+    <div class="section-title">교육·평가</div>
+    <a onclick="showSection('education')"><span class="icon">📚</span> 교육 관리</a>
+    <a onclick="showSection('risk')"><span class="icon">⚠️</span> 위험성 평가</a>
+    <div class="section-title">기록·서류</div>
+    <a onclick="showSection('documents')"><span class="icon">📋</span> 서류 현황</a>
+    <a onclick="showSection('accident')"><span class="icon">🚨</span> 아차사고 보고</a>
+    <a onclick="showSection('equipment')"><span class="icon">🔧</span> 설비 점검</a>
+    <div class="section-title">계획</div>
+    <a onclick="showSection('schedule')"><span class="icon">📅</span> 연간 일정</a>
+    <a onclick="showSection('signs')"><span class="icon">🪧</span> 안전 비표 관리</a>
+    <div class="section-title">교육·홍보</div>
+    <a onclick="showSection('cardnews')"><span class="icon">📢</span> 카드뉴스 시리즈</a>
+    <a onclick="showSection('posters')"><span class="icon">🖼️</span> 게시판 포스터</a>
+    <div class="section-title">시스템</div>
+    <a onclick="showSection('settings')"><span class="icon">⚙️</span> 설정</a>
+  </nav>
+  <div class="footer">
+    <div id="today-date"></div>
+    <div style="margin-top:4px;">ver 1.0 · localStorage 저장</div>
+    <div class="conn-status"><div class="conn-dot local" id="conn-dot"></div><span id="conn-text">로컬 저장 모드</span></div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div id="main">
+  <div class="topbar" id="topbar-print-hide">
+    <h2 id="page-title">📊 대시보드</h2>
+    <div class="actions">
+      <span id="clock" style="font-size:13px;color:#6b7280;"></span>
+      <button class="btn btn-outline btn-sm" onclick="window.print()">🖨️ 인쇄</button>
+      <button class="btn btn-outline btn-sm" onclick="exportData()">💾 백업</button>
+    </div>
+  </div>
+  <div class="content">
+
+  <!-- ===== 대시보드 ===== -->
+  <div id="section-dashboard" class="section active">
+    <div id="dashboard-alerts" style="margin-bottom:16px;"></div>
+    <div class="grid-4" style="margin-bottom:16px;">
+      <div class="stat-card blue">
+        <div class="label">오늘 TBM</div>
+        <div class="value" id="stat-tbm">-</div>
+        <div class="sub" id="stat-tbm-sub">미기록</div>
+      </div>
+      <div class="stat-card green">
+        <div class="label">이번달 교육</div>
+        <div class="value" id="stat-edu">-</div>
+        <div class="sub" id="stat-edu-sub">회 실시</div>
+      </div>
+      <div class="stat-card orange">
+        <div class="label">이번달 패트롤</div>
+        <div class="value" id="stat-patrol">-</div>
+        <div class="sub" id="stat-patrol-sub">회 실시</div>
+      </div>
+      <div class="stat-card red">
+        <div class="label">아차사고</div>
+        <div class="value" id="stat-accident">-</div>
+        <div class="sub" id="stat-accident-sub">건 (이번달)</div>
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-bottom:16px;">
+      <div class="card">
+        <div class="card-title">📋 법적 필수 서류 현황</div>
+        <div id="doc-status-mini"></div>
+        <button class="btn btn-outline btn-sm" style="margin-top:12px;" onclick="showSection('documents')">전체 보기 →</button>
+      </div>
+      <div class="card">
+        <div class="card-title">📅 이번달 안전관리 진행률</div>
+        <div id="monthly-progress"></div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">🌅 최근 TBM 기록</div>
+        <div id="recent-tbm"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">🔍 최근 패트롤 기록</div>
+        <div id="recent-patrol"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== TBM 일지 ===== -->
+  <div id="section-tbm" class="section">
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('tbm','write')">✏️ 오늘 TBM 작성</button>
+      <button class="tab" onclick="switchTab('tbm','history')">📜 기록 이력</button>
+    </div>
+    <div id="tbm-tab-write">
+      <div class="card">
+        <div class="card-title">🌅 TBM (Tool Box Meeting) 일지 <span style="font-size:11px;font-weight:400;color:#6b7280;">— TBM절차서 Rev.0 기준 (2025.11.14 제정)</span></div>
+        <div class="alert info">매일 작업 시작 전 <strong>5~10분</strong> 이내 실시 | 정상 작업 시 주제 <strong>3개 이내</strong> | 비정상 작업 시 시간 제한 없이 신중하게</div>
+
+        <!-- 오늘의 요일 테마 자동 표시 -->
+        <div id="tbm-today-theme" style="background:#eff6ff;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:13px;border-left:4px solid #2563eb;"></div>
+
+        <div class="form-row-3">
+          <div class="form-group"><label>날짜</label><input type="date" id="tbm-date"></div>
+          <div class="form-group"><label>시간</label><input type="time" id="tbm-time" value="08:00"></div>
+          <div class="form-group"><label>장소</label><input type="text" id="tbm-place" value="현장 작업장" placeholder="장소"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>TBM 리더 (진행자)</label><input type="text" id="tbm-leader" placeholder="소속·직위·이름"></div>
+          <div class="form-group"><label>참석 인원 수</label><input type="number" id="tbm-count" placeholder="명" min="1"></div>
+        </div>
+        <div class="form-group"><label>참석자 명단 (서명 갈음)</label><input type="text" id="tbm-attendees" placeholder="박제성, 안성현, 조경환, 김대수, 김민수, 이환돈, 강한철, 이민주, ..."></div>
+
+        <div style="margin:14px 0 8px;font-size:13px;font-weight:700;color:#374151;">① 작업자 건강 상태 확인</div>
+        <div class="check-item"><input type="checkbox" id="tc0"><label for="tc0">과도한 음주·37℃ 이상 체온·약물 복용 여부 이상 없음</label></div>
+
+        <div style="margin:14px 0 8px;font-size:13px;font-weight:700;color:#374151;">② 금일 작업내용 / 위험요인 / 안전대책 공유</div>
+        <div style="overflow-x:auto;margin-bottom:8px;">
+          <table style="width:100%;font-size:12px;border-collapse:collapse;border:1px solid #e5e7eb;">
+            <thead><tr style="background:#f8fafc;">
+              <th style="padding:8px;border:1px solid #e5e7eb;width:30%;">작업명</th>
+              <th style="padding:8px;border:1px solid #e5e7eb;width:35%;">위험요인</th>
+              <th style="padding:8px;border:1px solid #e5e7eb;width:35%;">대책 (제거→대체→통제 순)</th>
+            </tr></thead>
+            <tbody>
+              <tr><td><input type="text" id="tw1" style="width:100%;border:none;padding:4px;font-size:12px;" placeholder="예) 금형 교체"></td><td><input type="text" id="th1" style="width:100%;border:none;padding:4px;font-size:12px;" placeholder="예) 낙하·협착"></td><td><input type="text" id="td1" style="width:100%;border:none;padding:4px;font-size:12px;" placeholder="예) 2인1조+안전모착용"></td></tr>
+              <tr><td><input type="text" id="tw2" style="width:100%;border:none;padding:4px;font-size:12px;"></td><td><input type="text" id="th2" style="width:100%;border:none;padding:4px;font-size:12px;"></td><td><input type="text" id="td2" style="width:100%;border:none;padding:4px;font-size:12px;"></td></tr>
+              <tr><td><input type="text" id="tw3" style="width:100%;border:none;padding:4px;font-size:12px;"></td><td><input type="text" id="th3" style="width:100%;border:none;padding:4px;font-size:12px;"></td><td><input type="text" id="td3" style="width:100%;border:none;padding:4px;font-size:12px;"></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div style="margin:14px 0 8px;font-size:13px;font-weight:700;color:#374151;">③ PPE(보호구) 착용 점검</div>
+        <div class="check-item"><input type="checkbox" id="tc1"><label for="tc1">안전모 착용 (호이스트·크레인 구역 전원)</label></div>
+        <div class="check-item"><input type="checkbox" id="tc2"><label for="tc2">안전화 착용 (전 작업자)</label></div>
+        <div class="check-item"><input type="checkbox" id="tc3"><label for="tc3">안전장갑 착용 (금형·프레스 작업자)</label></div>
+        <div class="check-item"><input type="checkbox" id="tc4"><label for="tc4">방열장갑·보안경 착용 (사출 작업자)</label></div>
+
+        <div style="margin:14px 0 8px;font-size:13px;font-weight:700;color:#374151;">④ 5S / 기계설비 점검</div>
+        <div class="check-item"><input type="checkbox" id="tc5"><label for="tc5">작업 구역 정리정돈 상태 양호 (통로 확보)</label></div>
+        <div class="check-item"><input type="checkbox" id="tc6"><label for="tc6">호이스트·크레인 체인·훅 이상 없음</label></div>
+        <div class="check-item"><input type="checkbox" id="tc7"><label for="tc7">사출기·프레스 안전장치 작동 정상</label></div>
+        <div class="check-item"><input type="checkbox" id="tc8"><label for="tc8">소화기·비상구 접근 가능 상태</label></div>
+
+        <div style="margin:14px 0 8px;font-size:13px;font-weight:700;color:#374151;">⑤ 전일 이상·아차사고 공유 / TBM 리더 강조사항</div>
+        <div class="form-group"><textarea id="tbm-leader-msg" placeholder="어제 발생한 아차사고, 오늘 특별 주의사항, 리더 강조 메시지 등"></textarea></div>
+
+        <div style="margin:14px 0 8px;font-size:13px;font-weight:700;color:#374151;">⑥ 작업자 질의응답 / 제안사항</div>
+        <div class="form-group"><textarea id="tbm-notes" placeholder="작업자 질문, 건의사항, 불편한 점 등 자유롭게 기재"></textarea></div>
+
+        <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px;">
+          <button class="btn btn-outline" onclick="clearTBM()">초기화</button>
+          <button class="btn btn-success" onclick="saveTBM()">💾 TBM 기록 저장</button>
+        </div>
+      </div>
+    </div>
+    <div id="tbm-tab-history" style="display:none;">
+      <div class="card">
+        <div class="card-title">📜 TBM 이력</div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>날짜</th><th>진행자</th><th>참석인원</th><th>작업내용</th><th>위험요소</th><th>확인항목</th><th>작업</th></tr></thead>
+          <tbody id="tbm-history-body"></tbody>
+        </table></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 패트롤 체크리스트 ===== -->
+  <div id="section-patrol" class="section">
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('patrol','write')">✏️ 패트롤 실시</button>
+      <button class="tab" onclick="switchTab('patrol','history')">📜 패트롤 이력</button>
+    </div>
+    <div id="patrol-tab-write">
+      <div class="card" style="margin-bottom:16px;">
+        <div class="card-title">🔍 현장 패트롤 점검 정보</div>
+        <div class="form-row-3">
+          <div class="form-group"><label>점검일자</label><input type="date" id="p-date"></div>
+          <div class="form-group"><label>점검시간</label><input type="time" id="p-time"></div>
+          <div class="form-group"><label>점검자</label><input type="text" id="p-inspector" placeholder="이름"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>점검 구분</label>
+            <select id="p-type">
+              <option>일상 순회점검</option>
+              <option>주간 정기점검</option>
+              <option>월간 안전점검</option>
+              <option>특별 점검</option>
+            </select>
+          </div>
+          <div class="form-group"><label>날씨</label>
+            <select id="p-weather">
+              <option>맑음</option><option>흐림</option><option>비</option><option>눈</option><option>더위</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div id="patrol-zones"></div>
+
+      <div class="card" style="margin-top:16px;">
+        <div class="card-title">📝 종합 의견 및 조치 필요 사항</div>
+        <div class="form-group"><label>불량/개선 필요 사항 (구체적으로 기재)</label><textarea id="p-issues" placeholder="위치 및 내용 상세 기재&#10;예) 호이스트 구역 - 안전모 미착용 작업자 발견, 즉시 시정&#10;프레스 라인 - 바닥 오일 누출 확인, 청소 필요"></textarea></div>
+        <div class="form-group"><label>즉시 조치 완료 사항</label><textarea id="p-actions" placeholder="현장에서 즉시 조치한 사항을 기재"></textarea></div>
+        <div class="form-group"><label>추가 조치 필요 사항 (담당자/기한 명시)</label><textarea id="p-followup" placeholder="예) 호이스트 체인 교체 필요 - 담당: 홍길동 / 기한: 2026-03-30"></textarea></div>
+        <div style="display:flex;gap:8px;justify-content:flex-end;">
+          <button class="btn btn-outline" onclick="clearPatrol()">초기화</button>
+          <button class="btn btn-success" onclick="savePatrol()">💾 패트롤 기록 저장</button>
+        </div>
+      </div>
+    </div>
+    <div id="patrol-tab-history" style="display:none;">
+      <div class="card">
+        <div class="card-title">📜 패트롤 이력</div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>날짜</th><th>점검자</th><th>점검구분</th><th>총점검</th><th>불량건수</th><th>불량내용</th><th>작업</th></tr></thead>
+          <tbody id="patrol-history-body"></tbody>
+        </table></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 교육 관리 ===== -->
+  <div id="section-education" class="section">
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('edu','write')">✏️ 교육 기록</button>
+      <button class="tab" onclick="switchTab('edu','plan')">📅 연간 계획</button>
+      <button class="tab" onclick="switchTab('edu','history')">📜 교육 이력</button>
+    </div>
+    <div id="edu-tab-write">
+      <div class="card">
+        <div class="card-title">📚 안전보건교육 실시 기록</div>
+        <div class="form-row">
+          <div class="form-group"><label>교육일자</label><input type="date" id="edu-date"></div>
+          <div class="form-group"><label>교육 종류</label>
+            <select id="edu-type">
+              <option>정기교육 (근로자)</option>
+              <option>신규채용자 교육</option>
+              <option>작업변경 특별교육</option>
+              <option>관리감독자 교육</option>
+              <option>특별 안전보건교육</option>
+              <option>기타</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>교육 시간</label><input type="number" id="edu-hours" placeholder="시간" step="0.5" min="0.5"></div>
+          <div class="form-group"><label>교육 방법</label>
+            <select id="edu-method">
+              <option>집합교육</option>
+              <option>온라인교육</option>
+              <option>영상교육</option>
+              <option>OJT (현장교육)</option>
+              <option>외부교육기관</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group"><label>교육 내용</label><textarea id="edu-content" placeholder="교육 주요 내용을 기재"></textarea></div>
+        <div class="form-row">
+          <div class="form-group"><label>강사명</label><input type="text" id="edu-trainer" placeholder="이름 또는 기관명"></div>
+          <div class="form-group"><label>교육 장소</label><input type="text" id="edu-place" placeholder="회의실, 현장, 온라인 등"></div>
+        </div>
+        <div class="form-group"><label>참석자 명단</label><input type="text" id="edu-attendees" placeholder="홍길동, 김철수, ... (또는 '전 직원')"></div>
+        <div class="form-group"><label>참석 인원 수</label><input type="number" id="edu-count" placeholder="명" min="1"></div>
+        <div class="form-group"><label>특이사항</label><textarea id="edu-notes" placeholder="질문, 건의사항, 교육 효과 등"></textarea></div>
+        <div style="display:flex;gap:8px;justify-content:flex-end;">
+          <button class="btn btn-success" onclick="saveEducation()">💾 교육 기록 저장</button>
+        </div>
+      </div>
+    </div>
+    <div id="edu-tab-plan" style="display:none;">
+      <div class="card">
+        <div class="card-title">📅 법적 교육 의무 현황 (2026년)</div>
+        <div class="alert warning">법적 교육 미이수 시 과태료 부과 대상입니다.</div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>교육종류</th><th>대상</th><th>법정시간</th><th>주기</th><th>이수현황</th><th>비고</th></tr></thead>
+          <tbody>
+            <tr><td>정기교육</td><td>전 근로자</td><td>월 2시간 이상</td><td>매월</td><td id="edu-plan-regular"><span class="badge gray">확인중</span></td><td>연 24시간</td></tr>
+            <tr><td>신규채용자 교육</td><td>신규입사자</td><td>8시간</td><td>입사시</td><td><span class="badge blue">해당시 실시</span></td><td>채용 전 또는 당일</td></tr>
+            <tr><td>관리감독자 교육</td><td>관리감독자</td><td>연 16시간</td><td>연1회</td><td id="edu-plan-super"><span class="badge gray">확인중</span></td><td>반기 8시간씩 권장</td></tr>
+            <tr><td>특별교육</td><td>유해위험작업 근로자</td><td>16시간</td><td>작업 전</td><td><span class="badge blue">해당시 실시</span></td><td>금형,프레스 등</td></tr>
+            <tr><td>작업변경 교육</td><td>작업변경 근로자</td><td>2시간</td><td>변경시</td><td><span class="badge blue">해당시 실시</span></td><td>공정 변경 포함</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </div>
+    <div id="edu-tab-history" style="display:none;">
+      <div class="card">
+        <div class="card-title">📜 교육 이력</div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>교육일자</th><th>교육종류</th><th>시간</th><th>방법</th><th>강사</th><th>참석인원</th><th>작업</th></tr></thead>
+          <tbody id="edu-history-body"></tbody>
+        </table></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 위험성 평가 ===== -->
+  <div id="section-risk" class="section">
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('risk','write')">✏️ 위험요소 등록</button>
+      <button class="tab" onclick="switchTab('risk','list')">📜 평가 목록</button>
+    </div>
+    <div id="risk-tab-write">
+      <div class="card">
+        <div class="card-title">⚠️ 위험성 평가 등록</div>
+        <div class="alert info">산업안전보건법 제36조 - 연 1회 이상 실시 의무. 수시 위험성평가는 작업 변경 시마다 실시.</div>
+        <div class="form-row">
+          <div class="form-group"><label>평가일자</label><input type="date" id="risk-date"></div>
+          <div class="form-group"><label>작업/공정명</label><input type="text" id="risk-process" placeholder="예) 금형 교체 작업"></div>
+        </div>
+        <div class="form-group"><label>유해·위험요인</label><textarea id="risk-hazard" placeholder="예) 금형 이동 시 낙하로 인한 신체 타박상/압박 위험"></textarea></div>
+        <div class="form-row-3">
+          <div class="form-group"><label>빈도 (1~5)</label>
+            <select id="risk-freq">
+              <option value="1">1 - 거의 없음</option>
+              <option value="2">2 - 가끔</option>
+              <option value="3">3 - 보통</option>
+              <option value="4">4 - 자주</option>
+              <option value="5">5 - 매우 자주</option>
+            </select>
+          </div>
+          <div class="form-group"><label>강도 (1~5)</label>
+            <select id="risk-severity">
+              <option value="1">1 - 경미</option>
+              <option value="2">2 - 경상</option>
+              <option value="3">3 - 중상</option>
+              <option value="4">4 - 중대재해</option>
+              <option value="5">5 - 사망</option>
+            </select>
+          </div>
+          <div class="form-group"><label>위험도</label><input type="text" id="risk-score" readonly style="background:#f8fafc;font-weight:700;"></div>
+        </div>
+        <div class="form-group"><label>현재 안전조치</label><textarea id="risk-current" placeholder="현재 적용 중인 안전조치 기재"></textarea></div>
+        <div class="form-group"><label>추가 개선 조치</label><textarea id="risk-improve" placeholder="필요한 추가 조치 기재"></textarea></div>
+        <div class="form-row">
+          <div class="form-group"><label>조치 담당자</label><input type="text" id="risk-owner" placeholder="이름"></div>
+          <div class="form-group"><label>조치 기한</label><input type="date" id="risk-due"></div>
+        </div>
+        <div style="display:flex;gap:8px;justify-content:flex-end;">
+          <button class="btn btn-success" onclick="saveRisk()">💾 위험성 평가 저장</button>
+        </div>
+      </div>
+    </div>
+    <div id="risk-tab-list" style="display:none;">
+      <div class="card">
+        <div class="card-title">📜 위험성 평가 목록</div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>날짜</th><th>작업/공정</th><th>위험요인</th><th>위험도</th><th>조치담당자</th><th>기한</th><th>상태</th><th>작업</th></tr></thead>
+          <tbody id="risk-list-body"></tbody>
+        </table></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 서류 현황 ===== -->
+  <div id="section-documents" class="section">
+    <div class="card" style="margin-bottom:16px;">
+      <div class="card-title">📋 법적 필수 서류 현황 관리</div>
+      <div class="alert warning">근로감독 시 아래 서류를 우선적으로 확인합니다. 미비 시 과태료 대상.</div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>서류명</th><th>법적 근거</th><th>주기</th><th>보유 상태</th><th>최종 업데이트</th><th>만료/갱신일</th><th>비고</th><th>관리</th></tr></thead>
+          <tbody id="doc-table-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 아차사고 ===== -->
+  <div id="section-accident" class="section">
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('acc','write')">✏️ 보고서 작성</button>
+      <button class="tab" onclick="switchTab('acc','history')">📜 보고 이력</button>
+    </div>
+    <div id="acc-tab-write">
+      <div class="card">
+        <div class="card-title">🚨 아차사고 / 위험발견 보고서</div>
+        <div class="alert info">아차사고를 적극 보고하면 중대재해를 예방합니다. 보고자 불이익 없음.</div>
+        <div class="form-row">
+          <div class="form-group"><label>발생일시</label><input type="datetime-local" id="acc-datetime"></div>
+          <div class="form-group"><label>보고 유형</label>
+            <select id="acc-type">
+              <option>아차사고 (사고 직전 상황)</option>
+              <option>위험요인 발견</option>
+              <option>경미한 부상</option>
+              <option>설비 이상 발견</option>
+              <option>기타</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>발생 장소</label><input type="text" id="acc-location" placeholder="예) 금형 구역 3번 호이스트 앞"></div>
+          <div class="form-group"><label>관련 작업</label><input type="text" id="acc-work" placeholder="예) 금형 교체 작업 중"></div>
+        </div>
+        <div class="form-group"><label>발생 경위 (상세)</label><textarea id="acc-detail" placeholder="무슨 일이 있었는지 상세히 기재"></textarea></div>
+        <div class="form-group"><label>위험성 / 만약 사고가 났다면?</label><textarea id="acc-risk" placeholder="예) 금형이 발 위에 떨어졌다면 골절 가능"></textarea></div>
+        <div class="form-group"><label>즉시 조치 사항</label><textarea id="acc-immediate" placeholder="현장에서 즉시 취한 조치"></textarea></div>
+        <div class="form-row">
+          <div class="form-group"><label>추가 재발방지 대책</label><textarea id="acc-prevent" placeholder="재발방지를 위한 개선 방안"></textarea></div>
+          <div class="form-group">
+            <label>보고자</label><input type="text" id="acc-reporter" placeholder="이름">
+            <label style="margin-top:10px;">담당 조치자</label><input type="text" id="acc-owner" placeholder="이름">
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;justify-content:flex-end;">
+          <button class="btn btn-danger" onclick="saveAccident()">🚨 보고서 제출</button>
+        </div>
+      </div>
+    </div>
+    <div id="acc-tab-history" style="display:none;">
+      <div class="card">
+        <div class="card-title">📜 아차사고 보고 이력</div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>일시</th><th>유형</th><th>장소</th><th>발생경위</th><th>보고자</th><th>상태</th><th>작업</th></tr></thead>
+          <tbody id="acc-history-body"></tbody>
+        </table></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 설비 점검 ===== -->
+  <div id="section-equipment" class="section">
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('eq','write')">✏️ 점검 기록</button>
+      <button class="tab" onclick="switchTab('eq','history')">📜 점검 이력</button>
+    </div>
+    <div id="eq-tab-write">
+      <div class="card">
+        <div class="card-title">🔧 기계·설비 자체 점검</div>
+        <div class="form-row-3">
+          <div class="form-group"><label>점검일자</label><input type="date" id="eq-date"></div>
+          <div class="form-group"><label>설비명</label><input type="text" id="eq-name" placeholder="예) 1번 프레스기계"></div>
+          <div class="form-group"><label>점검자</label><input type="text" id="eq-inspector" placeholder="이름"></div>
+        </div>
+        <div id="eq-checklist">
+          <div style="font-size:13px;font-weight:700;margin-bottom:8px;color:#374151;">점검 항목</div>
+          <div class="check-item"><input type="checkbox" id="eq1"><label for="eq1">안전장치 작동 정상</label></div>
+          <div class="check-item"><input type="checkbox" id="eq2"><label for="eq2">비상정지 버튼 작동 확인</label></div>
+          <div class="check-item"><input type="checkbox" id="eq3"><label for="eq3">이상 소음·진동 없음</label></div>
+          <div class="check-item"><input type="checkbox" id="eq4"><label for="eq4">오일·냉각수 누출 없음</label></div>
+          <div class="check-item"><input type="checkbox" id="eq5"><label for="eq5">안전가드 정상 부착</label></div>
+          <div class="check-item"><input type="checkbox" id="eq6"><label for="eq6">전기배선 피복 이상 없음</label></div>
+        </div>
+        <div class="form-group" style="margin-top:12px;"><label>이상 사항</label><textarea id="eq-issues" placeholder="이상 발견 시 상세 기재"></textarea></div>
+        <div style="display:flex;gap:8px;justify-content:flex-end;">
+          <button class="btn btn-success" onclick="saveEquipment()">💾 점검 기록 저장</button>
+        </div>
+      </div>
+    </div>
+    <div id="eq-tab-history" style="display:none;">
+      <div class="card">
+        <div class="card-title">📜 설비 점검 이력</div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>날짜</th><th>설비명</th><th>점검자</th><th>이상사항</th><th>작업</th></tr></thead>
+          <tbody id="eq-history-body"></tbody>
+        </table></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 연간 일정 ===== -->
+  <div id="section-schedule" class="section">
+    <div class="card">
+      <div class="card-title">📅 2026년 연간 안전보건 관리 일정</div>
+      <div id="annual-schedule"></div>
+    </div>
+  </div>
+
+  <!-- ===== 안전 비표 관리 ===== -->
+  <div id="section-signs" class="section">
+    <div class="card" style="margin-bottom:16px;">
+      <div class="card-title">🪧 안전 비표·표지 관리 현황</div>
+      <div class="alert info">현장 비표는 설치 후 연 1회 이상 상태 점검 필요. 파손·퇴색 시 즉시 교체.</div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>설치 위치</th><th>비표 내용</th><th>색상 기준</th><th>설치일</th><th>최근 점검일</th><th>상태</th><th>관리</th></tr></thead>
+          <tbody id="signs-table-body"></tbody>
+        </table>
+      </div>
+      <button class="btn btn-primary btn-sm" style="margin-top:12px;" onclick="addSign()">+ 비표 추가</button>
+    </div>
+    <div class="card">
+      <div class="card-title">📖 안전표지 색상 기준 (KS S ISO 3864)</div>
+      <div class="grid-4">
+        <div style="text-align:center;padding:12px;background:#fee2e2;border-radius:8px;"><div style="font-size:24px;">🔴</div><div style="font-weight:700;font-size:13px;margin-top:4px;">빨강</div><div style="font-size:11px;color:#6b7280;">금지 / 위험</div></div>
+        <div style="text-align:center;padding:12px;background:#fef9c3;border-radius:8px;"><div style="font-size:24px;">🟡</div><div style="font-weight:700;font-size:13px;margin-top:4px;">노랑</div><div style="font-size:11px;color:#6b7280;">경고 / 주의</div></div>
+        <div style="text-align:center;padding:12px;background:#dbeafe;border-radius:8px;"><div style="font-size:24px;">🔵</div><div style="font-weight:700;font-size:13px;margin-top:4px;">파랑</div><div style="font-size:11px;color:#6b7280;">지시 / 의무</div></div>
+        <div style="text-align:center;padding:12px;background:#dcfce7;border-radius:8px;"><div style="font-size:24px;">🟢</div><div style="font-weight:700;font-size:13px;margin-top:4px;">초록</div><div style="font-size:11px;color:#6b7280;">안내 / 비상구</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 설정 ===== -->
+  <div id="section-settings" class="section">
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">🏭 회사 기본 정보</div>
+        <div class="form-group"><label>회사명</label><input type="text" id="s-company" placeholder="회사명 입력"></div>
+        <div class="form-group"><label>사업장 주소</label><input type="text" id="s-address" placeholder="주소 입력"></div>
+        <div class="form-group"><label>안전보건 담당자</label><input type="text" id="s-manager" placeholder="이름"></div>
+        <div class="form-group"><label>담당자 연락처</label><input type="text" id="s-tel" placeholder="전화번호"></div>
+        <div class="form-group"><label>전체 근로자 수</label><input type="number" id="s-workers" placeholder="명"></div>
+        <div class="form-group"><label>주요 제품/업종</label><input type="text" id="s-product" placeholder="예) 금형 제조, 프레스 가공"></div>
+        <button class="btn btn-primary" onclick="saveSettings()">💾 설정 저장</button>
+      </div>
+      <div class="card">
+        <div class="card-title">🌐 실시간 공유 설정 (Supabase)</div>
+        <div class="alert info">Supabase를 연결하면 여러 기기에서 실시간으로 데이터를 공유할 수 있습니다.</div>
+        <div class="form-group"><label>Supabase URL</label><input type="text" id="s-supa-url" placeholder="https://xxx.supabase.co"></div>
+        <div class="form-group"><label>Supabase Anon Key</label><input type="text" id="s-supa-key" placeholder="eyJ..."></div>
+        <button class="btn btn-outline" onclick="saveSupabase()">연결 설정 저장</button>
+        <div class="alert warning" style="margin-top:12px;">현재는 브라우저 로컬 저장(localStorage)으로 동작합니다.<br>Supabase 연결 시 실시간 공유 및 다기기 동기화가 가능합니다.</div>
+        <div style="margin-top:12px;">
+          <button class="btn btn-outline btn-sm" onclick="exportData()">📤 데이터 내보내기 (JSON)</button>
+          <button class="btn btn-outline btn-sm" style="margin-top:8px;" onclick="importData()">📥 데이터 불러오기 (JSON)</button>
+          <input type="file" id="import-file" accept=".json" style="display:none;" onchange="handleImport(event)">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 카드뉴스 시리즈 ===== -->
+  <div id="section-cardnews" class="section">
+    <div class="card" style="margin-bottom:16px;">
+      <div class="card-title">📢 안전보건 카드뉴스 시리즈 — 카카오톡·게시판 배포용</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
+        <button class="btn btn-outline btn-sm" onclick="cnFilter('all',this)" id="cn-btn-all" style="background:#1a2744;color:#fff;">전체 12편</button>
+        <button class="btn btn-outline btn-sm" onclick="cnFilter('basic',this)">기초 시리즈 (1~4)</button>
+        <button class="btn btn-outline btn-sm" onclick="cnFilter('field',this)">현장 시리즈 (5~8)</button>
+        <button class="btn btn-outline btn-sm" onclick="cnFilter('culture',this)">문화 시리즈 (9~12)</button>
+      </div>
+      <div style="font-size:12px;color:#6b7280;">카드 클릭 → 전체 내용 | 📋 복사 → 카카오톡 붙여넣기 | 🖨️ 인쇄 → 게시판 부착</div>
+    </div>
+    <div id="cn-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;"></div>
+  </div>
+
+  <!-- ===== 게시판 포스터 ===== -->
+  <div id="section-posters" class="section">
+    <div class="card" style="margin-bottom:16px;">
+      <div class="card-title">🖼️ 게시판 포스터 — A4 인쇄 후 현장 부착용</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
+        <button class="btn btn-outline btn-sm" onclick="ptFilter('all',this)" id="pt-btn-all" style="background:#1a2744;color:#fff;">전체 14종</button>
+        <button class="btn btn-outline btn-sm" onclick="ptFilter('notice',this)">📋 법정 필수</button>
+        <button class="btn btn-outline btn-sm" onclick="ptFilter('rule',this)">📌 안전수칙</button>
+        <button class="btn btn-outline btn-sm" onclick="ptFilter('monthly',this)">📅 월별 교체</button>
+        <button class="btn btn-outline btn-sm" onclick="ptFilter('sign',this)">🪧 현장 비표</button>
+      </div>
+      <div style="font-size:12px;color:#6b7280;">🖨️ 인쇄(A4) → 코팅 후 게시판 부착 | 📋 텍스트복사 → 카카오톡 공유</div>
+    </div>
+    <div id="pt-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;"></div>
+  </div>
+
+  <!-- CN/PT 모달 -->
+  <div id="cn-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:200;align-items:center;justify-content:center;padding:16px;" onclick="closeCnModal(event)">
+    <div style="background:#fff;border-radius:16px;width:100%;max-width:440px;max-height:88vh;overflow-y:auto;">
+      <div id="cn-modal-header" style="padding:28px 24px 20px;position:relative;min-height:180px;display:flex;flex-direction:column;justify-content:flex-end;">
+        <button onclick="closeCnModal()" style="position:absolute;top:12px;right:12px;background:rgba(0,0,0,0.3);border:none;color:#fff;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:15px;">✕</button>
+        <div id="cn-modal-emoji" style="position:absolute;top:18px;right:44px;font-size:60px;opacity:0.25;"></div>
+        <div id="cn-modal-ep" style="font-size:11px;font-weight:700;color:rgba(255,255,255,0.75);letter-spacing:0.08em;margin-bottom:6px;"></div>
+        <div id="cn-modal-title" style="font-size:22px;font-weight:800;color:#fff;line-height:1.3;"></div>
+      </div>
+      <div id="cn-modal-body" style="padding:20px 24px;"></div>
+      <div id="cn-modal-footer" style="padding:14px 24px;text-align:center;font-size:12px;font-weight:700;"></div>
+    </div>
+  </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<div class="realtime-badge" id="realtime-badge">🔴 LIVE</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal" id="modal-content">
+    <div class="modal-title">
+      <span id="modal-title-text">제목</span>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// SUPABASE LAYER
+// ============================================================
+let supaClient = null;
+
+function initSupabase(url, key) {
+  if (!url || !key) return;
+  try {
+    supaClient = supabase.createClient(url, key);
+    document.getElementById('conn-dot').className = 'conn-dot connected';
+    document.getElementById('conn-text').textContent = '실시간 공유 연결됨';
+    document.getElementById('realtime-badge').style.display = 'block';
+    // 실시간 구독
+    supaClient.channel('safety')
+      .on('postgres_changes', {event:'*', schema:'public', table:'safety_store'}, () => {
+        supaLoadAll().then(() => renderDashboard());
+      })
+      .subscribe();
+    supaLoadAll();
+  } catch(e) {
+    console.error('Supabase 연결 실패:', e);
+  }
+}
+
+async function supaLoadAll() {
+  if (!supaClient) return;
+  try {
+    const { data } = await supaClient.from('safety_store').select('*');
+    if (!data) return;
+    data.forEach(row => {
+      localStorage.setItem('safety_' + row.key, JSON.stringify(row.value));
+    });
+  } catch(e) { console.error('supaLoad 오류:', e); }
+}
+
+async function supaSync(key) {
+  if (!supaClient) return;
+  try {
+    const value = JSON.parse(localStorage.getItem('safety_' + key) || (key === 'settings' || key === 'doclist' || key === 'signs' ? '{}' : '[]'));
+    await supaClient.from('safety_store').upsert({ key, value }, { onConflict: 'key' });
+  } catch(e) { console.error('supaSync 오류:', e); }
+}
+
+// ============================================================
+// DATA & STORAGE
+// ============================================================
+const DB = {
+  get(key){ try{return JSON.parse(localStorage.getItem('safety_'+key))||[];}catch{return [];} },
+  getObj(key){ try{return JSON.parse(localStorage.getItem('safety_'+key))||{};}catch{return {};} },
+  set(key,val){ localStorage.setItem('safety_'+key, JSON.stringify(val)); supaSync(key); },
+  push(key,item){ const arr=DB.get(key); arr.unshift(item); DB.set(key,arr); return arr; }
+};
+
+// ============================================================
+// NAVIGATION
+// ============================================================
+const pageTitles = {
+  dashboard:'📊 대시보드', tbm:'🌅 TBM 일지', patrol:'🔍 패트롤 체크리스트',
+  education:'📚 교육 관리', risk:'⚠️ 위험성 평가', documents:'📋 서류 현황',
+  accident:'🚨 아차사고 보고', equipment:'🔧 설비 점검', schedule:'📅 연간 일정',
+  signs:'🪧 안전 비표 관리', cardnews:'📢 카드뉴스 시리즈', posters:'🖼️ 게시판 포스터', settings:'⚙️ 설정'
+};
+function showSection(id){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById('section-'+id).classList.add('active');
+  document.querySelectorAll('#sidebar nav a').forEach(a=>a.classList.remove('active'));
+  event && event.currentTarget && event.currentTarget.classList.add('active');
+  document.getElementById('page-title').textContent = pageTitles[id]||id;
+  if(id==='dashboard') renderDashboard();
+  if(id==='documents') renderDocuments();
+  if(id==='schedule') renderSchedule();
+  if(id==='signs') renderSigns();
+}
+function switchTab(section, tab){
+  const allTabs = document.querySelectorAll(`#section-${section} .tab`);
+  const allPanes = document.querySelectorAll(`[id^="${section}-tab-"], [id^="${section.replace('edu','edu')}-tab-"]`);
+  // generic
+  document.querySelectorAll(`#section-${section==='edu'?'education':section==='acc'?'accident':section==='eq'?'equipment':section==='risk'?'risk':section} [id*="-tab-"]`).forEach(p=>p.style.display='none');
+  const paneId = `${section}-tab-${tab}`;
+  const pane = document.getElementById(paneId);
+  if(pane) pane.style.display='block';
+  allTabs.forEach(t=>t.classList.remove('active'));
+  if(event && event.currentTarget) event.currentTarget.classList.add('active');
+  if(tab==='history'||tab==='list') renderHistories(section);
+}
+
+// ============================================================
+// INIT DATES
+// ============================================================
+function initDates(){
+  const today = new Date().toISOString().split('T')[0];
+  const now = new Date().toTimeString().slice(0,5);
+  ['tbm-date','p-date','edu-date','risk-date','eq-date'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.value=today;
+  });
+  const ptime=document.getElementById('p-time'); if(ptime) ptime.value=now;
+  const adt=document.getElementById('acc-datetime'); if(adt) adt.value=new Date().toISOString().slice(0,16);
+  document.getElementById('today-date').textContent = today;
+}
+
+// ============================================================
+// CLOCK
+// ============================================================
+function updateClock(){
+  const now=new Date();
+  document.getElementById('clock').textContent = now.toLocaleString('ko-KR',{hour12:false});
+}
+setInterval(updateClock,1000); updateClock();
+
+// ============================================================
+// PATROL ZONES DATA
+// ============================================================
+const patrolZones = [
+  // ── 실제 건물 구역 (환경운영점검표 기반) ──
+  {id:'pz1', name:'🏭 3층 사출실', items:[
+    '사출기 안전문(도어) 닫힘·잠금 정상',
+    '사출기 안전장치 (비상정지) 작동 확인',
+    '사출기 주변 오일·수지 누출 없음',
+    '냉각수 라인 누수 없음',
+    '작업자 보호구 착용 (방열장갑·보안경·안전화)',
+    '사출기 주변 통로 정리정돈 (최소 60cm 확보)',
+    '금형 체결 상태 (볼트 체결 완료)',
+    '성형품·스크랩 지정 보관함 사용',
+    '환기팬 작동 상태 양호',
+    '콤프레샤 작동 상태 및 이상음 없음'
+  ]},
+  {id:'pz2', name:'🔧 3층 조립실', items:[
+    '작업대 정리정돈 및 5S 상태',
+    '작업자 보호구 착용 (안전화, 필요 시 장갑)',
+    '조립용 공구 지정 위치 보관',
+    '전동공구 전선 피복 이상 없음',
+    '조명 상태 양호 (어두운 구역 없음)',
+    '부품·자재 정해진 장소 보관',
+    '바닥 이물질·미끄럼 요인 없음',
+    '비상구 접근 방해 물건 없음',
+    '자재창고 천장등 점등 상태',
+    '통로 보행 폭 확보 (80cm 이상)'
+  ]},
+  {id:'pz3', name:'🏗️ 호이스트 / 금형 구역', items:[
+    '호이스트 체인·와이어 마모·변형 없음',
+    '훅(Hook) 해지장치 정상 작동',
+    '최대하중 표시 확인 (초과 사용 없음)',
+    '사람 키 이상 인양물 운반 행위 없음',
+    '인양 중 하부 작업자 없음',
+    '크레인 이동 경로 장애물 없음',
+    '금형 보관대 안전 고정 상태',
+    '금형 이동 시 2인 1조 + 신호수 배치',
+    '안전모 착용 (호이스트 작업 전 구역)',
+    '비상정지 버튼 작동 확인'
+  ]},
+  {id:'pz4', name:'⚡ 전기설비 (각 층 분전반)', items:[
+    '1층 분전반 문 잠금 상태',
+    '2층 분전반 문 잠금 상태',
+    '3층 분전반 문 잠금 상태',
+    '분전반 내부 이물질 없음',
+    '분전반 내부 전선 피복 양호',
+    '분전반 접지 상태 양호',
+    '각 층 조명 손상·탈락 없음',
+    '콘센트 파손·전선 단선 없음',
+    '임시 연장선 바닥 방치 없음',
+    '전기 설비 주변 가연성 물질 없음'
+  ]},
+  {id:'pz5', name:'🧯 소방·비상장비 (전 구역)', items:[
+    '소화기 배치 위치 배치도와 일치',
+    '분말소화기 압력계 정상 (녹색 범위)',
+    '소화기 안전핀·봉인 이상 없음',
+    '소화전 표시등 점등 상태',
+    '소화전 호스 연결·노즐 결합 상태',
+    '비상구 표시등 점등 상태',
+    '비상구 장애물 없음 (항시 개방)',
+    '구급함 위치 확인 및 내용물 적정',
+    '비상 연락처 게시판 부착 상태',
+    '소화기 최근 점검일 확인 (6개월 이내)'
+  ]},
+  {id:'pz6', name:'🌊 수질·환경 설비', items:[
+    '쿨링타워 가동 상태 정상 (동절기 12~2월 가동 확인)',
+    '쿨링타워 주변 누수 없음',
+    '외부 배수관(맨홀) 막힘 없음',
+    '환풍기 작동 상태 양호',
+    '항온항습기 작동 상태 (해당 시)',
+    '내열시험기 가동 상태 (해당 시)',
+    '냉각수 보충 상태 적정'
+  ]},
+  {id:'pz7', name:'🗑️ 폐기물 관리', items:[
+    '지정 장소 외 폐기물 무단 방치 없음',
+    '폐기물 흩날림·악취 발생 없음',
+    '폐기물 보관소·보관용기 파손 없음',
+    '폐기물통 넘침 없음 (정기 비움)',
+    '쓰레기통 주변 정리 상태',
+    '분리수거 적정 실시',
+    '유해 폐기물 별도 구분 보관'
+  ]},
+  {id:'pz8', name:'🏢 사무동 (1층·2층·3층)', items:[
+    '1층 사무동 조명 손상·부착 상태 양호',
+    '2층 사무동 조명 손상·부착 상태 양호',
+    '3층 사무동·복도 조명 양호',
+    '각 층 통로 정리정돈',
+    '화재 시 대피 동선 장애물 없음',
+    '방문객 안전관리 (출입증, 보호구) 상태',
+    '각 층 비상구 표시 명확'
+  ]},
+  {id:'pz9', name:'🚜 지게차 운행 구역', items:[
+    '지게차 전용 통로 구분 표시 선 상태',
+    '보행자와 지게차 혼용 구역 없음',
+    '후방경보 장치 작동 정상',
+    '지게차 주차 위치 적정 (포크 하강, 전원 차단)',
+    '운전자 면허증 소지 확인',
+    '포크 주행 시 지상 20~30cm 유지',
+    '무면허 운전 없음'
+  ]},
+  {id:'pz10', name:'🌿 외부·주차장', items:[
+    '외부 통로 바닥 상태 (균열·미끄럼) 양호',
+    '주차장 정리정돈 상태',
+    '쓰레기통 주변 잡초·이물질 없음',
+    '외부 조명 점등 상태 (야간 작업 시)',
+    '외부 배수로 막힘 없음',
+    '위험물 외부 방치 없음'
+  ]}
+];
+
+function renderPatrolZones(){
+  const container = document.getElementById('patrol-zones');
+  if(!container) return;
+  container.innerHTML = patrolZones.map(zone=>`
+    <div class="zone-card" id="zone-card-${zone.id}">
+      <div class="zone-header default" onclick="toggleZone('${zone.id}')">
+        <span class="zone-title">${zone.name}</span>
+        <span class="zone-score" id="zone-score-${zone.id}">0 / ${zone.items.length}</span>
+      </div>
+      <div class="zone-body" id="zone-body-${zone.id}">
+        ${zone.items.map((item,i)=>`
+          <div class="check-item">
+            <input type="checkbox" id="${zone.id}_${i}" onchange="updateZoneScore('${zone.id}')">
+            <div>
+              <label for="${zone.id}_${i}">${item}</label>
+              <input type="text" placeholder="이상 시 메모..." style="margin-top:4px;padding:4px 8px;border:1px solid #e5e7eb;border-radius:6px;font-size:11px;width:100%;" id="${zone.id}_memo_${i}">
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleZone(id){
+  const body = document.getElementById('zone-body-'+id);
+  body.style.display = body.style.display==='none' ? 'block' : 'none';
+}
+
+function updateZoneScore(zoneId){
+  const zone = patrolZones.find(z=>z.id===zoneId);
+  const checked = zone.items.filter((_,i)=>document.getElementById(`${zoneId}_${i}`)?.checked).length;
+  const total = zone.items.length;
+  const scoreEl = document.getElementById('zone-score-'+zoneId);
+  const cardEl = document.getElementById('zone-card-'+zoneId);
+  if(scoreEl) scoreEl.textContent = `${checked} / ${total}`;
+  const header = cardEl?.querySelector('.zone-header');
+  if(header){
+    header.className = 'zone-header ';
+    if(checked===total) header.classList.add('ok');
+    else if(checked===0) header.classList.add('default');
+    else header.classList.add('warn');
+  }
+}
+
+// ============================================================
+// TBM
+// ============================================================
+// 요일별 TBM 테마 (TBM.docx 기반)
+const tbmThemes = {
+  0:'🌅 일요일 — 주간 안전 점검 사항 공유',
+  1:'⚙️ 월요일 테마: 설비·기계 점검 주간 — 각 기계 안전장치, 사출기, 프레스 이상 유무 집중 점검',
+  2:'⛑️ 화요일 테마: 개인보호구(PPE) 점검 — 안전모·안전화·장갑·보안경 착용 상태 전원 확인',
+  3:'💪 수요일 테마: 건강·피로 관리 — 수면 부족, 음주, 약물 복용 여부 확인 및 주의',
+  4:'✨ 목요일 테마: 환경·정리정돈(5S) — 통로 확보, 폐기물 처리, 작업장 청결 집중 점검',
+  5:'🚨 금요일 테마: 이번 주 아차사고·위험발견 사례 공유 — 무엇을 배웠나?',
+  6:'📋 토요일 — 주간 마무리 안전 점검'
+};
+function renderTBMTheme(){
+  const el=document.getElementById('tbm-today-theme');
+  if(!el)return;
+  const day=new Date().getDay();
+  el.innerHTML=`<strong>📅 오늘의 TBM 테마</strong><br>${tbmThemes[day]}`;
+}
+
+function saveTBM(){
+  const date=v('tbm-date'),leader=v('tbm-leader');
+  if(!date||!leader){alert('날짜와 TBM 리더를 입력해주세요.');return;}
+  const checks = [0,1,2,3,4,5,6,7,8].map(i=>document.getElementById('tc'+i)?.checked);
+  const checkedCount = checks.filter(Boolean).length;
+  const workRows=[1,2,3].map(i=>({work:v('tw'+i),hazard:v('th'+i),action:v('td'+i)})).filter(r=>r.work);
+  const record = {
+    id: Date.now(), date, time:v('tbm-time'), place:v('tbm-place'), leader,
+    count:v('tbm-count'), attendees:v('tbm-attendees'),
+    workRows, leaderMsg:v('tbm-leader-msg'),
+    notes:v('tbm-notes'), checks, checkedCount, createdAt: new Date().toISOString()
+  };
+  DB.push('tbm', record);
+  alert('✅ TBM 기록이 저장되었습니다! (중처법 이행 증빙 보관됨)');
+  clearTBM();
+}
+function clearTBM(){
+  ['tbm-leader-msg','tbm-notes','tbm-attendees','tbm-count','tbm-leader','tbm-place',
+   'tw1','tw2','tw3','th1','th2','th3','td1','td2','td3'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.value='';
+  });
+  [0,1,2,3,4,5,6,7,8].forEach(i=>{const el=document.getElementById('tc'+i);if(el)el.checked=false;});
+}
+
+// ============================================================
+// PATROL
+// ============================================================
+function savePatrol(){
+  const date=v('p-date'),inspector=v('p-inspector');
+  if(!date||!inspector){alert('날짜와 점검자를 입력해주세요.');return;}
+  const zoneResults = patrolZones.map(zone=>{
+    const items = zone.items.map((item,i)=>({
+      item, checked: document.getElementById(`${zone.id}_${i}`)?.checked||false,
+      memo: document.getElementById(`${zone.id}_memo_${i}`)?.value||''
+    }));
+    const checkedCount = items.filter(x=>x.checked).length;
+    return {zoneId:zone.id, zoneName:zone.name, items, checkedCount, total:zone.items.length};
+  });
+  const totalChecked = zoneResults.reduce((s,z)=>s+z.checkedCount,0);
+  const totalItems = zoneResults.reduce((s,z)=>s+z.total,0);
+  const badCount = zoneResults.reduce((s,z)=>s+(z.total-z.checkedCount),0);
+  const record = {
+    id:Date.now(), date, time:v('p-time'), inspector, type:v('p-type'), weather:v('p-weather'),
+    zoneResults, totalChecked, totalItems, badCount,
+    issues:v('p-issues'), actions:v('p-actions'), followup:v('p-followup'),
+    createdAt: new Date().toISOString()
+  };
+  DB.push('patrol', record);
+  alert(`✅ 패트롤 기록 저장! (점검: ${totalChecked}/${totalItems}, 불량: ${badCount}건)`);
+  clearPatrol();
+}
+function clearPatrol(){
+  patrolZones.forEach(zone=>{
+    zone.items.forEach((_,i)=>{
+      const cb=document.getElementById(`${zone.id}_${i}`); if(cb) cb.checked=false;
+      const m=document.getElementById(`${zone.id}_memo_${i}`); if(m) m.value='';
+      updateZoneScore(zone.id);
+    });
+  });
+  ['p-issues','p-actions','p-followup','p-inspector'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+}
+
+// ============================================================
+// EDUCATION
+// ============================================================
+function saveEducation(){
+  const date=v('edu-date'),type=v('edu-type');
+  if(!date){alert('교육일자를 입력해주세요.');return;}
+  const record = {
+    id:Date.now(), date, type, hours:v('edu-hours'), method:v('edu-method'),
+    content:v('edu-content'), trainer:v('edu-trainer'), place:v('edu-place'),
+    attendees:v('edu-attendees'), count:v('edu-count'), notes:v('edu-notes'),
+    createdAt: new Date().toISOString()
+  };
+  DB.push('education', record);
+  alert('✅ 교육 기록이 저장되었습니다!');
+}
+
+// ============================================================
+// RISK ASSESSMENT
+// ============================================================
+document.addEventListener('change', function(e){
+  if(e.target.id==='risk-freq'||e.target.id==='risk-severity'){
+    const f=parseInt(document.getElementById('risk-freq')?.value||1);
+    const s=parseInt(document.getElementById('risk-severity')?.value||1);
+    const score=f*s;
+    const el=document.getElementById('risk-score');
+    if(el){
+      el.value = score<=4?`${score} (낮음)`:score<=9?`${score} (보통)`:score<=16?`${score} (높음)`:`${score} (매우높음)`;
+      el.style.color = score<=4?'#16a34a':score<=9?'#ca8a04':score<=16?'#ea580c':'#dc2626';
+    }
+  }
+});
+function saveRisk(){
+  const process=v('risk-process');
+  if(!process){alert('작업/공정명을 입력해주세요.');return;}
+  const f=parseInt(document.getElementById('risk-freq')?.value||1);
+  const s=parseInt(document.getElementById('risk-severity')?.value||1);
+  const score=f*s;
+  const record = {
+    id:Date.now(), date:v('risk-date'), process, hazard:v('risk-hazard'),
+    freq:f, severity:s, score, current:v('risk-current'), improve:v('risk-improve'),
+    owner:v('risk-owner'), due:v('risk-due'), status:'진행중',
+    createdAt: new Date().toISOString()
+  };
+  DB.push('risk', record);
+  alert('✅ 위험성 평가가 저장되었습니다!');
+}
+
+// ============================================================
+// ACCIDENT
+// ============================================================
+function saveAccident(){
+  const type=v('acc-type'),detail=v('acc-detail');
+  if(!detail){alert('발생 경위를 입력해주세요.');return;}
+  const record = {
+    id:Date.now(), datetime:v('acc-datetime'), type, location:v('acc-location'),
+    work:v('acc-work'), detail, risk:v('acc-risk'), immediate:v('acc-immediate'),
+    prevent:v('acc-prevent'), reporter:v('acc-reporter'), owner:v('acc-owner'),
+    status:'접수', createdAt: new Date().toISOString()
+  };
+  DB.push('accident', record);
+  alert('🚨 아차사고 보고서가 제출되었습니다!');
+}
+
+// ============================================================
+// EQUIPMENT
+// ============================================================
+function saveEquipment(){
+  const name=v('eq-name'),inspector=v('eq-inspector');
+  if(!name||!inspector){alert('설비명과 점검자를 입력해주세요.');return;}
+  const checks = [1,2,3,4,5,6].map(i=>document.getElementById('eq'+i)?.checked);
+  const record = {
+    id:Date.now(), date:v('eq-date'), name, inspector, checks,
+    issues:v('eq-issues'), createdAt: new Date().toISOString()
+  };
+  DB.push('equipment', record);
+  alert('✅ 설비 점검 기록이 저장되었습니다!');
+}
+
+// ============================================================
+// RENDER HISTORIES
+// ============================================================
+function renderHistories(section){
+  if(section==='tbm'){
+    const tbody=document.getElementById('tbm-history-body');
+    if(!tbody)return;
+    const data=DB.get('tbm');
+    tbody.innerHTML = data.length===0
+      ? '<tr><td colspan="7" style="text-align:center;color:#9ca3af;padding:20px;">기록 없음</td></tr>'
+      : data.map(r=>`<tr>
+          <td>${r.date}</td><td>${r.leader||'-'}</td><td>${r.count||'-'}명</td>
+          <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${r.work||'-'}</td>
+          <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${r.hazard||'-'}</td>
+          <td>${r.checkedCount||0}/8 <span class="badge ${r.checkedCount>=6?'green':r.checkedCount>=3?'yellow':'red'}">${r.checkedCount>=8?'완료':r.checkedCount>=3?'부분':'미흡'}</span></td>
+          <td><button class="btn btn-outline btn-sm" onclick="deleteRecord('tbm',${r.id})">삭제</button></td>
+        </tr>`).join('');
+  }
+  if(section==='patrol'){
+    const tbody=document.getElementById('patrol-history-body');
+    if(!tbody)return;
+    const data=DB.get('patrol');
+    tbody.innerHTML = data.length===0
+      ? '<tr><td colspan="7" style="text-align:center;color:#9ca3af;padding:20px;">기록 없음</td></tr>'
+      : data.map(r=>`<tr>
+          <td>${r.date}</td><td>${r.inspector||'-'}</td><td>${r.type||'-'}</td>
+          <td>${r.totalChecked||0}/${r.totalItems||0}</td>
+          <td><span class="badge ${r.badCount===0?'green':r.badCount<=3?'yellow':'red'}">${r.badCount||0}건</span></td>
+          <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${r.issues||'-'}</td>
+          <td><button class="btn btn-outline btn-sm" onclick="deleteRecord('patrol',${r.id})">삭제</button></td>
+        </tr>`).join('');
+  }
+  if(section==='edu'){
+    const tbody=document.getElementById('edu-history-body');
+    if(!tbody)return;
+    const data=DB.get('education');
+    tbody.innerHTML = data.length===0
+      ? '<tr><td colspan="7" style="text-align:center;color:#9ca3af;padding:20px;">기록 없음</td></tr>'
+      : data.map(r=>`<tr>
+          <td>${r.date}</td>
+          <td><span class="badge blue">${r.type||'-'}</span></td>
+          <td>${r.hours||'-'}h</td><td>${r.method||'-'}</td><td>${r.trainer||'-'}</td>
+          <td>${r.count||'-'}명</td>
+          <td><button class="btn btn-outline btn-sm" onclick="deleteRecord('education',${r.id})">삭제</button></td>
+        </tr>`).join('');
+  }
+  if(section==='risk'){
+    const tbody=document.getElementById('risk-list-body');
+    if(!tbody)return;
+    const data=DB.get('risk');
+    tbody.innerHTML = data.length===0
+      ? '<tr><td colspan="8" style="text-align:center;color:#9ca3af;padding:20px;">기록 없음</td></tr>'
+      : data.map(r=>{
+          const score=r.score||0;
+          const badgeClass=score<=4?'green':score<=9?'yellow':score<=16?'orange':'red';
+          return `<tr>
+            <td>${r.date}</td><td>${r.process||'-'}</td>
+            <td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${r.hazard||'-'}</td>
+            <td><span class="badge ${badgeClass}">${score}</span></td>
+            <td>${r.owner||'-'}</td><td>${r.due||'-'}</td>
+            <td><span class="badge ${r.status==='완료'?'green':'yellow'}">${r.status||'진행중'}</span></td>
+            <td>
+              <button class="btn btn-outline btn-sm" onclick="toggleRiskStatus(${r.id})">완료처리</button>
+              <button class="btn btn-outline btn-sm" onclick="deleteRecord('risk',${r.id})">삭제</button>
+            </td>
+          </tr>`;
+        }).join('');
+  }
+  if(section==='acc'){
+    const tbody=document.getElementById('acc-history-body');
+    if(!tbody)return;
+    const data=DB.get('accident');
+    tbody.innerHTML = data.length===0
+      ? '<tr><td colspan="7" style="text-align:center;color:#9ca3af;padding:20px;">기록 없음</td></tr>'
+      : data.map(r=>`<tr>
+          <td>${r.datetime||'-'}</td>
+          <td><span class="badge red">${r.type||'-'}</span></td>
+          <td>${r.location||'-'}</td>
+          <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${r.detail||'-'}</td>
+          <td>${r.reporter||'-'}</td>
+          <td><span class="badge ${r.status==='완료'?'green':'yellow'}">${r.status||'접수'}</span></td>
+          <td><button class="btn btn-outline btn-sm" onclick="deleteRecord('accident',${r.id})">삭제</button></td>
+        </tr>`).join('');
+  }
+  if(section==='eq'){
+    const tbody=document.getElementById('eq-history-body');
+    if(!tbody)return;
+    const data=DB.get('equipment');
+    tbody.innerHTML = data.length===0
+      ? '<tr><td colspan="5" style="text-align:center;color:#9ca3af;padding:20px;">기록 없음</td></tr>'
+      : data.map(r=>`<tr>
+          <td>${r.date}</td><td>${r.name||'-'}</td><td>${r.inspector||'-'}</td>
+          <td>${r.issues||'이상없음'}</td>
+          <td><button class="btn btn-outline btn-sm" onclick="deleteRecord('equipment',${r.id})">삭제</button></td>
+        </tr>`).join('');
+  }
+}
+
+function deleteRecord(key,id){
+  if(!confirm('삭제하시겠습니까?'))return;
+  const arr=DB.get(key).filter(r=>r.id!==id);
+  DB.set(key,arr);
+  renderHistories(key==='education'?'edu':key==='accident'?'acc':key==='equipment'?'eq':key);
+}
+function toggleRiskStatus(id){
+  const arr=DB.get('risk').map(r=>r.id===id?{...r,status:r.status==='완료'?'진행중':'완료'}:r);
+  DB.set('risk',arr);
+  renderHistories('risk');
+}
+
+// ============================================================
+// DASHBOARD
+// ============================================================
+function renderDashboard(){
+  const today = new Date().toISOString().split('T')[0];
+  const thisMonth = today.slice(0,7);
+
+  // TBM stat
+  const tbmData = DB.get('tbm');
+  const todayTBM = tbmData.find(r=>r.date===today);
+  document.getElementById('stat-tbm').textContent = todayTBM ? '✅' : '❌';
+  document.getElementById('stat-tbm-sub').textContent = todayTBM ? `${todayTBM.leader} 완료` : '미기록';
+
+  // Education
+  const eduData = DB.get('education').filter(r=>r.date&&r.date.startsWith(thisMonth));
+  document.getElementById('stat-edu').textContent = eduData.length;
+
+  // Patrol
+  const patrolData = DB.get('patrol').filter(r=>r.date&&r.date.startsWith(thisMonth));
+  document.getElementById('stat-patrol').textContent = patrolData.length;
+
+  // Accident
+  const accData = DB.get('accident').filter(r=>r.datetime&&r.datetime.startsWith(thisMonth));
+  document.getElementById('stat-accident').textContent = accData.length;
+
+  // Alerts
+  const alerts = document.getElementById('dashboard-alerts');
+  const alertsHTML = [];
+  if(!todayTBM) alertsHTML.push('<div class="alert danger">⚠️ 오늘 TBM이 아직 기록되지 않았습니다.</div>');
+  if(patrolData.length===0) alertsHTML.push('<div class="alert warning">🔍 이번달 패트롤 점검 기록이 없습니다.</div>');
+  if(eduData.length===0) alertsHTML.push('<div class="alert warning">📚 이번달 정기 안전보건교육 기록이 없습니다. (법정: 월 2시간)</div>');
+  alerts.innerHTML = alertsHTML.join('');
+
+  // Doc status mini
+  renderDocStatusMini();
+  renderMonthlyProgress();
+  renderRecentTBM();
+  renderRecentPatrol();
+}
+
+function renderDocStatusMini(){
+  const docs = getDocList();
+  const total = docs.length;
+  const ok = docs.filter(d=>d.status==='보유').length;
+  const missing = docs.filter(d=>d.status==='미보유').length;
+  const el = document.getElementById('doc-status-mini');
+  if(!el)return;
+  el.innerHTML = `
+    <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
+      <span class="badge green">보유 ${ok}건</span>
+      <span class="badge red">미보유 ${missing}건</span>
+      <span class="badge yellow">갱신필요 ${total-ok-missing}건</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill green" style="width:${Math.round(ok/total*100)}%"></div></div>
+    <div style="font-size:11px;color:#6b7280;margin-top:4px;">${ok} / ${total} 서류 구비 (${Math.round(ok/total*100)}%)</div>
+  `;
+}
+
+function renderMonthlyProgress(){
+  const today = new Date().toISOString().split('T')[0];
+  const thisMonth = today.slice(0,7);
+  const tbm = DB.get('tbm').filter(r=>r.date&&r.date.startsWith(thisMonth)).length;
+  const patrol = DB.get('patrol').filter(r=>r.date&&r.date.startsWith(thisMonth)).length;
+  const edu = DB.get('education').filter(r=>r.date&&r.date.startsWith(thisMonth)).length;
+  const el = document.getElementById('monthly-progress');
+  if(!el)return;
+  const daysInMonth = new Date(new Date().getFullYear(), new Date().getMonth()+1, 0).getDate();
+  const workDays = Math.round(daysInMonth * 5/7);
+  el.innerHTML = `
+    <div style="margin-bottom:12px;">
+      <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span>TBM 기록</span><span>${tbm}/${workDays}일</span></div>
+      <div class="progress-bar"><div class="progress-fill blue" style="width:${Math.min(100,Math.round(tbm/workDays*100))}%"></div></div>
+    </div>
+    <div style="margin-bottom:12px;">
+      <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span>패트롤 점검</span><span>${patrol}회 (권장: 월4회)</span></div>
+      <div class="progress-bar"><div class="progress-fill orange" style="width:${Math.min(100,patrol*25)}%"></div></div>
+    </div>
+    <div>
+      <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span>교육 실시</span><span>${edu}회 (법정: 월1회)</span></div>
+      <div class="progress-bar"><div class="progress-fill green" style="width:${Math.min(100,edu*100)}%"></div></div>
+    </div>
+  `;
+}
+
+function renderRecentTBM(){
+  const data=DB.get('tbm').slice(0,3);
+  const el=document.getElementById('recent-tbm');
+  if(!el)return;
+  el.innerHTML = data.length===0
+    ? '<div style="color:#9ca3af;font-size:13px;padding:8px 0;">기록 없음</div>'
+    : data.map(r=>`<div style="padding:8px 0;border-bottom:1px solid #f1f5f9;">
+        <div style="display:flex;justify-content:space-between;">
+          <span style="font-size:13px;font-weight:600;">${r.date} ${r.time||''}</span>
+          <span class="badge ${r.checkedCount>=8?'green':r.checkedCount>=3?'yellow':'red'}">${r.checkedCount||0}/8</span>
+        </div>
+        <div style="font-size:12px;color:#6b7280;margin-top:2px;">진행: ${r.leader||'-'} · ${r.count||0}명 참석</div>
+      </div>`).join('');
+}
+
+function renderRecentPatrol(){
+  const data=DB.get('patrol').slice(0,3);
+  const el=document.getElementById('recent-patrol');
+  if(!el)return;
+  el.innerHTML = data.length===0
+    ? '<div style="color:#9ca3af;font-size:13px;padding:8px 0;">기록 없음</div>'
+    : data.map(r=>`<div style="padding:8px 0;border-bottom:1px solid #f1f5f9;">
+        <div style="display:flex;justify-content:space-between;">
+          <span style="font-size:13px;font-weight:600;">${r.date}</span>
+          <span class="badge ${r.badCount===0?'green':r.badCount<=3?'yellow':'red'}">불량 ${r.badCount||0}건</span>
+        </div>
+        <div style="font-size:12px;color:#6b7280;margin-top:2px;">점검: ${r.inspector||'-'} · ${r.totalChecked||0}/${r.totalItems||0} 항목</div>
+      </div>`).join('');
+}
+
+// ============================================================
+// DOCUMENTS
+// ============================================================
+const docListDefault = [
+  {id:'d01',name:'안전보건관리규정',basis:'산안법 §25',period:'상시',status:'미보유',updated:'',expires:'',note:'50인 이상 의무, 50인 미만 권고'},
+  {id:'d02',name:'안전보건관리계획서',basis:'산안법 §14',period:'연1회',status:'보유',updated:'2026-03-10',expires:'2026-12-31',note:''},
+  {id:'d03',name:'위험성평가 실시결과서',basis:'산안법 §36',period:'연1회 이상',status:'미보유',updated:'',expires:'',note:'미이행 시 과태료'},
+  {id:'d04',name:'안전보건목표·경영방침',basis:'산안법 §14',period:'연1회',status:'미보유',updated:'',expires:'',note:''},
+  {id:'d05',name:'정기 안전보건교육 일지',basis:'산안법 §29',period:'매월',status:'미보유',updated:'',expires:'',note:'근로자 월 2시간'},
+  {id:'d06',name:'신규채용자 교육 일지',basis:'산안법 §29',period:'채용시',status:'보유',updated:'2026-03-01',expires:'',note:'교안 보유'},
+  {id:'d07',name:'신규채용자 서약서',basis:'자율관리',period:'채용시',status:'보유',updated:'2026-03-01',expires:'',note:''},
+  {id:'d08',name:'관리감독자 교육 일지',basis:'산안법 §29',period:'연16시간',status:'미보유',updated:'',expires:'',note:''},
+  {id:'d09',name:'특별 안전보건교육 일지',basis:'산안법 §29',period:'해당작업 전',status:'미보유',updated:'',expires:''},
+  {id:'d10',name:'안전보건교육 연간 계획서',basis:'산안법 §29',period:'연1회',status:'미보유',updated:'',expires:'',note:''},
+  {id:'d11',name:'작업장 안전보건 점검표',basis:'산안법 §15',period:'월1회',status:'미보유',updated:'',expires:'',note:'환경점검표 보유'},
+  {id:'d12',name:'관리감독자 순회점검 기록',basis:'산안법 §16',period:'매일',status:'미보유',updated:'',expires:'',note:''},
+  {id:'d13',name:'기계·기구 자체검사 기록',basis:'산안법 §98',period:'장비별',status:'미보유',updated:'',expires:'',note:''},
+  {id:'d14',name:'도급인 안전보건관리계획서',basis:'산안법 §63',period:'계약시',status:'보유',updated:'2024-11-01',expires:'',note:''},
+  {id:'d15',name:'수급인 안전보건계획서 양식',basis:'산안법 §64',period:'계약시',status:'보유',updated:'',expires:'',note:''},
+  {id:'d16',name:'수급인 안전보건수준 평가기준',basis:'산안법 §64',period:'연1회',status:'보유',updated:'',expires:'',note:''},
+  {id:'d17',name:'중량물 운반기계 안전조치 지침서',basis:'산안법 §38',period:'상시',status:'보유',updated:'',expires:'',note:''},
+  {id:'d18',name:'근로자 참여·의견청취 절차서',basis:'산안법 §24',period:'상시',status:'보유',updated:'',expires:'',note:''},
+  {id:'d19',name:'협력업체 작업허가서',basis:'산안법 §63',period:'작업시',status:'미보유',updated:'',expires:'',note:''},
+  {id:'d20',name:'산업재해 발생 기록부',basis:'산안법 §57',period:'발생시',status:'미보유',updated:'',expires:'',note:''},
+  {id:'d21',name:'아차사고 보고서',basis:'자율관리',period:'발생시',status:'미보유',updated:'',expires:'',note:''},
+  {id:'d22',name:'특수건강검진 결과 관리대장',basis:'산안법 §130',period:'연1회',status:'미보유',updated:'',expires:'',note:''},
+  {id:'d23',name:'작업환경측정 결과서',basis:'산안법 §125',period:'반기1회',status:'미보유',updated:'',expires:'',note:''},
+  {id:'d24',name:'MSDS 관리대장',basis:'산안법 §114',period:'상시',status:'미보유',updated:'',expires:'',note:'화학물질 사용시'},
+  {id:'d25',name:'환경운영점검표',basis:'자율관리',period:'주기적',status:'보유',updated:'2024-01-01',expires:'',note:'2024년도 양식'},
+];
+
+function getDocList(){
+  const saved = DB.getObj('doclist');
+  if(Object.keys(saved).length===0) return docListDefault;
+  return docListDefault.map(d=>({...d,...(saved[d.id]||{})}));
+}
+function saveDocItem(id, field, value){
+  const saved = DB.getObj('doclist');
+  if(!saved[id]) saved[id]={};
+  saved[id][field]=value;
+  DB.set('doclist',saved);
+}
+
+function renderDocuments(){
+  const docs = getDocList();
+  const tbody = document.getElementById('doc-table-body');
+  if(!tbody)return;
+  tbody.innerHTML = docs.map(d=>{
+    const statusClass = d.status==='보유'?'green':d.status==='갱신필요'?'yellow':'red';
+    return `<tr>
+      <td style="font-weight:600;">${d.name}</td>
+      <td style="font-size:11px;color:#6b7280;">${d.basis}</td>
+      <td style="font-size:12px;">${d.period}</td>
+      <td>
+        <select class="badge ${statusClass}" style="border:none;cursor:pointer;font-size:11px;font-weight:600;" onchange="updateDocStatus('${d.id}','status',this.value)" id="doc-status-${d.id}">
+          <option value="보유" ${d.status==='보유'?'selected':''}>✅ 보유</option>
+          <option value="갱신필요" ${d.status==='갱신필요'?'selected':''}>⚠️ 갱신필요</option>
+          <option value="미보유" ${d.status==='미보유'?'selected':''}>❌ 미보유</option>
+        </select>
+      </td>
+      <td><input type="date" value="${d.updated||''}" style="border:1px solid #e5e7eb;border-radius:6px;padding:3px 6px;font-size:12px;" onchange="updateDocStatus('${d.id}','updated',this.value)"></td>
+      <td><input type="date" value="${d.expires||''}" style="border:1px solid #e5e7eb;border-radius:6px;padding:3px 6px;font-size:12px;" onchange="updateDocStatus('${d.id}','expires',this.value)"></td>
+      <td style="font-size:11px;color:#6b7280;">${d.note||''}</td>
+      <td>
+        <button class="btn btn-outline btn-sm" onclick="docNote('${d.id}')">메모</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function updateDocStatus(id, field, value){
+  saveDocItem(id, field, value);
+  const el = document.getElementById('doc-status-'+id);
+  if(el && field==='status'){
+    el.className = `badge ${value==='보유'?'green':value==='갱신필요'?'yellow':'red'}`;
+  }
+}
+function docNote(id){
+  const docs = getDocList();
+  const doc = docs.find(d=>d.id===id);
+  const note = prompt(`[${doc?.name}] 메모 입력:`, doc?.note||'');
+  if(note!==null) saveDocItem(id,'note',note);
+  renderDocuments();
+}
+
+// ============================================================
+// ANNUAL SCHEDULE
+// ============================================================
+const scheduleData = [
+  {month:1,items:['안전보건 경영방침 선언 및 게시','연간 안전보건 계획 수립','전년도 성과 분석','위험성평가 실시 계획']},
+  {month:2,items:['신규 위험성평가 실시','안전보건관리규정 검토·개정','법정 의무교육 계획 수립','설비 연간 자체검사 계획']},
+  {month:3,items:['1/4분기 안전보건 목표 점검','안전보건 담당자 교육 (외부)','협력업체 안전수준 평가']},
+  {month:4,items:['🔥 산업안전보건 강조기간 (4월)','안전의 달 행사 실시','체험 안전교육 실시','화재 대피 훈련']},
+  {month:5,items:['근로자 일반건강검진 실시','상반기 작업환경측정 실시','여름철 폭염 특별대책 수립']},
+  {month:6,items:['2/4분기 안전보건 점검','상반기 성과 평가','여름철 특별안전점검 실시','폭염 예방교육']},
+  {month:7,items:['하반기 안전보건 계획 점검','장마·폭염 현장관리','수급인 안전보건 수준 평가']},
+  {month:8,items:['폭염 특별관리 (열사병 예방)','여름철 안전보건 캠페인','설비 반기 자체검사 실시']},
+  {month:9,items:['3/4분기 안전보건 목표 점검','연간 위험성평가 검토','가을 안전캠페인']},
+  {month:10,items:['🔥 산업안전보건의 날 (10월 28일)','연간 안전보건 성과 점검','소방훈련 실시','겨울철 특별안전대책 수립']},
+  {month:11,items:['겨울철 특별안전점검','하반기 작업환경측정 실시','연간 교육 이수 현황 점검','동절기 안전교육']},
+  {month:12,items:['하반기 건강검진 실시','연간 안전보건 성과 평가','내년도 안전보건 계획 수립','안전보건 우수자 표창']},
+];
+
+function renderSchedule(){
+  const el = document.getElementById('annual-schedule');
+  if(!el)return;
+  el.innerHTML = `<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
+    ${scheduleData.map(s=>`
+      <div style="border:1px solid #e5e7eb;border-radius:8px;overflow:hidden;">
+        <div style="background:#1a2744;color:#fff;padding:8px 12px;font-weight:700;font-size:13px;">${s.month}월</div>
+        <div style="padding:10px 12px;">
+          ${s.items.map(item=>`<div style="font-size:12px;padding:3px 0;border-bottom:1px solid #f8fafc;display:flex;gap:6px;align-items:flex-start;">
+            <span style="color:#2563eb;flex-shrink:0;">•</span><span>${item}</span>
+          </div>`).join('')}
+        </div>
+      </div>
+    `).join('')}
+  </div>`;
+}
+
+// ============================================================
+// SIGNS
+// ============================================================
+const defaultSigns = [
+  {id:'s01',location:'호이스트/크레인 구역',content:'최대하중 _kg 초과 금지 / 사람 키 이상 운반 금지 / 안전모 필수 착용',color:'🔴 빨강 (금지)',installed:'',checked:'',status:'설치필요'},
+  {id:'s02',location:'금형 보관대',content:'금형 취급 시 2인 1조 필수 / 신호수 배치 / 안전화 착용',color:'🔵 파랑 (지시)',installed:'',checked:'',status:'설치필요'},
+  {id:'s03',location:'프레스 기계 전면',content:'양손 조작 필수 / 안전가드 제거 절대 금지 / 작업 중 청소 금지',color:'🔴 빨강 (금지)',installed:'',checked:'',status:'설치필요'},
+  {id:'s04',location:'분전반/전기 패널함',content:'허가자 외 접근 금지 / 작업 전 반드시 잠금·태깅 실시',color:'🔴 빨강 (금지)',installed:'',checked:'',status:'설치필요'},
+  {id:'s05',location:'공장 입구',content:'안전모·안전화 착용 후 입장 / 방문자는 안전담당자에게 신고',color:'🔵 파랑 (지시)',installed:'',checked:'',status:'설치필요'},
+  {id:'s06',location:'지게차 이동 통로',content:'지게차 전용 통로 / 보행자 진입 금지',color:'🔴 빨강 (금지)',installed:'',checked:'',status:'설치필요'},
+  {id:'s07',location:'화학물질 보관소',content:'MSDS 비치 / 보호구(장갑·마스크) 착용 필수 / 화기 금지',color:'🟡 노랑 (경고)',installed:'',checked:'',status:'설치필요'},
+  {id:'s08',location:'비상구',content:'비상구 / 화재 시 이곳으로 대피 / 장애물 절대 금지',color:'🟢 초록 (안내)',installed:'',checked:'',status:'설치필요'},
+  {id:'s09',location:'소화기 위치',content:'소화기 비치 / 사용법 안내',color:'🔴 빨강',installed:'',checked:'',status:'설치필요'},
+  {id:'s10',location:'휴게공간',content:'작업복 탈의 후 휴식 / 구역 내 금연',color:'🔴 빨강 (금지)',installed:'',checked:'',status:'설치필요'},
+];
+
+function getSignList(){
+  const saved = DB.getObj('signs');
+  if(Object.keys(saved).length===0) return defaultSigns;
+  return defaultSigns.map(s=>({...s,...(saved[s.id]||{})}));
+}
+function saveSignItem(id,field,value){
+  const saved=DB.getObj('signs');
+  if(!saved[id])saved[id]={};
+  saved[id][field]=value;
+  DB.set('signs',saved);
+}
+
+function renderSigns(){
+  const signs=getSignList();
+  const tbody=document.getElementById('signs-table-body');
+  if(!tbody)return;
+  tbody.innerHTML=signs.map(s=>{
+    const sc=s.status==='설치완료'?'green':s.status==='설치필요'?'red':'yellow';
+    return `<tr>
+      <td style="font-weight:600;">${s.location}</td>
+      <td style="font-size:12px;">${s.content}</td>
+      <td style="font-size:12px;">${s.color}</td>
+      <td><input type="date" value="${s.installed||''}" style="border:1px solid #e5e7eb;border-radius:6px;padding:3px 6px;font-size:12px;" onchange="saveSignItem('${s.id}','installed',this.value)"></td>
+      <td><input type="date" value="${s.checked||''}" style="border:1px solid #e5e7eb;border-radius:6px;padding:3px 6px;font-size:12px;" onchange="saveSignItem('${s.id}','checked',this.value)"></td>
+      <td>
+        <select style="border:1px solid #e5e7eb;border-radius:6px;padding:3px 6px;font-size:12px;" onchange="saveSignItem('${s.id}','status',this.value)">
+          <option value="설치필요" ${s.status==='설치필요'?'selected':''}>❌ 설치필요</option>
+          <option value="설치완료" ${s.status==='설치완료'?'selected':''}>✅ 설치완료</option>
+          <option value="교체필요" ${s.status==='교체필요'?'selected':''}>⚠️ 교체필요</option>
+        </select>
+      </td>
+      <td><button class="btn btn-outline btn-sm" onclick="editSign('${s.id}')">편집</button></td>
+    </tr>`;
+  }).join('');
+}
+function addSign(){
+  const location=prompt('설치 위치:');
+  if(!location)return;
+  const content=prompt('비표 내용:');
+  if(!content)return;
+  const id='s'+Date.now();
+  const saved=DB.getObj('signs');
+  saved[id]={id,location,content,color:'🔵 파랑 (지시)',installed:'',checked:'',status:'설치필요'};
+  DB.set('signs',saved);
+  // add to defaults temporarily - just re-render with custom item
+  defaultSigns.push({id,location,content,color:'🔵 파랑 (지시)',installed:'',checked:'',status:'설치필요'});
+  renderSigns();
+}
+function editSign(id){
+  const signs=getSignList();
+  const sign=signs.find(s=>s.id===id);
+  if(!sign)return;
+  const content=prompt('비표 내용 수정:', sign.content);
+  if(content!==null){saveSignItem(id,'content',content);renderSigns();}
+}
+
+// ============================================================
+// SETTINGS
+// ============================================================
+function saveSettings(){
+  const settings = {
+    company:v('s-company'), address:v('s-address'), manager:v('s-manager'),
+    tel:v('s-tel'), workers:v('s-workers'), product:v('s-product')
+  };
+  DB.set('settings', settings);
+  const cn=document.getElementById('company-name-display');
+  if(cn)cn.textContent=v('s-company')||'회사명 미설정';
+  // Supabase 연결도 함께 처리
+  const url=v('s-supa-url'), key=v('s-supa-key');
+  if(url&&key) initSupabase(url,key);
+  alert('✅ 설정이 저장되었습니다.');
+}
+function saveSupabase(){
+  const url=v('s-supa-url'), key=v('s-supa-key');
+  DB.set('supabase',{url,key});
+  if(url&&key){ initSupabase(url,key); alert('✅ Supabase 연결 완료! 실시간 공유가 활성화됩니다.'); }
+  else alert('URL과 Key를 모두 입력해주세요.');
+}
+function loadSettings(){
+  const s=DB.getObj('settings');
+  ['company','address','manager','tel','workers','product'].forEach(k=>{
+    const el=document.getElementById('s-'+k); if(el&&s[k]) el.value=s[k];
+  });
+  const cn=document.getElementById('company-name-display');
+  if(cn&&s.company) cn.textContent=s.company;
+  const sup=DB.getObj('supabase');
+  if(sup.url&&sup.key){
+    const u=document.getElementById('s-supa-url'), k=document.getElementById('s-supa-key');
+    if(u)u.value=sup.url; if(k)k.value=sup.key;
+    initSupabase(sup.url,sup.key);
+  }
+}
+
+// ============================================================
+// EXPORT / IMPORT
+// ============================================================
+function exportData(){
+  const allData={};
+  ['tbm','patrol','education','risk','accident','equipment','doclist','signs','settings'].forEach(k=>{
+    allData[k]=localStorage.getItem('safety_'+k);
+  });
+  const blob=new Blob([JSON.stringify(allData,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`safety_backup_${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+}
+function importData(){
+  document.getElementById('import-file').click();
+}
+function handleImport(event){
+  const file=event.target.files[0];
+  if(!file)return;
+  const reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      const data=JSON.parse(e.target.result);
+      Object.entries(data).forEach(([k,v])=>{if(v)localStorage.setItem('safety_'+k,v);});
+      alert('✅ 데이터를 불러왔습니다. 페이지를 새로고침합니다.');
+      location.reload();
+    }catch{alert('파일 형식이 올바르지 않습니다.');}
+  };
+  reader.readAsText(file);
+}
+
+// ============================================================
+// MODAL
+// ============================================================
+function closeModal(e){
+  if(!e||e.target===document.getElementById('modal-overlay')){
+    document.getElementById('modal-overlay').classList.remove('show');
+  }
+}
+
+// ============================================================
+// UTILS
+// ============================================================
+function v(id){ const el=document.getElementById(id); return el?el.value:''; }
+
+// ============================================================
+// INIT
+// ============================================================
+// ============================================================
+// CARD NEWS DATA
+// ============================================================
+const cnCards = [
+  {id:1,series:'basic',color:'linear-gradient(135deg,#1a2744,#2563eb)',ep:'SERIES 01 · 기초편',title:'우리 회사\n안전관리,\n왜 해야 할까요?',emoji:'🏭',footer:'안전은 선택이 아닌 의무입니다',fb:'#1a2744',fc:'#fff',
+   preview:['사망사고 1건 → 사업주 최대 징역 7년(중처법)','산재 발생 시 회사 이미지 훼손 + 거래처 계약 해지 위험','안전관리 잘 되는 회사 = 직원이 오래 다니는 회사'],
+   detail:{intro:'중대재해처벌법(2022년 시행) 이후 안전관리는 선택이 아닌 법적 의무가 되었습니다.',sections:[{t:'📌 법적 처벌 수준',i:['중대재해 발생 시 경영책임자 1년 이상 징역 (최대 7년)','법인 벌금 최대 50억원','반복 위반 시 가중처벌']},{t:'📌 우리 회사가 실천하는 것들',i:['매일 TBM — 10분 작업 전 안전회의','주간 패트롤 점검 — 현장 순회 및 위험요인 발굴','월간 정기 안전교육 — 법정 의무 이수']},{t:'✅ 직원 여러분이 해주실 것',i:['TBM 매일 빠짐없이 참석','위험 발견 즉시 보고 (처벌 없음, 포상 있음)','개인보호구 항상 착용']}],hl:'사고 한 건이 10년치 이익을 날릴 수 있습니다.',law:'산업안전보건법 제1조, 중대재해처벌법 제4조'}},
+  {id:2,series:'basic',color:'linear-gradient(135deg,#065f46,#10b981)',ep:'SERIES 02 · 기초편',title:'TBM\n매일 아침\n10분의 기적',emoji:'☀️',footer:'작업 전 TBM = 사고 예방의 시작',fb:'#065f46',fc:'#fff',
+   preview:['TBM = Tool Box Meeting (작업 전 안전점검 회의)','매일 작업 시작 10분 전, 전원 참석','요일별 테마제 운영 (월:설비 화:PPE 수:건강 목:환경 금:사고사례)'],
+   detail:{intro:'TBM은 중대재해처벌법에서 요구하는 "안전보건관리체계 이행 증빙"의 핵심 활동입니다.',sections:[{t:'📋 TBM 진행 8단계',i:['① 건강상태 확인 (음주·체온·약물)','② 전일 이상·아차사고 공유','③ 금일 작업내용 확인','④ 위험요인·안전대책 강조 (제거→대체→통제)','⑤ PPE 착용 점검','⑥ 5S·정리정돈 확인','⑦ 질의응답','⑧ 안전다짐 구호']},{t:'📅 요일별 TBM 테마',i:['월: 설비·기계 점검','화: 개인보호구 점검','수: 건강·피로 관리','목: 환경·정리정돈','금: 아차사고 사례 공유']}],hl:'TBM 기록지는 중처법 대응 핵심 증빙자료입니다!',law:'중대재해처벌법 제4조 1항'}},
+  {id:3,series:'basic',color:'linear-gradient(135deg,#7c2d12,#ea580c)',ep:'SERIES 03 · 기초편',title:'개인보호구\n완전 정복',emoji:'⛑️',footer:'보호구는 마지막 방어선입니다',fb:'#7c2d12',fc:'#fff',
+   preview:['착용 안 하면 산재 보상에 불이익 발생 가능','용도에 맞는 보호구 선택이 핵심','파손된 보호구 = 착용 안 한 것과 같다'],
+   detail:{intro:'개인보호구(PPE)는 모든 안전조치가 완료된 후에도 남은 위험으로부터 몸을 지키는 마지막 방어선입니다.',sections:[{t:'🪖 작업별 필수 보호구',i:['호이스트/크레인: 안전모+안전화 (필수)','금형 작업: 안전장갑+안전화+안전모','사출 작업: 방열장갑+보안경+안전화','화학물질: 방독마스크+내화학장갑+보안경']},{t:'❌ 이런 행동은 안 됩니다',i:['"잠깐이니까 괜찮아" → 사고는 잠깐에 발생','파손된 보호구 계속 착용','본인 것 아닌 보호구 무단 사용']}],hl:'보호구 미착용 사고 발생 시 산재보상 감액 + 회사 행정처분.',law:'산업안전보건법 제38조'}},
+  {id:4,series:'basic',color:'linear-gradient(135deg,#312e81,#6366f1)',ep:'SERIES 04 · 기초편',title:'아차사고\n신고하면\n포상합니다!',emoji:'🚨',footer:'아차사고 1건 = 중대사고 30건 예방',fb:'#312e81',fc:'#fff',
+   preview:['아차사고 = 다칠 뻔 했지만 실제 부상은 없는 상황','신고해도 절대 불이익 없음, 포상 있음','하인리히 법칙: 아차사고 300 → 중상 1'],
+   detail:{intro:'하인리히 법칙에 따르면 중대사고 1건 전에 아차사고 300건이 있습니다.',sections:[{t:'📌 아차사고란?',i:['발 헛디뎌 넘어질 뻔 했지만 안 넘어짐','금형 이동 중 미끄러졌지만 다치지 않음','지게차가 나와 충돌할 뻔 했지만 피함']},{t:'📝 신고 방법',i:['대시보드 → 아차사고 보고 → 제출','안전담당자에게 구두 보고도 가능','익명 신고도 가능']},{t:'🎁 신고 포상',i:['신고 1건: 소정의 포상','우수 제안: 분기 1회 표창']}],hl:'신고한다고 처벌받지 않습니다!',law:'산업안전보건법 제52조'}},
+  {id:5,series:'field',color:'linear-gradient(135deg,#78350f,#d97706)',ep:'SERIES 05 · 현장편',title:'호이스트\n크레인\n안전수칙',emoji:'🏗️',footer:'인양물 아래에는 절대 서지 마세요',fb:'#78350f',fc:'#fff',
+   preview:['체인·훅·안전장치 반드시 점검','사람 키 이상 높이 절대 금지','안전모 착용 의무 — 미착용 시 즉시 작업 중지'],
+   detail:{intro:'호이스트·크레인 사고는 대부분 사망으로 이어집니다.',sections:[{t:'🔴 절대 하면 안 되는 것',i:['인양물 아래에 사람이 있을 때 작업','최대하중 초과 운반','사람 키 이상으로 인양물 이동','혼자 대형 금형 이동']},{t:'✅ 작업 전 반드시 확인',i:['체인·와이어: 마모, 변형, 균열 없는지','훅: 해지장치 정상 작동','비상정지 버튼 작동 확인','작업 구역 인원 대피 완료']},{t:'📋 2인 1조 기준',i:['금형 1톤 이상 → 반드시 2인 1조','신호수 1명 별도 배치','운전자는 신호수 지시에만 따름']}],hl:'현장 비표: "최대하중 ___kg / 사람 키 이상 운반 금지 / 안전모 필수"',law:'산업안전보건법 시행규칙 제88조'}},
+  {id:6,series:'field',color:'linear-gradient(135deg,#134e4a,#0d9488)',ep:'SERIES 06 · 현장편',title:'금형 작업\n안전수칙',emoji:'🔩',footer:'금형 교체는 반드시 2인 1조',fb:'#134e4a',fc:'#fff',
+   preview:['교체 전: 프레스 전원 차단 + 잠금·태깅','이동 시: 호이스트 사용 + 2인 1조','보관: 전용 보관대, 바닥에 세워두기 금지'],
+   detail:{intro:'금형 관련 사고는 손가락 절단·압박·낙하로 이어지는 중대재해 고위험 작업입니다.',sections:[{t:'🔴 교체 절차 (반드시 준수)',i:['① 전원 차단 → 잠금 → 태그 부착','② 잔류 에너지 제거','③ 안전블록 삽입','④ 2인 이상 참여 + 신호수','⑤ 교체 완료 후 안전장치 복구 확인']},{t:'🧤 필수 보호구',i:['안전장갑 (두꺼운 것)', '안전화 (철심 내장)','안전모 (호이스트 사용 시)']}],hl:'잠금·태깅 없이 금형 교체 = 즉사 위험',law:'산업안전보건기준에 관한 규칙 제92조'}},
+  {id:7,series:'field',color:'linear-gradient(135deg,#1e1b4b,#4f46e5)',ep:'SERIES 07 · 현장편',title:'지게차\n사고 예방\n수칙',emoji:'🚜',footer:'지게차와 보행자는 절대 공존할 수 없습니다',fb:'#1e1b4b',fc:'#fff',
+   preview:['운전자: 면허 소지자만 운전','포크 높이: 주행 시 지상 20~30cm 유지','보행자: 지게차 이동 구역 절대 진입 금지'],
+   detail:{intro:'지게차 1톤 = 성인 14명 무게. 사고는 대부분 사망·중상으로 이어집니다.',sections:[{t:'🚜 운전자 수칙',i:['면허 소지자만 운전 (무면허 = 형사처벌)','매일 작업 전 조향·제동·경보 장치 점검','포크는 주행 시 지상 20~30cm 유지','경사로: 후진으로 올라가고 전진으로 내려오기','안전벨트 항상 착용']},{t:'🚶 보행자 수칙',i:['지게차 이동 통로 절대 진입 금지','지게차가 올 때는 정지·대기','눈 마주치기 전까지는 "못 본 것"으로 간주']}],hl:'무면허 운전 = 운전자·회사 모두 형사처벌',law:'산업안전보건기준에 관한 규칙 제179조~제185조'}},
+  {id:8,series:'field',color:'linear-gradient(135deg,#7f1d1d,#ef4444)',ep:'SERIES 08 · 현장편',title:'화재 예방\n및 비상\n대피 요령',emoji:'🧯',footer:'화재 → 신고 → 대피 → 초기진화',fb:'#7f1d1d',fc:'#fff',
+   preview:['소화기 위치 지금 바로 확인하세요','비상구 방향 외워두세요 (눈 감고도)','화재 발견 즉시: 큰소리로 "불이야!"'],
+   detail:{intro:'우리 공장의 비상 대피 절차와 소화기 위치를 반드시 알고 있어야 합니다.',sections:[{t:'🔥 화재 발견 시 행동 순서',i:['① "불이야!" 외쳐 전파','② 119 신고','③ 초기 소화 판단 (30초 이내)','④ 비상구로 대피 (엘리베이터 금지)','⑤ 정문 앞 주차장 집결']},{t:'🧯 소화기 사용법 (PASS)',i:['P - 핀 뽑기','A - 호스 불 쪽 겨냥','S - 손잡이 눌러 분사','S - 좌우로 쓸듯이 뿌리기']}],hl:'소화기 압력계 녹색 = 정상. 매월 점검하세요!',law:'소방시설법 제10조'}},
+  {id:9,series:'culture',color:'linear-gradient(135deg,#064e3b,#059669)',ep:'SERIES 09 · 문화편',title:'정리정돈\n5S로\n사고 막기',emoji:'✨',footer:'깨끗한 현장 = 사고 없는 현장',fb:'#064e3b',fc:'#fff',
+   preview:['사고의 30% 이상이 정리정돈 불량에서 시작','바닥 이물질 → 미끄러짐 사고의 주원인','통로 막힘 → 비상 시 대피 불가'],
+   detail:{intro:'5S는 가장 쉽고 효과적인 사고 예방 활동입니다.',sections:[{t:'5S 실천 방법',i:['정리: 필요 vs 불필요 구분 → 불필요한 것 즉시 처리','정돈: 정해진 위치에 → 누구나 꺼내고 되돌릴 수 있게','청소: 매일 작업 후 5분 청소','청결: 청소 상태 항상 유지','습관화: 위 4S를 당연하게 반복']},{t:'📋 퇴근 전 5분 체크',i:['내 구역 청소 완료','공구 제자리 반납','바닥 기름·이물질 없음']}],hl:'정리정돈으로 공구 찾는 시간 줄이면 하루 30분 절약!',law:'산업안전보건기준에 관한 규칙 제3조'}},
+  {id:10,series:'culture',color:'linear-gradient(135deg,#1e3a5f,#0ea5e9)',ep:'SERIES 10 · 문화편',title:'신규입사자\n안전 가이드\n8시간 교육',emoji:'🆕',footer:'현장 투입 전 교육 완료 = 법적 의무',fb:'#1e3a5f',fc:'#fff',
+   preview:['입사 당일 현장 투입 전 8시간 교육 필수 (법적 의무)','4단계: 이론→위험지식→실습→현장배치','교육 미이수 상태 사고 발생 = 회사 전적 책임'],
+   detail:{intro:'신규입사자 교육은 산업안전보건법 제29조에 따라 8시간 이상 실시해야 하는 법적 의무입니다.',sections:[{t:'📚 4단계 교육 과정',i:['1단계 (2시간): 산업안전보건법령 이론 교육','2단계 (3시간): 우리 공장 유해·위험요인 사례','3단계 (2시간): 보호구 착용법 + 대피 요령 실습','4단계 (1시간): 현장 기계 취급 + 관리감독자 면담']},{t:'📝 필수 서류',i:['신규채용자 서약서 서명','교육 일지 (참석자 서명)','개인별 교육이수카드']}],hl:'신규입사자 산재 발생률은 6개월 이내가 40% 이상!',law:'산업안전보건법 제29조'}},
+  {id:11,series:'culture',color:'linear-gradient(135deg,#4a1d96,#8b5cf6)',ep:'SERIES 11 · 문화편',title:'전기 안전\n기본수칙',emoji:'⚡',footer:'전기는 눈에 보이지 않는 살인자입니다',fb:'#4a1d96',fc:'#fff',
+   preview:['분전반: 허가받은 사람만 접근 가능','전선 피복 벗겨진 것 발견 즉시 신고','물기 있는 손으로 전기 설비 절대 접촉 금지'],
+   detail:{intro:'전기 감전 사고는 순식간에 사망으로 이어집니다.',sections:[{t:'🔴 절대 금지',i:['허가없이 분전반 개방','물기 있는 손으로 조작','전선 위에 자재 올려두기','자가 수리·개조']},{t:'✅ 발견 시 즉시 신고',i:['전선 피복 벗겨짐·손상','콘센트·플러그 파손','이상한 냄새·소리']},{t:'🛑 작업 전 잠금·태깅(LOTO)',i:['설비 수리 전 전원 차단','잠금(Lock) + 이름표(Tag) 부착','본인만 잠금 해제 가능']}],hl:'감전 사고 시 전류 차단부터! 맨손으로 피해자 잡지 마세요.',law:'산업안전보건기준에 관한 규칙 제301조'}},
+  {id:12,series:'culture',color:'linear-gradient(135deg,#1c1917,#57534e)',ep:'SERIES 12 · 문화편',title:'안전문화\n우리가\n만들어 갑니다',emoji:'🤝',footer:'"안전은 규정이 아닌 우리의 약속입니다"',fb:'#1c1917',fc:'#fff',
+   preview:['안전을 지키는 것이 동료를 지키는 것','위험 발견 = 즉시 멈추고 보고 (STOP-LOOK-ASSESS-MANAGE)','안전 제안 적극 참여 → 더 안전한 현장'],
+   detail:{intro:'안전문화는 우리 모두가 함께 만들어 가는 것입니다.',sections:[{t:'🤝 안전문화 4원칙',i:['동료 안전도 내 책임: 위험한 행동 발견 시 서로 알려주기','멈추는 용기: 위험하면 작업 중지 후 보고 (처벌 없음)','작은 것도 신고: 아차사고·개선 아이디어 모두 제안','기록이 문화: TBM·점검·교육 기록이 우리의 안전 역사']},{t:'🏆 안전 포상 제도',i:['아차사고 신고: 소정의 포상','위험발견 제안: 분기 우수 제안 선정','안전수칙 준수 우수자: 연 1회 표창']}],hl:'안전을 말할 수 있는 문화 = 사고가 없는 문화!',law:'산업안전보건법 제52조'}}
+];
+
+// ============================================================
+// POSTER DATA
+// ============================================================
+const ptPosters = [
+  {id:'p1',cat:'notice',color:'#1a2744',accent:'#2563eb',badge:'📋 법정 필수 게시',emoji:'📞',title:'비상 연락처',sub:'화재·사고 발생 시 즉시 연락',
+   rules:[{n:'🔥',t:'화재 신고',d:'119'},{n:'🚑',t:'응급 구조',d:'119'},{n:'🚓',t:'경찰',d:'112'},{n:'🏢',t:'안전보건 담당자',d:'연락처 기재'},{n:'🏥',t:'가까운 병원',d:'병원명·전화번호 기재'},{n:'👨‍💼',t:'공장장',d:'연락처 기재'}],
+   footer:'이 연락처는 항상 최신 상태로 유지하세요',fb:'#1a2744',fc:'#fff'},
+  {id:'p2',cat:'notice',color:'#991b1b',accent:'#ef4444',badge:'📋 법정 필수 게시',emoji:'🧯',title:'소화기 사용법',sub:'화재 발생 즉시 PASS 기억하세요',
+   rules:[{n:'P',t:'핀 뽑기',d:'안전핀을 뽑아 잠금 해제'},{n:'A',t:'겨냥',d:'호스를 불 쪽 아래를 향해 겨냥'},{n:'S',t:'분사',d:'손잡이를 꽉 눌러 분사 시작'},{n:'S',t:'쓸기',d:'좌우로 빗자루 쓸듯이 뿌리기'}],
+   footer:'분사 시간 약 10~15초 | 소화기는 1회용',fb:'#991b1b',fc:'#fff'},
+  {id:'p3',cat:'notice',color:'#065f46',accent:'#10b981',badge:'📋 법정 필수 게시',emoji:'🚪',title:'비상 대피 안내',sub:'화재·재난 발생 시 행동 절차',
+   rules:[{n:'1',t:'"불이야!" 외치기',d:'주변 사람 즉시 대피 유도'},{n:'2',t:'119 신고',d:'장소·상황 명확하게 전달'},{n:'3',t:'비상구로 대피',d:'엘리베이터 절대 사용 금지'},{n:'4',t:'문 닫고 대피',d:'연기 확산 방지'},{n:'5',t:'집결지 집합',d:'정문 앞 주차장 — 인원 확인'},{n:'6',t:'재진입 금지',d:'절대 건물 안으로 다시 들어가지 않기'}],
+   footer:'집결지: 정문 앞 주차장',fb:'#065f46',fc:'#fff'},
+  {id:'p4',cat:'rule',color:'#78350f',accent:'#d97706',badge:'📌 안전수칙',emoji:'🏗️',title:'호이스트·크레인 안전수칙',sub:'금형 운반 시 반드시 준수하세요',
+   rules:[{n:'✅',t:'체인·훅 점검 후 작업',d:'마모·변형·균열 확인'},{n:'✅',t:'안전모 착용 필수',d:'호이스트 구역 전원'},{n:'✅',t:'2인 1조 + 신호수',d:'금형 1톤 이상'},{n:'🚫',t:'사람 키 이상 운반 금지',d:'인양물은 낮게 이동'},{n:'🚫',t:'인양 중 하부 작업 금지',d:'낙하 시 즉사 위험'},{n:'🚫',t:'최대하중 초과 금지',d:'표시 하중 반드시 확인'}],
+   footer:'사람 키 이상 운반 금지 | 안전모 필수',fb:'#78350f',fc:'#fff'},
+  {id:'p5',cat:'rule',color:'#134e4a',accent:'#0d9488',badge:'📌 안전수칙',emoji:'🔩',title:'금형 교체 안전수칙',sub:'교체 전 반드시 전원 차단!',
+   rules:[{n:'1',t:'전원 차단 → 잠금 → 태그',d:'본인 이름 태그 부착'},{n:'2',t:'잔류 에너지 제거',d:'잔압·관성·열 완전 제거'},{n:'3',t:'안전블록 삽입',d:'슬라이드 낙하 방지'},{n:'4',t:'2인 이상 작업',d:'신호수 역할 1인'},{n:'5',t:'안전장갑·안전화 착용',d:'방열장갑 추가 (고온 시)'},{n:'6',t:'복구 확인 후 기동',d:'안전장치 복구 완료 확인'}],
+   footer:'전원 차단 없이 금형 교체 = 중대재해',fb:'#134e4a',fc:'#fff'},
+  {id:'p6',cat:'rule',color:'#1e1b4b',accent:'#4f46e5',badge:'📌 안전수칙',emoji:'🚜',title:'지게차 안전수칙',sub:'지게차와 보행자는 공존 불가',
+   rules:[{n:'✅',t:'면허자만 운전',d:'지게차 운전기능사 면허'},{n:'✅',t:'포크 높이: 지상 20~30cm',d:'주행 시 항상 낮게'},{n:'✅',t:'안전벨트 착용',d:'항상, 예외 없이'},{n:'🚫',t:'보행자 구역 진입 금지',d:'통로 분리 준수'},{n:'🚫',t:'포크에 사람 탑승 금지',d:'즉시 징계 대상'},{n:'🚫',t:'시야 가린 채 전진 금지',d:'후진으로 운행'}],
+   footer:'무면허 운전 = 형사처벌 | 지게차 1톤 = 성인 14명 무게',fb:'#1e1b4b',fc:'#fff'},
+  {id:'p7',cat:'rule',color:'#4a1d96',accent:'#8b5cf6',badge:'📌 안전수칙',emoji:'⚡',title:'전기 안전수칙',sub:'감전은 순식간에 사망으로 이어집니다',
+   rules:[{n:'✅',t:'작업 전 전원 차단',d:'잠금(Lock)+태그(Tag) 부착'},{n:'✅',t:'이상 발견 즉시 신고',d:'전선 피복 손상, 이상 냄새·소리'},{n:'🚫',t:'분전반 무단 접근 금지',d:'허가받은 담당자만 개방'},{n:'🚫',t:'물기 있는 손 조작 금지',d:'반드시 손 건조 후'},{n:'🚫',t:'임시 연장선 방치 금지',d:'반드시 정리 후 마감'},{n:'🚫',t:'자가 수리·개조 금지',d:'전문가에게 요청'}],
+   footer:'전기는 눈에 보이지 않는 살인자 | 규정 준수가 생명',fb:'#4a1d96',fc:'#fff'},
+  {id:'p8',cat:'monthly',color:'#0f4c75',accent:'#1b98e0',badge:'📅 이달의 안전 목표',emoji:'🎯',title:'이달의 안전 목표',sub:'우리 모두 함께 지킵시다',
+   rules:[{n:'①',t:'TBM 100% 참석',d:'매일 작업 전 10분, 빠짐없이'},{n:'②',t:'아차사고 1건 이상 신고',d:'숨기지 말고 공유 = 예방'},{n:'③',t:'보호구 완전 착용',d:'단 한 순간도 예외 없이'},{n:'④',t:'퇴근 전 작업장 정리',d:'내 구역은 내가 책임'}],
+   footer:'이번달 무재해 목표 달성! 우리가 만드는 안전한 현장',fb:'#0f4c75',fc:'#fff'},
+  {id:'p9',cat:'monthly',color:'#7c2d12',accent:'#ea580c',badge:'📅 계절별 안전',emoji:'☀️',title:'여름철 열사병 예방',sub:'폭염 속 작업 시 반드시 지키세요',
+   rules:[{n:'💧',t:'매시간 물 마시기',d:'200mL/시간, 갈증 전에'},{n:'🌡️',t:'33℃ 이상 — 매시간 휴식',d:'10~15분 그늘 휴식'},{n:'🩺',t:'열사병 증상 즉시 신고',d:'어지럼증·구역질·의식저하'},{n:'❌',t:'혼자 작업 금지',d:'폭염 시 반드시 동료와'}],
+   footer:'체온 39℃ 이상 → 즉시 119 신고 + 응급처치',fb:'#7c2d12',fc:'#fff'},
+  {id:'p10',cat:'monthly',color:'#1e3a5f',accent:'#0ea5e9',badge:'📅 계절별 안전',emoji:'❄️',title:'겨울철 안전수칙',sub:'동절기 특별 주의 사항',
+   rules:[{n:'🧊',t:'빙판길·결빙 바닥 주의',d:'낙상 주의, 모래 뿌리기'},{n:'🔥',t:'쿨링타워 동파 방지',d:'동절기 가동 확인 (12~2월)'},{n:'🧤',t:'방한 보호구 착용',d:'외부 작업 시 방한장갑·방한복'},{n:'🔌',t:'난방기기 안전 사용',d:'퇴근 전 전기난로 반드시 차단'}],
+   footer:'겨울철 낙상 = 골절 = 중대 산업재해 | 서두르지 말고 안전하게',fb:'#1e3a5f',fc:'#fff'},
+  {id:'p11',cat:'sign',color:'#991b1b',accent:'#ef4444',badge:'🪧 현장 부착용 비표',emoji:'🏗️',title:'호이스트 구역 안전수칙',sub:'이 구역에서는 반드시 지키세요',
+   rules:[{n:'🔴',t:'최대 하중 초과 운반 금지',d:'표시 하중 확인 후 작업'},{n:'🔴',t:'사람 키 이상 운반 금지',d:'인양물은 낮게 이동'},{n:'🔴',t:'인양물 아래 접근 금지',d:'낙하 시 즉사 위험'},{n:'🔵',t:'안전모 착용 필수',d:'이 구역 진입 전 착용'},{n:'🔵',t:'2인 1조 + 신호수 필수',d:'금형 1톤 이상'}],
+   footer:'⛑️ 안전모 착용 없이 진입 금지',fb:'#991b1b',fc:'#fff'},
+  {id:'p12',cat:'sign',color:'#1e3a5f',accent:'#0ea5e9',badge:'🪧 현장 부착용 비표',emoji:'🚫',title:'허가자 외 접근 금지',sub:'분전반 / 전기 패널함',
+   rules:[{n:'🔴',t:'허가받은 담당자만 접근',d:'무단 접근 시 감전 위험'},{n:'🔴',t:'작업 전 잠금·태깅 필수',d:'Lock + Tag 부착 후 작업'},{n:'🔴',t:'타인 잠금 해제 절대 금지',d:'본인 확인 후만 해제'},{n:'📞',t:'담당자 연락처',d:'전화번호 기재'}],
+   footer:'⚡ 허가 없이 접근 금지 — 감전 즉사 위험',fb:'#1e3a5f',fc:'#fff'},
+  {id:'p13',cat:'sign',color:'#78350f',accent:'#d97706',badge:'🪧 현장 부착용 비표',emoji:'🔩',title:'금형 작업 전원 차단 필수',sub:'프레스 / 사출기 금형 교체 시',
+   rules:[{n:'🔴',t:'전원 차단 → 잠금 → 태그 순서 필수',d:'순서 바꾸면 사망 사고'},{n:'🔴',t:'전원 차단 전 금형 교체 절대 금지',d:''},{n:'🔵',t:'안전장갑·안전화 착용 필수',d:''},{n:'🔵',t:'2인 1조 작업',d:'혼자 금형 교체 금지'}],
+   footer:'금형 교체 = 반드시 전원 차단 확인',fb:'#78350f',fc:'#fff'},
+  {id:'p14',cat:'sign',color:'#064e3b',accent:'#059669',badge:'🪧 현장 부착용 비표',emoji:'🚜',title:'지게차 전용 통로',sub:'보행자 진입 금지',
+   rules:[{n:'🔴',t:'보행자 진입 절대 금지',d:'지게차와 충돌 시 사망'},{n:'🔴',t:'무면허 운전 금지',d:'면허 소지자만 운전'},{n:'🔵',t:'지게차 발견 시 정지·대기',d:'눈 마주침 확인 후 이동'}],
+   footer:'지게차 통로 = 보행자 금지 구역',fb:'#064e3b',fc:'#fff'}
+];
+
+// ============================================================
+// CARD NEWS RENDER
+// ============================================================
+function cnFilter(cat, btn){
+  document.querySelectorAll('#section-cardnews .btn').forEach(b=>{b.style.background='';b.style.color='';});
+  btn.style.background='#1a2744'; btn.style.color='#fff';
+  renderCN(cat);
+}
+function renderCN(cat){
+  const list = cat==='all' ? cnCards : cnCards.filter(c=>c.series===cat);
+  document.getElementById('cn-grid').innerHTML = list.map(c=>`
+    <div onclick="openCN(${c.id})" style="background:#fff;border-radius:12px;overflow:hidden;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.1);transition:transform 0.15s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform=''">
+      <div style="padding:18px 16px 14px;background:${c.color};position:relative;min-height:130px;display:flex;flex-direction:column;justify-content:flex-end;">
+        <div style="position:absolute;top:12px;right:12px;font-size:40px;opacity:0.25;">${c.emoji}</div>
+        <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,0.7);letter-spacing:0.08em;margin-bottom:4px;">${c.ep}</div>
+        <div style="font-size:15px;font-weight:800;color:#fff;line-height:1.3;">${c.title.replace(/\n/g,'<br>')}</div>
+      </div>
+      <div style="padding:12px 14px;">
+        ${c.preview.map(p=>`<div style="font-size:11px;color:#374151;padding:4px 0;border-bottom:1px solid #f8fafc;display:flex;gap:6px;"><span style="color:#2563eb;">•</span><span>${p}</span></div>`).join('')}
+      </div>
+      <div style="padding:8px 14px;background:${c.fb};color:${c.fc};font-size:10px;font-weight:700;text-align:center;">${c.footer}</div>
+      <div style="display:flex;gap:6px;padding:8px 12px;background:#f8fafc;">
+        <button onclick="event.stopPropagation();cnCopy(${c.id})" class="btn btn-outline btn-sm" style="flex:1;font-size:11px;">📋 카톡 복사</button>
+        <button onclick="event.stopPropagation();cnPrint(${c.id})" class="btn btn-primary btn-sm" style="flex:1;font-size:11px;">🖨️ 인쇄</button>
+      </div>
+    </div>
+  `).join('');
+}
+function openCN(id){
+  const c=cnCards.find(x=>x.id===id);
+  const mh=document.getElementById('cn-modal-header');
+  mh.style.background=c.color;
+  document.getElementById('cn-modal-ep').textContent=c.ep;
+  document.getElementById('cn-modal-emoji').textContent=c.emoji;
+  document.getElementById('cn-modal-title').innerHTML=c.title.replace(/\n/g,'<br>');
+  const mf=document.getElementById('cn-modal-footer');
+  mf.textContent=c.footer; mf.style.background=c.fb; mf.style.color=c.fc;
+  const d=c.detail;
+  document.getElementById('cn-modal-body').innerHTML=`
+    <p style="font-size:13px;color:#374151;line-height:1.6;margin-bottom:12px;">${d.intro}</p>
+    ${d.sections.map(s=>`<div style="font-size:13px;font-weight:700;color:#1a2744;margin:12px 0 6px;">${s.t}</div><ul style="list-style:none;padding:0;">${s.i.map(x=>`<li style="padding:6px 0;border-bottom:1px solid #f1f5f9;font-size:12px;color:#374151;display:flex;gap:8px;"><span>✓</span><span>${x}</span></li>`).join('')}</ul>`).join('')}
+    <div style="background:#fef9c3;border-radius:8px;padding:12px;font-size:12px;color:#92400e;margin:12px 0;border-left:4px solid #f59e0b;">💡 ${d.hl}</div>
+    <div style="background:#eff6ff;border-radius:8px;padding:10px;font-size:11px;color:#1e40af;margin:8px 0;">⚖️ ${d.law}</div>
+    <div style="display:flex;gap:8px;margin-top:12px;">
+      <button onclick="cnCopy(${c.id})" class="btn btn-outline" style="flex:1;font-size:12px;">📋 카카오톡 복사</button>
+      <button onclick="cnPrint(${c.id})" class="btn btn-primary" style="flex:1;font-size:12px;">🖨️ 인쇄</button>
+    </div>
+  `;
+  document.getElementById('cn-modal').style.display='flex';
+}
+function closeCnModal(e){
+  if(!e||e.target===document.getElementById('cn-modal'))
+    document.getElementById('cn-modal').style.display='none';
+}
+function cnCopy(id){
+  const c=cnCards.find(x=>x.id===id);
+  let t=`[${c.ep}] ${c.title.replace(/\n/g,' ')}\n\n${c.detail.intro}\n\n`;
+  c.detail.sections.forEach(s=>{t+=`${s.t}\n`;s.i.forEach(x=>t+=`• ${x}\n`);t+='\n';});
+  t+=`💡 ${c.detail.hl}\n${c.footer}`;
+  navigator.clipboard.writeText(t).then(()=>alert('카카오톡에 붙여넣기하세요!'));
+}
+function cnPrint(id){
+  const c=cnCards.find(x=>x.id===id);
+  const w=window.open('','_blank','width=500,height:800');
+  w.document.write(`<html><head><meta charset="UTF-8"><style>
+    body{margin:0;font-family:'Malgun Gothic',sans-serif;}
+    .h{padding:32px 24px 20px;background:${c.color};min-height:170px;position:relative;}
+    .em{position:absolute;top:16px;right:16px;font-size:64px;opacity:0.22;}
+    .ep{font-size:11px;font-weight:700;color:rgba(255,255,255,0.7);letter-spacing:0.08em;}
+    .t{font-size:24px;font-weight:900;color:#fff;margin-top:6px;line-height:1.3;}
+    .body{padding:20px 24px;}
+    p{font-size:13px;color:#374151;line-height:1.6;margin-bottom:10px;}
+    .sec{font-size:13px;font-weight:700;color:#1a2744;margin:12px 0 6px;}
+    ul{list-style:none;padding:0;}
+    li{padding:6px 0;border-bottom:1px solid #f1f5f9;font-size:12px;color:#374151;display:flex;gap:8px;}
+    .hl{background:#fef9c3;border-radius:8px;padding:12px;font-size:12px;color:#92400e;margin:12px 0;border-left:4px solid #f59e0b;}
+    .lw{background:#eff6ff;border-radius:8px;padding:10px;font-size:11px;color:#1e40af;margin:8px 0;}
+    .f{padding:14px;text-align:center;font-size:13px;font-weight:800;background:${c.fb};color:${c.fc};}
+  </style></head><body>
+    <div class="h"><div class="em">${c.emoji}</div><div class="ep">${c.ep}</div><div class="t">${c.title.replace(/\n/g,'<br>')}</div></div>
+    <div class="body">
+      <p>${c.detail.intro}</p>
+      ${c.detail.sections.map(s=>`<div class="sec">${s.t}</div><ul>${s.i.map(x=>`<li>✓ ${x}</li>`).join('')}</ul>`).join('')}
+      <div class="hl">💡 ${c.detail.hl}</div>
+      <div class="lw">⚖️ ${c.detail.law}</div>
+    </div>
+    <div class="f">${c.footer}</div>
+  </body></html>`);
+  w.document.close(); setTimeout(()=>w.print(),500);
+}
+
+// ============================================================
+// POSTER RENDER
+// ============================================================
+function ptFilter(cat, btn){
+  document.querySelectorAll('#section-posters .btn').forEach(b=>{b.style.background='';b.style.color='';});
+  btn.style.background='#1a2744'; btn.style.color='#fff';
+  renderPT(cat);
+}
+function renderPT(cat){
+  const list = cat==='all' ? ptPosters : ptPosters.filter(p=>p.cat===cat);
+  document.getElementById('pt-grid').innerHTML = list.map(p=>`
+    <div style="background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,0.1);">
+      <div style="padding:22px 20px 16px;background:${p.color};text-align:center;">
+        <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,0.7);letter-spacing:0.08em;margin-bottom:6px;">${p.badge}</div>
+        <div style="font-size:52px;margin:6px 0;">${p.emoji}</div>
+        <div style="font-size:18px;font-weight:800;color:#fff;line-height:1.3;">${p.title}</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.8);margin-top:4px;">${p.sub}</div>
+      </div>
+      <div style="padding:14px 16px;">
+        <ul style="list-style:none;padding:0;">
+          ${p.rules.map(r=>`<li style="display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px solid #f8fafc;font-size:12px;"><span style="flex-shrink:0;width:22px;height:22px;border-radius:50%;background:${p.accent};color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;">${r.n}</span><div><strong style="display:block;font-size:12px;font-weight:700;color:#1a2744;">${r.t}</strong><span style="font-size:11px;color:#6b7280;">${r.d}</span></div></li>`).join('')}
+        </ul>
+      </div>
+      <div style="padding:10px;text-align:center;font-size:11px;font-weight:700;background:${p.fb};color:${p.fc};">${p.footer}</div>
+      <div style="display:flex;gap:6px;padding:8px 12px;background:#f8fafc;">
+        <button onclick="ptCopy('${p.id}')" class="btn btn-outline btn-sm" style="flex:1;font-size:11px;">📋 텍스트 복사</button>
+        <button onclick="ptPrint('${p.id}')" class="btn btn-primary btn-sm" style="flex:1;font-size:11px;">🖨️ A4 인쇄</button>
+      </div>
+    </div>
+  `).join('');
+}
+function ptCopy(id){
+  const p=ptPosters.find(x=>x.id===id);
+  let t=`${p.badge}\n${p.title}\n${p.sub}\n\n`;
+  p.rules.forEach(r=>{t+=`${r.n} ${r.t}`;if(r.d)t+=` — ${r.d}`;t+='\n';});
+  t+=`\n${p.footer}`;
+  navigator.clipboard.writeText(t).then(()=>alert('클립보드에 복사되었습니다!\n카카오톡에 붙여넣기하세요.'));
+}
+function ptPrint(id){
+  const p=ptPosters.find(x=>x.id===id);
+  const w=window.open('','_blank','width=800,height:1100');
+  w.document.write(`<html><head><meta charset="UTF-8"><style>
+    @page{size:A4;margin:15mm;}
+    body{margin:0;font-family:'Malgun Gothic',sans-serif;}
+    .h{padding:36px 28px 24px;background:${p.color};text-align:center;}
+    .badge{font-size:12px;font-weight:700;color:rgba(255,255,255,0.7);letter-spacing:0.1em;}
+    .em{font-size:80px;margin:10px 0;}
+    h2{font-size:32px;font-weight:900;color:#fff;line-height:1.2;}
+    .sub{font-size:15px;color:rgba(255,255,255,0.85);margin-top:8px;}
+    .body{padding:24px 28px;}
+    ul{list-style:none;padding:0;}
+    li{display:flex;gap:14px;align-items:flex-start;padding:12px 0;border-bottom:1px solid #f1f5f9;}
+    .num{flex-shrink:0;width:28px;height:28px;border-radius:50%;background:${p.accent};color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;}
+    strong{display:block;font-size:15px;font-weight:700;color:#1a2744;}
+    span{font-size:12px;color:#6b7280;}
+    .footer{padding:16px;text-align:center;font-size:15px;font-weight:800;background:${p.fb};color:${p.fc};}
+  </style></head><body>
+    <div class="h"><div class="badge">${p.badge}</div><div class="em">${p.emoji}</div><h2>${p.title}</h2><div class="sub">${p.sub}</div></div>
+    <div class="body"><ul>${p.rules.map(r=>`<li><span class="num">${r.n}</span><div><strong>${r.t}</strong><span>${r.d}</span></div></li>`).join('')}</ul></div>
+    <div class="footer">${p.footer}</div>
+  </body></html>`);
+  w.document.close(); setTimeout(()=>w.print(),500);
+}
+
+window.onload = function(){
+  initDates();
+  loadSettings();
+  renderDashboard();
+  renderPatrolZones();
+  renderTBMTheme();
+  renderCN('all');
+  renderPT('all');
+  // 저장된 Supabase 설정 불러와서 자동 연결 시도 (loadSettings에서도 처리되나 명시적으로 추가)
+  const sup = DB.getObj('supabase');
+  if(sup.url && sup.key) {
+    document.getElementById('s-supa-url') && (document.getElementById('s-supa-url').value = sup.url);
+    document.getElementById('s-supa-key') && (document.getElementById('s-supa-key').value = sup.key);
+    initSupabase(sup.url, sup.key);
+  }
+};
+</script>
+</body>
+</html>
