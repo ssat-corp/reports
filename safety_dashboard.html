@@ -289,7 +289,7 @@ table tr:hover td{background:#f8fafc;}
         <h4>📋 나의 현황</h4>
         <div id="doc-status-mini"></div>
         <div style="margin-top:14px;" id="monthly-progress"></div>
-        <button class="btn btn-outline btn-sm" style="margin-top:14px;color:#7bacd4;border-color:rgba(255,255,255,0.2);" onclick="showSection('documents')">서류 전체 보기 →</button>
+        <button class="btn btn-outline btn-sm" style="margin-top:14px;color:#7bacd4;border-color:rgba(255,255,255,0.2);" onclick="showSection('docmgr')">서류 전체 보기 →</button>
       </div>
       <!-- WWS 이행현황 도넛 -->
       <div class="dash-wws-card">
@@ -606,45 +606,86 @@ table tr:hover td{background:#f8fafc;}
   <!-- ===== 서류·이행 통합관리 ===== -->
   <div id="section-docmgr" class="section">
     <!-- 상단: 보유현황 요약 카드 -->
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px;">
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:20px;">
       <div class="stat-card blue"><div class="label">전체 서류</div><div class="value" id="dm-total">0</div><div class="sub">건</div></div>
       <div class="stat-card green"><div class="label">보유</div><div class="value" id="dm-owned">0</div><div class="sub">건</div></div>
       <div class="stat-card red"><div class="label">미보유</div><div class="value" id="dm-missing">0</div><div class="sub">건 확보 필요</div></div>
-      <div class="stat-card orange"><div class="label">WWS 이행률</div><div class="value" id="dm-rate">0%</div><div class="sub">이행 항목 기준</div></div>
+      <div class="stat-card orange"><div class="label">WWS 이행률</div><div class="value" id="dm-rate">0%</div><div class="sub">WWS 항목 기준</div></div>
+      <div class="stat-card" style="border-left:4px solid #8b5cf6;"><div class="label">파일 보유</div><div class="value" style="color:#8b5cf6;" id="dm-files">0</div><div class="sub">건 (로컬파일 매칭)</div></div>
+    </div>
+
+    <!-- 카테고리별 진행률 바 -->
+    <div class="card" style="margin-bottom:16px;">
+      <div class="card-title">📊 WWS 카테고리별 증빙 현황</div>
+      <div id="dm-category-bars" style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;"></div>
     </div>
 
     <!-- 필터 탭 -->
-    <div class="tabs" style="margin-bottom:16px;">
-      <button class="tab active" onclick="dmFilter('all',this)">전체</button>
-      <button class="tab" onclick="dmFilter('missing',this)">❌ 미보유만</button>
-      <button class="tab" onclick="dmFilter('owned',this)">✅ 보유만</button>
-      <button class="tab" onclick="dmFilter('wws',this)">🏢 WWS 이행항목</button>
-      <button class="tab" onclick="dmFilter('legal',this)">⚖️ 법정 필수</button>
+    <div style="display:flex;gap:8px;align-items:center;margin-bottom:16px;flex-wrap:wrap;">
+      <div class="tabs" style="margin-bottom:0;flex:1;">
+        <button class="tab active" onclick="dmFilter('all',this)">전체</button>
+        <button class="tab" onclick="dmFilter('missing',this)">❌ 미보유만</button>
+        <button class="tab" onclick="dmFilter('owned',this)">✅ 보유만</button>
+        <button class="tab" onclick="dmFilter('wws',this)">🏢 WWS 이행항목</button>
+        <button class="tab" onclick="dmFilter('legal',this)">⚖️ 법정 필수</button>
+        <button class="tab" onclick="dmFilter('hasfile',this)">📎 파일보유</button>
+        <button class="tab" onclick="dmFilter('nofile',this)">📭 파일없음</button>
+      </div>
+      <div style="display:flex;gap:6px;">
+        <button class="btn btn-primary btn-sm" onclick="dmAddDoc()">+ 서류 추가</button>
+        <button class="btn btn-outline btn-sm" onclick="dmExportCSV()">📥 CSV 내보내기</button>
+      </div>
     </div>
 
     <!-- 메인 테이블 -->
     <div class="card">
-      <div class="card-title">📋 서류·이행 통합 관리 <span style="font-size:11px;font-weight:400;color:#6b7280;">— 클릭하여 상세 관리</span></div>
+      <div class="card-title">📋 서류·이행 통합 관리 <span style="font-size:11px;font-weight:400;color:#6b7280;">— 상태 변경, 파일 연결, 메모 수정 가능</span></div>
       <div class="table-wrap">
         <table>
           <thead><tr>
-            <th style="width:70px;">WWS코드</th>
+            <th style="width:80px;">WWS코드</th>
             <th>서류명</th>
             <th style="width:80px;">법적 근거</th>
             <th style="width:60px;">주기</th>
             <th style="width:90px;">보유 상태</th>
             <th style="width:100px;">최종 업데이트</th>
             <th style="width:100px;">만료/갱신일</th>
-            <th style="width:150px;">비고</th>
-            <th style="width:80px;">관리</th>
+            <th style="width:140px;">로컬 파일</th>
+            <th style="width:130px;">비고</th>
+            <th style="width:110px;">관리</th>
           </tr></thead>
           <tbody id="dm-table-body"></tbody>
         </table>
       </div>
     </div>
 
-    <!-- 하단: 미보유 항목 안내 -->
-    <div id="dm-alert" style="margin-top:16px;"></div>
+    <!-- 하단: 미보유 항목 안내 + 파일 업로드 -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px;">
+      <div id="dm-alert"></div>
+      <div class="card">
+        <div class="card-title">📤 파일 업로드 (로컬 연결)</div>
+        <div class="alert info" style="margin-bottom:12px;">파일을 선택하면 해당 서류 항목에 파일명이 연결됩니다.<br>실제 파일은 이 폴더에 함께 보관하세요.</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>연결할 서류 항목</label>
+            <select id="dm-upload-target" style="width:100%;padding:8px 12px;border:1px solid #d1d5db;border-radius:8px;font-size:13px;">
+              <option value="">-- 서류 선택 --</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>파일 선택</label>
+            <input type="file" id="dm-file-input" style="width:100%;padding:6px;border:1px solid #d1d5db;border-radius:8px;font-size:12px;" onchange="dmLinkFile()">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>또는 파일명 직접 입력</label>
+          <div style="display:flex;gap:6px;">
+            <input type="text" id="dm-manual-filename" placeholder="예) 안전보건교육일지_202604.docx" style="flex:1;padding:8px 12px;border:1px solid #d1d5db;border-radius:8px;font-size:13px;">
+            <button class="btn btn-primary btn-sm" onclick="dmLinkManual()">연결</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- ===== 아차사고 ===== -->
@@ -1652,54 +1693,60 @@ function renderRecentPatrol(){
 // DOCUMENTS + WWS 통합 (docMasterList)
 // ============================================================
 const docMasterList = [
-  // === A. 경영책임자 의무이행 ===
-  {id:'d01', wwsCode:'', wwsNo:'', name:'안전보건관리규정', basis:'산안법 §25', period:'상시', status:'미보유', updated:'', expires:'', note:'50인 이상 의무, 50인 미만 권고', category:'legal', hasTemplate:false},
-  {id:'d02', wwsCode:'A-2-1', wwsNo:302, name:'안전보건관리계획서', basis:'산안법 §14', period:'연1회', status:'보유', updated:'2026-03-10', expires:'2026-12-31', note:'WWS: 안전보건관리체계의 수립 및 운영', category:'wws', hasTemplate:false},
-  {id:'d04', wwsCode:'A-2-4', wwsNo:305, name:'안전보건목표·경영방침', basis:'산안법 §14', period:'연1회', status:'미보유', updated:'', expires:'', note:'WWS: 기업 안전보건관리 실행 통합 확인', category:'wws', hasTemplate:true},
-  {id:'w01', wwsCode:'A-1-1', wwsNo:301, name:'경영책임자 안전보건교육 이수증', basis:'산안법 §14', period:'연1회', status:'미보유', updated:'', expires:'', note:'경영책임자 교육 참석사진·교육서류', category:'wws', hasTemplate:false},
-  {id:'w02', wwsCode:'A-3-1-3', wwsNo:306, name:'안전보건 담당자 배치 현황 (인사발령문)', basis:'산안법 §15', period:'상시', status:'미보유', updated:'', expires:'', note:'조직도/인사발령문', category:'wws', hasTemplate:false},
+  // === A. 경영책임자 리더십 (중처법 제4조 제4호 등) ===
+  {id:'d01', wwsCode:'', wwsNo:'', name:'안전보건관리규정', basis:'산안법 §25', period:'상시', status:'미보유', updated:'', expires:'', note:'50인 이상 의무, 50인 미만 권고', category:'legal', hasTemplate:false, localFile:''},
+  {id:'d02', wwsCode:'A-2-1', wwsNo:302, name:'안전보건관리계획서', basis:'산안법 §14', period:'연1회', status:'보유', updated:'2026-03-10', expires:'2026-12-31', note:'WWS: 안전보건관리체계의 수립 및 운영', category:'wws', hasTemplate:false, localFile:'04. 체계구축(안전보건관리계획(노).docx'},
+  {id:'d04', wwsCode:'A-2-4', wwsNo:305, name:'안전보건목표·경영방침', basis:'산안법 §14', period:'연1회', status:'미보유', updated:'', expires:'', note:'WWS: 기업 안전보건관리 실행 통합 확인', category:'wws', hasTemplate:true, localFile:''},
+  {id:'w01', wwsCode:'A-1-1', wwsNo:301, name:'경영책임자 안전보건교육 이수증', basis:'산안법 §14', period:'연1회', status:'미보유', updated:'', expires:'', note:'경영책임자 교육 참석사진·교육서류', category:'wws', hasTemplate:false, localFile:''},
+  {id:'w02', wwsCode:'A-3-1', wwsNo:306, name:'안전보건 담당자 배치 현황 (인사발령문)', basis:'산안법 §15', period:'상시', status:'미보유', updated:'', expires:'', note:'조직도/인사발령문', category:'wws', hasTemplate:false, localFile:''},
+  {id:'w30', wwsCode:'A-3-1~3', wwsNo:307, name:'안전보건목표 달성 예산 편성·집행 실적', basis:'중처법 §4④', period:'연1회', status:'미보유', updated:'', expires:'', note:'예산서, 결산서, 집행 영수증 필요', category:'wws', hasTemplate:true, localFile:''},
 
-  // === B. 안전보건 교육 ===
-  {id:'d10', wwsCode:'B-2-1', wwsNo:313, name:'안전보건교육 연간 계획서', basis:'산안법 §29', period:'연1회', status:'미보유', updated:'', expires:'', note:'WWS: 근로자 안전보건교육 체계 수립', category:'wws', hasTemplate:true},
-  {id:'d05', wwsCode:'B-2-2', wwsNo:314, name:'정기 안전보건교육 일지', basis:'산안법 §29', period:'매월', status:'미보유', updated:'', expires:'', note:'근로자 월 2시간 법정. WWS: 교육 실시(이수)', category:'wws', hasTemplate:true},
-  {id:'w03', wwsCode:'B-2-5', wwsNo:317, name:'교육 이수 누적 관리대장', basis:'산안법 §29', period:'상시', status:'미보유', updated:'', expires:'', note:'연 24시간 이상 누적 관리', category:'wws', hasTemplate:true},
-  {id:'d08', wwsCode:'B-3-3', wwsNo:320, name:'관리감독자 교육 일지', basis:'산안법 §29', period:'연16시간', status:'미보유', updated:'', expires:'', note:'WWS: 관리감독자 안전보건교육 이수', category:'wws', hasTemplate:true},
-  {id:'w04', wwsCode:'B-3-4', wwsNo:321, name:'안전보건 담당자 직무교육 이수증', basis:'산안법 §32', period:'2년마다', status:'미보유', updated:'', expires:'', note:'신규 34시간, 보수 24시간', category:'wws', hasTemplate:false},
-  {id:'d06', wwsCode:'', wwsNo:'', name:'신규채용자 교육 일지', basis:'산안법 §29', period:'채용시', status:'보유', updated:'2026-03-01', expires:'', note:'교안 보유', category:'legal', hasTemplate:false},
-  {id:'d07', wwsCode:'', wwsNo:'', name:'신규채용자 서약서', basis:'자율관리', period:'채용시', status:'보유', updated:'2026-03-01', expires:'', note:'', category:'self', hasTemplate:false},
-  {id:'d09', wwsCode:'', wwsNo:'', name:'특별 안전보건교육 일지', basis:'산안법 §29', period:'해당작업 전', status:'미보유', updated:'', expires:'', note:'', category:'legal', hasTemplate:false},
+  // === B. 안전보건 교육 (중처법 제5조 제2항 등) ===
+  {id:'d10', wwsCode:'B-2-1', wwsNo:313, name:'연간 근로자 안전보건교육 계획서', basis:'산안법 §29', period:'연1회', status:'미보유', updated:'', expires:'', note:'WWS: 연간 일정표 포함', category:'wws', hasTemplate:true, localFile:''},
+  {id:'d05', wwsCode:'B-2-2', wwsNo:314, name:'근로자 정기 안전보건교육 실시 증빙', basis:'산안법 §29', period:'매월', status:'미보유', updated:'', expires:'', note:'참석자 명단, 사진, 교육 자료 필요. 월 2시간 법정', category:'wws', hasTemplate:true, localFile:''},
+  {id:'w03', wwsCode:'B-2-5', wwsNo:317, name:'교육 미이수자/누락자 관리 현황 및 추가 교육 기록', basis:'산안법 §29', period:'상시', status:'미보유', updated:'', expires:'', note:'연 24시간 이상 누적 관리', category:'wws', hasTemplate:true, localFile:''},
+  {id:'d08', wwsCode:'B-3-3', wwsNo:320, name:'관리감독자 정기 안전보건교육 이수증', basis:'산안법 §29', period:'연16시간', status:'미보유', updated:'', expires:'', note:'연간 16시간 이상 이수 필요', category:'wws', hasTemplate:true, localFile:''},
+  {id:'w04', wwsCode:'B-3-4', wwsNo:321, name:'안전보건 업무 담당자 교육 이수 및 누락자 관리 대장', basis:'산안법 §32', period:'2년마다', status:'미보유', updated:'', expires:'', note:'신규 34시간, 보수 24시간', category:'wws', hasTemplate:false, localFile:''},
+  {id:'d06', wwsCode:'', wwsNo:'', name:'신규채용자 교육 일지', basis:'산안법 §29', period:'채용시', status:'보유', updated:'2026-03-01', expires:'', note:'교안 보유', category:'legal', hasTemplate:false, localFile:'신규입사자 안전보건교안.pptx'},
+  {id:'d07', wwsCode:'', wwsNo:'', name:'신규채용자 서약서', basis:'자율관리', period:'채용시', status:'보유', updated:'2026-03-01', expires:'', note:'', category:'self', hasTemplate:false, localFile:'신규채용자 서약서.docx'},
+  {id:'d09', wwsCode:'', wwsNo:'', name:'특별 안전보건교육 일지', basis:'산안법 §29', period:'해당작업 전', status:'미보유', updated:'', expires:'', note:'', category:'legal', hasTemplate:false, localFile:''},
 
-  // === C. 근로자 안전관리활동 ===
-  {id:'d03', wwsCode:'C-1-3', wwsNo:324, name:'위험성평가 실시결과서', basis:'산안법 §36', period:'연1회 이상', status:'미보유', updated:'', expires:'', note:'미이행 시 과태료. WWS: 유해위험요인 발굴', category:'wws', hasTemplate:true},
-  {id:'w05', wwsCode:'C-2-3', wwsNo:326, name:'TBM 일지 / TBM 절차서', basis:'산안법 §36', period:'매일', status:'보유', updated:'2025-11-14', expires:'', note:'TBM절차서 Rev.0 보유. 대시보드 TBM 기록 활용', category:'wws', hasTemplate:false},
+  // === C. 근로자 참여활동 (중처법 제4조 제3호, 제7호 등) ===
+  {id:'d03', wwsCode:'C-1-3', wwsNo:324, name:'위험성평가 결과 공유 및 유해·위험요인 알림 기록', basis:'산안법 §36', period:'연1회 이상', status:'미보유', updated:'', expires:'', note:'게시판 공고, 회의록 등 필요', category:'wws', hasTemplate:true, localFile:''},
+  {id:'w05', wwsCode:'C-2-3', wwsNo:326, name:'TBM(Tool Box Meeting) 활동 이행 일지', basis:'산안법 §36', period:'매일', status:'보유', updated:'2025-11-14', expires:'', note:'TBM절차서 Rev.0 보유. 대시보드 TBM 기록 활용', category:'wws', hasTemplate:false, localFile:'TBM.docx'},
 
-  // === D. 관리감독자 안전관리활동 ===
-  {id:'d12', wwsCode:'D-1-2', wwsNo:332, name:'관리감독자 순회점검 기록', basis:'산안법 §16', period:'매일', status:'미보유', updated:'', expires:'', note:'WWS: 관리감독자 순회점검 및 안전보건 관리', category:'wws', hasTemplate:true},
-  {id:'w06', wwsCode:'D-2-3', wwsNo:336, name:'관리감독자 TBM 교육 수행 기록', basis:'산안법 §16', period:'매일', status:'보유', updated:'', expires:'', note:'대시보드 TBM 기록 활용', category:'wws', hasTemplate:false},
+  // === D. 관리감독자 안전보건관리 (중처법 제4조 제5호 등) ===
+  {id:'d12', wwsCode:'D-1-2', wwsNo:332, name:'관리감독자 권한 부여 및 업무분장 문서', basis:'산안법 §16', period:'상시', status:'미보유', updated:'', expires:'', note:'조직도, 직무기술서 필요', category:'wws', hasTemplate:true, localFile:''},
+  {id:'w06', wwsCode:'D-2-3', wwsNo:336, name:'관리감독자별 TBM 교육 수행 및 점검 기록', basis:'산안법 §16', period:'매일', status:'보유', updated:'', expires:'', note:'대시보드 TBM 기록 활용', category:'wws', hasTemplate:false, localFile:'TBM절차서 샘플.docx'},
 
-  // === E. 구매/도급관리(SFS) ===
-  {id:'d14', wwsCode:'E-4-1', wwsNo:341, name:'도급인 안전보건관리계획서', basis:'산안법 §63', period:'계약시', status:'보유', updated:'2024-11-01', expires:'', note:'WWS: 구매 제어 및 도급 법규 이행', category:'wws', hasTemplate:false},
-  {id:'d15', wwsCode:'E-4-2', wwsNo:342, name:'수급인 안전보건계획서 양식', basis:'산안법 §64', period:'계약시', status:'보유', updated:'', expires:'', note:'WWS: 도급업자에 대한 위험성평가 이행', category:'wws', hasTemplate:false},
-  {id:'w07', wwsCode:'E-4-3-4', wwsNo:343, name:'위험성평가 결과 및 유해위험요인 발굴 기록', basis:'산안법 §36', period:'수시', status:'미보유', updated:'', expires:'', note:'위험성평가 미실시', category:'wws', hasTemplate:false},
-  {id:'d16', wwsCode:'E-5-5', wwsNo:345, name:'수급인 안전보건수준 평가기준', basis:'산안법 §64', period:'연1회', status:'보유', updated:'', expires:'', note:'WWS: 도급업체 안전보건관리부문 점검', category:'wws', hasTemplate:false},
-  {id:'w08', wwsCode:'E-6-2', wwsNo:348, name:'위험성평가 시 TBM 활용 교육 기록', basis:'산안법 §36', period:'수시', status:'보유', updated:'', expires:'', note:'TBM절차서 보유', category:'wws', hasTemplate:false},
+  // === E. 고위험요인(SIF) 중심 위험성평가 (중처법 제4조 제3호, 제9호 등) ===
+  {id:'d14', wwsCode:'E-4-1', wwsNo:341, name:'구매/용역/도급 계약 시 안전보건 조건 및 내역 파악 문서', basis:'산안법 §63', period:'계약시', status:'보유', updated:'2024-11-01', expires:'', note:'도급인 안전보건관리계획서 보유', category:'wws', hasTemplate:false, localFile:'0. 도급인 안전보건관리계획.docx'},
+  {id:'d15', wwsCode:'E-4-2', wwsNo:342, name:'도급업무(외주)에 대한 위험성 파악 및 평가서', basis:'산안법 §64', period:'계약시', status:'보유', updated:'', expires:'', note:'수급인 안전보건계획서 양식 보유', category:'wws', hasTemplate:false, localFile:'2. 수급인 제출 안전보건관리계획서(양식).docx'},
+  {id:'w07', wwsCode:'E-4-3~4', wwsNo:343, name:'위험성평가 결과 제공 및 수급인(협력사) 위험성평가 검토서', basis:'산안법 §36', period:'수시', status:'미보유', updated:'', expires:'', note:'위험성평가 미실시', category:'wws', hasTemplate:false, localFile:''},
+  {id:'w31', wwsCode:'E-5-3', wwsNo:344, name:'도급작업 시 주의사항 및 안전보건 정보제공 기록', basis:'산안법 §64', period:'계약시', status:'미보유', updated:'', expires:'', note:'안전보건협의체 회의록 등 필요', category:'wws', hasTemplate:true, localFile:''},
+  {id:'d16', wwsCode:'E-5-5', wwsNo:345, name:'도급받은 자(협력사)의 안전보건활동 점검 기록', basis:'산안법 §64', period:'연1회', status:'보유', updated:'', expires:'', note:'수급인 안전보건수준 평가기준 양식 보유', category:'wws', hasTemplate:false, localFile:'1. 수급인 안전보건관리수준 평가 기준(양식).docx'},
+  {id:'w32', wwsCode:'E-7-1', wwsNo:347, name:'위험성평가 실시 결과 및 경영책임자 보고서', basis:'산안법 §36', period:'연1회', status:'미보유', updated:'', expires:'', note:'결재 문서 필요 (경영책임자 서명)', category:'wws', hasTemplate:true, localFile:''},
+  {id:'w08', wwsCode:'E-8-2', wwsNo:348, name:'위험성평가 결과 현장 교육 및 TBM 전파 기록', basis:'산안법 §36', period:'수시', status:'보유', updated:'', expires:'', note:'TBM절차서 보유', category:'wws', hasTemplate:false, localFile:'TBM절차서 샘플.docx'},
 
-  // === F. 비상/기타 ===
-  {id:'w09', wwsCode:'F-3-1-4', wwsNo:350, name:'산업안전보건 관계법령 준수사항 점검표', basis:'산안법', period:'주기적', status:'미보유', updated:'', expires:'', note:'자체 점검표 작성 필요', category:'wws', hasTemplate:true},
-  {id:'w10', wwsCode:'F-4-1', wwsNo:358, name:'산업안전보건 관계법령 이행 및 준수 교육 기록', basis:'산안법', period:'주기적', status:'미보유', updated:'', expires:'', note:'정기적 법령 교육 필요', category:'wws', hasTemplate:false},
+  // === F. 평가 및 개선 (중처법 제4조 제9호, 제5조 제1호 등) ===
+  {id:'w09', wwsCode:'F-1-1~4', wwsNo:350, name:'산업안전보건 관계법령 파악 및 준수 상태 점검 결과서', basis:'산안법', period:'주기적', status:'미보유', updated:'', expires:'', note:'법규 등록부 작성 필요', category:'wws', hasTemplate:true, localFile:''},
+  {id:'w33', wwsCode:'F-3-1~2', wwsNo:355, name:'적격 수급업체 선정을 위한 안전보건 수준평가 기준 및 결과', basis:'산안법 §64', period:'계약시', status:'보유', updated:'', expires:'', note:'수급인 평가기준 양식 보유', category:'wws', hasTemplate:false, localFile:'1. 수급인 안전보건관리수준 평가 기준(양식).docx'},
+  {id:'w10', wwsCode:'F-4-1', wwsNo:358, name:'산업안전보건 관계법령 파악 대장 (최신 법규 업데이트 리스트)', basis:'산안법', period:'주기적', status:'미보유', updated:'', expires:'', note:'최신 법규 변경사항 반영 필요', category:'wws', hasTemplate:false, localFile:''},
 
   // === 기타 법정 서류 (WWS 코드 없음) ===
-  {id:'d11', wwsCode:'', wwsNo:'', name:'작업장 안전보건 점검표', basis:'산안법 §15', period:'월1회', status:'미보유', updated:'', expires:'', note:'환경점검표 보유', category:'legal', hasTemplate:true},
-  {id:'d13', wwsCode:'', wwsNo:'', name:'기계·기구 자체검사 기록', basis:'산안법 §98', period:'장비별', status:'미보유', updated:'', expires:'', note:'', category:'legal', hasTemplate:false},
-  {id:'d17', wwsCode:'', wwsNo:'', name:'중량물 운반기계 안전조치 지침서', basis:'산안법 §38', period:'상시', status:'보유', updated:'', expires:'', note:'ISPF-EHS-G-02', category:'legal', hasTemplate:false},
-  {id:'d18', wwsCode:'', wwsNo:'', name:'근로자 참여·의견청취 절차서', basis:'산안법 §24', period:'상시', status:'보유', updated:'', expires:'', note:'ISPF-EHS-P-02', category:'legal', hasTemplate:false},
-  {id:'d19', wwsCode:'', wwsNo:'', name:'협력업체 작업허가서', basis:'산안법 §63', period:'작업시', status:'미보유', updated:'', expires:'', note:'', category:'legal', hasTemplate:true},
-  {id:'d20', wwsCode:'', wwsNo:'', name:'산업재해 발생 기록부', basis:'산안법 §57', period:'발생시', status:'미보유', updated:'', expires:'', note:'', category:'legal', hasTemplate:false},
-  {id:'d21', wwsCode:'', wwsNo:'', name:'아차사고 보고서', basis:'자율관리', period:'발생시', status:'미보유', updated:'', expires:'', note:'', category:'self', hasTemplate:false},
-  {id:'d22', wwsCode:'', wwsNo:'', name:'특수건강검진 결과 관리대장', basis:'산안법 §130', period:'연1회', status:'미보유', updated:'', expires:'', note:'', category:'legal', hasTemplate:false},
-  {id:'d23', wwsCode:'', wwsNo:'', name:'작업환경측정 결과서', basis:'산안법 §125', period:'반기1회', status:'미보유', updated:'', expires:'', note:'', category:'legal', hasTemplate:false},
-  {id:'d24', wwsCode:'', wwsNo:'', name:'MSDS 관리대장', basis:'산안법 §114', period:'상시', status:'미보유', updated:'', expires:'', note:'화학물질 사용시', category:'legal', hasTemplate:false},
-  {id:'d25', wwsCode:'', wwsNo:'', name:'환경운영점검표', basis:'자율관리', period:'주기적', status:'보유', updated:'2024-01-01', expires:'', note:'2024년도 양식', category:'self', hasTemplate:false},
+  {id:'d11', wwsCode:'', wwsNo:'', name:'작업장 안전보건 점검표', basis:'산안법 §15', period:'월1회', status:'미보유', updated:'', expires:'', note:'환경점검표 보유', category:'legal', hasTemplate:true, localFile:''},
+  {id:'d13', wwsCode:'', wwsNo:'', name:'기계·기구 자체검사 기록', basis:'산안법 §98', period:'장비별', status:'미보유', updated:'', expires:'', note:'', category:'legal', hasTemplate:false, localFile:''},
+  {id:'d17', wwsCode:'', wwsNo:'', name:'중량물 운반기계 안전조치 지침서', basis:'산안법 §38', period:'상시', status:'보유', updated:'', expires:'', note:'ISPF-EHS-G-02', category:'legal', hasTemplate:false, localFile:'ISPF-EHS-G-02. 중량물 운반기계 안전조치 지침서(적재기준포함).docx'},
+  {id:'d18', wwsCode:'', wwsNo:'', name:'근로자 참여·의견청취 절차서', basis:'산안법 §24', period:'상시', status:'보유', updated:'', expires:'', note:'ISPF-EHS-P-02', category:'legal', hasTemplate:false, localFile:'ISPF-EHS-P-02. 근로자의 참여, 의견청취 절차서.docx'},
+  {id:'d19', wwsCode:'', wwsNo:'', name:'협력업체 작업허가서', basis:'산안법 §63', period:'작업시', status:'미보유', updated:'', expires:'', note:'', category:'legal', hasTemplate:true, localFile:''},
+  {id:'d20', wwsCode:'', wwsNo:'', name:'산업재해 발생 기록부', basis:'산안법 §57', period:'발생시', status:'미보유', updated:'', expires:'', note:'', category:'legal', hasTemplate:false, localFile:''},
+  {id:'d21', wwsCode:'', wwsNo:'', name:'아차사고 보고서', basis:'자율관리', period:'발생시', status:'미보유', updated:'', expires:'', note:'', category:'self', hasTemplate:false, localFile:''},
+  {id:'d22', wwsCode:'', wwsNo:'', name:'특수건강검진 결과 관리대장', basis:'산안법 §130', period:'연1회', status:'미보유', updated:'', expires:'', note:'', category:'legal', hasTemplate:false, localFile:''},
+  {id:'d23', wwsCode:'', wwsNo:'', name:'작업환경측정 결과서', basis:'산안법 §125', period:'반기1회', status:'미보유', updated:'', expires:'', note:'', category:'legal', hasTemplate:false, localFile:''},
+  {id:'d24', wwsCode:'', wwsNo:'', name:'MSDS 관리대장', basis:'산안법 §114', period:'상시', status:'미보유', updated:'', expires:'', note:'화학물질 사용시', category:'legal', hasTemplate:false, localFile:''},
+  {id:'d25', wwsCode:'', wwsNo:'', name:'환경운영점검표', basis:'자율관리', period:'주기적', status:'보유', updated:'2024-01-01', expires:'', note:'2024년도 양식', category:'self', hasTemplate:false, localFile:'SS-EM05-01 환경운영점검표(2024).xlsx'},
+  {id:'d26', wwsCode:'', wwsNo:'', name:'신규입사자의 주의사항', basis:'자율관리', period:'채용시', status:'보유', updated:'', expires:'', note:'', category:'self', hasTemplate:false, localFile:'신규입사자의 주의사항.docx'},
+  {id:'d27', wwsCode:'', wwsNo:'', name:'본사 비상대피도', basis:'소방법', period:'상시', status:'보유', updated:'2026-03-25', expires:'', note:'', category:'legal', hasTemplate:false, localFile:'본사 대피도.pptx'},
 ];
 
 function getDMList(){
@@ -1727,6 +1774,7 @@ function renderDocMgr(){
   const total = docs.length;
   const owned = docs.filter(d=>d.status==='보유').length;
   const missing = docs.filter(d=>d.status==='미보유').length;
+  const filesLinked = docs.filter(d=>d.localFile).length;
   const wwsTotal = docs.filter(d=>d.wwsCode).length;
   const wwsOwned = docs.filter(d=>d.wwsCode && d.status==='보유').length;
   const rate = wwsTotal>0 ? Math.round(wwsOwned/wwsTotal*100) : 0;
@@ -1737,6 +1785,34 @@ function renderDocMgr(){
   if(el('dm-owned')) el('dm-owned').textContent = owned;
   if(el('dm-missing')) el('dm-missing').textContent = missing;
   if(el('dm-rate')) el('dm-rate').textContent = rate+'%';
+  if(el('dm-files')) el('dm-files').textContent = filesLinked;
+
+  // 카테고리별 진행률 바
+  const catBars = document.getElementById('dm-category-bars');
+  if(catBars){
+    const categories = [
+      {code:'A', label:'A. 경영책임자 리더십', color:'#1e5096'},
+      {code:'B', label:'B. 안전보건 교육', color:'#16a34a'},
+      {code:'C', label:'C. 근로자 참여활동', color:'#ea580c'},
+      {code:'D', label:'D. 관리감독자 관리', color:'#8b5cf6'},
+      {code:'E', label:'E. 위험성평가(SIF)', color:'#dc2626'},
+      {code:'F', label:'F. 평가 및 개선', color:'#0891b2'},
+    ];
+    catBars.innerHTML = categories.map(cat=>{
+      const catDocs = docs.filter(d=>d.wwsCode && d.wwsCode.startsWith(cat.code));
+      const catOwned = catDocs.filter(d=>d.status==='보유').length;
+      const catTotal = catDocs.length;
+      const catPct = catTotal>0 ? Math.round(catOwned/catTotal*100) : 0;
+      return `<div style="padding:10px;border-radius:8px;border:1px solid #e8edf3;background:#fff;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+          <span style="font-size:12px;font-weight:700;color:#374151;">${cat.label}</span>
+          <span style="font-size:12px;font-weight:800;color:${catPct===100?'#16a34a':catPct>=50?'#ea580c':'#dc2626'};">${catOwned}/${catTotal}</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" style="width:${catPct}%;background:${catPct===100?'#16a34a':cat.color};"></div></div>
+        <div style="font-size:10px;color:#9ca3af;margin-top:4px;">${catPct}% 완료${catTotal-catOwned>0?' · 미보유 '+( catTotal-catOwned)+'건':' ✓'}</div>
+      </div>`;
+    }).join('');
+  }
 
   // 필터 적용
   let filtered = docs;
@@ -1744,21 +1820,34 @@ function renderDocMgr(){
   else if(dmCurrentFilter==='owned') filtered = docs.filter(d=>d.status==='보유');
   else if(dmCurrentFilter==='wws') filtered = docs.filter(d=>d.wwsCode);
   else if(dmCurrentFilter==='legal') filtered = docs.filter(d=>d.category==='legal'||d.category==='wws');
+  else if(dmCurrentFilter==='hasfile') filtered = docs.filter(d=>d.localFile);
+  else if(dmCurrentFilter==='nofile') filtered = docs.filter(d=>!d.localFile);
 
   // 테이블 렌더링
   const tbody = document.getElementById('dm-table-body');
   if(!tbody) return;
   tbody.innerHTML = filtered.length===0
-    ? '<tr><td colspan="9" style="text-align:center;color:#9ca3af;padding:24px;">해당 항목이 없습니다</td></tr>'
+    ? '<tr><td colspan="10" style="text-align:center;color:#9ca3af;padding:24px;">해당 항목이 없습니다</td></tr>'
     : filtered.map(d=>{
       const sc = d.status==='보유'?'green':d.status==='갱신필요'?'yellow':'red';
       const wwsBadge = d.wwsCode ? `<span class="badge blue" style="font-size:10px;">${d.wwsCode}</span>` : '<span style="font-size:10px;color:#9ca3af;">—</span>';
-      const templateBtn = d.hasTemplate ? `<button class="btn btn-primary btn-sm" onclick="openTemplate('${d.id}')" style="font-size:10px;">📝 웹양식</button>` : '';
-      return `<tr>
+      const templateBtn = d.hasTemplate ? `<button class="btn btn-primary btn-sm" onclick="openTemplate('${d.id}')" style="font-size:10px;" title="웹 양식 열기">📝</button>` : '';
+      const fileDisplay = d.localFile
+        ? `<span style="font-size:10px;color:#16a34a;cursor:pointer;" title="${d.localFile}" onclick="alert('📎 파일: ${d.localFile.replace(/'/g,"\\'")}')">📎 ${d.localFile.length>18?d.localFile.substring(0,18)+'…':d.localFile}</span>
+           <button style="background:none;border:none;cursor:pointer;font-size:10px;color:#dc2626;" onclick="dmUnlinkFile('${d.id}')" title="파일 연결 해제">✕</button>`
+        : `<span style="font-size:10px;color:#d1d5db;">파일 없음</span>`;
+      // 만료 경고
+      let expiresWarn = '';
+      if(d.expires){
+        const diff = Math.ceil((new Date(d.expires)-new Date())/(1000*60*60*24));
+        if(diff<0) expiresWarn = ' style="background:#fee2e2;"';
+        else if(diff<30) expiresWarn = ' style="background:#fef9c3;"';
+      }
+      return `<tr${expiresWarn}>
         <td style="text-align:center;">${wwsBadge}</td>
-        <td style="font-weight:600;font-size:13px;">${d.name}</td>
+        <td style="font-weight:600;font-size:12px;">${d.name}</td>
         <td style="font-size:11px;color:#6b7280;">${d.basis}</td>
-        <td style="font-size:12px;">${d.period}</td>
+        <td style="font-size:11px;">${d.period}</td>
         <td>
           <select class="badge ${sc}" style="border:none;cursor:pointer;font-size:11px;font-weight:600;" onchange="updateDMStatus('${d.id}','status',this.value)">
             <option value="보유" ${d.status==='보유'?'selected':''}>✅ 보유</option>
@@ -1768,28 +1857,52 @@ function renderDocMgr(){
         </td>
         <td><input type="date" value="${d.updated||''}" style="border:1px solid #e8edf3;border-radius:6px;padding:3px 6px;font-size:11px;width:100%;" onchange="updateDMStatus('${d.id}','updated',this.value)"></td>
         <td><input type="date" value="${d.expires||''}" style="border:1px solid #e8edf3;border-radius:6px;padding:3px 6px;font-size:11px;width:100%;" onchange="updateDMStatus('${d.id}','expires',this.value)"></td>
-        <td style="font-size:11px;color:#6b7280;">${d.note||''}</td>
-        <td style="display:flex;gap:4px;flex-wrap:wrap;">
+        <td>${fileDisplay}</td>
+        <td style="font-size:10px;color:#6b7280;max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${(d.note||'').replace(/"/g,'&quot;')}">${d.note||''}</td>
+        <td style="display:flex;gap:3px;flex-wrap:wrap;">
           ${templateBtn}
-          <button class="btn btn-outline btn-sm" onclick="dmNote('${d.id}')" style="font-size:10px;">메모</button>
+          <button class="btn btn-outline btn-sm" onclick="dmNote('${d.id}')" style="font-size:10px;" title="메모 편집">✏️</button>
+          <button class="btn btn-outline btn-sm" onclick="dmLinkFileFor('${d.id}')" style="font-size:10px;" title="파일 연결">📎</button>
         </td>
       </tr>`;
     }).join('');
+
+  // 파일 업로드 대상 셀렉트 업데이트
+  const uploadSelect = document.getElementById('dm-upload-target');
+  if(uploadSelect){
+    uploadSelect.innerHTML = '<option value="">-- 서류 선택 --</option>' +
+      docs.map(d=>`<option value="${d.id}">${d.wwsCode?'['+d.wwsCode+'] ':''}${d.name}</option>`).join('');
+  }
 
   // 하단 미보유 알림
   const alertEl = document.getElementById('dm-alert');
   if(alertEl){
     const missingWWS = docs.filter(d=>d.wwsCode && d.status==='미보유');
-    if(missingWWS.length>0){
-      alertEl.innerHTML = `<div class="alert danger">⚠️ <strong>WWS 미이행 항목 ${missingWWS.length}건</strong> — 우선 확보가 필요합니다:<br>${missingWWS.map(d=>`• ${d.wwsCode} ${d.name}`).join('<br>')}</div>`;
-    } else {
-      alertEl.innerHTML = '<div class="alert success">✅ WWS 이행항목 관련 서류를 모두 보유하고 있습니다.</div>';
+    const urgentItems = missingWWS.filter(d=>['A-3-1~3','B-2-2','B-2-5','B-3-3','E-4-2','E-7-1','F-1-1~4'].some(c=>d.wwsCode===c||d.wwsCode.startsWith(c)));
+    let html = '';
+    if(urgentItems.length>0){
+      html += `<div class="alert danger" style="margin-bottom:8px;">🔴 <strong>긴급 확보 필요 ${urgentItems.length}건</strong><br>${urgentItems.map(d=>`• <strong>${d.wwsCode}</strong> ${d.name}`).join('<br>')}</div>`;
     }
+    if(missingWWS.length>0){
+      const otherMissing = missingWWS.filter(d=>!urgentItems.includes(d));
+      if(otherMissing.length>0){
+        html += `<div class="alert warning">⚠️ <strong>WWS 미이행 항목 ${otherMissing.length}건</strong><br>${otherMissing.map(d=>`• ${d.wwsCode} ${d.name}`).join('<br>')}</div>`;
+      }
+    }
+    if(missingWWS.length===0){
+      html = '<div class="alert success">✅ WWS 이행항목 관련 서류를 모두 보유하고 있습니다.</div>';
+    }
+    alertEl.innerHTML = html;
   }
 }
 
 function updateDMStatus(id, field, value){
   saveDMItem(id, field, value);
+  // 상태를 보유로 변경 시 업데이트 날짜 자동 설정
+  if(field==='status' && value==='보유'){
+    const today = new Date().toISOString().split('T')[0];
+    saveDMItem(id, 'updated', today);
+  }
   renderDocMgr();
 }
 function dmNote(id){
@@ -1799,8 +1912,83 @@ function dmNote(id){
   if(note!==null){ saveDMItem(id,'note',note); renderDocMgr(); }
 }
 
+// 파일 연결 기능
+function dmLinkFile(){
+  const target = document.getElementById('dm-upload-target').value;
+  const fileInput = document.getElementById('dm-file-input');
+  if(!target){ alert('연결할 서류 항목을 먼저 선택하세요.'); return; }
+  if(!fileInput.files.length){ return; }
+  const fileName = fileInput.files[0].name;
+  saveDMItem(target, 'localFile', fileName);
+  // 파일이 있으면 자동으로 보유 상태로 변경
+  saveDMItem(target, 'status', '보유');
+  saveDMItem(target, 'updated', new Date().toISOString().split('T')[0]);
+  fileInput.value = '';
+  document.getElementById('dm-upload-target').value = '';
+  renderDocMgr();
+  alert('✅ 파일이 연결되었습니다: ' + fileName);
+}
+function dmLinkManual(){
+  const target = document.getElementById('dm-upload-target').value;
+  const fileName = document.getElementById('dm-manual-filename').value.trim();
+  if(!target){ alert('연결할 서류 항목을 먼저 선택하세요.'); return; }
+  if(!fileName){ alert('파일명을 입력하세요.'); return; }
+  saveDMItem(target, 'localFile', fileName);
+  saveDMItem(target, 'status', '보유');
+  saveDMItem(target, 'updated', new Date().toISOString().split('T')[0]);
+  document.getElementById('dm-manual-filename').value = '';
+  document.getElementById('dm-upload-target').value = '';
+  renderDocMgr();
+  alert('✅ 파일이 연결되었습니다: ' + fileName);
+}
+function dmLinkFileFor(id){
+  const docs = getDMList();
+  const doc = docs.find(d=>d.id===id);
+  const fileName = prompt(`[${doc?.name}] 연결할 파일명 입력:`, doc?.localFile||'');
+  if(fileName!==null){
+    saveDMItem(id, 'localFile', fileName);
+    if(fileName){
+      saveDMItem(id, 'status', '보유');
+      saveDMItem(id, 'updated', new Date().toISOString().split('T')[0]);
+    }
+    renderDocMgr();
+  }
+}
+function dmUnlinkFile(id){
+  if(confirm('이 서류의 파일 연결을 해제하시겠습니까?')){
+    saveDMItem(id, 'localFile', '');
+    renderDocMgr();
+  }
+}
+
+// 서류 추가
+function dmAddDoc(){
+  const name = prompt('서류명을 입력하세요:');
+  if(!name) return;
+  const wwsCode = prompt('WWS 코드 (없으면 빈칸):', '') || '';
+  const basis = prompt('법적 근거:', '자율관리') || '자율관리';
+  const period = prompt('주기 (예: 연1회, 매월, 상시):', '상시') || '상시';
+  const id = 'custom_' + Date.now();
+  const newDoc = {id, wwsCode, wwsNo:'', name, basis, period, status:'미보유', updated:'', expires:'', note:'사용자 추가 항목', category: wwsCode?'wws':'self', hasTemplate:false, localFile:''};
+  // docMasterList에 런타임 추가
+  docMasterList.push(newDoc);
+  renderDocMgr();
+}
+
+// CSV 내보내기
+function dmExportCSV(){
+  const docs = getDMList();
+  const BOM = '\uFEFF';
+  const header = 'WWS코드,서류명,법적근거,주기,보유상태,최종업데이트,만료갱신일,로컬파일,비고\n';
+  const rows = docs.map(d=>`"${d.wwsCode||''}","${d.name}","${d.basis}","${d.period}","${d.status}","${d.updated||''}","${d.expires||''}","${d.localFile||''}","${(d.note||'').replace(/"/g,'""')}"`).join('\n');
+  const blob = new Blob([BOM+header+rows], {type:'text/csv;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `WWS_서류현황_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+}
+
 function openTemplate(docId){
-  // 향후 HTML 템플릿 연결
   alert('웹 양식 기능은 곧 추가됩니다.');
 }
 
