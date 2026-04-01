@@ -54,17 +54,32 @@
   /* ===== SUMMARY CARD ===== */
   .summary-card {
     background: #fff; border-radius: 12px;
-    margin: -24px 44px 0; padding: 28px 32px;
+    margin: -24px 44px 0; padding: 28px 32px 24px;
     border-left: 5px solid #1e5096;
     box-shadow: 0 4px 20px rgba(0,0,0,0.07);
     position: relative; z-index: 2;
-    line-height: 1.9; font-size: 13.5px; color: #374151;
   }
-  .summary-card strong { color: #0d1f3c; font-weight: 700; }
-  .summary-highlight {
-    display: inline-block; background: #eef4ff; color: #1a3a6e;
-    padding: 1px 8px; border-radius: 4px; font-weight: 600; font-size: 12.5px;
+  .summary-intro {
+    font-size: 13.5px; line-height: 1.8; color: #374151; margin-bottom: 20px;
   }
+  .summary-intro strong { color: #0d1f3c; }
+  .summary-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
+  }
+  .summary-kpi {
+    background: #f8f9fc; border-radius: 10px; padding: 16px 14px;
+    text-align: center; border: 1px solid #e8edf3;
+    transition: transform 0.15s;
+  }
+  .summary-kpi:hover { transform: translateY(-2px); }
+  .summary-kpi-icon { font-size: 24px; margin-bottom: 6px; }
+  .summary-kpi-value { font-size: 18px; font-weight: 900; color: #0d1f3c; line-height: 1.2; }
+  .summary-kpi-label { font-size: 11px; color: #6b7280; margin-top: 4px; line-height: 1.4; }
+  .summary-next {
+    margin-top: 16px; padding-top: 14px; border-top: 1px solid #f0f2f6;
+    font-size: 12.5px; color: #6b7280; line-height: 1.7;
+  }
+  .summary-next strong { color: #1e5096; }
 
   /* ===== SECTION HEADER ===== */
   .sec-header {
@@ -256,6 +271,7 @@
   /* ===== RESPONSIVE ===== */
   @media (max-width: 960px) {
     .init-grid { grid-template-columns: repeat(2, 1fr); }
+    .summary-grid { grid-template-columns: repeat(2, 1fr); }
   }
   @media (max-width: 800px) {
     .plans-grid { grid-template-columns: 1fr; }
@@ -299,11 +315,35 @@
 </div>
 
 <div class="summary-card">
-  1분기 경영지원팀은 <strong>인사노무, 총무, 회계/세무, RPA 자동화, 안전보건/환경, ESG, 지원사업/컨설팅</strong> 등 폭넓은 영역에서 업무를 추진했습니다.
-  인사&middot;총무 업무 체계를 전면 업데이트하고, <strong>전사적 자동화</strong>(RPA 서버 구축, 대시보드 개발, 자동화 툴 확대)에 착수했으며,
-  <strong>ESG&middot;안전보건 체계</strong>를 강화했습니다. 외부 회계감사 완료, 임금채권부담금 감액 <span class="summary-highlight">연간 ~166만원 절감</span>,
-  디지털 융합 교육비 <span class="summary-highlight">100% 환급</span> 등 실질적 성과를 달성했습니다.
-  2분기에는 IATF/ISO 인증 준비, 보고 자동화, 경영진 대시보드 개발 등을 본격 추진할 예정입니다.
+  <div class="summary-intro">
+    1분기 경영지원팀은 <strong>인사노무, 총무, 회계/세무, RPA 자동화, 안전보건/환경, ESG, 지원사업/컨설팅</strong> 등
+    7개 영역에서 업무 체계 정비, 전사 자동화 착수, ESG&middot;안전보건 강화를 핵심 이니셔티브로 추진했습니다.
+  </div>
+  <div class="summary-grid">
+    <div class="summary-kpi">
+      <div class="summary-kpi-icon">&#x1F4CB;</div>
+      <div class="summary-kpi-value">63건 추진</div>
+      <div class="summary-kpi-label">완료 54건 (85.7%)<br>진행중 9건</div>
+    </div>
+    <div class="summary-kpi">
+      <div class="summary-kpi-icon">&#x1F4B0;</div>
+      <div class="summary-kpi-value">연 170만원+</div>
+      <div class="summary-kpi-label">임금채권부담금 감액<br>비용 절감 달성</div>
+    </div>
+    <div class="summary-kpi">
+      <div class="summary-kpi-icon">&#x1F393;</div>
+      <div class="summary-kpi-value">교육비 100%</div>
+      <div class="summary-kpi-label">디지털 융합 교육<br>36명 이수 &middot; 전액 환급</div>
+    </div>
+    <div class="summary-kpi">
+      <div class="summary-kpi-icon">&#x2705;</div>
+      <div class="summary-kpi-value">회계감사 완료</div>
+      <div class="summary-kpi-label">외부 감사 &middot; 연말정산<br>원천세 신고 일괄 완료</div>
+    </div>
+  </div>
+  <div class="summary-next">
+    &#x1F680; <strong>2Q 예고</strong> &mdash; IATF/ISO 인증 심사 준비, 보고 자동화 시스템 구축, 경영진 운영 대시보드 개발, 산업안전보건시스템 가동
+  </div>
 </div>
 
 <!-- =====================================================
