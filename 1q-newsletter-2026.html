@@ -341,8 +341,18 @@
     .work-table tbody td:empty,
     .work-table tbody td.cell-empty { display: none; }
 
-    /* consolidated 행 */
-    .consolidated { margin-bottom: 0 !important; border-radius: 0 0 12px 12px !important; margin-top: -17px; border-top: none !important; }
+    /* consolidated 행: 위 카테고리 카드와 하나로 연결 */
+    tr:has(+ .consolidated) {
+      border-radius: 12px 12px 0 0 !important;
+      margin-bottom: 0 !important;
+      border-bottom: none !important;
+    }
+    .consolidated {
+      border-radius: 0 0 12px 12px !important;
+      margin-top: 0 !important;
+      margin-bottom: 16px !important;
+      border-top: none !important;
+    }
     .consolidated td { border-right: none !important; }
     .consolidated td:first-child {
       background: linear-gradient(135deg, #0d1f3c, #1a3a6e) !important;
