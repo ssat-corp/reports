@@ -2544,9 +2544,9 @@ function renderESGPlan(containerId){
     tableHtml += `<tr>
       <td style="text-align:center;">${num}</td>
       ${isFiltered?'':`<td><span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:12px;font-weight:600;background:${esgCatColors[item.cat]}22;color:${esgCatColors[item.cat]};">${item.cat}</span></td>`}
-      <td style="font-weight:600;" title="준수근거: ${item.basis}${item.agency?' | 시행기관: '+item.agency:''}">${item.name}</td>
+      <td style="font-weight:600;">${item.name}${item.agency?`<div style="font-size:10px;color:#6b7280;font-weight:400;margin-top:2px;">${item.agency}</div>`:''}</td>
       <td>${item.target}</td>
-      <td title="${item.agency?'시행기관: '+item.agency:''}">${item.eval}</td>
+      <td>${item.eval}${item.basis?`<div style="font-size:10px;color:#9ca3af;margin-top:2px;">${item.basis}</div>`:''}</td>
       <td style="text-align:center;white-space:nowrap;">${item.cycle}</td>
       <td style="white-space:nowrap;">${item.manager}</td>
       ${item.plan.map((p,mi)=>{
