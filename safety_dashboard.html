@@ -355,21 +355,6 @@ table tr:hover td{background:#f8fafc;}
 
   <!-- ===== 대시보드 ===== -->
   <div id="section-dashboard" class="section active">
-    <div id="dashboard-alerts" style="margin-bottom:16px;"></div>
-
-    <!-- 일일 현장관리 5대 항목 (최상단) -->
-    <div class="daily5-card" id="daily5-card">
-      <div class="daily5-header">
-        <h4>🛡️ 일일 현장관리 5대 필수항목</h4>
-        <span class="daily5-date" id="daily5-date"></span>
-      </div>
-      <div class="daily5-progress">
-        <div class="d5p-bar"><div class="d5p-fill" id="daily5-fill" style="width:0%"></div></div>
-        <div class="d5p-pct" id="daily5-pct">0/5</div>
-      </div>
-      <div class="daily5-list" id="daily5-list"></div>
-    </div>
-
     <!-- 주요 이행현황 헤더 카드 -->
     <div class="dash-hero">
       <h3>📊 주요 이행현황</h3>
@@ -1885,13 +1870,7 @@ function renderDashboard(){
   const accData = DB.get('accident').filter(r=>r.datetime&&r.datetime.startsWith(thisMonth));
   document.getElementById('stat-accident').textContent = accData.length;
 
-  // Alerts
-  const alerts = document.getElementById('dashboard-alerts');
-  const alertsHTML = [];
-  if(!todayTBM) alertsHTML.push('<div class="alert danger">⚠️ 오늘 TBM이 아직 기록되지 않았습니다.</div>');
-  if(patrolData.length===0) alertsHTML.push('<div class="alert warning">🔍 이번달 패트롤 점검 기록이 없습니다.</div>');
-  if(eduData.length===0) alertsHTML.push('<div class="alert warning">📚 이번달 정기 안전보건교육 기록이 없습니다. (법정: 월 2시간)</div>');
-  alerts.innerHTML = alertsHTML.join('');
+  // Alerts removed - 이행현황 + 이메일 알림으로 대체
 
   // Doc status mini
   renderDocStatusMini();
@@ -1901,7 +1880,6 @@ function renderDashboard(){
   renderDashWWSDonut();
   renderDashCalendar();
   renderDashNotices();
-  renderDaily5();
 }
 
 // ── 일일 현장관리 5대 항목 ──
