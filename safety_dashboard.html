@@ -2313,54 +2313,54 @@ const cnCards = [
 // POSTER DATA
 // ============================================================
 const ptPosters = [
-  {id:'p1',cat:'notice',color:'#0d1f3c',accent:'#1e5096',badge:'📋 법정 필수 게시 法定必贴',emoji:'📞',title:'비상 연락처\n紧急联络电话',sub:'화재·사고 발생 시 즉시 연락 | 发生火灾·事故时立即联系',
-   rules:[{n:'🔥',t:'화재 신고 火灾报警',d:'119'},{n:'🚑',t:'응급 구조 紧急救援',d:'119'},{n:'🚓',t:'경찰 警察',d:'112'},{n:'🏢',t:'안전보건 담당자 安全负责人',d:'연락처 기재'},{n:'🏥',t:'가까운 병원 最近医院',d:'병원명·전화번호 기재'},{n:'👨‍💼',t:'공장장 厂长',d:'연락처 기재'}],
-   footer:'이 연락처는 항상 최신 상태로 유지하세요 | 请始终保持最新状态',fb:'#0d1f3c',fc:'#fff'},
-  {id:'p2',cat:'notice',color:'#991b1b',accent:'#ef4444',badge:'📋 법정 필수 게시 法定必贴',emoji:'🧯',title:'소화기 사용법\n灭火器使用方法',sub:'화재 발생 즉시 PASS 기억하세요 | 记住PASS',
-   rules:[{n:'P',t:'핀 뽑기 拔销',d:'안전핀을 뽑아 잠금 해제'},{n:'A',t:'겨냥 瞄准',d:'호스를 불 쪽 아래를 향해 겨냥'},{n:'S',t:'분사 喷射',d:'손잡이를 꽉 눌러 분사 시작'},{n:'S',t:'쓸기 扫射',d:'좌우로 빗자루 쓸듯이 뿌리기'}],
-   footer:'분사 시간 약 10~15초 | 소화기는 1회용 | 喷射约10~15秒',fb:'#991b1b',fc:'#fff'},
-  {id:'p3',cat:'notice',color:'#065f46',accent:'#10b981',badge:'📋 법정 필수 게시 法定必贴',emoji:'🚪',title:'비상 대피 안내\n紧急疏散指南',sub:'화재·재난 발생 시 행동 절차 | 火灾时行动步骤',
-   rules:[{n:'1',t:'"불이야!" 외치기 喊"着火了！"',d:'주변 사람 즉시 대피 유도'},{n:'2',t:'119 신고 报警119',d:'장소·상황 명확하게 전달'},{n:'3',t:'비상구로 대피 走紧急出口',d:'엘리베이터 절대 사용 금지 禁用电梯'},{n:'4',t:'문 닫고 대피 关门疏散',d:'연기 확산 방지'},{n:'5',t:'집결지 집합 集合点集合',d:'정문 앞 주차장 — 인원 확인'},{n:'6',t:'재진입 금지 禁止重新进入',d:'절대 건물 안으로 다시 들어가지 않기'}],
-   footer:'집결지: 정문 앞 주차장 | 集合点：大门前停车场',fb:'#065f46',fc:'#fff'},
-  {id:'p4',cat:'rule',color:'#78350f',accent:'#d97706',badge:'📌 안전수칙 安全规则',emoji:'🏗️',title:'천장주행크레인 안전수칙\n天车安全规则',sub:'금형 운반 시 반드시 준수 | 搬运模具时必须遵守',
-   rules:[{n:'✅',t:'체인·훅 점검 후 작업 检查链条吊钩',d:'마모·변형·균열 확인'},{n:'✅',t:'안전모 착용 필수 必须戴安全帽',d:'천장주행크레인 구역 전원'},{n:'✅',t:'2인 1조 + 신호수 2人1组+信号员',d:'금형 1톤 이상'},{n:'🚫',t:'사람 키 이상 운반 금지 禁止超高运输',d:'인양물은 낮게 이동'},{n:'🚫',t:'인양 중 하부 작업 금지 吊运中禁止下方作业',d:'낙하 시 즉사 위험'},{n:'🚫',t:'최대하중 초과 금지 禁止超载',d:'표시 하중 반드시 확인'}],
-   footer:'사람 키 이상 운반 금지 | 안전모 필수 | 禁止超高运输·必须戴安全帽',fb:'#78350f',fc:'#fff'},
-  {id:'p5',cat:'rule',color:'#134e4a',accent:'#0d9488',badge:'📌 안전수칙 安全规则',emoji:'🔒',title:'LOTO 잠금·태깅 안전수칙\n上锁挂牌安全规则',sub:'설비 수리·금형 교체 전 필수 | 设备维修·模具更换前必须',
-   rules:[{n:'1',t:'전원 차단 → 잠금 → 태그 断电→上锁→挂牌',d:'본인 이름 태그 부착'},{n:'2',t:'잔류 에너지 제거 消除残余能量',d:'잔압·관성·열 완전 제거'},{n:'3',t:'안전블록 삽입 插入安全块',d:'슬라이드 낙하 방지'},{n:'4',t:'2인 이상 작업 2人以上作业',d:'신호수 역할 1인'},{n:'5',t:'안전장갑·안전화 착용 穿戴防护',d:'방열장갑 추가 (고온 시)'},{n:'6',t:'본인만 잠금 해제 只有本人可解锁',d:'타인의 잠금 해제 절대 금지'}],
-   footer:'LOTO 없이 설비 접근 = 중대재해 | 未上锁接触设备=重大灾害',fb:'#134e4a',fc:'#fff'},
-  {id:'p6',cat:'rule',color:'#1e1b4b',accent:'#4f46e5',badge:'📌 안전수칙 安全规则',emoji:'🚜',title:'지게차 안전수칙\n叉车安全规则',sub:'지게차와 보행자는 공존 불가 | 叉车与行人不可共存',
-   rules:[{n:'✅',t:'면허자만 운전 持证驾驶',d:'지게차 운전기능사 면허'},{n:'✅',t:'포크 높이: 지상 20~30cm',d:'주행 시 항상 낮게'},{n:'✅',t:'안전벨트 착용 系安全带',d:'항상, 예외 없이'},{n:'🔑',t:'키 분리보관 必须 钥匙分离保管',d:'운행 종료 후 키 회수·지정 장소 보관'},{n:'🚫',t:'보행자 구역 진입 금지 行人区禁入',d:'통로 분리 준수'},{n:'🚫',t:'포크에 사람 탑승 금지 禁止乘坐',d:'즉시 징계 대상'}],
-   footer:'무면허=형사처벌 | 키 분리보관 필수 | 无证=刑事处罚·钥匙必须分离',fb:'#1e1b4b',fc:'#fff'},
-  {id:'p7',cat:'rule',color:'#4a1d96',accent:'#8b5cf6',badge:'📌 안전수칙 安全规则',emoji:'⚡',title:'전기 안전수칙\n电气安全规则',sub:'감전은 순식간에 사망 | 触电瞬间致命',
-   rules:[{n:'✅',t:'작업 전 전원 차단 作业前断电',d:'잠금(Lock)+태그(Tag) 부착 후 작업'},{n:'✅',t:'이상 발견 즉시 신고 异常立即报告',d:'전선 피복 손상, 이상 냄새·소리'},{n:'🚫',t:'분전반 무단 접근 금지 禁止擅自接触配电箱',d:'허가받은 담당자만 개방'},{n:'🚫',t:'물기 있는 손 조작 금지 湿手禁止操作',d:'반드시 손 건조 후'},{n:'🚫',t:'임시 연장선 방치 금지',d:'반드시 정리 후 마감'},{n:'🚫',t:'자가 수리·개조 금지 禁止自行维修',d:'전문가에게 요청'}],
-   footer:'전기는 눈에 보이지 않는 살인자 | 电是看不见的杀手',fb:'#4a1d96',fc:'#fff'},
-  {id:'p15',cat:'rule',color:'#0c4a6e',accent:'#0284c7',badge:'📌 안전수칙 安全规则',emoji:'🛒',title:'운반대차·중량물 안전수칙\n搬运车·重物安全规则',sub:'중량물 취급 시 반드시 준수 | 搬运重物时必须遵守',
-   rules:[{n:'✅',t:'적재 하중 준수 遵守承载量',d:'표시 하중 확인, 초과 적재 금지'},{n:'✅',t:'25kg 이상 2인 운반 25kg以上2人搬运',d:'무리한 인력 운반 금지'},{n:'✅',t:'허리 아닌 무릎 굽혀 들기 弯膝不弯腰',d:'근골격계 질환 예방'},{n:'🚫',t:'경사로 대차 이동 주의',d:'천천히 + 제동 확인'},{n:'🚫',t:'시야 가린 상태 이동 금지',d:'전방 주시 필수, 시야 차단 시 2인 운반'},{n:'🚫',t:'대차 위 사람 탑승 금지 禁止乘坐',d:''}],
-   footer:'중량물 무리 운반 = 허리 디스크! | 强行搬运=腰椎间盘！',fb:'#0c4a6e',fc:'#fff'},
-  {id:'p16',cat:'rule',color:'#065f46',accent:'#10b981',badge:'📌 건강관리 健康管理',emoji:'🦴',title:'근골격계 질환 예방\n肌肉骨骼疾病预防',sub:'바른 자세 + 스트레칭 = 건강한 몸 | 正确姿势+拉伸=健康身体',
-   rules:[{n:'1',t:'작업 전 스트레칭 5분 工作前拉伸5分钟',d:'목·어깨·허리·손목 스트레칭'},{n:'2',t:'바른 자세 유지 保持正确姿势',d:'허리 세우고, 무릎 구부려 들기'},{n:'3',t:'반복 동작 1시간마다 휴식 每小时休息',d:'같은 동작 반복 시 5분 스트레칭'},{n:'4',t:'중량물은 보조기구 사용 重物使用辅助工具',d:'리프트, 대차, 크레인 활용'},{n:'5',t:'이상 증상 즉시 보고 异常症状立即报告',d:'손저림·허리통증·어깨결림 등'},{n:'6',t:'올바른 들기 자세 正确搬举姿势',d:'발 어깨너비, 물건 밀착, 무릎으로 들기'}],
-   footer:'근골격계 질환은 누적됩니다 — 오늘의 스트레칭이 내일을 지킵니다 | 肌骨疾病会累积',fb:'#065f46',fc:'#fff'},
-  {id:'p8',cat:'monthly',color:'#0f4c75',accent:'#1b98e0',badge:'📅 이달의 안전 목표 本月安全目标',emoji:'🎯',title:'이달의 안전 목표\n本月安全目标',sub:'우리 모두 함께 지킵시다 | 让我们一起遵守',
-   rules:[{n:'①',t:'TBM 100% 참석 TBM100%参加',d:'매일 작업 전 10분, 빠짐없이'},{n:'②',t:'아차사고 1건 이상 신고 至少报告1次险情',d:'숨기지 말고 공유 = 예방'},{n:'③',t:'보호구 완전 착용 完全穿戴防护装备',d:'단 한 순간도 예외 없이'},{n:'④',t:'퇴근 전 작업장 정리 下班前整理',d:'내 구역은 내가 책임'}],
-   footer:'이번달 무재해 목표 달성! | 本月零事故目标！',fb:'#0f4c75',fc:'#fff'},
-  {id:'p9',cat:'monthly',color:'#7c2d12',accent:'#ea580c',badge:'📅 계절별 안전 季节安全',emoji:'☀️',title:'여름철 열사병 예방\n夏季中暑预防',sub:'폭염 속 작업 시 반드시 지키세요 | 高温作业必须遵守',
-   rules:[{n:'💧',t:'매시간 물 마시기 每小时喝水',d:'200mL/시간, 갈증 전에'},{n:'🌡️',t:'33℃ 이상 — 매시간 휴식',d:'10~15분 그늘 휴식'},{n:'🩺',t:'열사병 증상 즉시 신고 中暑症状立即报告',d:'어지럼증·구역질·의식저하'},{n:'❌',t:'혼자 작업 금지 禁止独自作业',d:'폭염 시 반드시 동료와'}],
-   footer:'체온 39℃ 이상 → 즉시 119 신고 | 体温39℃以上→立即报警',fb:'#7c2d12',fc:'#fff'},
-  {id:'p10',cat:'monthly',color:'#1e3a5f',accent:'#0ea5e9',badge:'📅 계절별 안전 季节安全',emoji:'❄️',title:'겨울철 안전수칙\n冬季安全规则',sub:'동절기 특별 주의 사항 | 冬季特别注意事项',
-   rules:[{n:'🧊',t:'빙판길·결빙 바닥 주의 注意结冰',d:'낙상 주의, 모래 뿌리기'},{n:'🔥',t:'쿨링타워 동파 방지',d:'동절기 가동 확인 (12~2월)'},{n:'🧤',t:'방한 보호구 착용 穿防寒装备',d:'외부 작업 시 방한장갑·방한복'},{n:'🔌',t:'난방기기 안전 사용 安全使用取暖设备',d:'퇴근 전 전기난로 반드시 차단'}],
-   footer:'겨울철 낙상 = 골절 = 중대 산업재해 | 冬季摔倒=骨折=重大事故',fb:'#1e3a5f',fc:'#fff'},
-  {id:'p11',cat:'sign',color:'#991b1b',accent:'#ef4444',badge:'🪧 현장 비표 现场标牌',emoji:'🏗️',title:'천장주행크레인 구역\n天车区域',sub:'이 구역에서는 반드시 지키세요 | 此区域必须遵守',
-   rules:[{n:'🔴',t:'최대 하중 초과 운반 금지 禁止超载',d:'표시 하중 확인 후 작업'},{n:'🔴',t:'사람 키 이상 운반 금지 禁止超高',d:'인양물은 낮게 이동'},{n:'🔴',t:'인양물 아래 접근 금지 禁止在下方',d:'낙하 시 즉사 위험'},{n:'🔵',t:'안전모 착용 필수 必须戴安全帽',d:'이 구역 진입 전 착용'},{n:'🔵',t:'2인 1조 + 신호수 필수',d:'금형 1톤 이상'}],
-   footer:'⛑️ 안전모 착용 없이 진입 금지 | 未戴安全帽禁止进入',fb:'#991b1b',fc:'#fff'},
-  {id:'p12',cat:'sign',color:'#1e3a5f',accent:'#0ea5e9',badge:'🪧 현장 비표 现场标牌',emoji:'🚫',title:'허가자 외 접근 금지\n非授权人员禁止接近',sub:'분전반 / 전기 패널함 | 配电箱/电气面板',
-   rules:[{n:'🔴',t:'허가받은 담당자만 접근 只有授权人员',d:'무단 접근 시 감전 위험'},{n:'🔴',t:'작업 전 잠금·태깅 필수 LOTO必须',d:'Lock + Tag 부착 후 작업'},{n:'🔴',t:'타인 잠금 해제 절대 금지 禁止他人解锁',d:'본인 확인 후만 해제'},{n:'📞',t:'담당자 연락처 负责人联系方式',d:'전화번호 기재'}],
-   footer:'⚡ 허가 없이 접근 금지 — 감전 즉사 위험 | 未授权禁止接近—触电致命',fb:'#1e3a5f',fc:'#fff'},
-  {id:'p13',cat:'sign',color:'#78350f',accent:'#d97706',badge:'🪧 현장 비표 现场标牌',emoji:'🔩',title:'금형 작업 전원 차단 필수\n模具作业必须断电',sub:'사출기 금형 교체 시 | 注塑机模具更换时',
-   rules:[{n:'🔴',t:'전원 차단 → 잠금 → 태그 순서 필수 断电→上锁→挂牌',d:'순서 바꾸면 사망 사고'},{n:'🔴',t:'전원 차단 전 금형 교체 절대 금지 未断电禁止更换',d:''},{n:'🔵',t:'안전장갑·안전화 착용 필수 穿戴防护',d:''},{n:'🔵',t:'2인 1조 작업 2人1组',d:'혼자 금형 교체 금지'}],
-   footer:'금형 교체 = 반드시 전원 차단 확인 | 模具更换=必须确认断电',fb:'#78350f',fc:'#fff'},
-  {id:'p14',cat:'sign',color:'#064e3b',accent:'#059669',badge:'🪧 현장 비표 现场标牌',emoji:'🚜',title:'지게차 전용 통로\n叉车专用通道',sub:'보행자 진입 금지 | 行人禁止进入',
-   rules:[{n:'🔴',t:'보행자 진입 절대 금지 行人严禁进入',d:'지게차와 충돌 시 사망'},{n:'🔴',t:'무면허 운전 금지 禁止无证驾驶',d:'면허 소지자만 운전'},{n:'🔵',t:'지게차 발견 시 정지·대기 看到叉车时停止等待',d:'눈 마주침 확인 후 이동'},{n:'🔑',t:'키 분리보관 必须 钥匙分离保管',d:'운행 종료 후 키 회수'}],
-   footer:'지게차 통로 = 보행자 금지 구역 | 叉车通道=行人禁止区',fb:'#064e3b',fc:'#fff'}
+  {id:'p1',cat:'notice',color:'#0d1f3c',accent:'#1e5096',badge:'📋 법정 필수 게시 法定必贴',emoji:'📞',title:'비상 연락처 紧急电话',sub:'화재·사고 시 즉시 연락 | 立即联系',
+   rules:[{n:'🔥',t:'화재 신고 火灾',d:'119'},{n:'🚑',t:'응급 구조 急救',d:'119'},{n:'🚓',t:'경찰 警察',d:'112'},{n:'🏢',t:'안전담당자 安全员',d:'연락처 기재'},{n:'🏥',t:'가까운 병원 医院',d:'병원명·전화번호 기재'},{n:'👨‍💼',t:'공장장 厂长',d:'연락처 기재'}],
+   footer:'항상 최신 상태 유지 | 始终保持最新',fb:'#0d1f3c',fc:'#fff'},
+  {id:'p2',cat:'notice',color:'#991b1b',accent:'#ef4444',badge:'📋 법정 필수 게시 法定必贴',emoji:'🧯',title:'소화기 사용법 灭火器',sub:'PASS 기억하세요 | 记住PASS',
+   rules:[{n:'P',t:'핀 뽑기 拔销',d:'안전핀을 뽑아 잠금 해제'},{n:'A',t:'겨냥 瞄准',d:'호스를 불 쪽으로 겨냥'},{n:'S',t:'분사 喷射',d:'손잡이를 눌러 분사'},{n:'S',t:'쓸기 扫射',d:'좌우로 쓸듯이 뿌리기'}],
+   footer:'분사 약 10~15초 | 1회용 | 喷射10~15秒',fb:'#991b1b',fc:'#fff'},
+  {id:'p3',cat:'notice',color:'#065f46',accent:'#10b981',badge:'📋 법정 필수 게시 法定必贴',emoji:'🚪',title:'비상 대피 안내 紧急疏散',sub:'화재 시 행동 절차 | 火灾行动步骤',
+   rules:[{n:'1',t:'"불이야!" 외치기 喊"着火了！"',d:'주변 대피 유도'},{n:'2',t:'119 신고 报警',d:'장소·상황 전달'},{n:'3',t:'비상구 대피 走安全出口',d:'엘리베이터 금지 禁用电梯'},{n:'4',t:'문 닫고 대피 关门疏散',d:'연기 확산 방지'},{n:'5',t:'집결지 집합 集合',d:'정문 앞 주차장 확인'},{n:'6',t:'재진입 금지 禁止返回',d:'절대 다시 들어가지 않기'}],
+   footer:'집결지: 정문 앞 주차장 | 集合：大门停车场',fb:'#065f46',fc:'#fff'},
+  {id:'p4',cat:'rule',color:'#78350f',accent:'#d97706',badge:'📌 안전수칙 安全规则',emoji:'🏗️',title:'천장주행크레인 수칙 天车规则',sub:'금형 운반 시 필수 준수 | 搬运模具必须遵守',
+   rules:[{n:'✅',t:'체인·훅 점검 后 작업 检查链条',d:'마모·변형·균열 확인'},{n:'✅',t:'안전모 필수 戴安全帽',d:'크레인 구역 전원'},{n:'✅',t:'2인1조+신호수 2人1组',d:'금형 1톤 이상'},{n:'🚫',t:'키 이상 운반 금지 禁超高',d:'인양물은 낮게 이동'},{n:'🚫',t:'하부 작업 금지 禁下方作业',d:'낙하 시 즉사 위험'},{n:'🚫',t:'최대하중 초과 금지 禁超载',d:'표시 하중 확인'}],
+   footer:'키 이상 운반 금지 | 안전모 필수 | 禁超高·戴安全帽',fb:'#78350f',fc:'#fff'},
+  {id:'p5',cat:'rule',color:'#134e4a',accent:'#0d9488',badge:'📌 안전수칙 安全规则',emoji:'🔒',title:'LOTO 잠금·태깅 上锁挂牌',sub:'설비 수리·금형 교체 전 필수 | 维修前必须',
+   rules:[{n:'1',t:'전원 차단→잠금→태그 断电→锁→牌',d:'본인 이름 태그 부착'},{n:'2',t:'잔류 에너지 제거 消除残能',d:'잔압·관성·열 제거'},{n:'3',t:'안전블록 삽입 插安全块',d:'낙하 방지'},{n:'4',t:'2인 이상 작업 2人以上',d:'신호수 1인'},{n:'5',t:'보호구 착용 穿防护',d:'안전장갑·안전화'},{n:'6',t:'본인만 해제 本人解锁',d:'타인 해제 절대 금지'}],
+   footer:'LOTO 없이 접근=중대재해 | 未锁=重大灾害',fb:'#134e4a',fc:'#fff'},
+  {id:'p6',cat:'rule',color:'#1e1b4b',accent:'#4f46e5',badge:'📌 안전수칙 安全规则',emoji:'🚜',title:'지게차 안전수칙 叉车规则',sub:'지게차와 보행자 공존 불가 | 叉车·行人不可共存',
+   rules:[{n:'✅',t:'면허자만 운전 持证驾驶',d:'운전기능사 면허'},{n:'✅',t:'포크 높이 20~30cm',d:'주행 시 항상 낮게'},{n:'✅',t:'안전벨트 착용 系安全带',d:'항상 예외 없이'},{n:'🔑',t:'키 분리보관 钥匙分离',d:'운행 후 키 회수'},{n:'🚫',t:'보행자 구역 금지 禁行人区',d:'통로 분리 준수'},{n:'🚫',t:'포크 탑승 금지 禁乘坐',d:'즉시 징계 대상'}],
+   footer:'무면허=형사처벌 | 키 분리 필수 | 无证=刑罚',fb:'#1e1b4b',fc:'#fff'},
+  {id:'p7',cat:'rule',color:'#4a1d96',accent:'#8b5cf6',badge:'📌 안전수칙 安全规则',emoji:'⚡',title:'전기 안전수칙 电气规则',sub:'감전은 순식간에 사망 | 触电致命',
+   rules:[{n:'✅',t:'작업 전 전원 차단 先断电',d:'잠금+태그 후 작업'},{n:'✅',t:'이상 즉시 신고 异常报告',d:'전선 손상, 이상 냄새'},{n:'🚫',t:'분전반 무단 접근 금지 禁擅触',d:'허가 담당자만 개방'},{n:'🚫',t:'물기 있는 손 금지 湿手禁',d:'반드시 손 건조 후'},{n:'🚫',t:'연장선 방치 금지',d:'정리 후 마감'},{n:'🚫',t:'자가 수리 금지 禁自修',d:'전문가에게 요청'}],
+   footer:'전기=보이지 않는 위험 | 电=看不见的危险',fb:'#4a1d96',fc:'#fff'},
+  {id:'p15',cat:'rule',color:'#0c4a6e',accent:'#0284c7',badge:'📌 안전수칙 安全规则',emoji:'🛒',title:'운반대차·중량물 수칙 搬运规则',sub:'중량물 취급 시 필수 준수 | 搬重物必须遵守',
+   rules:[{n:'✅',t:'적재 하중 준수 遵守载重',d:'초과 적재 금지'},{n:'✅',t:'25kg↑ 2인 운반 2人搬',d:'무리 운반 금지'},{n:'✅',t:'무릎 굽혀 들기 弯膝举',d:'근골격계 예방'},{n:'🚫',t:'경사로 대차 주의',d:'천천히+제동 확인'},{n:'🚫',t:'시야 차단 이동 금지',d:'전방 주시, 2인 운반'},{n:'🚫',t:'대차 탑승 금지 禁乘坐',d:''}],
+   footer:'무리 운반=허리 디스크! | 强搬=腰伤！',fb:'#0c4a6e',fc:'#fff'},
+  {id:'p16',cat:'rule',color:'#065f46',accent:'#10b981',badge:'📌 건강관리 健康管理',emoji:'🦴',title:'근골격계 질환 예방 肌骨预防',sub:'바른 자세+스트레칭=건강 | 正确姿势+拉伸',
+   rules:[{n:'1',t:'작업 전 스트레칭 5분 拉伸5分',d:'목·어깨·허리·손목'},{n:'2',t:'바른 자세 유지 正确姿势',d:'허리 세우고 무릎 굽혀 들기'},{n:'3',t:'1시간마다 휴식 每时休息',d:'5분 스트레칭'},{n:'4',t:'보조기구 사용 用辅助工具',d:'리프트, 대차, 크레인'},{n:'5',t:'이상 즉시 보고 异常报告',d:'손저림·허리통증 등'},{n:'6',t:'올바른 들기 자세 正确搬举',d:'발 어깨너비, 무릎 들기'}],
+   footer:'근골격계 질환은 누적됩니다 | 肌骨病会累积',fb:'#065f46',fc:'#fff'},
+  {id:'p8',cat:'monthly',color:'#0f4c75',accent:'#1b98e0',badge:'📅 이달의 안전 목표 本月目标',emoji:'🎯',title:'이달의 안전 목표 本月目标',sub:'함께 지킵시다 | 一起遵守',
+   rules:[{n:'①',t:'TBM 100% 참석 全员参加',d:'매일 작업 전 10분'},{n:'②',t:'아차사고 1건↑ 신고 报告险情',d:'공유=예방'},{n:'③',t:'보호구 완전 착용 穿戴防护',d:'예외 없이'},{n:'④',t:'퇴근 전 정리 下班整理',d:'내 구역은 내 책임'}],
+   footer:'무재해 목표 달성! | 零事故！',fb:'#0f4c75',fc:'#fff'},
+  {id:'p9',cat:'monthly',color:'#7c2d12',accent:'#ea580c',badge:'📅 계절별 안전 季节安全',emoji:'☀️',title:'여름철 열사병 예방 防中暑',sub:'폭염 작업 시 필수 | 高温必须遵守',
+   rules:[{n:'💧',t:'매시간 물 마시기 每时喝水',d:'200mL, 갈증 전에'},{n:'🌡️',t:'33℃↑ 매시간 휴식',d:'10~15분 그늘'},{n:'🩺',t:'열사병 증상 신고 中暑报告',d:'어지럼증·구역질'},{n:'❌',t:'혼자 작업 금지 禁独自',d:'반드시 동료와'}],
+   footer:'체온 39℃↑ → 즉시 119 | 39℃→立即报警',fb:'#7c2d12',fc:'#fff'},
+  {id:'p10',cat:'monthly',color:'#1e3a5f',accent:'#0ea5e9',badge:'📅 계절별 안전 季节安全',emoji:'❄️',title:'겨울철 안전수칙 冬季规则',sub:'동절기 주의사항 | 冬季注意',
+   rules:[{n:'🧊',t:'빙판·결빙 주의 注意结冰',d:'낙상 주의, 모래 뿌리기'},{n:'🔥',t:'쿨링타워 동파 방지',d:'12~2월 가동 확인'},{n:'🧤',t:'방한 보호구 착용 穿防寒',d:'방한장갑·방한복'},{n:'🔌',t:'난방기기 안전 取暖安全',d:'퇴근 전 차단'}],
+   footer:'낙상=골절=중대재해 | 摔倒=骨折=重大事故',fb:'#1e3a5f',fc:'#fff'},
+  {id:'p11',cat:'sign',color:'#991b1b',accent:'#ef4444',badge:'🪧 현장 비표 现场标牌',emoji:'🏗️',title:'천장주행크레인 구역 天车区',sub:'반드시 지키세요 | 必须遵守',
+   rules:[{n:'🔴',t:'하중 초과 금지 禁超载',d:'표시 하중 확인'},{n:'🔴',t:'키 이상 운반 금지 禁超高',d:'낮게 이동'},{n:'🔴',t:'하부 접근 금지 禁下方',d:'즉사 위험'},{n:'🔵',t:'안전모 필수 戴安全帽',d:'진입 전 착용'},{n:'🔵',t:'2인1조+신호수 2人1组+信号员',d:'1톤 이상'}],
+   footer:'안전모 없이 진입 금지 | 无帽禁入',fb:'#991b1b',fc:'#fff'},
+  {id:'p12',cat:'sign',color:'#1e3a5f',accent:'#0ea5e9',badge:'🪧 현장 비표 现场标牌',emoji:'🚫',title:'허가자 외 접근 금지 禁接近',sub:'분전반/전기 패널함 | 配电箱',
+   rules:[{n:'🔴',t:'허가 담당자만 접근 授权者',d:'무단 시 감전 위험'},{n:'🔴',t:'잠금·태깅 필수 LOTO',d:'Lock+Tag 후 작업'},{n:'🔴',t:'타인 해제 금지 禁他人解',d:'본인만 해제'},{n:'📞',t:'담당자 연락처 负责人',d:'전화번호 기재'}],
+   footer:'허가 없이 접근 금지 | 未授权禁入',fb:'#1e3a5f',fc:'#fff'},
+  {id:'p13',cat:'sign',color:'#78350f',accent:'#d97706',badge:'🪧 현장 비표 现场标牌',emoji:'🔩',title:'금형 작업 전원 차단 필수 断电',sub:'사출기 금형 교체 시 | 模具更换时',
+   rules:[{n:'🔴',t:'차단→잠금→태그 필수 断电→锁→牌',d:'순서 필수'},{n:'🔴',t:'미차단 교체 절대 금지 禁未断电',d:''},{n:'🔵',t:'보호구 착용 필수 穿防护',d:''},{n:'🔵',t:'2인1조 작업 2人1组',d:'혼자 금지'}],
+   footer:'금형 교체=반드시 전원 차단 | 模具=必须断电',fb:'#78350f',fc:'#fff'},
+  {id:'p14',cat:'sign',color:'#064e3b',accent:'#059669',badge:'🪧 현장 비표 现场标牌',emoji:'🚜',title:'지게차 전용 통로 叉车通道',sub:'보행자 진입 금지 | 行人禁入',
+   rules:[{n:'🔴',t:'보행자 진입 금지 行人禁入',d:'충돌 시 사망'},{n:'🔴',t:'무면허 금지 禁无证',d:'면허자만 운전'},{n:'🔵',t:'지게차 시 정지 叉车停等',d:'눈 마주침 확인'},{n:'🔑',t:'키 분리보관 钥匙分离',d:'운행 후 키 회수'}],
+   footer:'지게차 통로=보행자 금지 | 叉车道=禁行人',fb:'#064e3b',fc:'#fff'}
 ];
 
 // ============================================================
@@ -2466,18 +2466,19 @@ function renderPT(cat){
   const list = cat==='all' ? ptPosters : ptPosters.filter(p=>p.cat===cat);
   document.getElementById('pt-grid').innerHTML = list.map(p=>`
     <div style="background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,0.1);display:flex;flex-direction:column;min-height:620px;">
-      <div style="padding:22px 20px 16px;background:${p.color};text-align:center;min-height:180px;display:flex;flex-direction:column;justify-content:center;">
+      <div style="padding:22px 20px 16px;background:${p.color};text-align:center;height:200px;display:flex;flex-direction:column;justify-content:center;position:relative;">
+        <img src="logo_s_white.png" style="position:absolute;top:12px;right:12px;height:28px;opacity:0.7;" alt="S">
         <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,0.7);letter-spacing:0.08em;margin-bottom:6px;">${p.badge}</div>
-        <div style="font-size:52px;margin:6px 0;">${p.emoji}</div>
-        <div style="font-size:18px;font-weight:800;color:#fff;line-height:1.3;">${p.title}</div>
-        <div style="font-size:12px;color:rgba(255,255,255,0.8);margin-top:4px;">${p.sub}</div>
+        <div style="font-size:48px;margin:4px 0;">${p.emoji}</div>
+        <div style="font-size:17px;font-weight:800;color:#fff;line-height:1.35;">${p.title}</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.8);margin-top:4px;">${p.sub}</div>
       </div>
       <div style="padding:14px 16px;flex:1;">
         <ul style="list-style:none;padding:0;">
           ${p.rules.map(r=>`<li style="display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px solid #f8fafc;font-size:12px;"><span style="flex-shrink:0;width:22px;height:22px;border-radius:50%;background:${p.accent};color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;">${r.n}</span><div><strong style="display:block;font-size:12px;font-weight:700;color:#0d1f3c;">${r.t}</strong><span style="font-size:11px;color:#6b7280;">${r.d}</span></div></li>`).join('')}
         </ul>
       </div>
-      <div style="padding:10px;text-align:center;font-size:11px;font-weight:700;background:${p.fb};color:${p.fc};margin-top:auto;">${p.footer}</div>
+      <div style="padding:10px 8px;text-align:center;font-size:10px;font-weight:700;background:${p.fb};color:${p.fc};margin-top:auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${p.footer}</div>
       <div style="display:flex;gap:6px;padding:8px 12px;background:#f8fafc;">
         <button onclick="ptCopy('${p.id}')" class="btn btn-outline btn-sm" style="flex:1;font-size:11px;">📋 텍스트 복사</button>
         <button onclick="ptPrint('${p.id}')" class="btn btn-primary btn-sm" style="flex:1;font-size:11px;">🖨️ A4 인쇄</button>
@@ -2498,7 +2499,8 @@ function ptPrint(id){
   w.document.write(`<html><head><meta charset="UTF-8"><style>
     @page{size:A4;margin:15mm;}
     body{margin:0;font-family:'Noto Sans KR','Malgun Gothic',sans-serif;}
-    .h{padding:36px 28px 24px;background:${p.color};text-align:center;}
+    .h{padding:36px 28px 24px;background:${p.color};text-align:center;position:relative;}
+    .logo{position:absolute;top:16px;right:16px;height:36px;opacity:0.7;}
     .badge{font-size:12px;font-weight:700;color:rgba(255,255,255,0.7);letter-spacing:0.1em;}
     .em{font-size:80px;margin:10px 0;}
     h2{font-size:32px;font-weight:900;color:#fff;line-height:1.2;}
@@ -2511,7 +2513,7 @@ function ptPrint(id){
     span{font-size:12px;color:#6b7280;}
     .footer{padding:16px;text-align:center;font-size:15px;font-weight:800;background:${p.fb};color:${p.fc};}
   </style></head><body>
-    <div class="h"><div class="badge">${p.badge}</div><div class="em">${p.emoji}</div><h2>${p.title}</h2><div class="sub">${p.sub}</div></div>
+    <div class="h"><img class="logo" src="logo_s_white.png" alt="S"><div class="badge">${p.badge}</div><div class="em">${p.emoji}</div><h2>${p.title}</h2><div class="sub">${p.sub}</div></div>
     <div class="body"><ul>${p.rules.map(r=>`<li><span class="num">${r.n}</span><div><strong>${r.t}</strong><span>${r.d}</span></div></li>`).join('')}</ul></div>
     <div class="footer">${p.footer}</div>
   </body></html>`);
