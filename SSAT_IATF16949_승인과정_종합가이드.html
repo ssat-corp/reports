@@ -711,73 +711,66 @@ body{font-family:'Malgun Gothic','맑은 고딕',sans-serif;background:#EEF2F7;c
       </table>
 
       <div class="sec-sub" style="margin-bottom:10px">📖 Core Tools 상세 설명</div>
-      <div class="card-grid">
-        <div class="card">
-          <div class="card-head" style="background:#1E40AF">① APQP — 사전 제품 품질 계획</div>
-          <div class="card-body">
-            <strong>목적:</strong> 신규 제품·공정 개발 시 품질 위험 사전 예방<br>
-            <strong>5단계:</strong> 기획 → 제품설계 → 공정설계 → 유효성확인 → 피드백<br>
-            <strong>핵심 산출물:</strong> 설계목표, PFMEA, 공정흐름도, 관리계획서<br>
-            <strong>주관:</strong> <span class="tag tag-blue">개발팀</span> | <strong>시점:</strong> 신규 수주 즉시
-            <div class="card-tags"><span class="tag tag-purple">조항 8.3</span><span class="tag tag-gray">COP-02 연계</span></div>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-head" style="background:#0F172A">② PFMEA — 공정 고장유형 분석</div>
-          <div class="card-body">
-            <strong>목적:</strong> 공정 고장 모드 사전 식별 및 예방 조치<br>
-            <strong>최신 기준:</strong> AIAG-VDA 4판 — RPN → <strong>AP(Action Priority)</strong> 전환<br>
-            <strong>AP 기준:</strong> H(높음) / M(중간) / L(낮음)<br>
-            <strong>주관:</strong> <span class="tag tag-blue">개발팀</span> + <span class="tag tag-gray">품질팀</span> | <strong>주기:</strong> 연 1회 + 공정변경 시<br>
-            ⚠️ COP-02 내 기존 FMEA → AIAG-VDA 4판 포맷으로 전환 필요
-            <div class="card-tags"><span class="tag tag-red">조항 8.5.1.2</span><span class="tag tag-red">심사 Top 지적항목</span></div>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-head" style="background:#1D4ED8">③ 관리계획서 (Control Plan)</div>
-          <div class="card-body">
-            <strong>목적:</strong> 품질 특성 관리 방법 표준화<br>
-            <strong>3종류:</strong> 시작(Prototype) / 출시(Launch) / 양산(Production)<br>
-            <strong>핵심 내용:</strong> 특성·사양·측정방법·관리방법·반응계획<br>
-            <strong>주관:</strong> <span class="tag tag-blue">개발팀</span> + <span class="tag tag-green">생산팀</span> | PFMEA 연계 필수<br>
-            ✅ COP-02·COP-03에 '관리계획서' 탭 보유 — 최신화 검토
-            <div class="card-tags"><span class="tag tag-blue">조항 8.5.1.2</span></div>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-head" style="background:#2563EB">④ MSA — 측정시스템 분석</div>
-          <div class="card-body">
-            <strong>목적:</strong> 측정 오차 정량화 및 측정 신뢰성 확인<br>
-            <strong>Gage R&amp;R 기준:</strong> %GRR ≤ 10% 합격 / 10~30% 조건부 / &gt;30% 불합격<br>
-            <strong>ndc ≥ 5</strong> 권장 (데이터 구분 능력)<br>
-            <strong>주관:</strong> <span class="tag tag-red">품질팀</span> | <strong>주기:</strong> 연 2회 이상<br>
-            <span style="color:#DC2626;font-weight:600">❌ 현재 실시 기록 없음 — SP-13 또는 COP-04에 즉시 추가 필요</span>
-            <div class="card-tags"><span class="tag tag-green">조항 7.1.5.1.1</span></div>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-head" style="background:#1E3A5F">⑤ SPC — 통계적 공정관리</div>
-          <div class="card-body">
-            <strong>목적:</strong> 공정 변동 실시간 모니터링 및 이상 조기 감지<br>
-            <strong>목표 수준:</strong> Cpk ≥ 1.67 (신규공정) / ≥ 1.33 (기존공정)<br>
-            <strong>Ppk/Pp:</strong> 초기 공정 능력 지표 — Cpk와 구분 관리<br>
-            <strong>주관:</strong> <span class="tag tag-red">품질팀</span> + <span class="tag tag-green">생산팀</span> | 지속적(실시간)<br>
-            <span style="color:#DC2626;font-weight:600">❌ 현재 관리도 운영 없음 — 특수특성(SC) 공정 우선 적용</span>
-            <div class="card-tags"><span class="tag tag-orange">조항 8.5.1.1</span><span class="tag tag-orange">심사 Top 지적항목</span></div>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-head" style="background:#334155">⑥ PPAP — 양산부품 승인 프로세스</div>
-          <div class="card-body">
-            <strong>목적:</strong> 고객에게 제조 공정의 품질 적합성 증명<br>
-            <strong>5가지 제출 레벨:</strong> Level 1(선언서) ~ Level 5(전수검사)<br>
-            <strong>18가지 서류:</strong> 설계문서·PFMEA·CP·MSA결과·검사성적서 등<br>
-            <strong>주관:</strong> <span class="tag tag-blue">개발팀</span> + <span class="tag tag-gray">영업팀</span>(고객 제출 창구)<br>
-            <span style="color:#DC2626;font-weight:600">❌ COP-02 내 PPAP 전용 탭 없음 — 개발팀 주관으로 신규 추가 필요</span>
-            <div class="card-tags"><span class="tag tag-gray">조항 8.3.4.4</span><span class="tag tag-gray">신규/변경 납품 전 필수</span></div>
-          </div>
-        </div>
-      </div>
+      <table class="tbl" style="margin-bottom:20px">
+        <thead><tr>
+          <th style="width:5%">No</th>
+          <th style="width:13%">도구</th>
+          <th style="width:22%">목적 / 핵심 기준</th>
+          <th style="width:25%">주요 내용</th>
+          <th style="width:12%">주관 / 주기</th>
+          <th style="width:23%">현재 상태 / 비고</th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td style="text-align:center;font-weight:700">①</td>
+            <td><strong>APQP</strong><br>사전 제품 품질 계획</td>
+            <td>신규 제품·공정 개발 시<br>품질 위험 사전 예방</td>
+            <td><strong>5단계:</strong> 기획 → 제품설계 → 공정설계 → 유효성확인 → 피드백<br><strong>산출물:</strong> 설계목표, PFMEA, 공정흐름도, 관리계획서</td>
+            <td><span class="tag tag-blue">개발팀</span><br>신규 수주 즉시</td>
+            <td><span class="tag tag-purple">조항 8.3</span> <span class="tag tag-gray">COP-02 연계</span></td>
+          </tr>
+          <tr>
+            <td style="text-align:center;font-weight:700">②</td>
+            <td><strong>PFMEA</strong><br>공정 고장유형 분석</td>
+            <td>공정 고장 모드 사전 식별<br>및 예방 조치 수립</td>
+            <td><strong>최신 기준:</strong> AIAG-VDA 4판<br>RPN → <strong>AP(Action Priority)</strong> 전환<br><strong>AP 기준:</strong> H(높음) / M(중간) / L(낮음)</td>
+            <td><span class="tag tag-blue">개발팀</span> <span class="tag tag-gray">품질팀</span><br>연 1회 + 공정변경 시</td>
+            <td>⚠️ COP-02 내 기존 FMEA → AIAG-VDA 4판 전환 필요<br><span class="tag tag-red">심사 Top 지적항목</span></td>
+          </tr>
+          <tr>
+            <td style="text-align:center;font-weight:700">③</td>
+            <td><strong>관리계획서</strong><br>Control Plan</td>
+            <td>품질 특성 관리 방법<br>표준화</td>
+            <td><strong>3종류:</strong> 시작(Prototype) / 출시(Launch) / 양산(Production)<br><strong>핵심:</strong> 특성·사양·측정방법·관리방법·반응계획</td>
+            <td><span class="tag tag-blue">개발팀</span> <span class="tag tag-green">생산팀</span><br>PFMEA 연계 필수</td>
+            <td>✅ COP-02·COP-03에 탭 보유<br>최신화 검토 필요<br><span class="tag tag-blue">조항 8.5.1.2</span></td>
+          </tr>
+          <tr>
+            <td style="text-align:center;font-weight:700">④</td>
+            <td><strong>MSA</strong><br>측정시스템 분석</td>
+            <td>측정 오차 정량화 및<br>측정 신뢰성 확인</td>
+            <td><strong>Gage R&amp;R 기준:</strong><br>≤10% 합격 / 10~30% 조건부 / &gt;30% 불합격<br><strong>ndc ≥ 5</strong> 권장 (데이터 구분 능력)</td>
+            <td><span class="tag tag-blue">품질팀</span><br>연 2회 이상</td>
+            <td style="color:#DC2626;font-weight:600">❌ 실시 기록 없음<br>SP-13 또는 COP-04에 즉시 추가 필요<br><span class="tag tag-green">조항 7.1.5.1.1</span></td>
+          </tr>
+          <tr>
+            <td style="text-align:center;font-weight:700">⑤</td>
+            <td><strong>SPC</strong><br>통계적 공정관리</td>
+            <td>공정 변동 실시간 모니터링<br>및 이상 조기 감지</td>
+            <td><strong>목표:</strong> Cpk ≥ 1.67(신규) / ≥ 1.33(기존)<br><strong>Ppk/Pp:</strong> 초기 공정 능력 지표<br>Cpk와 구분 관리</td>
+            <td><span class="tag tag-blue">품질팀</span> <span class="tag tag-green">생산팀</span><br>지속적(실시간)</td>
+            <td style="color:#DC2626;font-weight:600">❌ 관리도 운영 없음<br>특수특성(SC) 공정 우선 적용<br><span class="tag tag-orange">심사 Top 지적항목</span></td>
+          </tr>
+          <tr>
+            <td style="text-align:center;font-weight:700">⑥</td>
+            <td><strong>PPAP</strong><br>양산부품 승인</td>
+            <td>고객에게 제조 공정의<br>품질 적합성 증명</td>
+            <td><strong>5가지 레벨:</strong> Level 1(선언서) ~ Level 5(전수검사)<br><strong>18가지 서류:</strong> 설계문서·PFMEA·CP·MSA결과·검사성적서 등</td>
+            <td><span class="tag tag-blue">개발팀</span> <span class="tag tag-gray">영업팀</span><br>신규/변경 납품 전</td>
+            <td style="color:#DC2626;font-weight:600">❌ COP-02 내 PPAP 전용 탭 없음<br>개발팀 주관 신규 추가 필요<br><span class="tag tag-gray">조항 8.3.4.4</span></td>
+          </tr>
+        </tbody>
+      </table>
 
       <div class="alert alert-blue">
         <strong>💡 Core Tools 연계 구조 (개발팀 주관):</strong>
