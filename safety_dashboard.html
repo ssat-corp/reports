@@ -2537,24 +2537,25 @@ function cnPrint(id){
     *{margin:0;padding:0;box-sizing:border-box;}
     html,body{width:210mm;height:297mm;font-family:'Noto Sans KR','Noto Sans SC','Malgun Gothic',sans-serif;
       -webkit-print-color-adjustment:exact !important;print-color-adjust:exact !important;color-adjust:exact !important;}
-    .card{width:210mm;min-height:297mm;display:flex;flex-direction:column;}
-    .header{padding:36px 32px 24px;background:${c.color};min-height:180px;position:relative;display:flex;flex-direction:column;justify-content:flex-end;
+    .card{width:210mm;height:297mm;display:flex;flex-direction:column;overflow:hidden;}
+    .header{padding:28px 28px 20px;background:${c.color};position:relative;display:flex;flex-direction:column;justify-content:flex-end;
       -webkit-print-color-adjustment:exact !important;print-color-adjust:exact !important;}
-    .logo{position:absolute;top:20px;right:20px;height:36px;opacity:0.7;}
-    .emoji{position:absolute;top:20px;right:64px;font-size:60px;opacity:0.22;}
-    .ep{font-size:12px;font-weight:700;color:rgba(255,255,255,0.7);letter-spacing:0.08em;margin-bottom:6px;}
-    .title{font-size:26px;font-weight:900;color:#fff;line-height:1.3;}
-    .body{flex:1;padding:24px 32px;}
-    .intro{font-size:13px;color:#374151;line-height:1.7;margin-bottom:14px;}
-    .sec{font-size:14px;font-weight:700;color:#0d1f3c;margin:16px 0 8px;padding-bottom:6px;border-bottom:2px solid #e8edf3;}
+    .logo{position:absolute;top:16px;right:16px;height:36px;opacity:0.7;}
+    .emoji{position:absolute;top:16px;right:60px;font-size:56px;opacity:0.22;}
+    .ep{font-size:13px;font-weight:700;color:rgba(255,255,255,0.75);letter-spacing:0.08em;margin-bottom:4px;}
+    .title{font-size:28px;font-weight:900;color:#fff;line-height:1.25;}
+    .body{flex:1;padding:20px 28px;display:flex;flex-direction:column;justify-content:space-between;}
+    .content{flex:1;}
+    .intro{font-size:15px;color:#374151;line-height:1.6;margin-bottom:12px;}
+    .sec{font-size:17px;font-weight:800;color:#0d1f3c;margin:14px 0 6px;padding-bottom:4px;border-bottom:2px solid #e8edf3;}
     ul{list-style:none;padding:0;}
-    li{padding:7px 0;border-bottom:1px solid #f5f7fa;font-size:13px;color:#374151;display:flex;gap:8px;line-height:1.5;}
+    li{padding:6px 0;border-bottom:1px solid #f5f7fa;font-size:15px;color:#374151;display:flex;gap:8px;line-height:1.5;}
     li:last-child{border-bottom:none;}
-    .hl{background:#fef9c3;border-radius:8px;padding:14px;font-size:13px;color:#92400e;margin:16px 0;border-left:4px solid #f59e0b;
+    .hl{background:#fef9c3;border-radius:8px;padding:14px;font-size:15px;color:#92400e;margin:14px 0 8px;border-left:4px solid #f59e0b;
       -webkit-print-color-adjustment:exact !important;print-color-adjust:exact !important;}
-    .lw{background:#eff6ff;border-radius:8px;padding:12px;font-size:12px;color:#1e5096;margin:8px 0;
+    .lw{background:#eff6ff;border-radius:8px;padding:10px;font-size:13px;color:#1e5096;margin:6px 0;
       -webkit-print-color-adjustment:exact !important;print-color-adjust:exact !important;}
-    .footer{padding:16px 24px;text-align:center;font-size:14px;font-weight:800;background:${c.fb};color:${c.fc};
+    .footer{padding:18px 24px;text-align:center;font-size:17px;font-weight:900;background:${c.fb};color:${c.fc};
       -webkit-print-color-adjustment:exact !important;print-color-adjust:exact !important;}
     @media print{.header,.hl,.lw,.footer{-webkit-print-color-adjustment:exact !important;print-color-adjust:exact !important;color-adjust:exact !important;}}
   </style></head><body>
@@ -2566,10 +2567,12 @@ function cnPrint(id){
         <div class="title">${c.title.replace(/\n/g,'<br>')}</div>
       </div>
       <div class="body">
-        <div class="intro">${c.detail.intro.replace(/\n/g,'<br>')}</div>
-        ${c.detail.sections.map(s=>`<div class="sec">${s.t}</div><ul>${s.i.map(x=>`<li><span style="color:#1e5096;flex-shrink:0;">✓</span><span>${x}</span></li>`).join('')}</ul>`).join('')}
-        <div class="hl">💡 ${c.detail.hl}</div>
-        <div class="lw">⚖️ ${c.detail.law}</div>
+        <div class="content">
+          <div class="intro">${c.detail.intro.replace(/\n/g,'<br>')}</div>
+          ${c.detail.sections.map(s=>`<div class="sec">${s.t}</div><ul>${s.i.map(x=>`<li><span style="color:#1e5096;flex-shrink:0;">✓</span><span>${x}</span></li>`).join('')}</ul>`).join('')}
+          <div class="hl">💡 ${c.detail.hl}</div>
+          <div class="lw">⚖️ ${c.detail.law}</div>
+        </div>
       </div>
       <div class="footer">${c.footer}</div>
     </div>
@@ -2625,28 +2628,28 @@ function ptPrint(id){
     *{margin:0;padding:0;box-sizing:border-box;}
     html,body{width:210mm;height:297mm;font-family:'Noto Sans KR','Noto Sans SC','Malgun Gothic',sans-serif;
       -webkit-print-color-adjustment:exact !important;print-color-adjust:exact !important;color-adjust:exact !important;}
-    .poster{width:210mm;min-height:297mm;display:flex;flex-direction:column;overflow:hidden;}
-    .header{padding:36px 32px 28px;background:${p.color};text-align:center;position:relative;min-height:200px;display:flex;flex-direction:column;justify-content:center;
+    .poster{width:210mm;height:297mm;display:flex;flex-direction:column;overflow:hidden;}
+    .header{padding:28px 28px 22px;background:${p.color};text-align:center;position:relative;display:flex;flex-direction:column;justify-content:center;
       -webkit-print-color-adjustment:exact !important;print-color-adjust:exact !important;}
-    .logo{position:absolute;top:20px;right:20px;height:40px;opacity:0.7;}
-    .badge{font-size:13px;font-weight:700;color:rgba(255,255,255,0.75);letter-spacing:0.1em;margin-bottom:8px;}
-    .emoji{font-size:72px;margin:8px 0;}
-    .title{font-size:30px;font-weight:900;color:#fff;line-height:1.25;white-space:pre-line;}
-    .subtitle{font-size:14px;color:rgba(255,255,255,0.85);margin-top:8px;}
-    .body{flex:1;padding:28px 32px;}
-    ul{list-style:none;padding:0;}
-    li{display:flex;gap:16px;align-items:flex-start;padding:14px 0;border-bottom:1px solid #f1f5f9;font-size:14px;}
+    .logo{position:absolute;top:16px;right:16px;height:36px;opacity:0.7;}
+    .badge{font-size:14px;font-weight:700;color:rgba(255,255,255,0.8);letter-spacing:0.1em;margin-bottom:6px;}
+    .emoji{font-size:64px;margin:6px 0;}
+    .title{font-size:36px;font-weight:900;color:#fff;line-height:1.2;white-space:pre-line;}
+    .subtitle{font-size:16px;color:rgba(255,255,255,0.9);margin-top:6px;}
+    .body{flex:1;padding:24px 28px;display:flex;flex-direction:column;justify-content:center;}
+    ul{list-style:none;padding:0;flex:1;display:flex;flex-direction:column;justify-content:space-around;}
+    li{display:flex;gap:18px;align-items:center;padding:16px 0;border-bottom:2px solid #f1f5f9;}
     li:last-child{border-bottom:none;}
-    .num{flex-shrink:0;width:32px;height:32px;border-radius:50%;background:${p.accent};color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;
+    .num{flex-shrink:0;width:44px;height:44px;border-radius:50%;background:${p.accent};color:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;
       -webkit-print-color-adjustment:exact !important;print-color-adjust:exact !important;}
-    .rule-title{display:block;font-size:15px;font-weight:700;color:#0d1f3c;line-height:1.4;}
-    .rule-desc{font-size:12px;color:#6b7280;margin-top:2px;display:block;}
-    .footer{padding:18px 24px;text-align:center;font-size:15px;font-weight:800;letter-spacing:0.02em;
-      background:${p.fb};color:${p.fc};white-space:nowrap;
+    .rule-title{display:block;font-size:22px;font-weight:800;color:#0d1f3c;line-height:1.35;}
+    .rule-desc{font-size:16px;color:#555;margin-top:4px;display:block;line-height:1.4;}
+    .footer{padding:20px 24px;text-align:center;font-size:20px;font-weight:900;letter-spacing:0.03em;
+      background:${p.fb};color:${p.fc};
       -webkit-print-color-adjustment:exact !important;print-color-adjust:exact !important;}
     @media print{
       html,body{width:210mm;height:297mm;}
-      .poster{width:210mm;min-height:297mm;}
+      .poster{width:210mm;height:297mm;}
       .header,.num,.footer{-webkit-print-color-adjustment:exact !important;print-color-adjust:exact !important;color-adjust:exact !important;}
     }
   </style></head><body>
