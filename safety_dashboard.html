@@ -1876,7 +1876,7 @@ function renderRecentPatrol(){
 // ============================================================
 const docMasterList = [
   // === A. 경영책임자 리더십 (중처법 제4조 제4호 등) ===
-  {id:'d01', wwsCode:'', wwsNo:'', name:'안전보건관리규정', basis:'산안법 §25', period:'상시', status:'미보유', updated:'', expires:'', note:'50인 이상 의무, 50인 미만 권고', category:'legal', hasTemplate:false, localFile:''},
+  {id:'d01', wwsCode:'', wwsNo:'', name:'안전보건관리규정', basis:'산안법 §25', period:'상시', status:'보유', updated:'2023-01-01', expires:'', note:'50인 이상 의무, 50인 미만 권고', category:'legal', hasTemplate:false, localFile:'산업안전보건관리규정(202301).docx'},
   {id:'d02', wwsCode:'A-2-1', wwsNo:302, name:'안전보건관리계획서', basis:'산안법 §14', period:'연1회', status:'보유', updated:'2026-03-10', expires:'2026-12-31', note:'WWS: 안전보건관리체계의 수립 및 운영', category:'wws', hasTemplate:false, localFile:'04. 체계구축(안전보건관리계획(노).docx'},
   {id:'d04', wwsCode:'A-2-4', wwsNo:305, name:'안전보건목표·경영방침', basis:'산안법 §14', period:'연1회', status:'미보유', updated:'', expires:'', note:'WWS: 기업 안전보건관리 실행 통합 확인', category:'wws', hasTemplate:true, localFile:''},
   {id:'w01', wwsCode:'A-1-1', wwsNo:301, name:'경영책임자 안전보건교육 이수증', basis:'산안법 §14', period:'연1회', status:'미보유', updated:'', expires:'', note:'경영책임자 교육 참석사진·교육서류', category:'wws', hasTemplate:false, localFile:''},
@@ -1916,19 +1916,29 @@ const docMasterList = [
   {id:'w10', wwsCode:'F-4-1', wwsNo:358, name:'산업안전보건 관계법령 파악 대장 (최신 법규 업데이트 리스트)', basis:'산안법', period:'주기적', status:'미보유', updated:'', expires:'', note:'최신 법규 변경사항 반영 필요', category:'wws', hasTemplate:false, localFile:''},
 
   // === 기타 법정 서류 (WWS 코드 없음) ===
-  {id:'d11', wwsCode:'', wwsNo:'', name:'작업장 안전보건 점검표', basis:'산안법 §15', period:'월1회', status:'미보유', updated:'', expires:'', note:'환경점검표 보유', category:'legal', hasTemplate:true, localFile:''},
-  {id:'d13', wwsCode:'', wwsNo:'', name:'기계·기구 자체검사 기록', basis:'산안법 §98', period:'장비별', status:'미보유', updated:'', expires:'', note:'', category:'legal', hasTemplate:false, localFile:''},
+  {id:'d11', wwsCode:'', wwsNo:'', name:'작업장 안전보건 점검표', basis:'산안법 §15', period:'월1회', status:'보유', updated:'2026-04-01', expires:'', note:'일일점검표+작업유형별+일일체크시트 보유', category:'legal', hasTemplate:true, localFile:'1.작업장_(일일)_점검표_매일.xlsx'},
+  {id:'d13', wwsCode:'', wwsNo:'', name:'기계·기구 자체검사 기록', basis:'산안법 §98', period:'장비별', status:'보유', updated:'2026-04-01', expires:'', note:'설비별 안전점검 체크리스트 보유', category:'legal', hasTemplate:false, localFile:'3.설비별_안전점검_체크리스트.xlsx'},
   {id:'d17', wwsCode:'', wwsNo:'', name:'중량물 운반기계 안전조치 지침서', basis:'산안법 §38', period:'상시', status:'보유', updated:'', expires:'', note:'ISPF-EHS-G-02', category:'legal', hasTemplate:false, localFile:'ISPF-EHS-G-02. 중량물 운반기계 안전조치 지침서(적재기준포함).docx'},
   {id:'d18', wwsCode:'', wwsNo:'', name:'근로자 참여·의견청취 절차서', basis:'산안법 §24', period:'상시', status:'보유', updated:'', expires:'', note:'ISPF-EHS-P-02', category:'legal', hasTemplate:false, localFile:'ISPF-EHS-P-02. 근로자의 참여, 의견청취 절차서.docx'},
   {id:'d19', wwsCode:'', wwsNo:'', name:'협력업체 작업허가서', basis:'산안법 §63', period:'작업시', status:'미보유', updated:'', expires:'', note:'', category:'legal', hasTemplate:true, localFile:''},
-  {id:'d20', wwsCode:'', wwsNo:'', name:'산업재해 발생 기록부', basis:'산안법 §57', period:'발생시', status:'미보유', updated:'', expires:'', note:'', category:'legal', hasTemplate:false, localFile:''},
+  {id:'d20', wwsCode:'', wwsNo:'', name:'산업재해조사지침', basis:'산안법 §57', period:'발생시', status:'보유', updated:'2023-11-01', expires:'', note:'산업재해조사지침 보유', category:'legal', hasTemplate:false, localFile:'산업재해조사지침(202311).docx'},
   {id:'d21', wwsCode:'', wwsNo:'', name:'아차사고 보고서', basis:'자율관리', period:'발생시', status:'미보유', updated:'', expires:'', note:'', category:'self', hasTemplate:false, localFile:''},
   {id:'d22', wwsCode:'', wwsNo:'', name:'특수건강검진 결과 관리대장', basis:'산안법 §130', period:'연1회', status:'미보유', updated:'', expires:'', note:'', category:'legal', hasTemplate:false, localFile:''},
   {id:'d23', wwsCode:'', wwsNo:'', name:'작업환경측정 결과서', basis:'산안법 §125', period:'반기1회', status:'미보유', updated:'', expires:'', note:'', category:'legal', hasTemplate:false, localFile:''},
-  {id:'d24', wwsCode:'', wwsNo:'', name:'MSDS 관리대장', basis:'산안법 §114', period:'상시', status:'미보유', updated:'', expires:'', note:'화학물질 사용시', category:'legal', hasTemplate:false, localFile:''},
+  {id:'d24', wwsCode:'', wwsNo:'', name:'MSDS 관리대장 (화학물질통합리스트)', basis:'산안법 §114', period:'상시', status:'보유', updated:'2025-05-06', expires:'', note:'최신 MSDS 자료 업데이트 필요', category:'legal', hasTemplate:false, localFile:'화학물질통합리스트(250506) _ 최신 MSDS 자료자체를 받아야 함. 업데이트 해야 함..xlsx'},
   {id:'d25', wwsCode:'', wwsNo:'', name:'환경운영점검표', basis:'자율관리', period:'주기적', status:'보유', updated:'2024-01-01', expires:'', note:'2024년도 양식', category:'self', hasTemplate:false, localFile:'SS-EM05-01 환경운영점검표(2024).xlsx'},
   {id:'d26', wwsCode:'', wwsNo:'', name:'신규입사자의 주의사항', basis:'자율관리', period:'채용시', status:'보유', updated:'', expires:'', note:'', category:'self', hasTemplate:false, localFile:'신규입사자의 주의사항.docx'},
   {id:'d27', wwsCode:'', wwsNo:'', name:'본사 비상대피도', basis:'소방법', period:'상시', status:'보유', updated:'2026-03-25', expires:'', note:'', category:'legal', hasTemplate:false, localFile:'본사 대피도.pptx'},
+  {id:'d28', wwsCode:'', wwsNo:'', name:'산업안전보건위원회 규정', basis:'산안법 §24', period:'상시', status:'보유', updated:'2023-01-01', expires:'', note:'', category:'legal', hasTemplate:false, localFile:'산업안전보건위원회규정(202301).docx'},
+  {id:'d29', wwsCode:'', wwsNo:'', name:'보건관리지침', basis:'산안법 §18', period:'상시', status:'보유', updated:'2025-08-25', expires:'', note:'', category:'legal', hasTemplate:false, localFile:'보건관리지침(20250825).docx'},
+  {id:'d30', wwsCode:'', wwsNo:'', name:'위험물질 안전관리지침', basis:'산안법 §114', period:'상시', status:'보유', updated:'2025-08-25', expires:'', note:'', category:'legal', hasTemplate:false, localFile:'위험물질안전관리지침(20250825).docx'},
+  {id:'d31', wwsCode:'', wwsNo:'', name:'LOTO(잠금·태깅) 관련 지침', basis:'산안법 §38', period:'상시', status:'보유', updated:'2025-08-29', expires:'', note:'', category:'legal', hasTemplate:false, localFile:'LOTO 관련 지침(20250829).docx'},
+  {id:'d32', wwsCode:'', wwsNo:'', name:'위험성평가 실시규정', basis:'산안법 §36', period:'상시', status:'보유', updated:'', expires:'', note:'신성오토텍 자체 규정', category:'legal', hasTemplate:false, localFile:'위험성평가 실시규정(신성오토텍).hwp'},
+  {id:'d33', wwsCode:'', wwsNo:'', name:'유해물질 취급작업 체크리스트', basis:'산안법 §114', period:'작업시', status:'보유', updated:'', expires:'', note:'', category:'legal', hasTemplate:false, localFile:'유해물질취급작업체크리스트.xlsx'},
+  {id:'d34', wwsCode:'', wwsNo:'', name:'호흡보호구 밀착도(Fit Test) 자가검사 매뉴얼', basis:'산안법 §38', period:'상시', status:'보유', updated:'', expires:'', note:'', category:'legal', hasTemplate:false, localFile:'호흡관련보호구밀착도(Fit Test)자가검사매뉴얼.docx'},
+  {id:'d35', wwsCode:'', wwsNo:'', name:'화재·폭발사고 예방 안전수칙', basis:'소방법', period:'상시', status:'보유', updated:'', expires:'', note:'PDF 자료', category:'legal', hasTemplate:false, localFile:'2. 사업장 화재_폭발사고 예방 안전수칙.pdf'},
+  {id:'d36', wwsCode:'', wwsNo:'', name:'작업자 안전보건관리 일일 체크시트', basis:'자율관리', period:'매일', status:'보유', updated:'', expires:'', note:'LG 점검시트 양식', category:'self', hasTemplate:false, localFile:'작업자 안전보건관리 일일 체크시트.xls'},
+  {id:'d37', wwsCode:'', wwsNo:'', name:'비상대피 시설 설치 운영 가이드', basis:'소방법', period:'상시', status:'보유', updated:'', expires:'', note:'PDF 가이드', category:'legal', hasTemplate:false, localFile:'3. 비상대피 시설 설치 운영 가이드.pdf'},
 ];
 
 function getDMList(){
@@ -2383,7 +2393,7 @@ const cnCards = [
    detail:{intro:'TBM은 중대재해처벌법에서 요구하는 "안전보건관리체계 이행 증빙"의 핵심 활동입니다.\nTBM是重大灾害法要求的核心安全活动。',sections:[{t:'📋 TBM 진행 8단계 TBM 8步骤',i:['① 건강상태 확인 (음주·체온·약물) 健康确认','② 전일 이상·아차사고 공유 前日异常分享','③ 금일 작업내용 확인 今日作业确认','④ 위험요인·안전대책 강조 危险因素·安全对策','⑤ PPE 착용 점검 防护装备检查','⑥ 5S·정리정돈 확인 5S整理确认','⑦ 질의응답 提问解答','⑧ 안전다짐 구호 安全口号']},{t:'📅 요일별 TBM 테마 每日主题',i:['월: 설비·기계 점검 周一:设备检查','화: 개인보호구 점검 周二:PPE检查','수: 건강·피로 관리 周三:健康管理','목: 환경·정리정돈 周四:环境整理','금: 아차사고 사례 공유 周五:险情分享']}],hl:'TBM 기록지는 중처법 대응 핵심 증빙자료입니다!',law:'중대재해처벌법 제4조 1항'}},
   {id:3,series:'basic',color:'linear-gradient(135deg,#7c2d12,#ea580c)',ep:'SERIES 03 · 기초편 基础篇',title:'개인보호구\n완전 정복\n个人防护装备',emoji:'⛑️',footer:'보호구는 마지막 방어선입니다 | 防护装备是最后的防线',fb:'#7c2d12',fc:'#fff',
    preview:['착용 안 하면 산재 보상에 불이익 발생 가능 不戴可能影响赔偿','용도에 맞는 보호구 선택이 핵심 选择合适的防护装备是关键','파손된 보호구 = 착용 안 한 것과 같다 损坏的=没戴'],
-   detail:{intro:'개인보호구(PPE)는 모든 안전조치가 완료된 후에도 남은 위험으로부터 몸을 지키는 마지막 방어선입니다.\nPPE是保护身体的最后防线。',sections:[{t:'🪖 작업별 필수 보호구 各作业必备防护',i:['천장주행크레인: 안전모+안전화 (필수) 安全帽+安全鞋','금형 작업: 안전장갑+안전화+안전모 模具:手套+安全鞋+安全帽','사출 작업: 방열장갑+보안경+안전화 注塑:隔热手套+护目镜+安全鞋','화학물질: 방독마스크+내화학장갑+보안경 化学品:防毒面具+耐化学手套+护目镜']},{t:'❌ 이런 행동은 안 됩니다 禁止事项',i:['"잠깐이니까 괜찮아" → 사고는 잠깐에 발생 "就一会儿"→事故瞬间发生','파손된 보호구 계속 착용 禁止使用损坏的防护装备','본인 것 아닌 보호구 무단 사용 禁止擅用他人防护装备']}],hl:'보호구 미착용 사고 발생 시 산재보상 감액 + 회사 행정처분.',law:'산업안전보건법 제38조'}},
+   detail:{intro:'개인보호구(PPE)는 모든 안전조치가 완료된 후에도 남은 위험으로부터 몸을 지키는 마지막 방어선입니다.\nPPE是保护身体的最后防线。',sections:[{t:'🪖 작업별 필수 보호구 各作业必备防护',i:['천장주행크레인: 안전모+안전화 (필수) 安全帽+安全鞋','금형 작업: 안전장갑+안전화+안전모 模具:手套+安全鞋+安全帽','사출 작업: 방열장갑+보안경+안전화 注塑:隔热手套+护目镜+安全鞋','화학물질: 방독마스크+내화학장갑+보안경 化学品:防毒面具+耐化学手套+护目镜']},{t:'❌ 이런 행동은 안 됩니다 禁止事项',i:['"잠깐이니까 괜찮아" → 사고는 잠깐에 발생 "就一会儿"→事故瞬间发生','파손된 보호구 계속 착용 禁止使用损坏的防护装备','본인 것 아닌 보호구 무단 사용 禁止擅用他人防护装备']}],hl:'보호구 미착용 사고 발생 시 산재보상 감액 + 회사 행정처분. 不戴防护发生事故→工伤赔偿减少+公司处罚。',law:'산업안전보건법 제38조 产业安全保健法第38条'}},
   {id:4,series:'basic',color:'linear-gradient(135deg,#312e81,#6366f1)',ep:'SERIES 04 · 기초편 基础篇',title:'아차사고\n신고하면 포상합니다!\n报告险情有奖励！',emoji:'🚨',footer:'아차사고 1건 = 중대사고 30건 예방 | 1次险情=预防30次事故',fb:'#312e81',fc:'#fff',
    preview:['아차사고 = 다칠 뻔 했지만 부상은 없는 상황 险情=差点受伤','신고해도 절대 불이익 없음, 포상 있음 报告无处罚，有奖励','하인리히 법칙: 아차사고 300 → 중상 1 海因里希:险情300→重伤1'],
    detail:{intro:'하인리히 법칙에 따르면 중대사고 1건 전에 아차사고 300건이 있습니다.\n海因里希法则：1次重大事故前有300次险情。',sections:[{t:'📌 아차사고란? 什么是险情？',i:['발 헛디뎌 넘어질 뻔 했지만 안 넘어짐 差点摔倒','금형 이동 중 미끄러졌지만 다치지 않음 模具搬运中滑但未受伤','지게차가 나와 충돌할 뻔 했지만 피함 差点与叉车碰撞但躲开了']},{t:'📝 신고 방법 报告方法',i:['안전지킴이 카카오톡 채팅방으로 보고 通过KakaoTalk报告','안전담당자에게 구두 보고도 가능 也可口头报告安全员','사진과 함께 보고하면 더 좋습니다 附照片报告更好']},{t:'🎁 신고 포상 奖励',i:['신고 1건: 소정의 포상 每次报告有奖励','우수 제안: 분기 1회 표창 优秀建议：季度表彰']}],hl:'신고한다고 처벌받지 않습니다! 报告不会受到处罚！',law:'산업안전보건법 제52조'}},
@@ -2401,7 +2411,7 @@ const cnCards = [
    detail:{intro:'우리 공장의 비상 대피 절차와 소화기 위치를 반드시 알고 있어야 합니다.\n必须知道工厂紧急疏散程序和灭火器位置。',sections:[{t:'🔥 화재 발견 시 행동 순서 发现火灾时行动顺序',i:['① "불이야!" 외쳐 전파 大喊"着火了！"','② 119 신고 报警119','③ 초기 소화 판단 (30초 이내) 30秒内判断初期灭火','④ 비상구로 대피 (엘리베이터 금지) 从紧急出口疏散','⑤ 정문 앞 주차장 집결 在大门前停车场集合']},{t:'🧯 소화기 사용법 (PASS) 灭火器使用方法',i:['P - 핀 뽑기 拔销','A - 호스 불 쪽 겨냥 对准火焰','S - 손잡이 눌러 분사 按压喷射','S - 좌우로 쓸듯이 뿌리기 左右扫射']}],hl:'소화기 압력계 녹색 = 정상. 매월 점검하세요! 灭火器压力表绿色=正常，每月检查！',law:'소방시설법 제10조'}},
   {id:9,series:'culture',color:'linear-gradient(135deg,#064e3b,#059669)',ep:'SERIES 09 · 문화편 文化篇',title:'정리정돈 5S로\n사고 막기\n用5S防止事故',emoji:'✨',footer:'깨끗한 현장 = 사고 없는 현장 | 干净的现场=无事故的现场',fb:'#064e3b',fc:'#fff',
    preview:['사고의 30% 이상이 정리정돈 불량에서 시작 30%以上事故因整理不良','바닥 이물질 → 미끄러짐 사고의 주원인 地面异物→滑倒主因','통로 막힘 → 비상 시 대피 불가 通道堵塞→无法疏散'],
-   detail:{intro:'5S는 가장 쉽고 효과적인 사고 예방 활동입니다.\n5S是最简单有效的事故预防活动。',sections:[{t:'5S 실천 방법 5S实践方法',i:['정리(整理): 필요 vs 불필요 구분','정돈(整顿): 정해진 위치에 보관','청소(清扫): 매일 작업 후 5분 청소','청결(清洁): 청소 상태 항상 유지','습관화(素养): 위 4S를 당연하게 반복']},{t:'📋 퇴근 전 5분 체크 下班前5分钟检查',i:['내 구역 청소 완료 我的区域打扫完毕','공구 제자리 반납 工具归位','바닥 기름·이물질 없음 地面无油污']}],hl:'정리정돈으로 공구 찾는 시간 줄이면 하루 30분 절약!',law:'산업안전보건기준에 관한 규칙 제3조'}},
+   detail:{intro:'5S는 가장 쉽고 효과적인 사고 예방 활동입니다.\n5S是最简单有效的事故预防活动。',sections:[{t:'5S 실천 방법 5S实践方法',i:['정리(整理): 필요 vs 불필요 구분','정돈(整顿): 정해진 위치에 보관','청소(清扫): 매일 작업 후 5분 청소','청결(清洁): 청소 상태 항상 유지','습관화(素养): 위 4S를 당연하게 반복']},{t:'📋 퇴근 전 5분 체크 下班前5分钟检查',i:['내 구역 청소 완료 我的区域打扫完毕','공구 제자리 반납 工具归位','바닥 기름·이물질 없음 地面无油污']}],hl:'정리정돈으로 공구 찾는 시간 줄이면 하루 30분 절약! 整理好工具每天节省30分钟！',law:'산업안전보건기준에 관한 규칙 제3조 产业安全保健规则第3条'}},
   {id:10,series:'culture',color:'linear-gradient(135deg,#1e3a5f,#0ea5e9)',ep:'SERIES 10 · 문화편 文化篇',title:'운반대차·중량물\n취급 안전수칙\n搬运车·重物安全',emoji:'📦',footer:'중량물 취급은 반드시 2인 이상! | 重物搬运必须2人以上！',fb:'#1e3a5f',fc:'#fff',
    preview:['운반대차 적재 하중 초과 금지 禁止超过搬运车承载量','중량물 인력 운반 시 2인 이상 必须2人以上搬运重物','허리를 굽히지 말고 무릎을 굽혀 들기 弯膝不弯腰'],
    detail:{intro:'운반대차 사고와 중량물 취급 사고는 근골격계 질환과 낙하·충돌 사고의 주요 원인입니다.\n搬运车事故和重物搬运事故是肌骨疾病和坠落碰撞事故的主要原因。',sections:[{t:'🛒 운반대차 안전수칙 搬运车安全规则',i:['적재 하중 초과 금지 (표시 하중 확인) 禁止超载','이동 시 전방 주시 — 시야 가리면 2인 운반 移动时注意前方','경사로 이동 시 천천히 + 제동 확인 斜坡缓行+确认制动','파손·변형된 대차 즉시 사용 중지 损坏的车辆立即停用','대차 위에 사람 탑승 금지 禁止人员乘坐']},{t:'💪 중량물 취급 수칙 重物搬运规则',i:['25kg 이상은 반드시 2인 이상 운반 25kg以上必须2人搬运','들어올릴 때: 허리가 아닌 무릎을 굽혀 들기 弯膝不弯腰','몸에 밀착하여 운반 (팔 뻗지 않기) 贴身搬运','운반 경로 장애물 사전 제거 预先清除搬运路径障碍物','장거리 운반 시 대차·리프트 사용 长距离使用搬运工具']},{t:'🔴 이런 행동은 금지 禁止事项',i:['한 손으로 중량물 운반 禁止单手搬运重物','시야 가린 상태로 이동 禁止视线遮挡移动','대차 끌기 (밀어서 이동) 推车不拉车']}],hl:'중량물 무리 운반 = 허리 디스크 직결! 보조기구를 활용하세요.\n强行搬运重物=直接导致腰椎间盘！请使用辅助工具。',law:'산업안전보건기준에 관한 규칙 제37조, 제39조'}},
@@ -2418,7 +2428,7 @@ const cnCards = [
 // ============================================================
 const ptPosters = [
   {id:'p1',cat:'notice',color:'#0d1f3c',accent:'#1e5096',badge:'📋 법정 필수 게시 法定必贴',emoji:'📞',title:'비상 연락처 紧急电话',sub:'화재·사고 시 즉시 연락 | 立即联系',
-   rules:[{n:'🔥',t:'화재 신고 火灾',d:'119'},{n:'🚑',t:'응급 구조 急救',d:'119'},{n:'🚓',t:'경찰 警察',d:'112'},{n:'🏢',t:'안전담당자 安全员',d:'연락처 기재'},{n:'🏥',t:'가까운 병원 医院',d:'병원명·전화번호 기재'},{n:'👨‍💼',t:'공장장 厂长',d:'연락처 기재'}],
+   rules:[{n:'🔥',t:'화재 신고 火灾',d:'119'},{n:'🚑',t:'응급 구조 急救',d:'119'},{n:'🚓',t:'경찰 警察',d:'112'},{n:'🏢',t:'안전담당자 安全员',d:'연락처 기재 填写联系方式'},{n:'🏥',t:'가까운 병원 医院',d:'병원명·전화번호 기재 填写医院电话'},{n:'👨‍💼',t:'공장장 厂长',d:'연락처 기재 填写联系方式'}],
    footer:'항상 최신 상태 유지 | 始终保持最新',fb:'#0d1f3c',fc:'#fff'},
   {id:'p2',cat:'notice',color:'#991b1b',accent:'#ef4444',badge:'📋 법정 필수 게시 法定必贴',emoji:'🧯',title:'소화기 사용법 灭火器',sub:'PASS 기억하세요 | 记住PASS',
    rules:[{n:'P',t:'핀 뽑기 拔销',d:'안전핀을 뽑아 잠금 해제 拔安全销解锁'},{n:'A',t:'겨냥 瞄准',d:'호스를 불 쪽으로 겨냥 对准火焰根部'},{n:'S',t:'분사 喷射',d:'손잡이를 눌러 분사 按压手柄喷射'},{n:'S',t:'쓸기 扫射',d:'좌우로 쓸듯이 뿌리기 左右扫射'}],
@@ -2433,7 +2443,7 @@ const ptPosters = [
    rules:[{n:'1',t:'전원 차단→잠금→태그 断电→锁→牌',d:'본인 이름 태그 부착 贴本人名牌'},{n:'2',t:'잔류 에너지 제거 释放残能',d:'잔압·관성·열 제거 消除余压·惯性·热'},{n:'3',t:'안전블록 삽입 插安全块',d:'낙하 방지 防坠落'},{n:'4',t:'2인 이상 작업 2人以上',d:'신호수 1인 配信号员'},{n:'5',t:'보호구 착용 穿防护',d:'안전장갑·안전화 手套·安全鞋'},{n:'6',t:'본인만 해제 本人解锁',d:'타인 해제 절대 금지 禁他人解锁'}],
    footer:'LOTO 없이 접근=중대재해 | 未锁=重大灾害',fb:'#134e4a',fc:'#fff'},
   {id:'p6',cat:'rule',color:'#1e1b4b',accent:'#4f46e5',badge:'📌 안전수칙 安全规则',emoji:'🚜',title:'지게차 안전수칙 叉车规则',sub:'지게차와 보행자 공존 불가 | 叉车·行人不可共存',
-   rules:[{n:'✅',t:'면허자만 운전 持证驾驶',d:'운전기능사 면허 驾驶证'},{n:'✅',t:'포크 높이 20~30cm',d:'주행 시 항상 낮게 行驶时保持低位'},{n:'✅',t:'안전벨트 착용 系安全带',d:'항상 예외 없이 无例外'},{n:'🔑',t:'키 분리보관 钥匙分离',d:'운행 후 키 회수 运行后回收钥匙'},{n:'🚫',t:'보행자 구역 금지 禁行人区',d:'통로 분리 준수 遵守通道分离'},{n:'🚫',t:'포크 탑승 금지 禁乘坐',d:'즉시 징계 대상 立即处分'}],
+   rules:[{n:'✅',t:'면허자만 운전 持证驾驶',d:'운전기능사 면허 驾驶证'},{n:'✅',t:'포크 높이 20~30cm 货叉离地',d:'주행 시 항상 낮게 行驶时保持低位'},{n:'✅',t:'안전벨트 착용 系安全带',d:'항상 예외 없이 无例外'},{n:'🔑',t:'키 분리보관 钥匙分离',d:'운행 후 키 회수 运行后回收钥匙'},{n:'🚫',t:'보행자 구역 금지 禁行人区',d:'통로 분리 준수 遵守通道分离'},{n:'🚫',t:'포크 탑승 금지 禁乘坐',d:'즉시 징계 대상 立即处分'}],
    footer:'무면허=형사처벌 | 키 분리 필수 | 无证=刑罚',fb:'#1e1b4b',fc:'#fff'},
   {id:'p7',cat:'rule',color:'#4a1d96',accent:'#8b5cf6',badge:'📌 안전수칙 安全规则',emoji:'⚡',title:'전기 안전수칙 电气规则',sub:'감전은 순식간에 사망 | 触电致命',
    rules:[{n:'✅',t:'작업 전 전원 차단 先断电',d:'잠금+태그 후 작업 上锁挂牌后作业'},{n:'✅',t:'이상 즉시 신고 异常报告',d:'전선 손상, 이상 냄새 电线破损·异味'},{n:'🚫',t:'분전반 무단 접근 금지 禁止乱碰',d:'허가 담당자만 개방 只有授权者'},{n:'🚫',t:'물기 있는 손 금지 湿手禁触',d:'반드시 손 건조 후 必须擦干手'},{n:'🚫',t:'연장선 방치 금지 禁放延长线',d:'정리 후 마감 整理后收尾'},{n:'🚫',t:'자가 수리 금지 禁止私修',d:'전문가에게 요청 请专业人员'}],
@@ -2457,7 +2467,7 @@ const ptPosters = [
    rules:[{n:'🔴',t:'하중 초과 금지 禁超载',d:'표시 하중 확인 确认标示载重'},{n:'🔴',t:'키 이상 운반 금지 禁超高',d:'낮게 이동 低位移动'},{n:'🔴',t:'하부 접근 금지 吊物下禁入',d:'즉사 위험 致命危险'},{n:'🔵',t:'안전모 필수 戴安全帽',d:'진입 전 착용 进入前佩戴'},{n:'🔵',t:'2인1조+신호수 2人1组+信号员',d:'1톤 이상 1吨以上'}],
    footer:'안전모 없이 진입 금지 | 无帽禁入',fb:'#991b1b',fc:'#fff'},
   {id:'p12',cat:'sign',color:'#1e3a5f',accent:'#0ea5e9',badge:'🪧 현장 비표 现场标牌',emoji:'🚫',title:'허가자 외 접근 금지 禁接近',sub:'분전반/전기 패널함 | 配电箱',
-   rules:[{n:'🔴',t:'허가 담당자만 접근 授权者',d:'무단 시 감전 위험 擅触有触电危险'},{n:'🔴',t:'잠금·태깅 필수 LOTO',d:'Lock+Tag 후 작업 上锁挂牌后作业'},{n:'🔴',t:'타인 해제 금지 禁他人解',d:'본인만 해제 只有本人可解'},{n:'📞',t:'담당자 연락처 负责人',d:'전화번호 기재 填写电话'}],
+   rules:[{n:'🔴',t:'허가 담당자만 접근 授权者',d:'무단 시 감전 위험 擅触有触电危险'},{n:'🔴',t:'잠금·태깅 필수 上锁挂牌',d:'Lock+Tag 후 작업 上锁挂牌后作业'},{n:'🔴',t:'타인 해제 금지 禁他人解',d:'본인만 해제 只有本人可解'},{n:'📞',t:'담당자 연락처 负责人',d:'전화번호 기재 填写电话'}],
    footer:'허가 없이 접근 금지 | 未授权禁入',fb:'#1e3a5f',fc:'#fff'},
   {id:'p13',cat:'sign',color:'#78350f',accent:'#d97706',badge:'🪧 현장 비표 现场标牌',emoji:'🔩',title:'금형 작업 전원 차단 필수 断电',sub:'사출기 금형 교체 시 | 模具更换时',
    rules:[{n:'🔴',t:'차단→잠금→태그 필수 断电→锁→牌',d:'순서 필수 顺序必须遵守'},{n:'🔴',t:'미차단 교체 절대 금지 禁未断电',d:'사망 사고 위험 致命危险'},{n:'🔵',t:'보호구 착용 필수 穿防护',d:'안전장갑·안전화 手套·安全鞋'},{n:'🔵',t:'2인1조 작업 2人1组',d:'혼자 금지 禁独自'}],
