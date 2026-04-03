@@ -2211,22 +2211,24 @@ function renderDocMgr(){
       const sc = d.status==='보유'?'green':d.status==='갱신필요'?'yellow':'red';
       const wwsBadge = d.wwsCode ? `<span class="badge blue" style="font-size:10px;">${d.wwsCode}</span>` : '<span style="font-size:10px;color:#9ca3af;">—</span>';
       // 웹 양식 기능 (추후 추가 예정)
-      const fileName = d.localFile || '';
-      let fileDisplay;
-      if(d.driveUrl && fileName){
-        fileDisplay = `<div style="display:flex;flex-direction:column;gap:3px;">
-          <a href="${d.driveUrl}" target="_blank" style="font-size:11px;color:#1e5096;text-decoration:none;font-weight:600;" title="${fileName}">📄 클릭해서 보기</a>
-          <div style="display:flex;align-items:center;gap:4px;">
-            <span style="font-size:9px;color:#9ca3af;">${fileName.length>18?fileName.substring(0,18)+'…':fileName}</span>
-            <a href="${d.driveUrl}" target="_blank" style="font-size:10px;color:#6b7280;" title="다운로드">⬇</a>
-            <button style="background:none;border:none;cursor:pointer;font-size:10px;color:#dc2626;" onclick="dmUnlinkFile('${d.id}')" title="삭제">✕</button>
-          </div>
-        </div>`;
-      } else {
-        fileDisplay = `<label style="font-size:11px;color:#1e5096;cursor:pointer;display:inline-flex;align-items:center;gap:3px;padding:4px 8px;background:#eef4ff;border-radius:6px;font-weight:600;">
-          <input type="file" style="display:none;" onchange="dmUploadToDrive('${d.id}',this)">📁 파일 업로드
-        </label>`;
+      // 다중 파일 지원
+      const dmFiles = getDMFiles(d.id);
+      const requiredCount = dmGetRequiredCount(d.period);
+      const counterText = requiredCount > 0 ? `<span style="font-size:11px;font-weight:700;color:${dmFiles.length>=requiredCount?'#16a34a':'#ea580c'};">${dmFiles.length}/${requiredCount}</span>` : (dmFiles.length>0?`<span style="font-size:11px;color:#6b7280;">${dmFiles.length}건</span>`:'');
+      let fileDisplay = `<div style="display:flex;flex-direction:column;gap:3px;">`;
+      if(dmFiles.length>0){
+        fileDisplay += dmFiles.map((f,fi)=>`<div style="display:flex;align-items:center;gap:4px;">
+          ${f.url?`<a href="${f.url}" target="_blank" style="font-size:11px;color:#1e5096;text-decoration:none;" title="${f.name}">📄 ${f.name.length>20?f.name.substring(0,20)+'…':f.name}</a>`:`<span style="font-size:11px;">📄 ${f.name.length>20?f.name.substring(0,20)+'…':f.name}</span>`}
+          <span style="font-size:9px;color:#9ca3af;">${f.date||''}</span>
+          <button style="background:none;border:none;cursor:pointer;font-size:10px;color:#dc2626;" onclick="dmRemoveFile('${d.id}',${fi})" title="삭제">✕</button>
+        </div>`).join('');
       }
+      fileDisplay += `<div style="display:flex;align-items:center;gap:6px;margin-top:${dmFiles.length>0?'4':'0'}px;">
+        <label style="font-size:11px;color:#1e5096;cursor:pointer;display:inline-flex;align-items:center;gap:3px;padding:3px 8px;background:#eef4ff;border-radius:6px;font-weight:600;">
+          <input type="file" style="display:none;" onchange="dmUploadToDrive('${d.id}',this)">📁 추가
+        </label>
+        ${counterText}
+      </div></div>`;
       const uploadId = 'dm-upload-'+d.id;
       // 만료 경고
       let expiresWarn = '';
@@ -2308,63 +2310,74 @@ function dmNote(id){
   if(note!==null){ saveDMItem(id,'note',note); renderDocMgr(); }
 }
 
-// 드라이브 업로드 기능
+// 다중 파일 관리
+function getDMFiles(docId){
+  try{ const all=JSON.parse(localStorage.getItem('safety_dm_files')||'{}'); return all[docId]||[]; }catch(e){ return []; }
+}
+function setDMFiles(docId, files){
+  try{ const all=JSON.parse(localStorage.getItem('safety_dm_files')||'{}'); all[docId]=files; localStorage.setItem('safety_dm_files',JSON.stringify(all)); }catch(e){}
+}
+function dmGetRequiredCount(period){
+  if(!period) return 0;
+  if(period.includes('매월')||period==='월1회') return 12;
+  if(period.includes('매일')) return 0; // 너무 많으므로 카운터 없음
+  if(period.includes('반기')||period==='년2회') return 2;
+  if(period.includes('년4회')||period.includes('분기')) return 4;
+  if(period.includes('연1회')||period.includes('년1회')) return 1;
+  if(period.includes('2년')) return 1;
+  if(period.includes('3년')) return 1;
+  if(period.includes('연16시간')) return 1;
+  return 0;
+}
 function dmUploadToDrive(docId, input) {
   if(!input.files || !input.files[0]) return;
   const file = input.files[0];
-  const docs = getDMList();
-  const doc = docs.find(d=>d.id===docId);
+  const today = new Date().toISOString().split('T')[0];
+  const statusEl = document.getElementById('dm-upload-status-' + docId);
 
-  if(!DRIVE_UPLOAD_URL) {
-    // Fallback: just save filename
-    saveDMItem(docId, 'localFile', file.name);
+  const addFileRecord = (url) => {
+    const files = getDMFiles(docId);
+    files.push({name:file.name, url:url||'', date:today});
+    setDMFiles(docId, files);
     saveDMItem(docId, 'status', '보유');
-    saveDMItem(docId, 'updated', new Date().toISOString().split('T')[0]);
+    saveDMItem(docId, 'updated', today);
+    input.value='';
+    if(statusEl){ statusEl.textContent='✅'; setTimeout(()=>{statusEl.textContent='';},1500); }
     renderDocMgr();
-    alert('✅ 파일이 연결되었습니다: ' + file.name);
+  };
+
+  if(!DRIVE_UPLOAD_URL){
+    addFileRecord('');
     return;
   }
 
-  // Show uploading status
-  const statusEl = document.getElementById('dm-upload-status-' + docId);
   if(statusEl) statusEl.textContent = '업로드 중...';
-
   const reader = new FileReader();
-  reader.onload = function(e) {
+  reader.onload = function(e){
     const base64 = e.target.result.split(',')[1];
     fetch(DRIVE_UPLOAD_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({
-        fileName: file.name,
-        fileData: base64,
-        mimeType: file.type,
-        subfolder: '서류관리'
-      })
-    }).then(() => {
-      // Save drive folder URL (since no-cors can't read response)
-      const driveUrl = 'https://drive.google.com/drive/folders/10a7V0ao6Qf-_9XeiK4Bd2NRmfAX7rgB5';
-      saveDMItem(docId, 'driveUrl', driveUrl);
-      saveDMItem(docId, 'localFile', file.name);
-      saveDMItem(docId, 'status', '보유');
-      saveDMItem(docId, 'updated', new Date().toISOString().split('T')[0]);
-      if(statusEl) statusEl.textContent = '✅ 완료';
-      setTimeout(() => { if(statusEl) statusEl.textContent = ''; }, 2000);
-      renderDocMgr();
-    }).catch(err => {
-      if(statusEl) statusEl.textContent = '❌ 실패';
-      console.error('Drive upload error:', err);
+      method:'POST', mode:'no-cors',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({fileName:file.name, fileData:base64, mimeType:file.type, subfolder:'서류관리'})
+    }).then(()=>{
+      addFileRecord('https://drive.google.com/drive/folders/10a7V0ao6Qf-_9XeiK4Bd2NRmfAX7rgB5');
+    }).catch(err=>{
+      if(statusEl) statusEl.textContent='❌ 실패';
+      console.error(err);
     });
   };
   reader.readAsDataURL(file);
 }
-function dmUnlinkFile(id){
-  if(confirm('이 서류의 파일 연결을 해제하시겠습니까?')){
-    saveDMItem(id, 'localFile', '');
-    saveDMItem(id, 'driveUrl', '');
-    renderDocMgr();
+function dmRemoveFile(docId, fileIdx){
+  if(!confirm('이 파일을 삭제하시겠습니까?')) return;
+  const files = getDMFiles(docId);
+  files.splice(fileIdx, 1);
+  setDMFiles(docId, files);
+  if(files.length===0){
+    saveDMItem(docId, 'status', '미보유');
+    saveDMItem(docId, 'updated', '');
   }
+  renderDocMgr();
 }
 
 // 서류 추가
