@@ -2837,8 +2837,28 @@ function renderSigns(){
     const sc=s.status==='설치완료'?'green':s.status==='설치필요'?'red':'yellow';
     const memo = s.memo || '';
     const signImg = s.imageData || '';
+    // 색상별 미니 아이콘
+    const colorKey = s.color||'';
+    let miniSign = '';
+    if(colorKey.includes('빨강')){
+      miniSign = `<div style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border:3px solid #D32F2F;border-radius:50%;position:relative;flex-shrink:0;"><div style="width:70%;height:3px;background:#D32F2F;transform:rotate(-45deg);border-radius:2px;"></div></div>`;
+    } else if(colorKey.includes('노랑')){
+      miniSign = `<div style="width:0;height:0;border-left:14px solid transparent;border-right:14px solid transparent;border-bottom:24px solid #F57F17;flex-shrink:0;"></div>`;
+    } else if(colorKey.includes('파랑')){
+      miniSign = `<div style="width:28px;height:28px;border-radius:50%;background:#1565C0;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="color:#fff;font-weight:900;font-size:14px;">!</span></div>`;
+    } else if(colorKey.includes('초록')){
+      miniSign = `<div style="width:28px;height:22px;border-radius:3px;background:#2E7D32;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="color:#fff;font-size:12px;">🚪</span></div>`;
+    }
     return `<tr>
-      <td style="font-weight:600;">${s.location}</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:8px;">
+          ${miniSign}
+          <div>
+            <div style="font-weight:600;font-size:13px;">${s.location}</div>
+            <a href="safety_signs_print.html#${s.id}" target="_blank" style="font-size:10px;color:#1e5096;text-decoration:none;">🖨️ 인쇄용 보기</a>
+          </div>
+        </div>
+      </td>
       <td style="font-size:12px;">
         ${s.content}
         ${memo?`<div style="font-size:11px;color:#6b7280;margin-top:4px;padding:4px 8px;background:#f8fafc;border-radius:4px;">📝 ${memo}</div>`:''}
