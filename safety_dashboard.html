@@ -143,6 +143,28 @@ table tr:hover td{background:#f8fafc;}
 .modal{background:#fff;border-radius:12px;padding:24px;width:90%;max-width:560px;max-height:85vh;overflow-y:auto;}
 .modal-title{font-size:16px;font-weight:700;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;}
 .modal-close{background:none;border:none;font-size:20px;cursor:pointer;color:#9ca3af;}
+/* 일일 현장관리 5대 항목 */
+.daily5-card{background:#fff;border-radius:14px;padding:22px 26px;box-shadow:0 2px 8px rgba(0,0,0,0.08);margin-bottom:16px;border-left:5px solid #1e5096;}
+.daily5-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.daily5-header h4{font-size:15px;font-weight:800;color:#0d1f3c;display:flex;align-items:center;gap:8px;}
+.daily5-header .daily5-date{font-size:12px;color:#6b7280;font-weight:400;}
+.daily5-progress{display:flex;align-items:center;gap:12px;margin-bottom:18px;}
+.daily5-progress .d5p-bar{flex:1;background:#e5e7eb;border-radius:20px;height:10px;overflow:hidden;}
+.daily5-progress .d5p-fill{height:100%;border-radius:20px;background:linear-gradient(90deg,#1e5096,#22c55e);transition:width 0.4s;}
+.daily5-progress .d5p-pct{font-size:16px;font-weight:800;color:#1e5096;min-width:45px;text-align:right;}
+.daily5-list{display:flex;flex-direction:column;gap:8px;}
+.daily5-item{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:10px;background:#f8fafc;border:1px solid #e8edf3;transition:all 0.2s;}
+.daily5-item:hover{background:#eef4ff;border-color:#1e5096;}
+.daily5-item.checked{background:#f0fdf4;border-color:#22c55e;}
+.daily5-item input[type=checkbox]{width:20px;height:20px;accent-color:#16a34a;cursor:pointer;flex-shrink:0;}
+.daily5-item .d5-num{width:26px;height:26px;border-radius:50%;background:#1e5096;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0;}
+.daily5-item.checked .d5-num{background:#16a34a;}
+.daily5-item .d5-text{flex:1;}
+.daily5-item .d5-title{font-size:13px;font-weight:600;color:#374151;}
+.daily5-item.checked .d5-title{color:#16a34a;}
+.daily5-item .d5-sub{font-size:11px;color:#9ca3af;margin-top:2px;}
+.daily5-item .d5-link{font-size:11px;color:#1e5096;cursor:pointer;text-decoration:none;font-weight:600;white-space:nowrap;padding:4px 10px;border-radius:6px;background:#eef4ff;transition:all 0.2s;}
+.daily5-item .d5-link:hover{background:#1e5096;color:#fff;}
 /* PRINT */
 @media print{#sidebar,#topbar-print-hide{display:none!important;}#main{margin-left:0!important;}}
 @media(max-width:1200px){.dash-hero-stats{grid-template-columns:repeat(2,1fr);}}
@@ -221,8 +243,7 @@ table tr:hover td{background:#f8fafc;}
     <a onclick="showSection('risk')"><span class="icon">⚠️</span> 위험성 평가</a>
     <div class="section-title">기록·서류</div>
     <a onclick="showSection('docmgr')"><span class="icon">📋</span> 서류·이행 통합관리</a>
-    <a onclick="showSection('accident')"><span class="icon">🚨</span> 아차사고 보고</a>
-    <a onclick="showSection('equipment')"><span class="icon">🔧</span> 설비 점검</a>
+    <a onclick="window.open('https://open.kakao.com/o/gmcH8V6h','_blank')"><span class="icon">🚨</span> 아차사고 (카톡방)</a>
     <div class="section-title">계획</div>
     <a onclick="showSection('schedule')"><span class="icon">📅</span> 연간 일정</a>
     <a onclick="showSection('signs')"><span class="icon">🪧</span> 안전 비표 관리</a>
@@ -280,6 +301,19 @@ table tr:hover td{background:#f8fafc;}
           <div class="dhs-lbl" id="stat-accident-sub">건 (이번달)</div>
         </div>
       </div>
+    </div>
+
+    <!-- 일일 현장관리 5대 항목 -->
+    <div class="daily5-card" id="daily5-card">
+      <div class="daily5-header">
+        <h4>🛡️ 일일 현장관리 5대 필수항목</h4>
+        <span class="daily5-date" id="daily5-date"></span>
+      </div>
+      <div class="daily5-progress">
+        <div class="d5p-bar"><div class="d5p-fill" id="daily5-fill" style="width:0%"></div></div>
+        <div class="d5p-pct" id="daily5-pct">0/5</div>
+      </div>
+      <div class="daily5-list" id="daily5-list"></div>
     </div>
 
     <!-- 중간 3컬럼: 나의 현황 / WWS 이행현황 / 캘린더 -->
@@ -368,14 +402,14 @@ table tr:hover td{background:#f8fafc;}
         </div>
 
         <div style="margin:14px 0 8px;font-size:13px;font-weight:700;color:#374151;">③ PPE(보호구) 착용 점검</div>
-        <div class="check-item"><input type="checkbox" id="tc1"><label for="tc1">안전모 착용 (호이스트·크레인 구역 전원)</label></div>
+        <div class="check-item"><input type="checkbox" id="tc1"><label for="tc1">안전모 착용 (천장주행크레인·크레인 구역 전원)</label></div>
         <div class="check-item"><input type="checkbox" id="tc2"><label for="tc2">안전화 착용 (전 작업자)</label></div>
         <div class="check-item"><input type="checkbox" id="tc3"><label for="tc3">안전장갑 착용 (금형·프레스 작업자)</label></div>
         <div class="check-item"><input type="checkbox" id="tc4"><label for="tc4">방열장갑·보안경 착용 (사출 작업자)</label></div>
 
         <div style="margin:14px 0 8px;font-size:13px;font-weight:700;color:#374151;">④ 5S / 기계설비 점검</div>
         <div class="check-item"><input type="checkbox" id="tc5"><label for="tc5">작업 구역 정리정돈 상태 양호 (통로 확보)</label></div>
-        <div class="check-item"><input type="checkbox" id="tc6"><label for="tc6">호이스트·크레인 체인·훅 이상 없음</label></div>
+        <div class="check-item"><input type="checkbox" id="tc6"><label for="tc6">천장주행크레인·크레인 체인·훅 이상 없음</label></div>
         <div class="check-item"><input type="checkbox" id="tc7"><label for="tc7">사출기·프레스 안전장치 작동 정상</label></div>
         <div class="check-item"><input type="checkbox" id="tc8"><label for="tc8">소화기·비상구 접근 가능 상태</label></div>
 
@@ -402,19 +436,20 @@ table tr:hover td{background:#f8fafc;}
     </div>
   </div>
 
-  <!-- ===== 패트롤 체크리스트 ===== -->
+  <!-- ===== 패트롤 체크리스트 (통합) ===== -->
   <div id="section-patrol" class="section">
+    <div class="alert info" style="margin-bottom:16px;"><strong>👨‍💼 관리감독자(공장장) 업무</strong> — 환경운영점검표·안전보건 일일체크·LG 점검시트를 통합한 패트롤 체크리스트입니다. 모든 항목 체크 후, 하단에 TBM 사진을 첨부하여 저장하면 패트롤+TBM이 한번에 관리됩니다.</div>
     <div class="tabs">
       <button class="tab active" onclick="switchTab('patrol','write')">✏️ 패트롤 실시</button>
       <button class="tab" onclick="switchTab('patrol','history')">📜 패트롤 이력</button>
     </div>
     <div id="patrol-tab-write">
       <div class="card" style="margin-bottom:16px;">
-        <div class="card-title">🔍 현장 패트롤 점검 정보</div>
+        <div class="card-title">🔍 현장 패트롤 점검 정보 <span class="badge blue" style="font-size:11px;">관리감독자(공장장) 전용</span></div>
         <div class="form-row-3">
           <div class="form-group"><label>점검일자</label><input type="date" id="p-date"></div>
           <div class="form-group"><label>점검시간</label><input type="time" id="p-time"></div>
-          <div class="form-group"><label>점검자</label><input type="text" id="p-inspector" placeholder="이름"></div>
+          <div class="form-group"><label>점검자 (관리감독자)</label><input type="text" id="p-inspector" placeholder="공장장 이름"></div>
         </div>
         <div class="form-row">
           <div class="form-group"><label>점검 구분</label>
@@ -437,7 +472,7 @@ table tr:hover td{background:#f8fafc;}
       <div class="patrol-total" id="patrol-total">
         <div>
           <h3>🔍 전체 점검 진행률</h3>
-          <div style="font-size:12px;opacity:0.8;margin-top:4px;" id="patrol-total-sub">구역을 클릭하여 점검을 시작하세요</div>
+          <div style="font-size:12px;opacity:0.8;margin-top:4px;" id="patrol-total-sub">항목을 체크하여 점검을 시작하세요</div>
         </div>
         <div class="patrol-total-bar">
           <div class="ptb-track"><div class="ptb-fill" id="patrol-total-fill" style="width:0%"></div></div>
@@ -445,14 +480,26 @@ table tr:hover td{background:#f8fafc;}
         <div class="patrol-total-pct" id="patrol-total-pct">0%</div>
       </div>
 
-      <!-- 구역별 카드 그리드 -->
-      <div class="zone-grid" id="patrol-zones"></div>
+      <!-- 통합 점검 항목 (구역 구분 없이) -->
+      <div id="patrol-zones"></div>
+
+      <!-- TBM 사진 첨부 -->
+      <div class="card" style="margin-top:16px;">
+        <div class="card-title">📸 TBM 사진 첨부</div>
+        <div class="alert info">패트롤 점검 완료 후, 당일 TBM 실시 사진을 첨부하세요. <strong>3월, 8월</strong>에는 반드시 1회 이상 사진이 업로드되어야 합니다.</div>
+        <div id="tbm-photo-alert"></div>
+        <div class="form-group">
+          <label>TBM 사진 업로드</label>
+          <input type="file" id="patrol-tbm-photo" accept="image/*" multiple style="width:100%;padding:8px;border:1px solid #d1d5db;border-radius:8px;font-size:13px;" onchange="previewTbmPhotos(this)">
+        </div>
+        <div id="tbm-photo-preview" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;"></div>
+      </div>
 
       <div class="card" style="margin-top:16px;">
         <div class="card-title">📝 종합 의견 및 조치 필요 사항</div>
-        <div class="form-group"><label>불량/개선 필요 사항 (구체적으로 기재)</label><textarea id="p-issues" placeholder="위치 및 내용 상세 기재&#10;예) 호이스트 구역 - 안전모 미착용 작업자 발견, 즉시 시정&#10;프레스 라인 - 바닥 오일 누출 확인, 청소 필요"></textarea></div>
+        <div class="form-group"><label>불량/개선 필요 사항 (구체적으로 기재)</label><textarea id="p-issues" placeholder="위치 및 내용 상세 기재&#10;예) 천장주행크레인 구역 - 안전모 미착용 작업자 발견, 즉시 시정"></textarea></div>
         <div class="form-group"><label>즉시 조치 완료 사항</label><textarea id="p-actions" placeholder="현장에서 즉시 조치한 사항을 기재"></textarea></div>
-        <div class="form-group"><label>추가 조치 필요 사항 (담당자/기한 명시)</label><textarea id="p-followup" placeholder="예) 호이스트 체인 교체 필요 - 담당: 홍길동 / 기한: 2026-03-30"></textarea></div>
+        <div class="form-group"><label>추가 조치 필요 사항 (담당자/기한 명시)</label><textarea id="p-followup" placeholder="예) 천장주행크레인 체인 교체 필요 - 담당: 홍길동 / 기한: 2026-03-30"></textarea></div>
         <div style="display:flex;gap:8px;justify-content:flex-end;">
           <button class="btn btn-outline" onclick="clearPatrol()">초기화</button>
           <button class="btn btn-success" onclick="savePatrol()">💾 패트롤 기록 저장</button>
@@ -463,7 +510,7 @@ table tr:hover td{background:#f8fafc;}
       <div class="card">
         <div class="card-title">📜 패트롤 이력</div>
         <div class="table-wrap"><table>
-          <thead><tr><th>날짜</th><th>점검자</th><th>점검구분</th><th>총점검</th><th>불량건수</th><th>불량내용</th><th>작업</th></tr></thead>
+          <thead><tr><th>날짜</th><th>점검자</th><th>점검구분</th><th>총점검</th><th>불량건수</th><th>TBM사진</th><th>작업</th></tr></thead>
           <tbody id="patrol-history-body"></tbody>
         </table></div>
       </div>
@@ -545,66 +592,69 @@ table tr:hover td{background:#f8fafc;}
     </div>
   </div>
 
-  <!-- ===== 위험성 평가 ===== -->
+  <!-- ===== 위험성 평가 (PDF 업로드 관리) ===== -->
   <div id="section-risk" class="section">
-    <div class="tabs">
-      <button class="tab active" onclick="switchTab('risk','write')">✏️ 위험요소 등록</button>
-      <button class="tab" onclick="switchTab('risk','list')">📜 평가 목록</button>
+    <div class="card" style="margin-bottom:16px;">
+      <div class="card-title">⚠️ 위험성 평가 관리</div>
+      <div class="alert info">산업안전보건법 제36조 — 위험성평가는 별도 서류로 실시·보유합니다.<br>여기에서는 <strong>PDF 업로드</strong>를 통해 관리 이력만 기록합니다.</div>
+      <div class="alert warning">📅 <strong>1차 평가: 4월</strong> | <strong>2차 평가: 10월</strong> — 해당 월에 PDF를 업로드해 주세요.</div>
     </div>
-    <div id="risk-tab-write">
+
+    <div class="grid-2" style="margin-bottom:16px;">
       <div class="card">
-        <div class="card-title">⚠️ 위험성 평가 등록</div>
-        <div class="alert info">산업안전보건법 제36조 - 연 1회 이상 실시 의무. 수시 위험성평가는 작업 변경 시마다 실시.</div>
-        <div class="form-row">
-          <div class="form-group"><label>평가일자</label><input type="date" id="risk-date"></div>
-          <div class="form-group"><label>작업/공정명</label><input type="text" id="risk-process" placeholder="예) 금형 교체 작업"></div>
+        <div class="card-title">📄 1차 위험성평가 (4월)</div>
+        <div id="risk-1st-status" style="margin-bottom:12px;"></div>
+        <div class="form-group">
+          <label>위험성평가 PDF 업로드 (1차 - 4월)</label>
+          <input type="file" id="risk-file-1" accept=".pdf,.doc,.docx,.xlsx,.hwp" style="width:100%;padding:8px;border:1px solid #d1d5db;border-radius:8px;font-size:13px;" onchange="uploadRiskFile(1, this)">
         </div>
-        <div class="form-group"><label>유해·위험요인</label><textarea id="risk-hazard" placeholder="예) 금형 이동 시 낙하로 인한 신체 타박상/압박 위험"></textarea></div>
-        <div class="form-row-3">
-          <div class="form-group"><label>빈도 (1~5)</label>
-            <select id="risk-freq">
-              <option value="1">1 - 거의 없음</option>
-              <option value="2">2 - 가끔</option>
-              <option value="3">3 - 보통</option>
-              <option value="4">4 - 자주</option>
-              <option value="5">5 - 매우 자주</option>
-            </select>
+        <div class="form-group">
+          <label>또는 파일명 직접 입력</label>
+          <div style="display:flex;gap:6px;">
+            <input type="text" id="risk-manual-1" placeholder="예) 위험성평가_2026_1차.pdf" style="flex:1;padding:8px 12px;border:1px solid #d1d5db;border-radius:8px;font-size:13px;">
+            <button class="btn btn-primary btn-sm" onclick="manualRiskFile(1)">연결</button>
           </div>
-          <div class="form-group"><label>강도 (1~5)</label>
-            <select id="risk-severity">
-              <option value="1">1 - 경미</option>
-              <option value="2">2 - 경상</option>
-              <option value="3">3 - 중상</option>
-              <option value="4">4 - 중대재해</option>
-              <option value="5">5 - 사망</option>
-            </select>
+        </div>
+        <div class="form-group">
+          <label>메모</label>
+          <textarea id="risk-memo-1" placeholder="1차 평가 관련 메모" style="min-height:50px;" onchange="saveRiskMemo(1)"></textarea>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">📄 2차 위험성평가 (10월)</div>
+        <div id="risk-2nd-status" style="margin-bottom:12px;"></div>
+        <div class="form-group">
+          <label>위험성평가 PDF 업로드 (2차 - 10월)</label>
+          <input type="file" id="risk-file-2" accept=".pdf,.doc,.docx,.xlsx,.hwp" style="width:100%;padding:8px;border:1px solid #d1d5db;border-radius:8px;font-size:13px;" onchange="uploadRiskFile(2, this)">
+        </div>
+        <div class="form-group">
+          <label>또는 파일명 직접 입력</label>
+          <div style="display:flex;gap:6px;">
+            <input type="text" id="risk-manual-2" placeholder="예) 위험성평가_2026_2차.pdf" style="flex:1;padding:8px 12px;border:1px solid #d1d5db;border-radius:8px;font-size:13px;">
+            <button class="btn btn-primary btn-sm" onclick="manualRiskFile(2)">연결</button>
           </div>
-          <div class="form-group"><label>위험도</label><input type="text" id="risk-score" readonly style="background:#f8fafc;font-weight:700;"></div>
         </div>
-        <div class="form-group"><label>현재 안전조치</label><textarea id="risk-current" placeholder="현재 적용 중인 안전조치 기재"></textarea></div>
-        <div class="form-group"><label>추가 개선 조치</label><textarea id="risk-improve" placeholder="필요한 추가 조치 기재"></textarea></div>
-        <div class="form-row">
-          <div class="form-group"><label>조치 담당자</label><input type="text" id="risk-owner" placeholder="이름"></div>
-          <div class="form-group"><label>조치 기한</label><input type="date" id="risk-due"></div>
-        </div>
-        <div style="display:flex;gap:8px;justify-content:flex-end;">
-          <button class="btn btn-success" onclick="saveRisk()">💾 위험성 평가 저장</button>
+        <div class="form-group">
+          <label>메모</label>
+          <textarea id="risk-memo-2" placeholder="2차 평가 관련 메모" style="min-height:50px;" onchange="saveRiskMemo(2)"></textarea>
         </div>
       </div>
     </div>
-    <div id="risk-tab-list" style="display:none;">
-      <div class="card">
-        <div class="card-title">📜 위험성 평가 목록</div>
-        <div class="table-wrap"><table>
-          <thead><tr><th>날짜</th><th>작업/공정</th><th>위험요인</th><th>위험도</th><th>조치담당자</th><th>기한</th><th>상태</th><th>작업</th></tr></thead>
-          <tbody id="risk-list-body"></tbody>
-        </table></div>
-      </div>
+
+    <div class="card">
+      <div class="card-title">📜 위험성 평가 이력</div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>차수</th><th>예정월</th><th>파일명</th><th>업로드일</th><th>상태</th><th>메모</th></tr></thead>
+        <tbody id="risk-list-body"></tbody>
+      </table></div>
     </div>
   </div>
 
+  <!-- 기존 위험성평가 입력폼 삭제됨 -->
+
   <!-- ===== 서류·이행 통합관리 ===== -->
   <div id="section-docmgr" class="section">
+    <div class="alert info" style="margin-bottom:16px;">📋 이미 <strong>하드카피(출력본)</strong>로 보유 중인 서류가 많습니다. 상태를 '보유'로 표기하고 메모란에 보관 위치를 기재해 주세요.<br>🔮 <strong>향후 계획:</strong> 구글 드라이브를 연결하여 파일 존재 여부 및 업데이트 필요 여부를 자동 확인할 수 있도록 업그레이드 예정입니다.</div>
     <!-- 상단: 보유현황 요약 카드 -->
     <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:20px;">
       <div class="stat-card blue"><div class="label">전체 서류</div><div class="value" id="dm-total">0</div><div class="sub">건</div></div>
@@ -688,97 +738,18 @@ table tr:hover td{background:#f8fafc;}
     </div>
   </div>
 
-  <!-- ===== 아차사고 ===== -->
+  <!-- ===== 아차사고 (카톡방 연결) ===== -->
   <div id="section-accident" class="section">
-    <div class="tabs">
-      <button class="tab active" onclick="switchTab('acc','write')">✏️ 보고서 작성</button>
-      <button class="tab" onclick="switchTab('acc','history')">📜 보고 이력</button>
-    </div>
-    <div id="acc-tab-write">
-      <div class="card">
-        <div class="card-title">🚨 아차사고 / 위험발견 보고서</div>
-        <div class="alert info">아차사고를 적극 보고하면 중대재해를 예방합니다. 보고자 불이익 없음.</div>
-        <div class="form-row">
-          <div class="form-group"><label>발생일시</label><input type="datetime-local" id="acc-datetime"></div>
-          <div class="form-group"><label>보고 유형</label>
-            <select id="acc-type">
-              <option>아차사고 (사고 직전 상황)</option>
-              <option>위험요인 발견</option>
-              <option>경미한 부상</option>
-              <option>설비 이상 발견</option>
-              <option>기타</option>
-            </select>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group"><label>발생 장소</label><input type="text" id="acc-location" placeholder="예) 금형 구역 3번 호이스트 앞"></div>
-          <div class="form-group"><label>관련 작업</label><input type="text" id="acc-work" placeholder="예) 금형 교체 작업 중"></div>
-        </div>
-        <div class="form-group"><label>발생 경위 (상세)</label><textarea id="acc-detail" placeholder="무슨 일이 있었는지 상세히 기재"></textarea></div>
-        <div class="form-group"><label>위험성 / 만약 사고가 났다면?</label><textarea id="acc-risk" placeholder="예) 금형이 발 위에 떨어졌다면 골절 가능"></textarea></div>
-        <div class="form-group"><label>즉시 조치 사항</label><textarea id="acc-immediate" placeholder="현장에서 즉시 취한 조치"></textarea></div>
-        <div class="form-row">
-          <div class="form-group"><label>추가 재발방지 대책</label><textarea id="acc-prevent" placeholder="재발방지를 위한 개선 방안"></textarea></div>
-          <div class="form-group">
-            <label>보고자</label><input type="text" id="acc-reporter" placeholder="이름">
-            <label style="margin-top:10px;">담당 조치자</label><input type="text" id="acc-owner" placeholder="이름">
-          </div>
-        </div>
-        <div style="display:flex;gap:8px;justify-content:flex-end;">
-          <button class="btn btn-danger" onclick="saveAccident()">🚨 보고서 제출</button>
-        </div>
-      </div>
-    </div>
-    <div id="acc-tab-history" style="display:none;">
-      <div class="card">
-        <div class="card-title">📜 아차사고 보고 이력</div>
-        <div class="table-wrap"><table>
-          <thead><tr><th>일시</th><th>유형</th><th>장소</th><th>발생경위</th><th>보고자</th><th>상태</th><th>작업</th></tr></thead>
-          <tbody id="acc-history-body"></tbody>
-        </table></div>
-      </div>
+    <div class="card" style="text-align:center;padding:40px;">
+      <div style="font-size:64px;margin-bottom:16px;">💬</div>
+      <div class="card-title" style="justify-content:center;font-size:18px;">아차사고 / 위험발견 보고</div>
+      <div class="alert info" style="text-align:left;">아차사고 보고는 <strong>안전지킴이 카카오톡 오픈채팅방</strong>을 통해 실시간으로 진행됩니다.<br>사진과 함께 즉시 보고해 주세요. 보고자 불이익 없음, 포상 있음.</div>
+      <a href="https://open.kakao.com/o/gmcH8V6h" target="_blank" class="btn btn-primary" style="font-size:16px;padding:14px 32px;margin-top:16px;">💬 안전지킴이 카톡방 열기</a>
+      <div style="margin-top:16px;font-size:12px;color:#6b7280;">위 버튼을 클릭하면 카카오톡 오픈채팅방으로 이동합니다.</div>
     </div>
   </div>
 
-  <!-- ===== 설비 점검 ===== -->
-  <div id="section-equipment" class="section">
-    <div class="tabs">
-      <button class="tab active" onclick="switchTab('eq','write')">✏️ 점검 기록</button>
-      <button class="tab" onclick="switchTab('eq','history')">📜 점검 이력</button>
-    </div>
-    <div id="eq-tab-write">
-      <div class="card">
-        <div class="card-title">🔧 기계·설비 자체 점검</div>
-        <div class="form-row-3">
-          <div class="form-group"><label>점검일자</label><input type="date" id="eq-date"></div>
-          <div class="form-group"><label>설비명</label><input type="text" id="eq-name" placeholder="예) 1번 프레스기계"></div>
-          <div class="form-group"><label>점검자</label><input type="text" id="eq-inspector" placeholder="이름"></div>
-        </div>
-        <div id="eq-checklist">
-          <div style="font-size:13px;font-weight:700;margin-bottom:8px;color:#374151;">점검 항목</div>
-          <div class="check-item"><input type="checkbox" id="eq1"><label for="eq1">안전장치 작동 정상</label></div>
-          <div class="check-item"><input type="checkbox" id="eq2"><label for="eq2">비상정지 버튼 작동 확인</label></div>
-          <div class="check-item"><input type="checkbox" id="eq3"><label for="eq3">이상 소음·진동 없음</label></div>
-          <div class="check-item"><input type="checkbox" id="eq4"><label for="eq4">오일·냉각수 누출 없음</label></div>
-          <div class="check-item"><input type="checkbox" id="eq5"><label for="eq5">안전가드 정상 부착</label></div>
-          <div class="check-item"><input type="checkbox" id="eq6"><label for="eq6">전기배선 피복 이상 없음</label></div>
-        </div>
-        <div class="form-group" style="margin-top:12px;"><label>이상 사항</label><textarea id="eq-issues" placeholder="이상 발견 시 상세 기재"></textarea></div>
-        <div style="display:flex;gap:8px;justify-content:flex-end;">
-          <button class="btn btn-success" onclick="saveEquipment()">💾 점검 기록 저장</button>
-        </div>
-      </div>
-    </div>
-    <div id="eq-tab-history" style="display:none;">
-      <div class="card">
-        <div class="card-title">📜 설비 점검 이력</div>
-        <div class="table-wrap"><table>
-          <thead><tr><th>날짜</th><th>설비명</th><th>점검자</th><th>이상사항</th><th>작업</th></tr></thead>
-          <tbody id="eq-history-body"></tbody>
-        </table></div>
-      </div>
-    </div>
-  </div>
+  <!-- 설비 점검 삭제됨 - 패트롤 체크리스트로 통합 -->
 
   <!-- ===== 연간 일정 ===== -->
   <div id="section-schedule" class="section">
@@ -802,13 +773,15 @@ table tr:hover td{background:#f8fafc;}
       <button class="btn btn-primary btn-sm" style="margin-top:12px;" onclick="addSign()">+ 비표 추가</button>
     </div>
     <div class="card">
-      <div class="card-title">📖 안전표지 색상 기준 (KS S ISO 3864)</div>
-      <div class="grid-4">
-        <div style="text-align:center;padding:12px;background:#fee2e2;border-radius:8px;"><div style="font-size:24px;">🔴</div><div style="font-weight:700;font-size:13px;margin-top:4px;">빨강</div><div style="font-size:11px;color:#6b7280;">금지 / 위험</div></div>
-        <div style="text-align:center;padding:12px;background:#fef9c3;border-radius:8px;"><div style="font-size:24px;">🟡</div><div style="font-weight:700;font-size:13px;margin-top:4px;">노랑</div><div style="font-size:11px;color:#6b7280;">경고 / 주의</div></div>
-        <div style="text-align:center;padding:12px;background:#eef4ff;border-radius:8px;"><div style="font-size:24px;">🔵</div><div style="font-weight:700;font-size:13px;margin-top:4px;">파랑</div><div style="font-size:11px;color:#6b7280;">지시 / 의무</div></div>
-        <div style="text-align:center;padding:12px;background:#dcfce7;border-radius:8px;"><div style="font-size:24px;">🟢</div><div style="font-weight:700;font-size:13px;margin-top:4px;">초록</div><div style="font-size:11px;color:#6b7280;">안내 / 비상구</div></div>
+      <div class="card-title">📖 안전표지 색상 기준 (ISO 45001 / KS S ISO 3864-1)</div>
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;">
+        <div style="text-align:center;padding:12px;background:#fee2e2;border-radius:8px;"><div style="font-size:24px;">🔴</div><div style="font-weight:700;font-size:13px;margin-top:4px;">빨강 (Red)</div><div style="font-size:11px;color:#6b7280;">금지 / 방화</div><div style="font-size:10px;color:#9ca3af;margin-top:2px;">원형 + 대각선</div></div>
+        <div style="text-align:center;padding:12px;background:#fef9c3;border-radius:8px;"><div style="font-size:24px;">🟡</div><div style="font-weight:700;font-size:13px;margin-top:4px;">노랑 (Yellow)</div><div style="font-size:11px;color:#6b7280;">경고 / 주의</div><div style="font-size:10px;color:#9ca3af;margin-top:2px;">삼각형</div></div>
+        <div style="text-align:center;padding:12px;background:#eef4ff;border-radius:8px;"><div style="font-size:24px;">🔵</div><div style="font-weight:700;font-size:13px;margin-top:4px;">파랑 (Blue)</div><div style="font-size:11px;color:#6b7280;">지시 / 의무</div><div style="font-size:10px;color:#9ca3af;margin-top:2px;">원형</div></div>
+        <div style="text-align:center;padding:12px;background:#dcfce7;border-radius:8px;"><div style="font-size:24px;">🟢</div><div style="font-weight:700;font-size:13px;margin-top:4px;">초록 (Green)</div><div style="font-size:11px;color:#6b7280;">안전 / 비상구 / 응급</div><div style="font-size:10px;color:#9ca3af;margin-top:2px;">사각형</div></div>
+        <div style="text-align:center;padding:12px;background:#f3f4f6;border-radius:8px;border:2px solid #374151;"><div style="font-size:24px;">⬛</div><div style="font-weight:700;font-size:13px;margin-top:4px;">검정/흰색</div><div style="font-size:11px;color:#6b7280;">보조색 / 대비색</div><div style="font-size:10px;color:#9ca3af;margin-top:2px;">텍스트·기호</div></div>
       </div>
+      <div class="alert info" style="margin-top:12px;font-size:11px;">ISO 45001:2018 안전보건경영시스템 기준. 안전표지는 KS S ISO 3864-1(그래픽 심볼), KS C IEC 60417(전기표지) 병행 적용.</div>
     </div>
   </div>
 
@@ -848,7 +821,7 @@ table tr:hover td{background:#f8fafc;}
     <div class="card" style="margin-bottom:16px;">
       <div class="card-title">📢 안전보건 카드뉴스 시리즈 — 카카오톡·게시판 배포용</div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
-        <button class="btn btn-outline btn-sm" onclick="cnFilter('all',this)" id="cn-btn-all" style="background:#0d1f3c;color:#fff;">전체 12편</button>
+        <button class="btn btn-outline btn-sm" onclick="cnFilter('all',this)" id="cn-btn-all" style="background:#0d1f3c;color:#fff;">전체 12편 (한국어+중국어)</button>
         <button class="btn btn-outline btn-sm" onclick="cnFilter('basic',this)">기초 시리즈 (1~4)</button>
         <button class="btn btn-outline btn-sm" onclick="cnFilter('field',this)">현장 시리즈 (5~8)</button>
         <button class="btn btn-outline btn-sm" onclick="cnFilter('culture',this)">문화 시리즈 (9~12)</button>
@@ -863,7 +836,7 @@ table tr:hover td{background:#f8fafc;}
     <div class="card" style="margin-bottom:16px;">
       <div class="card-title">🖼️ 게시판 포스터 — A4 인쇄 후 현장 부착용</div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
-        <button class="btn btn-outline btn-sm" onclick="ptFilter('all',this)" id="pt-btn-all" style="background:#0d1f3c;color:#fff;">전체 14종</button>
+        <button class="btn btn-outline btn-sm" onclick="ptFilter('all',this)" id="pt-btn-all" style="background:#0d1f3c;color:#fff;">전체 16종 (한국어+중국어)</button>
         <button class="btn btn-outline btn-sm" onclick="ptFilter('notice',this)">📋 법정 필수</button>
         <button class="btn btn-outline btn-sm" onclick="ptFilter('rule',this)">📌 안전수칙</button>
         <button class="btn btn-outline btn-sm" onclick="ptFilter('monthly',this)">📅 월별 교체</button>
@@ -964,7 +937,7 @@ const DB = {
 const pageTitles = {
   dashboard:'📊 대시보드', docmgr:'📋 서류·이행 통합관리', tbm:'🌅 TBM 일지', patrol:'🔍 패트롤 체크리스트',
   education:'📚 교육 관리', risk:'⚠️ 위험성 평가',
-  accident:'🚨 아차사고 보고', equipment:'🔧 설비 점검', schedule:'📅 연간 일정',
+  accident:'🚨 아차사고 (카톡방)', schedule:'📅 연간 일정',
   signs:'🪧 안전 비표 관리', cardnews:'📢 카드뉴스 시리즈', posters:'🖼️ 게시판 포스터', settings:'⚙️ 설정'
 };
 function showSection(id){
@@ -977,6 +950,7 @@ function showSection(id){
   if(id==='docmgr') renderDocMgr();
   if(id==='schedule') renderSchedule();
   if(id==='signs') renderSigns();
+  if(id==='risk') renderRiskStatus();
 }
 function switchTab(section, tab){
   const allTabs = document.querySelectorAll(`#section-${section} .tab`);
@@ -1017,34 +991,36 @@ setInterval(updateClock,1000); updateClock();
 // ============================================================
 // PATROL ZONES DATA
 // ============================================================
+// 패트롤 통합 체크리스트 (환경운영점검표 + 안전보건 일일체크 + LG 점검시트 취합)
+// 구역별 구분 없이 카테고리별 통합 관리 (관리감독자/공장장 업무)
 const patrolZones = [
-  // ── 실제 건물 구역 (환경운영점검표 기반) ──
-  {id:'pz1', name:'🏭 3층 사출실', items:[
+  {id:'pc1', name:'🛡️ 현장관리 기본 (5대 필수)', items:[
+    'TBM 활동 실시 확인 (일지 작성 완료)',
+    '작업장 정리정돈 상태 양호 (5S)',
+    '주요 통로 확보 (최소 60cm 이상)',
+    '근로자 보호구(안전모·안전화·보안경 등) 착용 확인',
+    '보호구 미착용자 지도·시정 완료',
+    '위험성평가 실시 여부 확인 (근로자 참여)',
+    '재해 발생 시 보고체계 게시·확인',
+    '비상연락망 및 응급처치함 비치 확인',
+    '작업 시작 전 설비 점검 완료 확인',
+    '바닥 이물질·미끄럼 요인 없음'
+  ]},
+  {id:'pc2', name:'🏭 기계설비 안전', items:[
     '사출기 안전문(도어) 닫힘·잠금 정상',
     '사출기 안전장치 (비상정지) 작동 확인',
     '사출기 주변 오일·수지 누출 없음',
-    '냉각수 라인 누수 없음',
-    '작업자 보호구 착용 (방열장갑·보안경·안전화)',
-    '사출기 주변 통로 정리정돈 (최소 60cm 확보)',
     '금형 체결 상태 (볼트 체결 완료)',
-    '성형품·스크랩 지정 보관함 사용',
-    '환기팬 작동 상태 양호',
+    '컨베이어 가동 중 안전덮개 정상',
+    '래핑기 안전덮개 및 비상정지 정상',
+    '건조기 온도 정상 / 개방 잠금 상태',
+    '리프트 안전바 설치 / 하중 초과 없음',
+    '운반대차 적재 하중 준수 / 파손 없음',
+    '각 설비 비상정지 버튼 작동 확인',
     '콤프레샤 작동 상태 및 이상음 없음'
   ]},
-  {id:'pz2', name:'🔧 3층 조립실', items:[
-    '작업대 정리정돈 및 5S 상태',
-    '작업자 보호구 착용 (안전화, 필요 시 장갑)',
-    '조립용 공구 지정 위치 보관',
-    '전동공구 전선 피복 이상 없음',
-    '조명 상태 양호 (어두운 구역 없음)',
-    '부품·자재 정해진 장소 보관',
-    '바닥 이물질·미끄럼 요인 없음',
-    '비상구 접근 방해 물건 없음',
-    '자재창고 천장등 점등 상태',
-    '통로 보행 폭 확보 (80cm 이상)'
-  ]},
-  {id:'pz3', name:'🏗️ 호이스트 / 금형 구역', items:[
-    '호이스트 체인·와이어 마모·변형 없음',
+  {id:'pc3', name:'🏗️ 천장주행크레인·금형', items:[
+    '천장주행크레인 체인·와이어 마모·변형 없음',
     '훅(Hook) 해지장치 정상 작동',
     '최대하중 표시 확인 (초과 사용 없음)',
     '사람 키 이상 인양물 운반 행위 없음',
@@ -1052,76 +1028,62 @@ const patrolZones = [
     '크레인 이동 경로 장애물 없음',
     '금형 보관대 안전 고정 상태',
     '금형 이동 시 2인 1조 + 신호수 배치',
-    '안전모 착용 (호이스트 작업 전 구역)',
-    '비상정지 버튼 작동 확인'
+    '안전모 착용 (천장주행크레인 구역 전원)'
   ]},
-  {id:'pz4', name:'⚡ 전기설비 (각 층 분전반)', items:[
-    '1층 분전반 문 잠금 상태',
-    '2층 분전반 문 잠금 상태',
-    '3층 분전반 문 잠금 상태',
-    '분전반 내부 이물질 없음',
-    '분전반 내부 전선 피복 양호',
-    '분전반 접지 상태 양호',
-    '각 층 조명 손상·탈락 없음',
-    '콘센트 파손·전선 단선 없음',
-    '임시 연장선 바닥 방치 없음',
-    '전기 설비 주변 가연성 물질 없음'
-  ]},
-  {id:'pz5', name:'🧯 소방·비상장비 (전 구역)', items:[
-    '소화기 배치 위치 배치도와 일치',
-    '분말소화기 압력계 정상 (녹색 범위)',
-    '소화기 안전핀·봉인 이상 없음',
-    '소화전 표시등 점등 상태',
-    '소화전 호스 연결·노즐 결합 상태',
-    '비상구 표시등 점등 상태',
-    '비상구 장애물 없음 (항시 개방)',
-    '구급함 위치 확인 및 내용물 적정',
-    '비상 연락처 게시판 부착 상태',
-    '소화기 최근 점검일 확인 (6개월 이내)'
-  ]},
-  {id:'pz6', name:'🌊 수질·환경 설비', items:[
-    '쿨링타워 가동 상태 정상 (동절기 12~2월 가동 확인)',
-    '쿨링타워 주변 누수 없음',
-    '외부 배수관(맨홀) 막힘 없음',
-    '환풍기 작동 상태 양호',
-    '항온항습기 작동 상태 (해당 시)',
-    '내열시험기 가동 상태 (해당 시)',
-    '냉각수 보충 상태 적정'
-  ]},
-  {id:'pz7', name:'🗑️ 폐기물 관리', items:[
-    '지정 장소 외 폐기물 무단 방치 없음',
-    '폐기물 흩날림·악취 발생 없음',
-    '폐기물 보관소·보관용기 파손 없음',
-    '폐기물통 넘침 없음 (정기 비움)',
-    '쓰레기통 주변 정리 상태',
-    '분리수거 적정 실시',
-    '유해 폐기물 별도 구분 보관'
-  ]},
-  {id:'pz8', name:'🏢 사무동 (1층·2층·3층)', items:[
-    '1층 사무동 조명 손상·부착 상태 양호',
-    '2층 사무동 조명 손상·부착 상태 양호',
-    '3층 사무동·복도 조명 양호',
-    '각 층 통로 정리정돈',
-    '화재 시 대피 동선 장애물 없음',
-    '방문객 안전관리 (출입증, 보호구) 상태',
-    '각 층 비상구 표시 명확'
-  ]},
-  {id:'pz9', name:'🚜 지게차 운행 구역', items:[
+  {id:'pc4', name:'🚜 지게차·운반', items:[
     '지게차 전용 통로 구분 표시 선 상태',
     '보행자와 지게차 혼용 구역 없음',
     '후방경보 장치 작동 정상',
     '지게차 주차 위치 적정 (포크 하강, 전원 차단)',
     '운전자 면허증 소지 확인',
     '포크 주행 시 지상 20~30cm 유지',
-    '무면허 운전 없음'
+    '무면허 운전 없음',
+    '지게차 키 분리보관 확인 (운행 종료 후 키 회수)',
+    '운반대차 이동 시 전방 주시 확인'
   ]},
-  {id:'pz10', name:'🌿 외부·주차장', items:[
+  {id:'pc5', name:'⚡ 전기설비·분전반', items:[
+    '1층 분전반 문 잠금 상태',
+    '2층 분전반 문 잠금 상태',
+    '3층 분전반 문 잠금 상태',
+    '분전반 내부 이물질·전선 피복 양호',
+    '분전반 접지 상태 양호',
+    '각 층 조명 손상·탈락 없음',
+    '콘센트 파손·전선 단선 없음',
+    '임시 연장선 바닥 방치 없음',
+    '전기 설비 주변 가연성 물질 없음'
+  ]},
+  {id:'pc6', name:'🧯 소방·비상장비', items:[
+    '소화기 배치 위치 배치도와 일치',
+    '분말소화기 압력계 정상 (녹색 범위)',
+    '소화기 안전핀·봉인 이상 없음',
+    '소화전 표시등 점등 / 호스·노즐 결합 상태',
+    '비상구 표시등 점등 상태',
+    '비상구 장애물 없음 (항시 개방)',
+    '구급함 위치 확인 및 내용물 적정',
+    '비상 연락처 게시판 부착 상태',
+    '소화기 최근 점검일 확인 (6개월 이내)'
+  ]},
+  {id:'pc7', name:'🌊 환경·수질·폐기물', items:[
+    '쿨링타워 가동 상태 정상',
+    '쿨링타워 주변 누수 없음',
+    '환풍기 작동 상태 양호',
+    '냉각수 보충 상태 적정',
+    '외부 배수관(맨홀) 막힘 없음',
+    '폐기물 지정 장소 외 방치 없음',
+    '폐기물통 넘침 없음 (정기 비움)',
+    '분리수거 적정 실시',
+    '유해 폐기물 별도 구분 보관'
+  ]},
+  {id:'pc8', name:'🏢 공용구역·외부', items:[
+    '사무동 각 층 조명 상태 양호',
+    '각 층 통로 정리정돈',
+    '화재 시 대피 동선 장애물 없음',
+    '방문객 안전관리 (출입증, 보호구)',
+    '각 층 비상구 표시 명확',
     '외부 통로 바닥 상태 (균열·미끄럼) 양호',
     '주차장 정리정돈 상태',
-    '쓰레기통 주변 잡초·이물질 없음',
-    '외부 조명 점등 상태 (야간 작업 시)',
-    '외부 배수로 막힘 없음',
-    '위험물 외부 방치 없음'
+    '외부 조명 점등 상태',
+    '외부 배수로 막힘 없음'
   ]}
 ];
 
@@ -1337,34 +1299,94 @@ function saveEducation(){
 }
 
 // ============================================================
-// RISK ASSESSMENT
+// RISK ASSESSMENT (PDF 업로드 관리 방식)
 // ============================================================
-document.addEventListener('change', function(e){
-  if(e.target.id==='risk-freq'||e.target.id==='risk-severity'){
-    const f=parseInt(document.getElementById('risk-freq')?.value||1);
-    const s=parseInt(document.getElementById('risk-severity')?.value||1);
-    const score=f*s;
-    const el=document.getElementById('risk-score');
-    if(el){
-      el.value = score<=4?`${score} (낮음)`:score<=9?`${score} (보통)`:score<=16?`${score} (높음)`:`${score} (매우높음)`;
-      el.style.color = score<=4?'#16a34a':score<=9?'#ca8a04':score<=16?'#ea580c':'#dc2626';
+function uploadRiskFile(round, input){
+  if(!input.files.length) return;
+  const fileName = input.files[0].name;
+  const riskData = DB.getObj('riskFiles');
+  riskData['round'+round] = {fileName, uploadDate: new Date().toISOString().split('T')[0]};
+  DB.set('riskFiles', riskData);
+  alert('✅ '+round+'차 위험성평가 파일이 연결되었습니다: ' + fileName);
+  renderRiskStatus();
+}
+function manualRiskFile(round){
+  const fileName = v('risk-manual-'+round);
+  if(!fileName){alert('파일명을 입력하세요.');return;}
+  const riskData = DB.getObj('riskFiles');
+  riskData['round'+round] = {fileName, uploadDate: new Date().toISOString().split('T')[0]};
+  DB.set('riskFiles', riskData);
+  document.getElementById('risk-manual-'+round).value = '';
+  alert('✅ '+round+'차 위험성평가 파일이 연결되었습니다: ' + fileName);
+  renderRiskStatus();
+}
+function saveRiskMemo(round){
+  const memo = v('risk-memo-'+round);
+  const riskData = DB.getObj('riskFiles');
+  if(!riskData['round'+round]) riskData['round'+round] = {};
+  riskData['round'+round].memo = memo;
+  DB.set('riskFiles', riskData);
+}
+function renderRiskStatus(){
+  const riskData = DB.getObj('riskFiles');
+  const today = new Date();
+  const month = today.getMonth()+1;
+  [1,2].forEach(round=>{
+    const targetMonth = round===1 ? 4 : 10;
+    const el = document.getElementById('risk-'+round+'st-status') || document.getElementById('risk-'+round+'nd-status');
+    if(!el) return;
+    const data = riskData['round'+round];
+    if(data && data.fileName){
+      el.innerHTML = '<div class="alert success"><strong>✅ 업로드 완료</strong><br>파일: '+data.fileName+'<br>업로드일: '+(data.uploadDate||'-')+'</div>';
+    } else if(month >= targetMonth){
+      el.innerHTML = '<div class="alert danger"><strong>⚠️ 미업로드</strong> — '+targetMonth+'월 위험성평가 PDF를 업로드해 주세요.</div>';
+    } else {
+      el.innerHTML = '<div class="alert warning">📅 예정: '+targetMonth+'월에 업로드 필요</div>';
     }
+    // 메모 복원
+    const memoEl = document.getElementById('risk-memo-'+round);
+    if(memoEl && data && data.memo) memoEl.value = data.memo;
+  });
+  // 이력 테이블
+  const tbody = document.getElementById('risk-list-body');
+  if(tbody){
+    const rows = [1,2].map(round=>{
+      const targetMonth = round===1 ? '4월' : '10월';
+      const data = riskData['round'+round];
+      const status = data && data.fileName ? '<span class="badge green">업로드완료</span>' : '<span class="badge red">미업로드</span>';
+      return '<tr><td>'+round+'차</td><td>'+targetMonth+'</td><td>'+(data&&data.fileName||'-')+'</td><td>'+(data&&data.uploadDate||'-')+'</td><td>'+status+'</td><td style="font-size:11px;">'+(data&&data.memo||'-')+'</td></tr>';
+    }).join('');
+    tbody.innerHTML = rows;
   }
-});
-function saveRisk(){
-  const process=v('risk-process');
-  if(!process){alert('작업/공정명을 입력해주세요.');return;}
-  const f=parseInt(document.getElementById('risk-freq')?.value||1);
-  const s=parseInt(document.getElementById('risk-severity')?.value||1);
-  const score=f*s;
-  const record = {
-    id:Date.now(), date:v('risk-date'), process, hazard:v('risk-hazard'),
-    freq:f, severity:s, score, current:v('risk-current'), improve:v('risk-improve'),
-    owner:v('risk-owner'), due:v('risk-due'), status:'진행중',
-    createdAt: new Date().toISOString()
-  };
-  DB.push('risk', record);
-  alert('✅ 위험성 평가가 저장되었습니다!');
+}
+
+// ============================================================
+// TBM PHOTO PREVIEW & ALERT
+// ============================================================
+function previewTbmPhotos(input){
+  const preview = document.getElementById('tbm-photo-preview');
+  if(!preview) return;
+  preview.innerHTML = '';
+  Array.from(input.files).forEach(file=>{
+    const reader = new FileReader();
+    reader.onload = function(e){
+      preview.innerHTML += '<div style="position:relative;"><img src="'+e.target.result+'" style="width:120px;height:90px;object-fit:cover;border-radius:8px;border:2px solid #e5e7eb;"><div style="font-size:10px;color:#6b7280;margin-top:2px;max-width:120px;overflow:hidden;text-overflow:ellipsis;">'+file.name+'</div></div>';
+    };
+    reader.readAsDataURL(file);
+  });
+}
+function checkTbmPhotoAlert(){
+  const el = document.getElementById('tbm-photo-alert');
+  if(!el) return;
+  const month = new Date().getMonth()+1;
+  const patrols = DB.get('patrol');
+  const thisMonth = new Date().toISOString().slice(0,7);
+  const hasPhoto = patrols.some(p=>p.date&&p.date.startsWith(thisMonth)&&p.tbmPhoto);
+  if((month===3||month===8) && !hasPhoto){
+    el.innerHTML = '<div class="alert danger" style="margin-bottom:8px;">📸 <strong>'+month+'월 TBM 사진 업로드 필수!</strong> — 이번 달 패트롤 저장 시 TBM 사진을 반드시 첨부해 주세요.</div>';
+  } else {
+    el.innerHTML = '';
+  }
 }
 
 // ============================================================
@@ -1383,20 +1405,7 @@ function saveAccident(){
   alert('🚨 아차사고 보고서가 제출되었습니다!');
 }
 
-// ============================================================
-// EQUIPMENT
-// ============================================================
-function saveEquipment(){
-  const name=v('eq-name'),inspector=v('eq-inspector');
-  if(!name||!inspector){alert('설비명과 점검자를 입력해주세요.');return;}
-  const checks = [1,2,3,4,5,6].map(i=>document.getElementById('eq'+i)?.checked);
-  const record = {
-    id:Date.now(), date:v('eq-date'), name, inspector, checks,
-    issues:v('eq-issues'), createdAt: new Date().toISOString()
-  };
-  DB.push('equipment', record);
-  alert('✅ 설비 점검 기록이 저장되었습니다!');
-}
+// 설비 점검 삭제됨 - 패트롤 체크리스트로 통합
 
 // ============================================================
 // RENDER HISTORIES
@@ -1549,6 +1558,75 @@ function renderDashboard(){
   renderDashWWSDonut();
   renderDashCalendar();
   renderDashNotices();
+  renderDaily5();
+}
+
+// ── 일일 현장관리 5대 항목 ──
+const daily5Items = [
+  {id:'d5_1', title:'작업장 정리정돈, 통로확보', sub:'정리정돈 상태 및 통로 60cm 이상 확보 확인', link:'patrol', linkText:'패트롤 →'},
+  {id:'d5_2', title:'근로자 보호구 착용상태 점검 및 지도', sub:'안전모·안전화·보안경 등 착용 확인, 미착용자 시정', link:'patrol', linkText:'패트롤 →'},
+  {id:'d5_3', title:'위험성평가 실시 (근로자 참여)', sub:'작업 전 위험요인 파악 및 근로자 참여 확인', link:'risk', linkText:'위험성평가 →'},
+  {id:'d5_4', title:'현장 내 재해 발생 시 보고 및 응급처리', sub:'보고체계 게시 확인, 비상연락망·응급처치함 비치', link:'accident', linkText:'사고보고 →'},
+  {id:'d5_5', title:'작업 시작 전 설비 점검 및 TBM 활동 실시', sub:'설비 점검 완료 확인, TBM 일지 작성 (매일)', link:'tbm', linkText:'TBM →'}
+];
+
+function getDaily5Key(){
+  return 'daily5_' + new Date().toISOString().split('T')[0];
+}
+
+function getDaily5State(){
+  const key = getDaily5Key();
+  const raw = localStorage.getItem(key);
+  return raw ? JSON.parse(raw) : {};
+}
+
+function saveDaily5State(state){
+  localStorage.setItem(getDaily5Key(), JSON.stringify(state));
+}
+
+function toggleDaily5(id){
+  const state = getDaily5State();
+  state[id] = !state[id];
+  saveDaily5State(state);
+  renderDaily5();
+}
+
+function renderDaily5(){
+  const container = document.getElementById('daily5-list');
+  const dateEl = document.getElementById('daily5-date');
+  const fillEl = document.getElementById('daily5-fill');
+  const pctEl = document.getElementById('daily5-pct');
+  if(!container) return;
+
+  const today = new Date();
+  const ymd = today.toISOString().split('T')[0];
+  const dayNames = ['일','월','화','수','목','금','토'];
+  if(dateEl) dateEl.textContent = `${ymd} (${dayNames[today.getDay()]})`;
+
+  const state = getDaily5State();
+  const checked = daily5Items.filter(it=>state[it.id]).length;
+  const pct = Math.round(checked / daily5Items.length * 100);
+
+  if(fillEl) fillEl.style.width = pct + '%';
+  if(pctEl){
+    pctEl.textContent = checked === daily5Items.length ? '✅ 완료!' : `${checked}/${daily5Items.length}`;
+    pctEl.style.color = checked === daily5Items.length ? '#16a34a' : '#1e5096';
+  }
+
+  container.innerHTML = daily5Items.map((it, i) => {
+    const isChecked = !!state[it.id];
+    return `
+      <div class="daily5-item${isChecked?' checked':''}">
+        <input type="checkbox" ${isChecked?'checked':''} onchange="toggleDaily5('${it.id}')">
+        <div class="d5-num">${i+1}</div>
+        <div class="d5-text">
+          <div class="d5-title">${it.title}</div>
+          <div class="d5-sub">${it.sub}</div>
+        </div>
+        <span class="d5-link" onclick="showSection('${it.link}')">${it.linkText}</span>
+      </div>
+    `;
+  }).join('');
 }
 
 function renderDocStatusMini(){
@@ -2031,16 +2109,21 @@ function renderSchedule(){
 // SIGNS
 // ============================================================
 const defaultSigns = [
-  {id:'s01',location:'호이스트/크레인 구역',content:'최대하중 _kg 초과 금지 / 사람 키 이상 운반 금지 / 안전모 필수 착용',color:'🔴 빨강 (금지)',installed:'',checked:'',status:'설치필요'},
-  {id:'s02',location:'금형 보관대',content:'금형 취급 시 2인 1조 필수 / 신호수 배치 / 안전화 착용',color:'🔵 파랑 (지시)',installed:'',checked:'',status:'설치필요'},
-  {id:'s03',location:'프레스 기계 전면',content:'양손 조작 필수 / 안전가드 제거 절대 금지 / 작업 중 청소 금지',color:'🔴 빨강 (금지)',installed:'',checked:'',status:'설치필요'},
-  {id:'s04',location:'분전반/전기 패널함',content:'허가자 외 접근 금지 / 작업 전 반드시 잠금·태깅 실시',color:'🔴 빨강 (금지)',installed:'',checked:'',status:'설치필요'},
+  {id:'s01',location:'천장주행크레인/크레인 구역',content:'최대하중 _kg 초과 금지 / 사람 키 이상 운반 금지 / 안전모 필수 착용',color:'🔴 빨강 (금지)',installed:'',checked:'',status:'설치필요'},
+  {id:'s02',location:'금형 보관대 / 금형 취급 구역',content:'금형 취급 시 2인 1조 필수 / 신호수 배치 / 안전화·안전모 착용 / 안전블록 삽입',color:'🔵 파랑 (지시)',installed:'',checked:'',status:'설치필요'},
+  {id:'s04',location:'분전반/전기 패널함',content:'허가자 외 접근 금지 / 작업 전 반드시 잠금·태깅(LOTO) 실시',color:'🔴 빨강 (금지)',installed:'',checked:'',status:'설치필요'},
   {id:'s05',location:'공장 입구',content:'안전모·안전화 착용 후 입장 / 방문자는 안전담당자에게 신고',color:'🔵 파랑 (지시)',installed:'',checked:'',status:'설치필요'},
-  {id:'s06',location:'지게차 이동 통로',content:'지게차 전용 통로 / 보행자 진입 금지',color:'🔴 빨강 (금지)',installed:'',checked:'',status:'설치필요'},
+  {id:'s06',location:'지게차 이동 통로',content:'지게차 전용 통로 / 보행자 진입 금지 / 지게차 키 분리보관 필수 (운행 종료 후 키 반납)',color:'🔴 빨강 (금지)',installed:'',checked:'',status:'설치필요'},
   {id:'s07',location:'화학물질 보관소',content:'MSDS 비치 / 보호구(장갑·마스크) 착용 필수 / 화기 금지',color:'🟡 노랑 (경고)',installed:'',checked:'',status:'설치필요'},
-  {id:'s08',location:'비상구',content:'비상구 / 화재 시 이곳으로 대피 / 장애물 절대 금지',color:'🟢 초록 (안내)',installed:'',checked:'',status:'설치필요'},
-  {id:'s09',location:'소화기 위치',content:'소화기 비치 / 사용법 안내',color:'🔴 빨강',installed:'',checked:'',status:'설치필요'},
+  {id:'s08',location:'비상구',content:'비상구 / 화재 시 이곳으로 대피 / 장애물 절대 금지',color:'🟢 초록 (안전/비상구)',installed:'',checked:'',status:'설치필요'},
+  {id:'s09',location:'소화기 위치',content:'소화기 비치 / 사용법 안내',color:'🔴 빨강 (방화)',installed:'',checked:'',status:'설치필요'},
   {id:'s10',location:'휴게공간',content:'작업복 탈의 후 휴식 / 구역 내 금연',color:'🔴 빨강 (금지)',installed:'',checked:'',status:'설치필요'},
+  {id:'s11',location:'운반대차 보관/이동 구역',content:'운반대차 적재 하중 준수 / 이동 시 전방 주시 / 경사로 이동 금지 / 2인 이상 운반 (중량물)',color:'🟡 노랑 (경고)',installed:'',checked:'',status:'설치필요'},
+  {id:'s12',location:'래핑기 작업 구역',content:'래핑기 작동 중 손·신체 접근 금지 / 보안경·안전장갑 착용 / 비상정지 위치 숙지',color:'🔴 빨강 (금지)',installed:'',checked:'',status:'설치필요'},
+  {id:'s13',location:'사출기 작업 구역',content:'사출기 안전문 닫힘 확인 후 작동 / 방열장갑·보안경 착용 필수 / 금형 체결 상태 확인',color:'🔵 파랑 (지시)',installed:'',checked:'',status:'설치필요'},
+  {id:'s14',location:'건조기 구역',content:'건조기 작동 중 개방 금지 / 고온 주의 / 방열장갑 착용 필수',color:'🟡 노랑 (경고)',installed:'',checked:'',status:'설치필요'},
+  {id:'s15',location:'컨베이어 구역',content:'컨베이어 가동 중 접촉 금지 / 끼임 주의 / 긴 머리카락·옷자락 말림 주의 / 비상정지 위치 숙지',color:'🔴 빨강 (금지)',installed:'',checked:'',status:'설치필요'},
+  {id:'s16',location:'리프트 구역',content:'리프트 최대 하중 준수 / 탑승 금지 / 상·하부 동시 작업 금지 / 안전바 설치 확인',color:'🔴 빨강 (금지)',installed:'',checked:'',status:'설치필요'},
 ];
 
 function getSignList(){
@@ -2188,90 +2271,96 @@ function v(id){ const el=document.getElementById(id); return el?el.value:''; }
 // CARD NEWS DATA
 // ============================================================
 const cnCards = [
-  {id:1,series:'basic',color:'linear-gradient(135deg,#0d1f3c,#1e5096)',ep:'SERIES 01 · 기초편',title:'우리 회사\n안전관리,\n왜 해야 할까요?',emoji:'🏭',footer:'안전은 선택이 아닌 의무입니다',fb:'#0d1f3c',fc:'#fff',
-   preview:['사망사고 1건 → 사업주 최대 징역 7년(중처법)','산재 발생 시 회사 이미지 훼손 + 거래처 계약 해지 위험','안전관리 잘 되는 회사 = 직원이 오래 다니는 회사'],
-   detail:{intro:'중대재해처벌법(2022년 시행) 이후 안전관리는 선택이 아닌 법적 의무가 되었습니다.',sections:[{t:'📌 법적 처벌 수준',i:['중대재해 발생 시 경영책임자 1년 이상 징역 (최대 7년)','법인 벌금 최대 50억원','반복 위반 시 가중처벌']},{t:'📌 우리 회사가 실천하는 것들',i:['매일 TBM — 10분 작업 전 안전회의','주간 패트롤 점검 — 현장 순회 및 위험요인 발굴','월간 정기 안전교육 — 법정 의무 이수']},{t:'✅ 직원 여러분이 해주실 것',i:['TBM 매일 빠짐없이 참석','위험 발견 즉시 보고 (처벌 없음, 포상 있음)','개인보호구 항상 착용']}],hl:'사고 한 건이 10년치 이익을 날릴 수 있습니다.',law:'산업안전보건법 제1조, 중대재해처벌법 제4조'}},
-  {id:2,series:'basic',color:'linear-gradient(135deg,#065f46,#10b981)',ep:'SERIES 02 · 기초편',title:'TBM\n매일 아침\n10분의 기적',emoji:'☀️',footer:'작업 전 TBM = 사고 예방의 시작',fb:'#065f46',fc:'#fff',
-   preview:['TBM = Tool Box Meeting (작업 전 안전점검 회의)','매일 작업 시작 10분 전, 전원 참석','요일별 테마제 운영 (월:설비 화:PPE 수:건강 목:환경 금:사고사례)'],
-   detail:{intro:'TBM은 중대재해처벌법에서 요구하는 "안전보건관리체계 이행 증빙"의 핵심 활동입니다.',sections:[{t:'📋 TBM 진행 8단계',i:['① 건강상태 확인 (음주·체온·약물)','② 전일 이상·아차사고 공유','③ 금일 작업내용 확인','④ 위험요인·안전대책 강조 (제거→대체→통제)','⑤ PPE 착용 점검','⑥ 5S·정리정돈 확인','⑦ 질의응답','⑧ 안전다짐 구호']},{t:'📅 요일별 TBM 테마',i:['월: 설비·기계 점검','화: 개인보호구 점검','수: 건강·피로 관리','목: 환경·정리정돈','금: 아차사고 사례 공유']}],hl:'TBM 기록지는 중처법 대응 핵심 증빙자료입니다!',law:'중대재해처벌법 제4조 1항'}},
-  {id:3,series:'basic',color:'linear-gradient(135deg,#7c2d12,#ea580c)',ep:'SERIES 03 · 기초편',title:'개인보호구\n완전 정복',emoji:'⛑️',footer:'보호구는 마지막 방어선입니다',fb:'#7c2d12',fc:'#fff',
-   preview:['착용 안 하면 산재 보상에 불이익 발생 가능','용도에 맞는 보호구 선택이 핵심','파손된 보호구 = 착용 안 한 것과 같다'],
-   detail:{intro:'개인보호구(PPE)는 모든 안전조치가 완료된 후에도 남은 위험으로부터 몸을 지키는 마지막 방어선입니다.',sections:[{t:'🪖 작업별 필수 보호구',i:['호이스트/크레인: 안전모+안전화 (필수)','금형 작업: 안전장갑+안전화+안전모','사출 작업: 방열장갑+보안경+안전화','화학물질: 방독마스크+내화학장갑+보안경']},{t:'❌ 이런 행동은 안 됩니다',i:['"잠깐이니까 괜찮아" → 사고는 잠깐에 발생','파손된 보호구 계속 착용','본인 것 아닌 보호구 무단 사용']}],hl:'보호구 미착용 사고 발생 시 산재보상 감액 + 회사 행정처분.',law:'산업안전보건법 제38조'}},
-  {id:4,series:'basic',color:'linear-gradient(135deg,#312e81,#6366f1)',ep:'SERIES 04 · 기초편',title:'아차사고\n신고하면\n포상합니다!',emoji:'🚨',footer:'아차사고 1건 = 중대사고 30건 예방',fb:'#312e81',fc:'#fff',
-   preview:['아차사고 = 다칠 뻔 했지만 실제 부상은 없는 상황','신고해도 절대 불이익 없음, 포상 있음','하인리히 법칙: 아차사고 300 → 중상 1'],
-   detail:{intro:'하인리히 법칙에 따르면 중대사고 1건 전에 아차사고 300건이 있습니다.',sections:[{t:'📌 아차사고란?',i:['발 헛디뎌 넘어질 뻔 했지만 안 넘어짐','금형 이동 중 미끄러졌지만 다치지 않음','지게차가 나와 충돌할 뻔 했지만 피함']},{t:'📝 신고 방법',i:['대시보드 → 아차사고 보고 → 제출','안전담당자에게 구두 보고도 가능','익명 신고도 가능']},{t:'🎁 신고 포상',i:['신고 1건: 소정의 포상','우수 제안: 분기 1회 표창']}],hl:'신고한다고 처벌받지 않습니다!',law:'산업안전보건법 제52조'}},
-  {id:5,series:'field',color:'linear-gradient(135deg,#78350f,#d97706)',ep:'SERIES 05 · 현장편',title:'호이스트\n크레인\n안전수칙',emoji:'🏗️',footer:'인양물 아래에는 절대 서지 마세요',fb:'#78350f',fc:'#fff',
-   preview:['체인·훅·안전장치 반드시 점검','사람 키 이상 높이 절대 금지','안전모 착용 의무 — 미착용 시 즉시 작업 중지'],
-   detail:{intro:'호이스트·크레인 사고는 대부분 사망으로 이어집니다.',sections:[{t:'🔴 절대 하면 안 되는 것',i:['인양물 아래에 사람이 있을 때 작업','최대하중 초과 운반','사람 키 이상으로 인양물 이동','혼자 대형 금형 이동']},{t:'✅ 작업 전 반드시 확인',i:['체인·와이어: 마모, 변형, 균열 없는지','훅: 해지장치 정상 작동','비상정지 버튼 작동 확인','작업 구역 인원 대피 완료']},{t:'📋 2인 1조 기준',i:['금형 1톤 이상 → 반드시 2인 1조','신호수 1명 별도 배치','운전자는 신호수 지시에만 따름']}],hl:'현장 비표: "최대하중 ___kg / 사람 키 이상 운반 금지 / 안전모 필수"',law:'산업안전보건법 시행규칙 제88조'}},
-  {id:6,series:'field',color:'linear-gradient(135deg,#134e4a,#0d9488)',ep:'SERIES 06 · 현장편',title:'금형 작업\n안전수칙',emoji:'🔩',footer:'금형 교체는 반드시 2인 1조',fb:'#134e4a',fc:'#fff',
-   preview:['교체 전: 프레스 전원 차단 + 잠금·태깅','이동 시: 호이스트 사용 + 2인 1조','보관: 전용 보관대, 바닥에 세워두기 금지'],
-   detail:{intro:'금형 관련 사고는 손가락 절단·압박·낙하로 이어지는 중대재해 고위험 작업입니다.',sections:[{t:'🔴 교체 절차 (반드시 준수)',i:['① 전원 차단 → 잠금 → 태그 부착','② 잔류 에너지 제거','③ 안전블록 삽입','④ 2인 이상 참여 + 신호수','⑤ 교체 완료 후 안전장치 복구 확인']},{t:'🧤 필수 보호구',i:['안전장갑 (두꺼운 것)', '안전화 (철심 내장)','안전모 (호이스트 사용 시)']}],hl:'잠금·태깅 없이 금형 교체 = 즉사 위험',law:'산업안전보건기준에 관한 규칙 제92조'}},
-  {id:7,series:'field',color:'linear-gradient(135deg,#1e1b4b,#4f46e5)',ep:'SERIES 07 · 현장편',title:'지게차\n사고 예방\n수칙',emoji:'🚜',footer:'지게차와 보행자는 절대 공존할 수 없습니다',fb:'#1e1b4b',fc:'#fff',
-   preview:['운전자: 면허 소지자만 운전','포크 높이: 주행 시 지상 20~30cm 유지','보행자: 지게차 이동 구역 절대 진입 금지'],
-   detail:{intro:'지게차 1톤 = 성인 14명 무게. 사고는 대부분 사망·중상으로 이어집니다.',sections:[{t:'🚜 운전자 수칙',i:['면허 소지자만 운전 (무면허 = 형사처벌)','매일 작업 전 조향·제동·경보 장치 점검','포크는 주행 시 지상 20~30cm 유지','경사로: 후진으로 올라가고 전진으로 내려오기','안전벨트 항상 착용']},{t:'🚶 보행자 수칙',i:['지게차 이동 통로 절대 진입 금지','지게차가 올 때는 정지·대기','눈 마주치기 전까지는 "못 본 것"으로 간주']}],hl:'무면허 운전 = 운전자·회사 모두 형사처벌',law:'산업안전보건기준에 관한 규칙 제179조~제185조'}},
-  {id:8,series:'field',color:'linear-gradient(135deg,#7f1d1d,#ef4444)',ep:'SERIES 08 · 현장편',title:'화재 예방\n및 비상\n대피 요령',emoji:'🧯',footer:'화재 → 신고 → 대피 → 초기진화',fb:'#7f1d1d',fc:'#fff',
-   preview:['소화기 위치 지금 바로 확인하세요','비상구 방향 외워두세요 (눈 감고도)','화재 발견 즉시: 큰소리로 "불이야!"'],
-   detail:{intro:'우리 공장의 비상 대피 절차와 소화기 위치를 반드시 알고 있어야 합니다.',sections:[{t:'🔥 화재 발견 시 행동 순서',i:['① "불이야!" 외쳐 전파','② 119 신고','③ 초기 소화 판단 (30초 이내)','④ 비상구로 대피 (엘리베이터 금지)','⑤ 정문 앞 주차장 집결']},{t:'🧯 소화기 사용법 (PASS)',i:['P - 핀 뽑기','A - 호스 불 쪽 겨냥','S - 손잡이 눌러 분사','S - 좌우로 쓸듯이 뿌리기']}],hl:'소화기 압력계 녹색 = 정상. 매월 점검하세요!',law:'소방시설법 제10조'}},
-  {id:9,series:'culture',color:'linear-gradient(135deg,#064e3b,#059669)',ep:'SERIES 09 · 문화편',title:'정리정돈\n5S로\n사고 막기',emoji:'✨',footer:'깨끗한 현장 = 사고 없는 현장',fb:'#064e3b',fc:'#fff',
-   preview:['사고의 30% 이상이 정리정돈 불량에서 시작','바닥 이물질 → 미끄러짐 사고의 주원인','통로 막힘 → 비상 시 대피 불가'],
-   detail:{intro:'5S는 가장 쉽고 효과적인 사고 예방 활동입니다.',sections:[{t:'5S 실천 방법',i:['정리: 필요 vs 불필요 구분 → 불필요한 것 즉시 처리','정돈: 정해진 위치에 → 누구나 꺼내고 되돌릴 수 있게','청소: 매일 작업 후 5분 청소','청결: 청소 상태 항상 유지','습관화: 위 4S를 당연하게 반복']},{t:'📋 퇴근 전 5분 체크',i:['내 구역 청소 완료','공구 제자리 반납','바닥 기름·이물질 없음']}],hl:'정리정돈으로 공구 찾는 시간 줄이면 하루 30분 절약!',law:'산업안전보건기준에 관한 규칙 제3조'}},
-  {id:10,series:'culture',color:'linear-gradient(135deg,#1e3a5f,#0ea5e9)',ep:'SERIES 10 · 문화편',title:'신규입사자\n안전 가이드\n8시간 교육',emoji:'🆕',footer:'현장 투입 전 교육 완료 = 법적 의무',fb:'#1e3a5f',fc:'#fff',
-   preview:['입사 당일 현장 투입 전 8시간 교육 필수 (법적 의무)','4단계: 이론→위험지식→실습→현장배치','교육 미이수 상태 사고 발생 = 회사 전적 책임'],
-   detail:{intro:'신규입사자 교육은 산업안전보건법 제29조에 따라 8시간 이상 실시해야 하는 법적 의무입니다.',sections:[{t:'📚 4단계 교육 과정',i:['1단계 (2시간): 산업안전보건법령 이론 교육','2단계 (3시간): 우리 공장 유해·위험요인 사례','3단계 (2시간): 보호구 착용법 + 대피 요령 실습','4단계 (1시간): 현장 기계 취급 + 관리감독자 면담']},{t:'📝 필수 서류',i:['신규채용자 서약서 서명','교육 일지 (참석자 서명)','개인별 교육이수카드']}],hl:'신규입사자 산재 발생률은 6개월 이내가 40% 이상!',law:'산업안전보건법 제29조'}},
-  {id:11,series:'culture',color:'linear-gradient(135deg,#4a1d96,#8b5cf6)',ep:'SERIES 11 · 문화편',title:'전기 안전\n기본수칙',emoji:'⚡',footer:'전기는 눈에 보이지 않는 살인자입니다',fb:'#4a1d96',fc:'#fff',
-   preview:['분전반: 허가받은 사람만 접근 가능','전선 피복 벗겨진 것 발견 즉시 신고','물기 있는 손으로 전기 설비 절대 접촉 금지'],
-   detail:{intro:'전기 감전 사고는 순식간에 사망으로 이어집니다.',sections:[{t:'🔴 절대 금지',i:['허가없이 분전반 개방','물기 있는 손으로 조작','전선 위에 자재 올려두기','자가 수리·개조']},{t:'✅ 발견 시 즉시 신고',i:['전선 피복 벗겨짐·손상','콘센트·플러그 파손','이상한 냄새·소리']},{t:'🛑 작업 전 잠금·태깅(LOTO)',i:['설비 수리 전 전원 차단','잠금(Lock) + 이름표(Tag) 부착','본인만 잠금 해제 가능']}],hl:'감전 사고 시 전류 차단부터! 맨손으로 피해자 잡지 마세요.',law:'산업안전보건기준에 관한 규칙 제301조'}},
-  {id:12,series:'culture',color:'linear-gradient(135deg,#1c1917,#57534e)',ep:'SERIES 12 · 문화편',title:'안전문화\n우리가\n만들어 갑니다',emoji:'🤝',footer:'"안전은 규정이 아닌 우리의 약속입니다"',fb:'#1c1917',fc:'#fff',
-   preview:['안전을 지키는 것이 동료를 지키는 것','위험 발견 = 즉시 멈추고 보고 (STOP-LOOK-ASSESS-MANAGE)','안전 제안 적극 참여 → 더 안전한 현장'],
-   detail:{intro:'안전문화는 우리 모두가 함께 만들어 가는 것입니다.',sections:[{t:'🤝 안전문화 4원칙',i:['동료 안전도 내 책임: 위험한 행동 발견 시 서로 알려주기','멈추는 용기: 위험하면 작업 중지 후 보고 (처벌 없음)','작은 것도 신고: 아차사고·개선 아이디어 모두 제안','기록이 문화: TBM·점검·교육 기록이 우리의 안전 역사']},{t:'🏆 안전 포상 제도',i:['아차사고 신고: 소정의 포상','위험발견 제안: 분기 우수 제안 선정','안전수칙 준수 우수자: 연 1회 표창']}],hl:'안전을 말할 수 있는 문화 = 사고가 없는 문화!',law:'산업안전보건법 제52조'}}
+  {id:1,series:'basic',color:'linear-gradient(135deg,#0d1f3c,#1e5096)',ep:'SERIES 01 · 기초편 基础篇',title:'우리 회사\n안전관리,\n왜 해야 할까요?\n为什么要做安全管理？',emoji:'🏭',footer:'안전은 선택이 아닌 의무입니다 | 安全是义务，不是选择',fb:'#0d1f3c',fc:'#fff',
+   preview:['사망사고 1건 → 사업주 최대 징역 7년(중처법) | 死亡事故→最高7年','산재 발생 시 회사 이미지 훼손 + 거래처 계약 해지 위험','안전관리 잘 되는 회사 = 직원이 오래 다니는 회사'],
+   detail:{intro:'중대재해처벌법(2022년 시행) 이후 안전관리는 선택이 아닌 법적 의무가 되었습니다.\n《重大灾害处罚法》施行后，安全管理已成为法律义务。',sections:[{t:'📌 법적 처벌 수준 法律处罚',i:['중대재해 발생 시 경영책임자 1년 이상 징역 (최대 7년)','법인 벌금 최대 50억원','반복 위반 시 가중처벌']},{t:'📌 우리 회사가 실천하는 것들 公司实践事项',i:['매일 TBM — 10분 작업 전 안전회의 每天TBM','주간 패트롤 점검 — 현장 순회 및 위험요인 발굴','월간 정기 안전교육 — 법정 의무 이수']},{t:'✅ 직원 여러분이 해주실 것 员工须知',i:['TBM 매일 빠짐없이 참석 每天参加TBM','위험 발견 즉시 보고 (처벌 없음, 포상 있음) 发现危险立即报告','개인보호구 항상 착용 始终佩戴防护装备']}],hl:'사고 한 건이 10년치 이익을 날릴 수 있습니다. 一次事故可能损失十年利润。',law:'산업안전보건법 제1조, 중대재해처벌법 제4조'}},
+  {id:2,series:'basic',color:'linear-gradient(135deg,#065f46,#10b981)',ep:'SERIES 02 · 기초편 基础篇',title:'TBM\n매일 아침 10분의 기적\n每天早晨10分钟的奇迹',emoji:'☀️',footer:'작업 전 TBM = 사고 예방의 시작 | 工作前TBM=预防事故的开始',fb:'#065f46',fc:'#fff',
+   preview:['TBM = Tool Box Meeting (작업 전 안전점검 회의) 工具箱会议','매일 작업 시작 10분 전, 전원 참석 每天工作前10分钟','요일별 테마제 운영 (월:설비 화:PPE 수:건강 목:환경 금:사고사례)'],
+   detail:{intro:'TBM은 중대재해처벌법에서 요구하는 "안전보건관리체계 이행 증빙"의 핵심 활동입니다.\nTBM是重大灾害法要求的核心安全活动。',sections:[{t:'📋 TBM 진행 8단계 TBM 8步骤',i:['① 건강상태 확인 (음주·체온·약물) 健康确认','② 전일 이상·아차사고 공유 前日异常分享','③ 금일 작업내용 확인 今日作业确认','④ 위험요인·안전대책 강조 危险因素·安全对策','⑤ PPE 착용 점검 防护装备检查','⑥ 5S·정리정돈 확인','⑦ 질의응답 提问解答','⑧ 안전다짐 구호 安全口号']},{t:'📅 요일별 TBM 테마 每日主题',i:['월: 설비·기계 점검 周一:设备检查','화: 개인보호구 점검 周二:PPE检查','수: 건강·피로 관리 周三:健康管理','목: 환경·정리정돈 周四:环境整理','금: 아차사고 사례 공유 周五:险情分享']}],hl:'TBM 기록지는 중처법 대응 핵심 증빙자료입니다!',law:'중대재해처벌법 제4조 1항'}},
+  {id:3,series:'basic',color:'linear-gradient(135deg,#7c2d12,#ea580c)',ep:'SERIES 03 · 기초편 基础篇',title:'개인보호구\n완전 정복\n个人防护装备',emoji:'⛑️',footer:'보호구는 마지막 방어선입니다 | 防护装备是最后的防线',fb:'#7c2d12',fc:'#fff',
+   preview:['착용 안 하면 산재 보상에 불이익 발생 가능 不戴可能影响赔偿','용도에 맞는 보호구 선택이 핵심','파손된 보호구 = 착용 안 한 것과 같다 损坏的=没戴'],
+   detail:{intro:'개인보호구(PPE)는 모든 안전조치가 완료된 후에도 남은 위험으로부터 몸을 지키는 마지막 방어선입니다.\nPPE是保护身体的最后防线。',sections:[{t:'🪖 작업별 필수 보호구 各作业必备防护',i:['천장주행크레인: 안전모+안전화 (필수) 安全帽+安全鞋','금형 작업: 안전장갑+안전화+안전모','사출 작업: 방열장갑+보안경+안전화','화학물질: 방독마스크+내화학장갑+보안경']},{t:'❌ 이런 행동은 안 됩니다 禁止事项',i:['"잠깐이니까 괜찮아" → 사고는 잠깐에 발생 "就一会儿"→事故瞬间发生','파손된 보호구 계속 착용 禁止使用损坏的防护装备','본인 것 아닌 보호구 무단 사용']}],hl:'보호구 미착용 사고 발생 시 산재보상 감액 + 회사 행정처분.',law:'산업안전보건법 제38조'}},
+  {id:4,series:'basic',color:'linear-gradient(135deg,#312e81,#6366f1)',ep:'SERIES 04 · 기초편 基础篇',title:'아차사고\n신고하면 포상합니다!\n报告险情有奖励！',emoji:'🚨',footer:'아차사고 1건 = 중대사고 30건 예방 | 1次险情=预防30次事故',fb:'#312e81',fc:'#fff',
+   preview:['아차사고 = 다칠 뻔 했지만 부상은 없는 상황 险情=差点受伤','신고해도 절대 불이익 없음, 포상 있음 报告无处罚，有奖励','하인리히 법칙: 아차사고 300 → 중상 1'],
+   detail:{intro:'하인리히 법칙에 따르면 중대사고 1건 전에 아차사고 300건이 있습니다.\n海因里希法则：1次重大事故前有300次险情。',sections:[{t:'📌 아차사고란? 什么是险情？',i:['발 헛디뎌 넘어질 뻔 했지만 안 넘어짐 差点摔倒','금형 이동 중 미끄러졌지만 다치지 않음','지게차가 나와 충돌할 뻔 했지만 피함']},{t:'📝 신고 방법 报告方法',i:['안전지킴이 카카오톡 채팅방으로 보고 通过KakaoTalk报告','안전담당자에게 구두 보고도 가능','사진과 함께 보고하면 더 좋습니다']},{t:'🎁 신고 포상 奖励',i:['신고 1건: 소정의 포상','우수 제안: 분기 1회 표창']}],hl:'신고한다고 처벌받지 않습니다! 报告不会受到处罚！',law:'산업안전보건법 제52조'}},
+  {id:5,series:'field',color:'linear-gradient(135deg,#78350f,#d97706)',ep:'SERIES 05 · 현장편 现场篇',title:'천장주행크레인\n안전수칙\n天车安全规则',emoji:'🏗️',footer:'인양물 아래에는 절대 서지 마세요 | 严禁站在吊物下方',fb:'#78350f',fc:'#fff',
+   preview:['체인·훅·안전장치 반드시 점검 链条·吊钩必须检查','사람 키 이상 높이 절대 금지 严禁超过人身高度','안전모 착용 의무 必须戴安全帽'],
+   detail:{intro:'천장주행크레인 사고는 대부분 사망으로 이어집니다.\n天车事故大多导致死亡。',sections:[{t:'🔴 절대 하면 안 되는 것 绝对禁止',i:['인양물 아래에 사람이 있을 때 작업 有人在下方时禁止作业','최대하중 초과 운반 禁止超载','사람 키 이상으로 인양물 이동 禁止高于人身高度移动','혼자 대형 금형 이동 禁止独自移动大型模具']},{t:'✅ 작업 전 반드시 확인 作业前必须确认',i:['체인·와이어: 마모, 변형, 균열 없는지','훅: 해지장치 정상 작동','비상정지 버튼 작동 확인','작업 구역 인원 대피 완료']},{t:'📋 2인 1조 기준 2人1组标准',i:['금형 1톤 이상 → 반드시 2인 1조','신호수 1명 별도 배치','운전자는 신호수 지시에만 따름']}],hl:'현장 비표: "최대하중 ___kg / 사람 키 이상 운반 금지 / 안전모 필수"',law:'산업안전보건법 시행규칙 제88조'}},
+  {id:6,series:'field',color:'linear-gradient(135deg,#134e4a,#0d9488)',ep:'SERIES 06 · 현장편 现场篇',title:'비정형 작업 안전\n+LOTO 절차\n非常规作业安全+上锁挂牌',emoji:'🔒',footer:'비정형 작업 = 사전 허가 + LOTO 필수 | 非常规作业=事前许可+LOTO',fb:'#134e4a',fc:'#fff',
+   preview:['비정형 작업: 일상적이지 않은 특수 작업 非常规作业','LOTO = Lock Out / Tag Out (잠금·태깅) 上锁挂牌','전원 차단 없이 설비 접근 = 즉사 위험 未断电接触设备=致命'],
+   detail:{intro:'비정형 작업은 일상 반복 작업이 아닌 설비 수리, 금형 교체, 청소, 시운전 등 특수 작업을 말합니다. 사고 발생률이 일반 작업의 3배 이상입니다.\n非常规作业是指设备维修、模具更换、清洁等特殊作业，事故率是普通作业的3倍以上。',sections:[{t:'🔴 비정형 작업 시 필수 절차 非常规作业必须步骤',i:['① 작업 허가서 발행 (관리감독자 승인) 发行作业许可证','② 위험성평가 실시 (참여 작업자 전원) 全员参与风险评估','③ 안전조치 확인 (LOTO, 가림막 등) 确认安全措施','④ 작업 중 안전 감시 (감시인 배치) 配置监护人','⑤ 작업 완료 후 원상 복구 확인 完工后恢复确认']},{t:'🔒 LOTO 절차 (잠금·태깅) 上锁挂牌步骤',i:['① 설비 전원 차단 (해당 차단기) 断电','② 잠금장치(Lock) 설치 + 본인 이름표(Tag) 부착 上锁+挂牌','③ 잔류 에너지 제거 (기압·열·관성 등) 消除残余能量','④ 작업 완료 후 본인만 잠금 해제 只有本人可以解锁','⑤ 안전장치 복구 확인 → 가동 确认安全装置恢复后启动']},{t:'📋 비정형 작업 예시 非常规作业示例',i:['금형 교체 작업 模具更换','설비 내부 청소·수리 设备内部清洁维修','전기 배선 작업 电气布线作业','고소 작업 (사다리, 비계) 高空作业']}],hl:'LOTO 없이 설비 접근 = 중대재해 직결! 未LOTO接触设备=直接导致重大灾害！',law:'산업안전보건기준에 관한 규칙 제92조, 제301조'}},
+  {id:7,series:'field',color:'linear-gradient(135deg,#1e1b4b,#4f46e5)',ep:'SERIES 07 · 현장편 现场篇',title:'지게차\n사고 예방 수칙\n叉车事故预防',emoji:'🚜',footer:'지게차와 보행자는 절대 공존할 수 없습니다 | 叉车与行人不可共存',fb:'#1e1b4b',fc:'#fff',
+   preview:['운전자: 면허 소지자만 운전 只有持证人员可驾驶','포크 높이: 주행 시 지상 20~30cm 유지','보행자: 지게차 이동 구역 절대 진입 금지 行人禁止进入叉车区域'],
+   detail:{intro:'지게차 1톤 = 성인 14명 무게. 사고는 대부분 사망·중상으로 이어집니다.\n叉车1吨=14名成人重量，事故大多导致死亡或重伤。',sections:[{t:'🚜 운전자 수칙 驾驶员规则',i:['면허 소지자만 운전 (무면허 = 형사처벌) 无证驾驶=刑事处罚','매일 작업 전 조향·제동·경보 장치 점검','포크는 주행 시 지상 20~30cm 유지','경사로: 후진으로 올라가고 전진으로 내려오기','안전벨트 항상 착용 始终系安全带','⚠️ 키 분리보관 필수 — 운행 종료 후 키 회수·지정 장소 보관 钥匙必须分离保管']},{t:'🚶 보행자 수칙 行人规则',i:['지게차 이동 통로 절대 진입 금지 禁止进入叉车通道','지게차가 올 때는 정지·대기 叉车来时停止等待','눈 마주치기 전까지는 "못 본 것"으로 간주']}],hl:'무면허 운전 = 운전자·회사 모두 형사처벌. 키 분리보관 필수!\n无证驾驶=刑事处罚，钥匙必须分离保管！',law:'산업안전보건기준에 관한 규칙 제179조~제185조'}},
+  {id:8,series:'field',color:'linear-gradient(135deg,#7f1d1d,#ef4444)',ep:'SERIES 08 · 현장편 现场篇',title:'화재 예방\n및 비상 대피 요령\n火灾预防与紧急疏散',emoji:'🧯',footer:'화재 → 신고 → 대피 → 초기진화 | 火灾→报警→疏散→初期灭火',fb:'#7f1d1d',fc:'#fff',
+   preview:['소화기 위치 지금 바로 확인하세요 现在确认灭火器位置','비상구 방향 외워두세요 (눈 감고도) 记住紧急出口方向','화재 발견 즉시: 큰소리로 "불이야!" 发现火灾立即大声喊"着火了！"'],
+   detail:{intro:'우리 공장의 비상 대피 절차와 소화기 위치를 반드시 알고 있어야 합니다.\n必须知道工厂紧急疏散程序和灭火器位置。',sections:[{t:'🔥 화재 발견 시 행동 순서 发现火灾时行动顺序',i:['① "불이야!" 외쳐 전파 大喊"着火了！"','② 119 신고 报警119','③ 초기 소화 판단 (30초 이내) 30秒内判断初期灭火','④ 비상구로 대피 (엘리베이터 금지) 从紧急出口疏散','⑤ 정문 앞 주차장 집결 在大门前停车场集合']},{t:'🧯 소화기 사용법 (PASS) 灭火器使用方法',i:['P - 핀 뽑기 拔销','A - 호스 불 쪽 겨냥 对准火焰','S - 손잡이 눌러 분사 按压喷射','S - 좌우로 쓸듯이 뿌리기 左右扫射']}],hl:'소화기 압력계 녹색 = 정상. 매월 점검하세요!',law:'소방시설법 제10조'}},
+  {id:9,series:'culture',color:'linear-gradient(135deg,#064e3b,#059669)',ep:'SERIES 09 · 문화편 文化篇',title:'정리정돈 5S로\n사고 막기\n用5S防止事故',emoji:'✨',footer:'깨끗한 현장 = 사고 없는 현장 | 干净的现场=无事故的现场',fb:'#064e3b',fc:'#fff',
+   preview:['사고의 30% 이상이 정리정돈 불량에서 시작 30%以上事故因整理不良','바닥 이물질 → 미끄러짐 사고의 주원인 地面异物→滑倒主因','통로 막힘 → 비상 시 대피 불가 通道堵塞→无法疏散'],
+   detail:{intro:'5S는 가장 쉽고 효과적인 사고 예방 활동입니다.\n5S是最简单有效的事故预防活动。',sections:[{t:'5S 실천 방법 5S实践方法',i:['정리(整理): 필요 vs 불필요 구분','정돈(整顿): 정해진 위치에 보관','청소(清扫): 매일 작업 후 5분 청소','청결(清洁): 청소 상태 항상 유지','습관화(素养): 위 4S를 당연하게 반복']},{t:'📋 퇴근 전 5분 체크 下班前5分钟检查',i:['내 구역 청소 완료 我的区域打扫完毕','공구 제자리 반납 工具归位','바닥 기름·이물질 없음 地面无油污']}],hl:'정리정돈으로 공구 찾는 시간 줄이면 하루 30분 절약!',law:'산업안전보건기준에 관한 규칙 제3조'}},
+  {id:10,series:'culture',color:'linear-gradient(135deg,#1e3a5f,#0ea5e9)',ep:'SERIES 10 · 문화편 文化篇',title:'운반대차·중량물\n취급 안전수칙\n搬运车·重物安全',emoji:'📦',footer:'중량물 취급은 반드시 2인 이상! | 重物搬运必须2人以上！',fb:'#1e3a5f',fc:'#fff',
+   preview:['운반대차 적재 하중 초과 금지 禁止超过搬运车承载量','중량물 인력 운반 시 2인 이상 必须2人以上搬运重物','허리를 굽히지 말고 무릎을 굽혀 들기 弯膝不弯腰'],
+   detail:{intro:'운반대차 사고와 중량물 취급 사고는 근골격계 질환과 낙하·충돌 사고의 주요 원인입니다.\n搬运车事故和重物搬运事故是肌骨疾病和坠落碰撞事故的主要原因。',sections:[{t:'🛒 운반대차 안전수칙 搬运车安全规则',i:['적재 하중 초과 금지 (표시 하중 확인) 禁止超载','이동 시 전방 주시 — 시야 가리면 2인 운반 移动时注意前方','경사로 이동 시 천천히 + 제동 확인 斜坡缓行+确认制动','파손·변형된 대차 즉시 사용 중지 损坏的车辆立即停用','대차 위에 사람 탑승 금지 禁止人员乘坐']},{t:'💪 중량물 취급 수칙 重物搬运规则',i:['25kg 이상은 반드시 2인 이상 운반 25kg以上必须2人搬运','들어올릴 때: 허리가 아닌 무릎을 굽혀 들기 弯膝不弯腰','몸에 밀착하여 운반 (팔 뻗지 않기) 贴身搬运','운반 경로 장애물 사전 제거 预先清除搬运路径障碍物','장거리 운반 시 대차·리프트 사용 长距离使用搬运工具']},{t:'🔴 이런 행동은 금지 禁止事项',i:['한 손으로 중량물 운반 禁止单手搬运重物','시야 가린 상태로 이동 禁止视线遮挡移动','대차 끌기 (밀어서 이동) 推车不拉车']}],hl:'중량물 무리 운반 = 허리 디스크 직결! 보조기구를 활용하세요.\n强行搬运重物=直接导致腰椎间盘！请使用辅助工具。',law:'산업안전보건기준에 관한 규칙 제37조, 제39조'}},
+  {id:11,series:'culture',color:'linear-gradient(135deg,#4a1d96,#8b5cf6)',ep:'SERIES 11 · 문화편 文化篇',title:'전기 안전\n기본수칙\n电气安全基本规则',emoji:'⚡',footer:'전기는 눈에 보이지 않는 살인자입니다 | 电是看不见的杀手',fb:'#4a1d96',fc:'#fff',
+   preview:['분전반: 허가받은 사람만 접근 가능 只有授权人员可接触配电箱','전선 피복 벗겨진 것 발견 즉시 신고 发现电线破损立即报告','물기 있는 손으로 전기 설비 절대 접촉 금지 湿手禁止触碰电气设备'],
+   detail:{intro:'전기 감전 사고는 순식간에 사망으로 이어집니다.\n触电事故瞬间导致死亡。',sections:[{t:'🔴 절대 금지 绝对禁止',i:['허가없이 분전반 개방 未授权禁止打开配电箱','물기 있는 손으로 조작 湿手操作','전선 위에 자재 올려두기','자가 수리·개조 禁止自行维修改造']},{t:'✅ 발견 시 즉시 신고 发现时立即报告',i:['전선 피복 벗겨짐·손상 电线破损','콘센트·플러그 파손 插座破损','이상한 냄새·소리 异常气味或声音']},{t:'🛑 작업 전 잠금·태깅(LOTO) 上锁挂牌',i:['설비 수리 전 전원 차단 维修前断电','잠금(Lock) + 이름표(Tag) 부착 上锁+挂牌','본인만 잠금 해제 가능 只有本人可解锁']}],hl:'감전 사고 시 전류 차단부터! 맨손으로 피해자 잡지 마세요.\n触电时先断电！禁止徒手接触触电者。',law:'산업안전보건기준에 관한 규칙 제301조'}},
+  {id:12,series:'culture',color:'linear-gradient(135deg,#1c1917,#57534e)',ep:'SERIES 12 · 문화편 文化篇',title:'안전문화\n우리가 만들어 갑니다\n我们共同打造安全文化',emoji:'🤝',footer:'"안전은 규정이 아닌 우리의 약속입니다" | "安全是我们的承诺"',fb:'#1c1917',fc:'#fff',
+   preview:['안전을 지키는 것이 동료를 지키는 것 守护安全就是守护同事','위험 발견 = 즉시 멈추고 보고 发现危险=立即停止报告','안전 제안 적극 참여 → 더 안전한 현장 积极参与安全建议'],
+   detail:{intro:'안전문화는 우리 모두가 함께 만들어 가는 것입니다.\n安全文化是我们共同打造的。',sections:[{t:'🤝 안전문화 4원칙 安全文化4原则',i:['동료 안전도 내 책임 同事安全也是我的责任','멈추는 용기: 위험하면 작업 중지 후 보고 (처벌 없음) 危险时停工报告(无处罚)','작은 것도 신고: 아차사고·개선 아이디어 모두 제안 小事也报告','기록이 문화: TBM·점검·교육 기록이 우리의 안전 역사 记录就是文化']},{t:'🏆 안전 포상 제도 安全奖励制度',i:['아차사고 신고: 소정의 포상 报告险情有奖励','위험발견 제안: 분기 우수 제안 선정','안전수칙 준수 우수자: 연 1회 표창']}],hl:'안전을 말할 수 있는 문화 = 사고가 없는 문화!\n能说出安全问题的文化=无事故的文化！',law:'산업안전보건법 제52조'}}
 ];
 
 // ============================================================
 // POSTER DATA
 // ============================================================
 const ptPosters = [
-  {id:'p1',cat:'notice',color:'#0d1f3c',accent:'#1e5096',badge:'📋 법정 필수 게시',emoji:'📞',title:'비상 연락처',sub:'화재·사고 발생 시 즉시 연락',
-   rules:[{n:'🔥',t:'화재 신고',d:'119'},{n:'🚑',t:'응급 구조',d:'119'},{n:'🚓',t:'경찰',d:'112'},{n:'🏢',t:'안전보건 담당자',d:'연락처 기재'},{n:'🏥',t:'가까운 병원',d:'병원명·전화번호 기재'},{n:'👨‍💼',t:'공장장',d:'연락처 기재'}],
-   footer:'이 연락처는 항상 최신 상태로 유지하세요',fb:'#0d1f3c',fc:'#fff'},
-  {id:'p2',cat:'notice',color:'#991b1b',accent:'#ef4444',badge:'📋 법정 필수 게시',emoji:'🧯',title:'소화기 사용법',sub:'화재 발생 즉시 PASS 기억하세요',
-   rules:[{n:'P',t:'핀 뽑기',d:'안전핀을 뽑아 잠금 해제'},{n:'A',t:'겨냥',d:'호스를 불 쪽 아래를 향해 겨냥'},{n:'S',t:'분사',d:'손잡이를 꽉 눌러 분사 시작'},{n:'S',t:'쓸기',d:'좌우로 빗자루 쓸듯이 뿌리기'}],
-   footer:'분사 시간 약 10~15초 | 소화기는 1회용',fb:'#991b1b',fc:'#fff'},
-  {id:'p3',cat:'notice',color:'#065f46',accent:'#10b981',badge:'📋 법정 필수 게시',emoji:'🚪',title:'비상 대피 안내',sub:'화재·재난 발생 시 행동 절차',
-   rules:[{n:'1',t:'"불이야!" 외치기',d:'주변 사람 즉시 대피 유도'},{n:'2',t:'119 신고',d:'장소·상황 명확하게 전달'},{n:'3',t:'비상구로 대피',d:'엘리베이터 절대 사용 금지'},{n:'4',t:'문 닫고 대피',d:'연기 확산 방지'},{n:'5',t:'집결지 집합',d:'정문 앞 주차장 — 인원 확인'},{n:'6',t:'재진입 금지',d:'절대 건물 안으로 다시 들어가지 않기'}],
-   footer:'집결지: 정문 앞 주차장',fb:'#065f46',fc:'#fff'},
-  {id:'p4',cat:'rule',color:'#78350f',accent:'#d97706',badge:'📌 안전수칙',emoji:'🏗️',title:'호이스트·크레인 안전수칙',sub:'금형 운반 시 반드시 준수하세요',
-   rules:[{n:'✅',t:'체인·훅 점검 후 작업',d:'마모·변형·균열 확인'},{n:'✅',t:'안전모 착용 필수',d:'호이스트 구역 전원'},{n:'✅',t:'2인 1조 + 신호수',d:'금형 1톤 이상'},{n:'🚫',t:'사람 키 이상 운반 금지',d:'인양물은 낮게 이동'},{n:'🚫',t:'인양 중 하부 작업 금지',d:'낙하 시 즉사 위험'},{n:'🚫',t:'최대하중 초과 금지',d:'표시 하중 반드시 확인'}],
-   footer:'사람 키 이상 운반 금지 | 안전모 필수',fb:'#78350f',fc:'#fff'},
-  {id:'p5',cat:'rule',color:'#134e4a',accent:'#0d9488',badge:'📌 안전수칙',emoji:'🔩',title:'금형 교체 안전수칙',sub:'교체 전 반드시 전원 차단!',
-   rules:[{n:'1',t:'전원 차단 → 잠금 → 태그',d:'본인 이름 태그 부착'},{n:'2',t:'잔류 에너지 제거',d:'잔압·관성·열 완전 제거'},{n:'3',t:'안전블록 삽입',d:'슬라이드 낙하 방지'},{n:'4',t:'2인 이상 작업',d:'신호수 역할 1인'},{n:'5',t:'안전장갑·안전화 착용',d:'방열장갑 추가 (고온 시)'},{n:'6',t:'복구 확인 후 기동',d:'안전장치 복구 완료 확인'}],
-   footer:'전원 차단 없이 금형 교체 = 중대재해',fb:'#134e4a',fc:'#fff'},
-  {id:'p6',cat:'rule',color:'#1e1b4b',accent:'#4f46e5',badge:'📌 안전수칙',emoji:'🚜',title:'지게차 안전수칙',sub:'지게차와 보행자는 공존 불가',
-   rules:[{n:'✅',t:'면허자만 운전',d:'지게차 운전기능사 면허'},{n:'✅',t:'포크 높이: 지상 20~30cm',d:'주행 시 항상 낮게'},{n:'✅',t:'안전벨트 착용',d:'항상, 예외 없이'},{n:'🚫',t:'보행자 구역 진입 금지',d:'통로 분리 준수'},{n:'🚫',t:'포크에 사람 탑승 금지',d:'즉시 징계 대상'},{n:'🚫',t:'시야 가린 채 전진 금지',d:'후진으로 운행'}],
-   footer:'무면허 운전 = 형사처벌 | 지게차 1톤 = 성인 14명 무게',fb:'#1e1b4b',fc:'#fff'},
-  {id:'p7',cat:'rule',color:'#4a1d96',accent:'#8b5cf6',badge:'📌 안전수칙',emoji:'⚡',title:'전기 안전수칙',sub:'감전은 순식간에 사망으로 이어집니다',
-   rules:[{n:'✅',t:'작업 전 전원 차단',d:'잠금(Lock)+태그(Tag) 부착 후 작업'},{n:'✅',t:'이상 발견 즉시 신고',d:'전선 피복 손상, 이상 냄새·소리'},{n:'🚫',t:'분전반 무단 접근 금지',d:'허가받은 담당자만 개방'},{n:'🚫',t:'물기 있는 손 조작 금지',d:'반드시 손 건조 후'},{n:'🚫',t:'임시 연장선 방치 금지',d:'반드시 정리 후 마감'},{n:'🚫',t:'자가 수리·개조 금지',d:'전문가에게 요청'}],
-   footer:'전기는 눈에 보이지 않는 살인자 | 규정 준수가 생명',fb:'#4a1d96',fc:'#fff'},
-  {id:'p8',cat:'monthly',color:'#0f4c75',accent:'#1b98e0',badge:'📅 이달의 안전 목표',emoji:'🎯',title:'이달의 안전 목표',sub:'우리 모두 함께 지킵시다',
-   rules:[{n:'①',t:'TBM 100% 참석',d:'매일 작업 전 10분, 빠짐없이'},{n:'②',t:'아차사고 1건 이상 신고',d:'숨기지 말고 공유 = 예방'},{n:'③',t:'보호구 완전 착용',d:'단 한 순간도 예외 없이'},{n:'④',t:'퇴근 전 작업장 정리',d:'내 구역은 내가 책임'}],
-   footer:'이번달 무재해 목표 달성! 우리가 만드는 안전한 현장',fb:'#0f4c75',fc:'#fff'},
-  {id:'p9',cat:'monthly',color:'#7c2d12',accent:'#ea580c',badge:'📅 계절별 안전',emoji:'☀️',title:'여름철 열사병 예방',sub:'폭염 속 작업 시 반드시 지키세요',
-   rules:[{n:'💧',t:'매시간 물 마시기',d:'200mL/시간, 갈증 전에'},{n:'🌡️',t:'33℃ 이상 — 매시간 휴식',d:'10~15분 그늘 휴식'},{n:'🩺',t:'열사병 증상 즉시 신고',d:'어지럼증·구역질·의식저하'},{n:'❌',t:'혼자 작업 금지',d:'폭염 시 반드시 동료와'}],
-   footer:'체온 39℃ 이상 → 즉시 119 신고 + 응급처치',fb:'#7c2d12',fc:'#fff'},
-  {id:'p10',cat:'monthly',color:'#1e3a5f',accent:'#0ea5e9',badge:'📅 계절별 안전',emoji:'❄️',title:'겨울철 안전수칙',sub:'동절기 특별 주의 사항',
-   rules:[{n:'🧊',t:'빙판길·결빙 바닥 주의',d:'낙상 주의, 모래 뿌리기'},{n:'🔥',t:'쿨링타워 동파 방지',d:'동절기 가동 확인 (12~2월)'},{n:'🧤',t:'방한 보호구 착용',d:'외부 작업 시 방한장갑·방한복'},{n:'🔌',t:'난방기기 안전 사용',d:'퇴근 전 전기난로 반드시 차단'}],
-   footer:'겨울철 낙상 = 골절 = 중대 산업재해 | 서두르지 말고 안전하게',fb:'#1e3a5f',fc:'#fff'},
-  {id:'p11',cat:'sign',color:'#991b1b',accent:'#ef4444',badge:'🪧 현장 부착용 비표',emoji:'🏗️',title:'호이스트 구역 안전수칙',sub:'이 구역에서는 반드시 지키세요',
-   rules:[{n:'🔴',t:'최대 하중 초과 운반 금지',d:'표시 하중 확인 후 작업'},{n:'🔴',t:'사람 키 이상 운반 금지',d:'인양물은 낮게 이동'},{n:'🔴',t:'인양물 아래 접근 금지',d:'낙하 시 즉사 위험'},{n:'🔵',t:'안전모 착용 필수',d:'이 구역 진입 전 착용'},{n:'🔵',t:'2인 1조 + 신호수 필수',d:'금형 1톤 이상'}],
-   footer:'⛑️ 안전모 착용 없이 진입 금지',fb:'#991b1b',fc:'#fff'},
-  {id:'p12',cat:'sign',color:'#1e3a5f',accent:'#0ea5e9',badge:'🪧 현장 부착용 비표',emoji:'🚫',title:'허가자 외 접근 금지',sub:'분전반 / 전기 패널함',
-   rules:[{n:'🔴',t:'허가받은 담당자만 접근',d:'무단 접근 시 감전 위험'},{n:'🔴',t:'작업 전 잠금·태깅 필수',d:'Lock + Tag 부착 후 작업'},{n:'🔴',t:'타인 잠금 해제 절대 금지',d:'본인 확인 후만 해제'},{n:'📞',t:'담당자 연락처',d:'전화번호 기재'}],
-   footer:'⚡ 허가 없이 접근 금지 — 감전 즉사 위험',fb:'#1e3a5f',fc:'#fff'},
-  {id:'p13',cat:'sign',color:'#78350f',accent:'#d97706',badge:'🪧 현장 부착용 비표',emoji:'🔩',title:'금형 작업 전원 차단 필수',sub:'프레스 / 사출기 금형 교체 시',
-   rules:[{n:'🔴',t:'전원 차단 → 잠금 → 태그 순서 필수',d:'순서 바꾸면 사망 사고'},{n:'🔴',t:'전원 차단 전 금형 교체 절대 금지',d:''},{n:'🔵',t:'안전장갑·안전화 착용 필수',d:''},{n:'🔵',t:'2인 1조 작업',d:'혼자 금형 교체 금지'}],
-   footer:'금형 교체 = 반드시 전원 차단 확인',fb:'#78350f',fc:'#fff'},
-  {id:'p14',cat:'sign',color:'#064e3b',accent:'#059669',badge:'🪧 현장 부착용 비표',emoji:'🚜',title:'지게차 전용 통로',sub:'보행자 진입 금지',
-   rules:[{n:'🔴',t:'보행자 진입 절대 금지',d:'지게차와 충돌 시 사망'},{n:'🔴',t:'무면허 운전 금지',d:'면허 소지자만 운전'},{n:'🔵',t:'지게차 발견 시 정지·대기',d:'눈 마주침 확인 후 이동'}],
-   footer:'지게차 통로 = 보행자 금지 구역',fb:'#064e3b',fc:'#fff'}
+  {id:'p1',cat:'notice',color:'#0d1f3c',accent:'#1e5096',badge:'📋 법정 필수 게시 法定必贴',emoji:'📞',title:'비상 연락처\n紧急联络电话',sub:'화재·사고 발생 시 즉시 연락 | 发生火灾·事故时立即联系',
+   rules:[{n:'🔥',t:'화재 신고 火灾报警',d:'119'},{n:'🚑',t:'응급 구조 紧急救援',d:'119'},{n:'🚓',t:'경찰 警察',d:'112'},{n:'🏢',t:'안전보건 담당자 安全负责人',d:'연락처 기재'},{n:'🏥',t:'가까운 병원 最近医院',d:'병원명·전화번호 기재'},{n:'👨‍💼',t:'공장장 厂长',d:'연락처 기재'}],
+   footer:'이 연락처는 항상 최신 상태로 유지하세요 | 请始终保持最新状态',fb:'#0d1f3c',fc:'#fff'},
+  {id:'p2',cat:'notice',color:'#991b1b',accent:'#ef4444',badge:'📋 법정 필수 게시 法定必贴',emoji:'🧯',title:'소화기 사용법\n灭火器使用方法',sub:'화재 발생 즉시 PASS 기억하세요 | 记住PASS',
+   rules:[{n:'P',t:'핀 뽑기 拔销',d:'안전핀을 뽑아 잠금 해제'},{n:'A',t:'겨냥 瞄准',d:'호스를 불 쪽 아래를 향해 겨냥'},{n:'S',t:'분사 喷射',d:'손잡이를 꽉 눌러 분사 시작'},{n:'S',t:'쓸기 扫射',d:'좌우로 빗자루 쓸듯이 뿌리기'}],
+   footer:'분사 시간 약 10~15초 | 소화기는 1회용 | 喷射约10~15秒',fb:'#991b1b',fc:'#fff'},
+  {id:'p3',cat:'notice',color:'#065f46',accent:'#10b981',badge:'📋 법정 필수 게시 法定必贴',emoji:'🚪',title:'비상 대피 안내\n紧急疏散指南',sub:'화재·재난 발생 시 행동 절차 | 火灾时行动步骤',
+   rules:[{n:'1',t:'"불이야!" 외치기 喊"着火了！"',d:'주변 사람 즉시 대피 유도'},{n:'2',t:'119 신고 报警119',d:'장소·상황 명확하게 전달'},{n:'3',t:'비상구로 대피 走紧急出口',d:'엘리베이터 절대 사용 금지 禁用电梯'},{n:'4',t:'문 닫고 대피 关门疏散',d:'연기 확산 방지'},{n:'5',t:'집결지 집합 集合点集合',d:'정문 앞 주차장 — 인원 확인'},{n:'6',t:'재진입 금지 禁止重新进入',d:'절대 건물 안으로 다시 들어가지 않기'}],
+   footer:'집결지: 정문 앞 주차장 | 集合点：大门前停车场',fb:'#065f46',fc:'#fff'},
+  {id:'p4',cat:'rule',color:'#78350f',accent:'#d97706',badge:'📌 안전수칙 安全规则',emoji:'🏗️',title:'천장주행크레인 안전수칙\n天车安全规则',sub:'금형 운반 시 반드시 준수 | 搬运模具时必须遵守',
+   rules:[{n:'✅',t:'체인·훅 점검 후 작업 检查链条吊钩',d:'마모·변형·균열 확인'},{n:'✅',t:'안전모 착용 필수 必须戴安全帽',d:'천장주행크레인 구역 전원'},{n:'✅',t:'2인 1조 + 신호수 2人1组+信号员',d:'금형 1톤 이상'},{n:'🚫',t:'사람 키 이상 운반 금지 禁止超高运输',d:'인양물은 낮게 이동'},{n:'🚫',t:'인양 중 하부 작업 금지 吊运中禁止下方作业',d:'낙하 시 즉사 위험'},{n:'🚫',t:'최대하중 초과 금지 禁止超载',d:'표시 하중 반드시 확인'}],
+   footer:'사람 키 이상 운반 금지 | 안전모 필수 | 禁止超高运输·必须戴安全帽',fb:'#78350f',fc:'#fff'},
+  {id:'p5',cat:'rule',color:'#134e4a',accent:'#0d9488',badge:'📌 안전수칙 安全规则',emoji:'🔒',title:'LOTO 잠금·태깅 안전수칙\n上锁挂牌安全规则',sub:'설비 수리·금형 교체 전 필수 | 设备维修·模具更换前必须',
+   rules:[{n:'1',t:'전원 차단 → 잠금 → 태그 断电→上锁→挂牌',d:'본인 이름 태그 부착'},{n:'2',t:'잔류 에너지 제거 消除残余能量',d:'잔압·관성·열 완전 제거'},{n:'3',t:'안전블록 삽입 插入安全块',d:'슬라이드 낙하 방지'},{n:'4',t:'2인 이상 작업 2人以上作业',d:'신호수 역할 1인'},{n:'5',t:'안전장갑·안전화 착용 穿戴防护',d:'방열장갑 추가 (고온 시)'},{n:'6',t:'본인만 잠금 해제 只有本人可解锁',d:'타인의 잠금 해제 절대 금지'}],
+   footer:'LOTO 없이 설비 접근 = 중대재해 | 未上锁接触设备=重大灾害',fb:'#134e4a',fc:'#fff'},
+  {id:'p6',cat:'rule',color:'#1e1b4b',accent:'#4f46e5',badge:'📌 안전수칙 安全规则',emoji:'🚜',title:'지게차 안전수칙\n叉车安全规则',sub:'지게차와 보행자는 공존 불가 | 叉车与行人不可共存',
+   rules:[{n:'✅',t:'면허자만 운전 持证驾驶',d:'지게차 운전기능사 면허'},{n:'✅',t:'포크 높이: 지상 20~30cm',d:'주행 시 항상 낮게'},{n:'✅',t:'안전벨트 착용 系安全带',d:'항상, 예외 없이'},{n:'🔑',t:'키 분리보관 必须 钥匙分离保管',d:'운행 종료 후 키 회수·지정 장소 보관'},{n:'🚫',t:'보행자 구역 진입 금지 行人区禁入',d:'통로 분리 준수'},{n:'🚫',t:'포크에 사람 탑승 금지 禁止乘坐',d:'즉시 징계 대상'}],
+   footer:'무면허=형사처벌 | 키 분리보관 필수 | 无证=刑事处罚·钥匙必须分离',fb:'#1e1b4b',fc:'#fff'},
+  {id:'p7',cat:'rule',color:'#4a1d96',accent:'#8b5cf6',badge:'📌 안전수칙 安全规则',emoji:'⚡',title:'전기 안전수칙\n电气安全规则',sub:'감전은 순식간에 사망 | 触电瞬间致命',
+   rules:[{n:'✅',t:'작업 전 전원 차단 作业前断电',d:'잠금(Lock)+태그(Tag) 부착 후 작업'},{n:'✅',t:'이상 발견 즉시 신고 异常立即报告',d:'전선 피복 손상, 이상 냄새·소리'},{n:'🚫',t:'분전반 무단 접근 금지 禁止擅自接触配电箱',d:'허가받은 담당자만 개방'},{n:'🚫',t:'물기 있는 손 조작 금지 湿手禁止操作',d:'반드시 손 건조 후'},{n:'🚫',t:'임시 연장선 방치 금지',d:'반드시 정리 후 마감'},{n:'🚫',t:'자가 수리·개조 금지 禁止自行维修',d:'전문가에게 요청'}],
+   footer:'전기는 눈에 보이지 않는 살인자 | 电是看不见的杀手',fb:'#4a1d96',fc:'#fff'},
+  {id:'p15',cat:'rule',color:'#0c4a6e',accent:'#0284c7',badge:'📌 안전수칙 安全规则',emoji:'🛒',title:'운반대차·중량물 안전수칙\n搬运车·重物安全规则',sub:'중량물 취급 시 반드시 준수 | 搬运重物时必须遵守',
+   rules:[{n:'✅',t:'적재 하중 준수 遵守承载量',d:'표시 하중 확인, 초과 적재 금지'},{n:'✅',t:'25kg 이상 2인 운반 25kg以上2人搬运',d:'무리한 인력 운반 금지'},{n:'✅',t:'허리 아닌 무릎 굽혀 들기 弯膝不弯腰',d:'근골격계 질환 예방'},{n:'🚫',t:'경사로 대차 이동 주의',d:'천천히 + 제동 확인'},{n:'🚫',t:'시야 가린 상태 이동 금지',d:'전방 주시 필수, 시야 차단 시 2인 운반'},{n:'🚫',t:'대차 위 사람 탑승 금지 禁止乘坐',d:''}],
+   footer:'중량물 무리 운반 = 허리 디스크! | 强行搬运=腰椎间盘！',fb:'#0c4a6e',fc:'#fff'},
+  {id:'p16',cat:'rule',color:'#065f46',accent:'#10b981',badge:'📌 건강관리 健康管理',emoji:'🦴',title:'근골격계 질환 예방\n肌肉骨骼疾病预防',sub:'바른 자세 + 스트레칭 = 건강한 몸 | 正确姿势+拉伸=健康身体',
+   rules:[{n:'1',t:'작업 전 스트레칭 5분 工作前拉伸5分钟',d:'목·어깨·허리·손목 스트레칭'},{n:'2',t:'바른 자세 유지 保持正确姿势',d:'허리 세우고, 무릎 구부려 들기'},{n:'3',t:'반복 동작 1시간마다 휴식 每小时休息',d:'같은 동작 반복 시 5분 스트레칭'},{n:'4',t:'중량물은 보조기구 사용 重物使用辅助工具',d:'리프트, 대차, 크레인 활용'},{n:'5',t:'이상 증상 즉시 보고 异常症状立即报告',d:'손저림·허리통증·어깨결림 등'},{n:'6',t:'올바른 들기 자세 正确搬举姿势',d:'발 어깨너비, 물건 밀착, 무릎으로 들기'}],
+   footer:'근골격계 질환은 누적됩니다 — 오늘의 스트레칭이 내일을 지킵니다 | 肌骨疾病会累积',fb:'#065f46',fc:'#fff'},
+  {id:'p8',cat:'monthly',color:'#0f4c75',accent:'#1b98e0',badge:'📅 이달의 안전 목표 本月安全目标',emoji:'🎯',title:'이달의 안전 목표\n本月安全目标',sub:'우리 모두 함께 지킵시다 | 让我们一起遵守',
+   rules:[{n:'①',t:'TBM 100% 참석 TBM100%参加',d:'매일 작업 전 10분, 빠짐없이'},{n:'②',t:'아차사고 1건 이상 신고 至少报告1次险情',d:'숨기지 말고 공유 = 예방'},{n:'③',t:'보호구 완전 착용 完全穿戴防护装备',d:'단 한 순간도 예외 없이'},{n:'④',t:'퇴근 전 작업장 정리 下班前整理',d:'내 구역은 내가 책임'}],
+   footer:'이번달 무재해 목표 달성! | 本月零事故目标！',fb:'#0f4c75',fc:'#fff'},
+  {id:'p9',cat:'monthly',color:'#7c2d12',accent:'#ea580c',badge:'📅 계절별 안전 季节安全',emoji:'☀️',title:'여름철 열사병 예방\n夏季中暑预防',sub:'폭염 속 작업 시 반드시 지키세요 | 高温作业必须遵守',
+   rules:[{n:'💧',t:'매시간 물 마시기 每小时喝水',d:'200mL/시간, 갈증 전에'},{n:'🌡️',t:'33℃ 이상 — 매시간 휴식',d:'10~15분 그늘 휴식'},{n:'🩺',t:'열사병 증상 즉시 신고 中暑症状立即报告',d:'어지럼증·구역질·의식저하'},{n:'❌',t:'혼자 작업 금지 禁止独自作业',d:'폭염 시 반드시 동료와'}],
+   footer:'체온 39℃ 이상 → 즉시 119 신고 | 体温39℃以上→立即报警',fb:'#7c2d12',fc:'#fff'},
+  {id:'p10',cat:'monthly',color:'#1e3a5f',accent:'#0ea5e9',badge:'📅 계절별 안전 季节安全',emoji:'❄️',title:'겨울철 안전수칙\n冬季安全规则',sub:'동절기 특별 주의 사항 | 冬季特别注意事项',
+   rules:[{n:'🧊',t:'빙판길·결빙 바닥 주의 注意结冰',d:'낙상 주의, 모래 뿌리기'},{n:'🔥',t:'쿨링타워 동파 방지',d:'동절기 가동 확인 (12~2월)'},{n:'🧤',t:'방한 보호구 착용 穿防寒装备',d:'외부 작업 시 방한장갑·방한복'},{n:'🔌',t:'난방기기 안전 사용 安全使用取暖设备',d:'퇴근 전 전기난로 반드시 차단'}],
+   footer:'겨울철 낙상 = 골절 = 중대 산업재해 | 冬季摔倒=骨折=重大事故',fb:'#1e3a5f',fc:'#fff'},
+  {id:'p11',cat:'sign',color:'#991b1b',accent:'#ef4444',badge:'🪧 현장 비표 现场标牌',emoji:'🏗️',title:'천장주행크레인 구역\n天车区域',sub:'이 구역에서는 반드시 지키세요 | 此区域必须遵守',
+   rules:[{n:'🔴',t:'최대 하중 초과 운반 금지 禁止超载',d:'표시 하중 확인 후 작업'},{n:'🔴',t:'사람 키 이상 운반 금지 禁止超高',d:'인양물은 낮게 이동'},{n:'🔴',t:'인양물 아래 접근 금지 禁止在下方',d:'낙하 시 즉사 위험'},{n:'🔵',t:'안전모 착용 필수 必须戴安全帽',d:'이 구역 진입 전 착용'},{n:'🔵',t:'2인 1조 + 신호수 필수',d:'금형 1톤 이상'}],
+   footer:'⛑️ 안전모 착용 없이 진입 금지 | 未戴安全帽禁止进入',fb:'#991b1b',fc:'#fff'},
+  {id:'p12',cat:'sign',color:'#1e3a5f',accent:'#0ea5e9',badge:'🪧 현장 비표 现场标牌',emoji:'🚫',title:'허가자 외 접근 금지\n非授权人员禁止接近',sub:'분전반 / 전기 패널함 | 配电箱/电气面板',
+   rules:[{n:'🔴',t:'허가받은 담당자만 접근 只有授权人员',d:'무단 접근 시 감전 위험'},{n:'🔴',t:'작업 전 잠금·태깅 필수 LOTO必须',d:'Lock + Tag 부착 후 작업'},{n:'🔴',t:'타인 잠금 해제 절대 금지 禁止他人解锁',d:'본인 확인 후만 해제'},{n:'📞',t:'담당자 연락처 负责人联系方式',d:'전화번호 기재'}],
+   footer:'⚡ 허가 없이 접근 금지 — 감전 즉사 위험 | 未授权禁止接近—触电致命',fb:'#1e3a5f',fc:'#fff'},
+  {id:'p13',cat:'sign',color:'#78350f',accent:'#d97706',badge:'🪧 현장 비표 现场标牌',emoji:'🔩',title:'금형 작업 전원 차단 필수\n模具作业必须断电',sub:'사출기 금형 교체 시 | 注塑机模具更换时',
+   rules:[{n:'🔴',t:'전원 차단 → 잠금 → 태그 순서 필수 断电→上锁→挂牌',d:'순서 바꾸면 사망 사고'},{n:'🔴',t:'전원 차단 전 금형 교체 절대 금지 未断电禁止更换',d:''},{n:'🔵',t:'안전장갑·안전화 착용 필수 穿戴防护',d:''},{n:'🔵',t:'2인 1조 작업 2人1组',d:'혼자 금형 교체 금지'}],
+   footer:'금형 교체 = 반드시 전원 차단 확인 | 模具更换=必须确认断电',fb:'#78350f',fc:'#fff'},
+  {id:'p14',cat:'sign',color:'#064e3b',accent:'#059669',badge:'🪧 현장 비표 现场标牌',emoji:'🚜',title:'지게차 전용 통로\n叉车专用通道',sub:'보행자 진입 금지 | 行人禁止进入',
+   rules:[{n:'🔴',t:'보행자 진입 절대 금지 行人严禁进入',d:'지게차와 충돌 시 사망'},{n:'🔴',t:'무면허 운전 금지 禁止无证驾驶',d:'면허 소지자만 운전'},{n:'🔵',t:'지게차 발견 시 정지·대기 看到叉车时停止等待',d:'눈 마주침 확인 후 이동'},{n:'🔑',t:'키 분리보관 必须 钥匙分离保管',d:'운행 종료 후 키 회수'}],
+   footer:'지게차 통로 = 보행자 금지 구역 | 叉车通道=行人禁止区',fb:'#064e3b',fc:'#fff'}
 ];
 
 // ============================================================
@@ -2435,6 +2524,8 @@ window.onload = function(){
   renderDashboard();
   renderPatrolZones();
   renderTBMTheme();
+  renderRiskStatus();
+  checkTbmPhotoAlert();
   renderCN('all');
   renderPT('all');
   // 저장된 Supabase 설정 불러와서 자동 연결 시도 (loadSettings에서도 처리되나 명시적으로 추가)
