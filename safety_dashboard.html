@@ -254,16 +254,16 @@ table tr:hover td{background:#f8fafc;}
 /* ESG ANNUAL PLAN TABLE */
 .esg-container{overflow:visible;}
 .esg-filter-bar{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px;}
-.esg-filter-btn{padding:5px 12px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid #e8edf3;background:#fff;color:#374151;transition:all 0.2s;}
+.esg-filter-btn{padding:7px 16px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid #e8edf3;background:#fff;color:#374151;transition:all 0.2s;}
 .esg-filter-btn.active{color:#fff;border-color:transparent;}
 .esg-table-wrap{overflow-x:auto;border:1px solid #e8edf3;border-radius:8px;max-height:80vh;}
-.esg-table{width:100%;border-collapse:collapse;font-size:11px;min-width:1400px;}
+.esg-table{width:100%;border-collapse:collapse;font-size:13px;min-width:1500px;}
 .esg-table thead{position:sticky;top:0;z-index:5;}
-.esg-table th{background:#0d1f3c;color:#fff;padding:7px 6px;text-align:center;font-size:10px;font-weight:600;white-space:nowrap;border:1px solid #1a3a6e;}
-.esg-table th.col-month{width:32px;min-width:32px;}
-.esg-table td{padding:5px 6px;border:1px solid #e8edf3;vertical-align:middle;font-size:11px;}
+.esg-table th{background:#0d1f3c;color:#fff;padding:10px 8px;text-align:center;font-size:12px;font-weight:600;white-space:nowrap;border:1px solid #1a3a6e;}
+.esg-table th.col-month{width:38px;min-width:38px;}
+.esg-table td{padding:8px 8px;border:1px solid #e8edf3;vertical-align:middle;font-size:13px;}
 .esg-table tr:hover td{background:#f0f4ff;}
-.esg-cat-row td{font-weight:800;font-size:12px;color:#fff;padding:6px 10px;border:none;}
+.esg-cat-row td{font-weight:800;font-size:14px;color:#fff;padding:8px 12px;border:none;}
 .esg-cat-안전{background:#1e5096;}
 .esg-cat-소방{background:#dc2626;}
 .esg-cat-보건{background:#16a34a;}
@@ -273,7 +273,7 @@ table tr:hover td{background:#f8fafc;}
 .esg-cat-자격관리{background:#f97316;}
 .esg-cat-정보보안{background:#6366f1;}
 .esg-cat-기타{background:#6b7280;}
-.esg-month-cell{text-align:center;width:32px;min-width:32px;font-size:13px;font-weight:700;transition:all 0.15s;}
+.esg-month-cell{text-align:center;width:38px;min-width:38px;font-size:15px;font-weight:700;transition:all 0.15s;}
 .esg-month-cell.esg-clickable{cursor:pointer;user-select:none;}
 .esg-month-cell.esg-clickable:hover{background:#dbeafe;transform:scale(1.15);}
 .esg-month-cell.esg-done.esg-clickable:hover{background:#dcfce7;}
@@ -2553,33 +2553,33 @@ function renderESGPlan(containerId){
     const fileCount = itemFiles.length;
     tableHtml += `<tr>
       <td style="text-align:center;">${num}</td>
-      <td><span style="display:inline-block;padding:1px 6px;border-radius:10px;font-size:10px;font-weight:600;background:${esgCatColors[item.cat]}22;color:${esgCatColors[item.cat]};">${item.cat}</span></td>
+      <td><span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:12px;font-weight:600;background:${esgCatColors[item.cat]}22;color:${esgCatColors[item.cat]};">${item.cat}</span></td>
       <td style="font-weight:600;">${item.name}</td>
       <td>${item.target}</td>
       <td>${item.eval}</td>
-      <td style="font-size:10px;">${item.basis}</td>
+      <td>${item.basis}</td>
       <td style="text-align:center;">${item.cycle}</td>
       <td>${item.manager}</td>
-      <td style="font-size:10px;">${item.agency}</td>
+      <td style="font-size:12px;">${item.agency}</td>
       ${item.plan.map((p,mi)=>{
         const d = isESGDone(globalIdx, mi);
         if(d) return `<td class="esg-month-cell esg-done esg-clickable" title="${mi+1}월 - 클릭하여 미시행으로 변경" onclick="toggleESGDone(${globalIdx},${mi},'${containerId}')">●</td>`;
         if(p) return `<td class="esg-month-cell esg-plan esg-clickable" title="${mi+1}월 - 클릭하여 시행완료 처리" onclick="toggleESGDone(${globalIdx},${mi},'${containerId}')">○</td>`;
         return `<td class="esg-month-cell esg-empty">-</td>`;
       }).join('')}
-      <td style="text-align:right;font-size:11px;white-space:nowrap;">${item.cost}</td>
+      <td style="text-align:right;white-space:nowrap;">${item.cost}</td>
       <td style="text-align:center;position:relative;">
         <button class="esg-file-btn" onclick="toggleESGFile(event,${globalIdx},'${containerId}')">📎${fileCount>0?' '+fileCount:''}</button>
         <div class="esg-file-popup" id="esg-fp-${containerId}-${globalIdx}">
-          <div style="font-weight:700;font-size:12px;margin-bottom:8px;">📎 ${item.name}</div>
-          <div style="font-size:11px;font-weight:600;color:#374151;margin-bottom:4px;">첨부파일 / 링크</div>
+          <div style="font-weight:700;font-size:13px;margin-bottom:8px;">📎 ${item.name}</div>
+          <div style="font-size:12px;font-weight:600;color:#374151;margin-bottom:4px;">첨부파일 / 링크</div>
           <div class="esg-file-list" id="esg-fl-${containerId}-${globalIdx}"></div>
           <input type="text" id="esg-fi-${containerId}-${globalIdx}" placeholder="URL 또는 파일명 입력">
           <div style="display:flex;gap:4px;margin-bottom:4px;">
-            <label style="font-size:10px;color:#6b7280;cursor:pointer;display:flex;align-items:center;gap:3px;">
+            <label style="font-size:12px;color:#6b7280;cursor:pointer;display:flex;align-items:center;gap:3px;">
               <input type="file" style="display:none;" onchange="addESGFileUpload(${globalIdx},'${containerId}',this)">📁 파일선택
             </label>
-            <button class="btn btn-primary btn-sm" style="font-size:10px;padding:3px 8px;" onclick="addESGFile(${globalIdx},'${containerId}')">링크추가</button>
+            <button class="btn btn-primary btn-sm" style="font-size:12px;padding:4px 10px;" onclick="addESGFile(${globalIdx},'${containerId}')">링크추가</button>
           </div>
           <div class="esg-memo-area">
             <div style="font-size:11px;font-weight:600;color:#374151;margin-bottom:4px;">내역 메모</div>
