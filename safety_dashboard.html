@@ -390,6 +390,25 @@ table tr:hover td{background:#f8fafc;}
         </div>
       </div>
 
+      <!-- 필터: 사업장 + 레벨 -->
+      <div class="card" style="margin-bottom:16px;padding:14px 18px;">
+        <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;">
+          <div style="font-size:13px;font-weight:700;color:#0d1f3c;">🏭 사업장</div>
+          <div style="display:flex;gap:6px;">
+            <button class="btn btn-sm" onclick="setPatrolFilter('site','all',this)" id="pf-site-all" style="background:#0d1f3c;color:#fff;">전체</button>
+            <button class="btn btn-outline btn-sm" onclick="setPatrolFilter('site','suwon',this)">수원 (사출·조립)</button>
+            <button class="btn btn-outline btn-sm" onclick="setPatrolFilter('site','hwaseong',this)">화성 (도색·레이저·화학)</button>
+          </div>
+          <div style="width:1px;height:24px;background:#e5e7eb;"></div>
+          <div style="font-size:13px;font-weight:700;color:#0d1f3c;">👤 레벨</div>
+          <div style="display:flex;gap:6px;">
+            <button class="btn btn-sm" onclick="setPatrolFilter('level','all',this)" id="pf-level-all" style="background:#0d1f3c;color:#fff;">전체</button>
+            <button class="btn btn-outline btn-sm" onclick="setPatrolFilter('level','manager',this)">공장장 (관리감독자)</button>
+            <button class="btn btn-outline btn-sm" onclick="setPatrolFilter('level','team',this)">팀별 (현장점검)</button>
+          </div>
+        </div>
+      </div>
+
       <!-- 전체 달성률 바 -->
       <div class="patrol-total" id="patrol-total">
         <div>
@@ -960,154 +979,153 @@ setInterval(updateClock,1000); updateClock();
 // ============================================================
 // 패트롤 통합 체크리스트 (환경운영점검표 + 안전보건 일일체크 + LG 점검시트 취합)
 // 구역별 구분 없이 카테고리별 통합 관리 (관리감독자/공장장 업무)
-// 패트롤 통합 체크리스트
-// 출처: 환경운영점검표 + 작업장 일일점검표(A/B) + 설비별 안전점검 + 작업자 안전보건관리 일일체크시트
-// 관리감독자(공장장) 업무
+// 패트롤 통합 체크리스트 (사업장별 + 레벨별 필터 지원)
+// site: 'all'=공통, 'suwon'=수원, 'hwaseong'=화성
+// level: 'manager'=공장장, 'team'=팀별
+let patrolSiteFilter = 'all';
+let patrolLevelFilter = 'all';
+
 const patrolZones = [
-  {id:'pc1', name:'🛡️ 현장관리 기본 (5대 필수)', items:[
-    'TBM 활동 실시 확인 (일지 작성 완료)',
-    '작업장 정리정돈·청소 상태 양호 (→ 3정5S 카테고리 상세 점검)',
-    '주요 통로 확보 (1인당 최소 1.5㎡ 작업공간)',
-    '근로자 보호구(안전모·안전화·보안경·장갑 등) 착용 확인',
-    '보호구 미착용자 지도·시정 완료',
-    '위험성평가 실시 여부 확인 (근로자 참여)',
-    '재해 발생 시 보고체계 게시·확인',
-    '비상연락망 및 응급처치함 비치 확인',
-    '작업 시작 전 설비 점검 완료 확인',
-    '바닥 견고 여부 및 미끄럼·넘어짐 요인 없음',
-    '작업자 불안전한 행동·상태 없음',
-    '안전표지 및 안전수칙 게시 상태 양호',
-    '작업 중 휴대폰 사용 금지 준수',
-    '안전보건교육 실시 여부 확인'
+  // ── 공통 · 공장장 ──
+  {id:'pc1', site:'all', level:'manager', name:'🛡️ 현장관리 기본', items:[
+    'TBM 활동 실시 확인',
+    '보호구(안전모·안전화·보안경) 착용 확인 및 미착용자 시정',
+    '통로 확보 (60cm↑) 및 바닥 미끄럼 요인 없음',
+    '안전표지·수칙 게시 상태 양호',
+    '비상연락망·응급처치함 비치 확인',
+    '작업 중 휴대폰 사용 금지 준수'
   ]},
-  {id:'pc2', name:'🏭 기계설비 안전', items:[
-    '사출기 안전문(도어) 닫힘·잠금 정상',
-    '사출기 안전장치 (비상정지) 작동 확인',
-    '사출기 주변 오일·수지 누출 없음',
-    '금형 체결 상태 (볼트 체결 완료)',
-    '컨베이어 가동 중 안전덮개 정상 (목장갑 착용 금지 구역)',
-    '래핑기 안전덮개 및 비상정지 정상',
-    '건조기 온도 정상 / 개방 잠금 상태',
-    '리프트 안전바 설치 / 하중 초과 없음',
-    '운반대차 적재 하중 준수 / 파손 없음',
-    '각 설비 비상정지 버튼 작동 확인',
-    '각 설비 ON/OFF 스위치 정상·접근 가능',
-    '동력전달부 덮개·울(안전가드) 설치 상태',
-    '방호장치 설치 및 기능 상태 양호',
-    '콤프레샤 작동 상태 및 이상음 없음',
-    '설비 정비·수리 시 잠금·태깅(LOTO) 실시 여부'
+  {id:'pc6', site:'all', level:'manager', name:'🧯 소방·비상', items:[
+    '소화기 배치·압력(녹색)·안전핀·몸체 상태 양호',
+    '소화전 표시등 점등 / 호스·노즐 결합 상태',
+    '비상구 표시등 점등 / 장애물 없음 (항시 개방)',
+    '대피로 확보 / 구급함 비치 확인',
+    '비상 연락처 게시판 부착 상태'
   ]},
-  {id:'pc3', name:'🏗️ 천장주행크레인·금형', items:[
-    '천장주행크레인 체인·와이어 마모·변형 없음',
-    '훅(Hook) 해지장치 정상 작동',
-    '최대하중 표시 확인 (초과 사용 없음)',
-    '사람 키 이상 인양물 운반 행위 없음',
-    '인양 중 하부 작업자 없음',
-    '크레인 이동 경로 장애물 없음',
-    '금형 보관대 안전 고정 상태',
-    '금형 이동 시 2인 1조 + 신호수 배치',
-    '안전모 착용 (천장주행크레인 구역 전원)',
-    '중량물 취급 시 이동대차·보조기구 사용 확인'
-  ]},
-  {id:'pc4', name:'🚜 지게차·운반', items:[
-    '지게차 전용 통로 구분 표시 선 상태',
-    '보행자와 지게차 혼용 구역 없음',
-    '후방경보 장치 작동 정상',
-    '지게차 주차 위치 적정 (포크 하강, 전원 차단)',
-    '운전자 면허증 소지 확인',
-    '포크 주행 시 지상 20~30cm 유지',
-    '무면허 운전 없음',
-    '지게차 키 분리보관 확인 (운행 종료 후 키 회수)',
-    '운반대차 이동 시 전방 주시 확인',
-    '중량물 인력 운반 시 2인 이상 확인 (25kg↑)'
-  ]},
-  {id:'pc5', name:'⚡ 전기설비·분전반', items:[
-    '1층 분전반 문 잠금 상태',
-    '2층 분전반 문 잠금 상태',
-    '3층 분전반 문 잠금 상태',
-    '분전반 내부 이물질 없음',
-    '분전반 내부 전선 피복 양호',
+  {id:'pc5', site:'all', level:'manager', name:'⚡ 전기·분전반', items:[
+    '각 층 분전반 문 잠금 / 내부 이물질·피복 양호',
     '분전반 접지 상태 양호',
-    '각 층 조명 손상·탈락 없음',
-    '콘센트 파손·전선 단선 없음',
-    '임시 연장선 바닥 방치 없음',
-    '전기 설비 주변 가연성 물질 없음',
-    '전동공구 이중절연구조 및 접지 상태 양호',
-    '전기작업 시 전기담당자(자격자) 실시 확인'
+    '조명 손상·탈락 / 콘센트 파손 없음',
+    '임시 연장선 방치 없음 / 가연성 물질 없음'
   ]},
-  {id:'pc6', name:'🧯 소방·비상장비', items:[
-    '소화기 배치 위치 배치도와 일치',
-    '분말소화기 압력계 정상 (녹색 범위)',
-    '소화기 안전핀·봉인 이상 없음',
-    '소화기 몸체 녹·부식·누액·파손 없음',
-    '소화기 월별점검표 및 사용법 부착 상태',
-    '소화전 표시등 점등 상태',
-    '소화전 호스 연결·노즐 결합 상태',
-    '소화전 밸브·호스 연결부 누수 없음',
-    '소화기배치도 및 소방조직도 비치 상태',
-    '비상구 표시등 점등 상태',
-    '비상구 장애물 없음 (항시 개방)',
-    '대피로 확보 상태 양호',
-    '구급함 위치 확인 및 내용물 적정',
-    '비상 연락처 게시판 부착 상태',
-    '소화기 최근 점검일 확인 (6개월 이내)'
+  {id:'pc9', site:'all', level:'manager', name:'🏢 공용구역·외부', items:[
+    '사무동 통로 정리정돈 / 대피 동선 장애물 없음',
+    '비상구 표시 명확 / 출입구 물건 방치 없음',
+    '외부 통로 바닥(균열·미끄럼) / 주차장 정리',
+    '외부 조명·배수로 상태 양호'
   ]},
-  {id:'pc7', name:'🧪 유해물질·화학물질', items:[
-    '유해물질 지정 장소 보관 및 경고표지 부착',
-    'MSDS(물질안전보건자료) 비치 및 작업자 숙지 확인',
-    '유해물질 취급 시 보호구(방독마스크·내화학장갑 등) 착용',
-    '화학물질 보관소 소화기 비치 상태',
-    '화학물질 보관소 통풍·환기 상태 양호',
-    '유해물질 취급자 안전교육 실시 확인',
-    '유해물질 운반 시 전용 용기 사용 확인'
+  {id:'pc10', site:'all', level:'team', name:'✨ 3정5S 점검', items:[
+    '[정품] 지정 자재·부품만 있는가 (불필요 물품 제거)',
+    '[정량] 적정 수량만 보관 (과다 적재 없음)',
+    '[정위치] 자재·공구 지정 위치 보관 (위치 표시 확인)',
+    '[정리] 필요/불필요 구분 완료',
+    '[정돈] 누구나 꺼내고 되돌릴 수 있게 정돈',
+    '[청소] 작업장·설비·바닥 청소 상태',
+    '공구 사용 후 제자리 반납 / 퇴근 전 5분 정리'
   ]},
-  {id:'pc8', name:'🌊 환경·수질·폐기물', items:[
-    '쿨링타워 가동 상태 정상 (동절기 12~2월 가동 확인)',
-    '쿨링타워 주변 누수 없음',
-    '환풍기 작동 상태 양호',
-    '냉각수 보충 상태 적정',
+  {id:'pc8', site:'all', level:'team', name:'🌊 환경·폐기물', items:[
+    '환풍기 작동 / 작업장 환기 상태 양호',
     '외부 배수관(맨홀) 막힘 없음',
-    '작업장 환기 상태 양호 (유해가스·분진)',
-    '소음 수준 이상 없음',
-    '폐기물 지정 장소 외 방치 없음',
-    '폐기물통 넘침 없음 (정기 비움)',
-    '폐기물 흩날림·악취 발생 없음',
-    '폐기물 보관소·보관용기 파손 없음',
-    '분리수거 적정 실시',
-    '유해 폐기물 별도 구분 보관'
+    '폐기물 지정 장소 외 방치·넘침 없음',
+    '분리수거 적정 / 유해 폐기물 별도 보관'
   ]},
-  {id:'pc9', name:'🏢 공용구역·외부', items:[
-    '사무동 각 층 조명 상태 양호',
-    '각 층 통로 정리정돈',
-    '화재 시 대피 동선 장애물 없음',
-    '방문객 안전관리 (출입증, 보호구)',
-    '각 층 비상구 표시 명확',
-    '출입구·비상구 주변 물건 방치 없음',
-    '외부 통로 바닥 상태 (균열·미끄럼) 양호',
-    '주차장 정리정돈 상태',
-    '외부 조명 점등 상태',
-    '외부 배수로 막힘 없음',
-    '쓰레기통 주변 잡초·이물질 없음'
+
+  // ── 수원 공장 (사출·조립) ──
+  {id:'pc2s', site:'suwon', level:'manager', name:'🏭 사출·조립 설비', items:[
+    '사출기 안전문 닫힘 / 비상정지 작동',
+    '사출기 주변 오일·수지 누출 없음',
+    '금형 체결 상태 (볼트 완료)',
+    '컨베이어 안전덮개 정상 (목장갑 금지 구역)',
+    '래핑기 안전덮개·비상정지 정상',
+    '건조기 온도·잠금 / 리프트 안전바·하중',
+    '각 설비 비상정지·스위치 작동 확인',
+    '방호장치·안전가드 설치 상태',
+    '설비 정비 시 LOTO 실시 확인'
   ]},
-  {id:'pc10', name:'✨ 3정5S 점검', items:[
-    '[정품] 작업장에 지정된 자재·부품만 있는가 (불필요 물품 제거)',
-    '[정량] 자재·부품이 적정 수량만 보관되어 있는가 (과다 적재 없음)',
-    '[정위치] 자재·공구가 정해진 위치에 보관되어 있는가 (위치 표시 확인)',
-    '[정리] 필요한 것과 불필요한 것이 구분되어 있는가',
-    '[정돈] 누구나 꺼내고 되돌릴 수 있게 정돈되어 있는가',
-    '[청소] 작업장·설비·바닥 청소 상태 양호한가',
-    '[청결] 정리·정돈·청소 상태가 항상 유지되고 있는가',
-    '[습관화] 위 4S가 일상적으로 실천되고 있는가 (당연한 습관)',
-    '공구 사용 후 제자리 반납 확인',
-    '퇴근 전 5분 정리 실시 확인'
+  {id:'pc3s', site:'suwon', level:'manager', name:'🏗️ 천장주행크레인·금형', items:[
+    '체인·와이어 마모 없음 / 훅 해지장치 정상',
+    '최대하중 표시 확인 (초과 없음)',
+    '인양 중 하부 작업자 없음 / 키 이상 운반 없음',
+    '금형 2인1조+신호수 / 안전모 착용',
+    '금형 보관대 안전 고정 상태'
+  ]},
+  {id:'pc4s', site:'suwon', level:'team', name:'🚜 지게차·운반 (수원)', items:[
+    '지게차 통로 구분 / 보행자 혼용 없음',
+    '후방경보·제동 정상 / 면허 소지 확인',
+    '포크 20~30cm 유지 / 키 분리보관',
+    '운반대차 하중 준수 / 전방 주시',
+    '중량물 2인↑ 운반 (25kg 이상)'
+  ]},
+  {id:'pcsw', site:'suwon', level:'team', name:'🌊 수원 환경설비', items:[
+    '쿨링타워 가동 상태 (동절기 12~2월 확인)',
+    '쿨링타워 누수 없음 / 냉각수 보충',
+    '콤프레샤 작동 및 이상음 없음'
+  ]},
+
+  // ── 화성 공장 (도색·레이저·화학) ──
+  {id:'pc2h', site:'hwaseong', level:'manager', name:'🏭 도색·레이저 설비', items:[
+    '도색 부스 환기·배기장치 정상 작동',
+    '도색실 방폭 설비·접지 상태 양호',
+    '레이저 장비 안전커버·인터록 정상',
+    '레이저 보안경 착용 확인 (작업자 전원)',
+    '각 설비 비상정지·스위치 작동 확인',
+    '방호장치·안전가드 설치 상태',
+    '설비 정비 시 LOTO 실시 확인'
+  ]},
+  {id:'pc7h', site:'hwaseong', level:'manager', name:'🧪 유해물질·화학물질', items:[
+    '유해물질 지정 장소 보관 / 경고표지 부착',
+    'MSDS 비치 및 작업자 숙지 확인',
+    '취급 시 보호구(방독마스크·내화학장갑) 착용',
+    '화학물질 보관소 소화기·환기 상태',
+    '유해물질 취급자 교육 실시 확인',
+    '유기용제 전용 용기 사용 / 밀폐 보관'
+  ]},
+  {id:'pc4h', site:'hwaseong', level:'team', name:'🚜 지게차·운반 (화성)', items:[
+    '지게차 통로 구분 / 보행자 혼용 없음',
+    '후방경보·제동 정상 / 면허 소지 확인',
+    '포크 20~30cm 유지 / 키 분리보관',
+    '운반대차 하중 준수 / 전방 주시',
+    '중량물 2인↑ 운반 (25kg 이상)'
+  ]},
+  {id:'pchw', site:'hwaseong', level:'team', name:'🌬️ 화성 환경설비', items:[
+    '도색실 배기·집진 장치 작동 확인',
+    '유기용제 작업장 환기 상태 양호',
+    '소음·분진 수준 이상 없음',
+    '폐도료·폐용제 별도 수거 보관'
   ]}
 ];
+
+function setPatrolFilter(type, val, btn){
+  if(type==='site'){
+    patrolSiteFilter = val;
+    document.querySelectorAll('[id^="pf-site-"]').forEach(b=>{b.style.background='';b.style.color='';b.className='btn btn-outline btn-sm';});
+  } else {
+    patrolLevelFilter = val;
+    document.querySelectorAll('[id^="pf-level-"]').forEach(b=>{b.style.background='';b.style.color='';b.className='btn btn-outline btn-sm';});
+  }
+  if(btn){btn.style.background='#0d1f3c';btn.style.color='#fff';}
+  renderPatrolZones();
+  updatePatrolTotal();
+}
+
+function getFilteredZones(){
+  return patrolZones.filter(z=>{
+    const siteOk = patrolSiteFilter==='all' || z.site==='all' || z.site===patrolSiteFilter;
+    const levelOk = patrolLevelFilter==='all' || z.level===patrolLevelFilter;
+    return siteOk && levelOk;
+  });
+}
 
 function renderPatrolZones(){
   const container = document.getElementById('patrol-zones');
   if(!container) return;
   const R=20, C=2*Math.PI*R;
-  container.innerHTML = patrolZones.map(zone=>{
+  const filtered = getFilteredZones();
+  // 항목 수 표시
+  const totalItems = filtered.reduce((s,z)=>s+z.items.length, 0);
+  const sub = document.getElementById('patrol-total-sub');
+  if(sub) sub.textContent = `${filtered.length}개 카테고리 · ${totalItems}개 항목`;
+  container.innerHTML = filtered.map(zone=>{
     const icon = zone.name.match(/^(\S+)/)?.[1]||'📋';
     const label = zone.name.replace(/^(\S+)\s*/,'');
     return `
@@ -1116,7 +1134,7 @@ function renderPatrolZones(){
         <div class="zone-icon">${icon}</div>
         <div class="zone-info">
           <div class="zone-title">${label}</div>
-          <div class="zone-subtitle" id="zone-sub-${zone.id}">0 / ${zone.items.length} 항목</div>
+          <div class="zone-subtitle" id="zone-sub-${zone.id}">0 / ${zone.items.length} 항목 ${zone.site==='suwon'?'<span style="color:#1e5096;font-weight:600;">수원</span>':zone.site==='hwaseong'?'<span style="color:#ea580c;font-weight:600;">화성</span>':'<span style="color:#6b7280;">공통</span>'} · ${zone.level==='manager'?'공장장':'팀별'}</div>
         </div>
         <div class="zone-ring" id="zone-ring-${zone.id}">
           <svg viewBox="0 0 48 48"><circle class="ring-bg" cx="24" cy="24" r="${R}"/><circle class="ring-fg" cx="24" cy="24" r="${R}" stroke-dasharray="${C}" stroke-dashoffset="${C}" id="zone-arc-${zone.id}"/></svg>
@@ -1197,8 +1215,9 @@ function updateZoneScore(zoneId){
 }
 
 function updatePatrolTotal(){
+  const filtered = getFilteredZones();
   let totalChecked=0, totalItems=0;
-  patrolZones.forEach(zone=>{
+  filtered.forEach(zone=>{
     zone.items.forEach((_,i)=>{
       totalItems++;
       if(document.getElementById(`${zone.id}_${i}`)?.checked) totalChecked++;
@@ -1211,8 +1230,8 @@ function updatePatrolTotal(){
   if(fill) fill.style.width = pct+'%';
   if(pctEl) pctEl.textContent = pct+'%';
   if(subEl){
-    const doneZones = patrolZones.filter(z=>z.items.every((_,i)=>document.getElementById(`${z.id}_${i}`)?.checked)).length;
-    subEl.textContent = pct===100 ? '전 구역 점검 완료! 🎉' : `${totalChecked}/${totalItems} 항목 · ${doneZones}/${patrolZones.length} 구역 완료`;
+    const doneZones = filtered.filter(z=>z.items.every((_,i)=>document.getElementById(`${z.id}_${i}`)?.checked)).length;
+    subEl.textContent = pct===100 ? '전 항목 점검 완료! 🎉' : `${totalChecked}/${totalItems} 항목 · ${doneZones}/${filtered.length} 카테고리 완료`;
   }
 }
 
@@ -1266,7 +1285,7 @@ function clearTBM(){
 function savePatrol(){
   const date=v('p-date'),inspector=v('p-inspector');
   if(!date||!inspector){alert('날짜와 점검자를 입력해주세요.');return;}
-  const zoneResults = patrolZones.map(zone=>{
+  const zoneResults = getFilteredZones().map(zone=>{
     const items = zone.items.map((item,i)=>({
       item, checked: document.getElementById(`${zone.id}_${i}`)?.checked||false,
       memo: document.getElementById(`${zone.id}_memo_${i}`)?.value||''
@@ -1285,6 +1304,7 @@ function savePatrol(){
 
   const record = {
     id:Date.now(), date, time:v('p-time'), inspector, type:v('p-type'), weather:v('p-weather'),
+    siteFilter:patrolSiteFilter, levelFilter:patrolLevelFilter,
     zoneResults, totalChecked, totalItems, badCount,
     // TBM 통합 데이터
     tbmLeader:v('tbm-leader'), tbmCount:v('tbm-count'), tbmAttendees:v('tbm-attendees'),
@@ -1306,7 +1326,7 @@ function savePatrol(){
   clearPatrol();
 }
 function clearPatrol(){
-  patrolZones.forEach(zone=>{
+  getFilteredZones().forEach(zone=>{
     zone.items.forEach((_,i)=>{
       const cb=document.getElementById(`${zone.id}_${i}`); if(cb) cb.checked=false;
       const m=document.getElementById(`${zone.id}_memo_${i}`); if(m) m.value='';
