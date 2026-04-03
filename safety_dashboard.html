@@ -777,11 +777,41 @@ table tr:hover td{background:#f8fafc;}
     <div class="card">
       <div class="card-title">📖 안전표지 색상 기준 (ISO 45001 / KS S ISO 3864-1)</div>
       <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;">
-        <div style="text-align:center;padding:12px;background:#fee2e2;border-radius:8px;"><div style="font-size:24px;">🔴</div><div style="font-weight:700;font-size:13px;margin-top:4px;">빨강 (Red)</div><div style="font-size:11px;color:#6b7280;">금지 / 방화</div><div style="font-size:10px;color:#9ca3af;margin-top:2px;">원형 + 대각선</div></div>
-        <div style="text-align:center;padding:12px;background:#fef9c3;border-radius:8px;"><div style="font-size:24px;">🟡</div><div style="font-weight:700;font-size:13px;margin-top:4px;">노랑 (Yellow)</div><div style="font-size:11px;color:#6b7280;">경고 / 주의</div><div style="font-size:10px;color:#9ca3af;margin-top:2px;">삼각형</div></div>
-        <div style="text-align:center;padding:12px;background:#eef4ff;border-radius:8px;"><div style="font-size:24px;">🔵</div><div style="font-weight:700;font-size:13px;margin-top:4px;">파랑 (Blue)</div><div style="font-size:11px;color:#6b7280;">지시 / 의무</div><div style="font-size:10px;color:#9ca3af;margin-top:2px;">원형</div></div>
-        <div style="text-align:center;padding:12px;background:#dcfce7;border-radius:8px;"><div style="font-size:24px;">🟢</div><div style="font-weight:700;font-size:13px;margin-top:4px;">초록 (Green)</div><div style="font-size:11px;color:#6b7280;">안전 / 비상구 / 응급</div><div style="font-size:10px;color:#9ca3af;margin-top:2px;">사각형</div></div>
-        <div style="text-align:center;padding:12px;background:#f3f4f6;border-radius:8px;border:2px solid #374151;"><div style="font-size:24px;">⬛</div><div style="font-weight:700;font-size:13px;margin-top:4px;">검정/흰색</div><div style="font-size:11px;color:#6b7280;">보조색 / 대비색</div><div style="font-size:10px;color:#9ca3af;margin-top:2px;">텍스트·기호</div></div>
+        <!-- 빨강: 원형 + 대각선 (금지) -->
+        <div style="text-align:center;padding:16px 12px;background:#fee2e2;border-radius:8px;">
+          <div style="width:56px;height:56px;margin:0 auto;border-radius:50%;border:5px solid #dc2626;position:relative;display:flex;align-items:center;justify-content:center;">
+            <div style="width:80%;height:4px;background:#dc2626;transform:rotate(45deg);border-radius:2px;"></div>
+          </div>
+          <div style="font-weight:700;font-size:13px;margin-top:8px;">빨강 (Red)</div><div style="font-size:11px;color:#6b7280;">금지 / 방화</div><div style="font-size:10px;color:#9ca3af;margin-top:2px;">원형 + 대각선</div>
+        </div>
+        <!-- 노랑: 삼각형 (경고) -->
+        <div style="text-align:center;padding:16px 12px;background:#fef9c3;border-radius:8px;">
+          <div style="width:0;height:0;margin:0 auto;border-left:30px solid transparent;border-right:30px solid transparent;border-bottom:52px solid #eab308;position:relative;">
+            <div style="position:absolute;top:18px;left:-6px;font-size:20px;font-weight:900;color:#000;">!</div>
+          </div>
+          <div style="font-weight:700;font-size:13px;margin-top:8px;">노랑 (Yellow)</div><div style="font-size:11px;color:#6b7280;">경고 / 주의</div><div style="font-size:10px;color:#9ca3af;margin-top:2px;">삼각형</div>
+        </div>
+        <!-- 파랑: 원형 (지시) -->
+        <div style="text-align:center;padding:16px 12px;background:#eef4ff;border-radius:8px;">
+          <div style="width:56px;height:56px;margin:0 auto;border-radius:50%;background:#2563eb;display:flex;align-items:center;justify-content:center;">
+            <div style="font-size:22px;color:#fff;font-weight:900;">!</div>
+          </div>
+          <div style="font-weight:700;font-size:13px;margin-top:8px;">파랑 (Blue)</div><div style="font-size:11px;color:#6b7280;">지시 / 의무</div><div style="font-size:10px;color:#9ca3af;margin-top:2px;">원형</div>
+        </div>
+        <!-- 초록: 사각형 (안전/비상구) -->
+        <div style="text-align:center;padding:16px 12px;background:#dcfce7;border-radius:8px;">
+          <div style="width:56px;height:56px;margin:0 auto;border-radius:4px;background:#16a34a;display:flex;align-items:center;justify-content:center;">
+            <div style="font-size:20px;color:#fff;font-weight:900;">🚪</div>
+          </div>
+          <div style="font-weight:700;font-size:13px;margin-top:8px;">초록 (Green)</div><div style="font-size:11px;color:#6b7280;">안전 / 비상구 / 응급</div><div style="font-size:10px;color:#9ca3af;margin-top:2px;">사각형</div>
+        </div>
+        <!-- 검정/흰색: 보조 -->
+        <div style="text-align:center;padding:16px 12px;background:#f3f4f6;border-radius:8px;border:2px solid #374151;">
+          <div style="width:56px;height:56px;margin:0 auto;border-radius:4px;background:#1f2937;display:flex;align-items:center;justify-content:center;">
+            <div style="font-size:18px;color:#fff;font-weight:900;">Aa</div>
+          </div>
+          <div style="font-weight:700;font-size:13px;margin-top:8px;">검정/흰색</div><div style="font-size:11px;color:#6b7280;">보조색 / 대비색</div><div style="font-size:10px;color:#9ca3af;margin-top:2px;">텍스트·기호</div>
+        </div>
       </div>
       <div class="alert info" style="margin-top:12px;font-size:11px;">ISO 45001:2018 안전보건경영시스템 기준. 안전표지는 KS S ISO 3864-1(그래픽 심볼), KS C IEC 60417(전기표지) 병행 적용.</div>
     </div>
