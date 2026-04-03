@@ -343,7 +343,7 @@ table tr:hover td{background:#f8fafc;}
       <div class="dash-wws-card">
         <h4>🏢 WWS 이행현황</h4>
         <div id="dash-wws-donut"></div>
-        <button class="btn btn-outline btn-sm" style="margin-top:8px;" onclick="showSection('wws')">상세 보기 →</button>
+        <button class="btn btn-outline btn-sm" style="margin-top:8px;" onclick="showSection('docmgr')">상세 보기 →</button>
       </div>
       <!-- 캘린더 -->
       <div class="dash-calendar">
@@ -936,11 +936,10 @@ function switchTab(section, tab){
 function initDates(){
   const today = new Date().toISOString().split('T')[0];
   const now = new Date().toTimeString().slice(0,5);
-  ['tbm-date','p-date','edu-date','risk-date','eq-date'].forEach(id=>{
+  ['p-date','edu-date'].forEach(id=>{
     const el=document.getElementById(id); if(el) el.value=today;
   });
   const ptime=document.getElementById('p-time'); if(ptime) ptime.value=now;
-  const adt=document.getElementById('acc-datetime'); if(adt) adt.value=new Date().toISOString().slice(0,16);
   document.getElementById('today-date').textContent = today;
 }
 
