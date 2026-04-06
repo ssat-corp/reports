@@ -1923,8 +1923,8 @@ function printPatrolChecklist(){
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap');
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:'Noto Sans KR','Malgun Gothic',sans-serif;}
-@page{size:A4 portrait;margin:8mm;}
-.page{width:194mm;min-height:281mm;padding:0;position:relative;display:flex;flex-direction:column;}
+@page{size:A4 portrait;margin:0;}
+.page{width:210mm;height:297mm;padding:8mm 10mm;display:flex;flex-direction:column;box-sizing:border-box;}
 
 /* 헤더 */
 .hdr{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2.5px solid #0d1f3c;padding-bottom:6px;margin-bottom:5px;}
@@ -1944,21 +1944,22 @@ body{font-family:'Noto Sans KR','Malgun Gothic',sans-serif;}
 .spec .lb{font-weight:700;}
 .spec label{display:flex;align-items:center;gap:3px;}
 
-/* 2단 체크리스트 */
-.cols{display:grid;grid-template-columns:1fr 1fr;gap:6px;flex:1;}
-.col table{width:100%;border-collapse:collapse;}
-.col th{background:#0d1f3c;color:#fff;font-size:8px;padding:3px 5px;text-align:left;
+/* 2단 체크리스트 — flex:1로 남은 공간 전부 사용 */
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:8px;flex:1;}
+.col{display:flex;flex-direction:column;}
+.col table{width:100%;border-collapse:collapse;flex:1;}
+.col th{background:#0d1f3c;color:#fff;font-size:8px;padding:3px 6px;text-align:left;
   -webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;color-adjust:exact!important;}
-.col th.chk-h{width:26px;text-align:center;}
+.col th.chk-h{width:28px;text-align:center;}
 .col th.nt-h{width:20%;}
-.zh td{background:#e8edf3;font-weight:800;font-size:9px;padding:3px 5px;
+.zh td{background:#e8edf3;font-weight:800;font-size:9px;padding:3px 6px;
   -webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;color-adjust:exact!important;}
-.itm{font-size:8.5px;padding:3px 5px;border-bottom:0.5px solid #ddd;}
-.chk{width:26px;text-align:center;font-size:11px;padding:2px;border-bottom:0.5px solid #ddd;}
-.nt{width:20%;font-size:7.5px;padding:2px 4px;border-bottom:0.5px solid #ddd;color:#666;}
+.itm{font-size:8.5px;padding:3.5px 6px;border-bottom:0.5px solid #ddd;}
+.chk{width:28px;text-align:center;font-size:11px;padding:2px;border-bottom:0.5px solid #ddd;}
+.nt{width:20%;font-size:7.5px;padding:2px 5px;border-bottom:0.5px solid #ddd;color:#666;}
 
 /* 하단 */
-.bot{margin-top:5px;}
+.bot{margin-top:6px;}
 .act{border:1.5px solid #333;padding:5px 8px;margin-bottom:5px;min-height:32px;}
 .act .lb{font-weight:700;font-size:9.5px;margin-bottom:3px;}
 .act .ln{border-bottom:1px dotted #bbb;height:14px;}
@@ -1970,8 +1971,8 @@ body{font-family:'Noto Sans KR','Malgun Gothic',sans-serif;}
 .ft{text-align:center;font-size:8px;color:#aaa;margin-top:4px;}
 
 @media print{
-  html,body{width:210mm;height:297mm;}
-  .page{width:194mm;min-height:281mm;}
+  html,body{width:210mm;height:297mm;margin:0;padding:0;}
+  .page{width:210mm;height:297mm;padding:8mm 10mm;}
   .hdr,.zh td,.col th,.sign,.act{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;color-adjust:exact!important;}
 }
 </style></head><body>
