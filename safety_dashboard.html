@@ -491,17 +491,22 @@ table tr:hover td{background:#f8fafc;}
 .pcl-zone{background:#fff;border:1px solid #e8edf3;border-radius:12px;overflow:hidden;}
 .pcl-zone-title{background:linear-gradient(135deg,#0d1f3c,#1e5096);color:#fff;padding:12px 16px;font-size:15px;font-weight:800;display:flex;align-items:center;gap:8px;}
 .pcl-zone-ic{font-size:18px;}
-.pcl-item{display:flex;align-items:flex-start;gap:12px;padding:13px 14px;border-bottom:1px solid #f1f5f9;cursor:pointer;transition:background 0.15s;-webkit-tap-highlight-color:transparent;}
+.pcl-item{display:flex;align-items:center;gap:14px;padding:12px 16px;border-bottom:1px solid #f1f5f9;cursor:pointer;transition:background 0.15s;-webkit-tap-highlight-color:transparent;}
 .pcl-item:last-child{border-bottom:none;}
+.pcl-item:hover{background:#f8fafc;}
 .pcl-item:active{background:#f0f7ff;}
 .pcl-item.pcl-checked{background:#f0fdf4;}
-.pcl-item input[type=checkbox]{width:24px;height:24px;flex-shrink:0;accent-color:#16a34a;cursor:pointer;margin-top:1px;}
-.pcl-item-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px;}
-.pcl-item-text{font-size:14px;font-weight:600;color:#1a1a1a;line-height:1.4;word-break:keep-all;overflow-wrap:break-word;}
+.pcl-item input[type=checkbox]{width:22px;height:22px;flex-shrink:0;accent-color:#16a34a;cursor:pointer;}
+.pcl-item-body{flex:1;min-width:0;display:flex;align-items:center;gap:14px;}
+.pcl-item-text{flex:1;min-width:0;font-size:14px;font-weight:600;color:#1a1a1a;line-height:1.4;word-break:keep-all;overflow-wrap:break-word;}
 .pcl-item.pcl-checked .pcl-item-text{color:#15803d;text-decoration:line-through;text-decoration-thickness:1px;}
-.pcl-item-memo{width:100%;border:1px solid #e8edf3;background:#fff;border-radius:6px;padding:7px 10px;font-size:12.5px;color:#475569;font-family:inherit;}
+.pcl-item-memo{flex-shrink:0;width:200px;border:1px solid #e8edf3;background:#fff;border-radius:6px;padding:7px 10px;font-size:12.5px;color:#475569;font-family:inherit;}
 .pcl-item-memo:focus{outline:none;border-color:#1e5096;box-shadow:0 0 0 2px rgba(30,80,150,0.1);}
-@media(max-width:768px){.pcl-item-memo{font-size:13px;}}
+@media(max-width:768px){
+  .pcl-item-body{flex-direction:column;align-items:stretch;gap:6px;}
+  .pcl-item-text{flex:none;width:100%;}
+  .pcl-item-memo{width:100%;font-size:13px;}
+}
 
 /* PATROL BANNERS + 페이지 (모바일 컴팩트) */
 @media(max-width:768px){
