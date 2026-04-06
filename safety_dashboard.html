@@ -1842,7 +1842,8 @@ function printPatrolChecklist(){
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:'Noto Sans KR','Malgun Gothic',sans-serif;}
 @page{size:A4 portrait;margin:0;}
-.page{width:210mm;height:297mm;padding:5mm;display:flex;flex-direction:column;box-sizing:border-box;}
+html,body{width:210mm;}
+.page{width:210mm;height:297mm;padding:6mm;display:flex;flex-direction:column;box-sizing:border-box;overflow:hidden;}
 
 /* 헤더 */
 .hdr{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2.5px solid #0d1f3c;padding-bottom:6px;margin-bottom:5px;}
@@ -1863,9 +1864,9 @@ body{font-family:'Noto Sans KR','Malgun Gothic',sans-serif;}
 .spec label{display:flex;align-items:center;gap:3px;}
 
 /* 2단 체크리스트 — flex:1로 남은 공간 전부 사용 */
-.cols{display:grid;grid-template-columns:1fr 1fr;gap:8px;flex:1;}
-.col{display:flex;flex-direction:column;}
-.col table{width:100%;border-collapse:collapse;flex:1;}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:6px;flex:1;width:100%;min-width:0;}
+.col{display:flex;flex-direction:column;min-width:0;width:100%;}
+.col table{width:100%;border-collapse:collapse;flex:1;table-layout:fixed;}
 .col th{background:#0d1f3c;color:#fff;font-size:8px;padding:3px 6px;text-align:left;
   -webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;color-adjust:exact!important;}
 .col th.chk-h{width:28px;text-align:center;}
@@ -1890,7 +1891,7 @@ body{font-family:'Noto Sans KR','Malgun Gothic',sans-serif;}
 
 @media print{
   html,body{width:210mm;height:297mm;margin:0;padding:0;}
-  .page{width:210mm;height:297mm;padding:5mm;}
+  .page{width:210mm;height:297mm;padding:6mm;}
   .hdr,.zh td,.col th,.sign,.act{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;color-adjust:exact!important;}
 }
 </style></head><body>
