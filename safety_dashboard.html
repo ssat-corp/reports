@@ -467,6 +467,7 @@ table tr:hover td{background:#f8fafc;}
         <div style="font-size:13px;opacity:0.8;margin-top:4px;">담당자 · 주간 순회점검</div>
         <div style="position:absolute;bottom:12px;right:16px;font-size:12px;opacity:0.6;">달력에서 날짜 선택 →</div>
         <div id="patrol-banner-stat" style="margin-top:12px;font-size:12px;opacity:0.9;"></div>
+        <a href="patrol_print.html" target="_blank" onclick="event.stopPropagation();" style="position:absolute;top:12px;right:16px;background:rgba(255,255,255,0.2);color:#fff;padding:4px 10px;border-radius:6px;font-size:11px;text-decoration:none;font-weight:600;">🖨️ 인쇄용</a>
       </div>
       <!-- TBM 배너 -->
       <div onclick="showPatrolView('tbm')" style="background:linear-gradient(135deg,#065f46,#10b981);border-radius:16px;padding:28px 24px;color:#fff;cursor:pointer;transition:transform 0.15s;position:relative;overflow:hidden;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform=''">
@@ -533,6 +534,7 @@ table tr:hover td{background:#f8fafc;}
           <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px;">
             <button class="btn btn-outline" onclick="clearPatrol()">초기화</button>
             <button class="btn btn-success" onclick="savePatrolDay()">💾 점검 저장</button>
+            <a href="patrol_print.html" target="_blank" class="btn btn-outline" style="text-decoration:none;">🖨️ 인쇄용 점검표 (A4)</a>
           </div>
         </div>
       </div>
