@@ -468,6 +468,7 @@ table tr:hover td{background:#f8fafc;}
     <a onclick="showSection('patrol')"><span class="icon">🔍</span> 패트롤+TBM 통합</a>
     <div class="section-title">교육·평가</div>
     <a onclick="showSection('meetcal')"><span class="icon">📅</span> 교육 & 운영 관리</a>
+    <a onclick="showSection('officialdoc')"><span class="icon">📨</span> 공문서 관리 대장</a>
     <a onclick="showSection('risk')"><span class="icon">⚠️</span> 위험성 평가</a>
     <div class="section-title">기록·서류</div>
     <a onclick="showSection('docmgr')"><span class="icon">📋</span> 서류·이행 통합관리</a>
@@ -882,6 +883,71 @@ table tr:hover td{background:#f8fafc;}
     </div>
   </div>
 
+  <!-- ===== 공문서 관리 대장 ===== -->
+  <div id="section-officialdoc" class="section">
+    <div class="card" style="margin-bottom:16px;">
+      <div class="card-title">📨 공문서 관리 대장</div>
+      <p style="font-size:13px;color:#6b7280;margin-bottom:12px;">수신·발신 공문서를 등록하고 대응 현황을 관리합니다. 첨부 파일은 Google Drive에 자동 저장됩니다.</p>
+      <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;align-items:center;">
+        <button class="btn btn-primary btn-sm" onclick="openOdForm()">➕ 공문서 등록</button>
+        <select id="od-filter-status" onchange="renderOfficialDoc()" style="padding:5px 10px;border:1px solid #d1d5db;border-radius:8px;font-size:12px;">
+          <option value="all">전체</option>
+          <option value="대응완료">대응완료</option>
+          <option value="대응중">대응중</option>
+          <option value="미대응">미대응</option>
+        </select>
+        <input type="text" id="od-search" placeholder="검색 (제목, 기관명)" oninput="renderOfficialDoc()" style="padding:5px 10px;border:1px solid #d1d5db;border-radius:8px;font-size:12px;width:200px;">
+      </div>
+      <div id="od-list"></div>
+    </div>
+
+    <!-- 등록/수정 모달 -->
+    <div id="od-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;align-items:center;justify-content:center;padding:20px;" onclick="if(event.target===this)this.style.display='none'">
+      <div style="background:#fff;border-radius:16px;width:100%;max-width:560px;padding:24px;max-height:90vh;overflow-y:auto;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+          <div style="font-size:16px;font-weight:800;color:#0d1f3c;" id="od-modal-title">📨 공문서 등록</div>
+          <button onclick="document.getElementById('od-modal').style.display='none'" style="background:none;border:none;font-size:20px;cursor:pointer;color:#6b7280;">✕</button>
+        </div>
+        <input type="hidden" id="od-edit-id">
+        <div class="form-row">
+          <div class="form-group"><label>수신/발신일</label><input type="date" id="od-date"></div>
+          <div class="form-group"><label>구분</label>
+            <select id="od-direction" style="width:100%;padding:8px 12px;border:1px solid #d1d5db;border-radius:8px;font-size:13px;">
+              <option value="수신">수신</option>
+              <option value="발신">발신</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>발송 기관 / 업체</label><input type="text" id="od-sender" placeholder="예: 고용노동부, 소방서, 협력사"></div>
+          <div class="form-group"><label>대응 상태</label>
+            <select id="od-status" style="width:100%;padding:8px 12px;border:1px solid #d1d5db;border-radius:8px;font-size:13px;">
+              <option value="미대응">미대응</option>
+              <option value="대응중">대응중</option>
+              <option value="대응완료">대응완료</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group"><label>공문 제목</label><input type="text" id="od-title" placeholder="공문 제목"></div>
+        <div class="form-group"><label>내용 / 메모</label><textarea id="od-memo" placeholder="공문 요약, 대응 내역 등" style="min-height:60px;"></textarea></div>
+        <div class="form-group">
+          <label>서류 첨부 (파일/이미지)</label>
+          <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
+            <label style="font-size:12px;color:#1e5096;cursor:pointer;display:flex;align-items:center;gap:3px;padding:6px 12px;background:#eef4ff;border-radius:8px;font-weight:600;">
+              <input type="file" id="od-file" style="display:none;" multiple accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.hwp">📁 파일 선택 (드라이브 업로드)
+            </label>
+            <span id="od-file-status" style="font-size:12px;color:#6b7280;"></span>
+          </div>
+          <div id="od-file-preview" style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;"></div>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:12px;">
+          <button class="btn btn-primary" onclick="saveOfficialDoc()" style="flex:1;">💾 저장</button>
+          <button class="btn btn-outline" onclick="document.getElementById('od-modal').style.display='none'">취소</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- ===== 위험성 평가 (PDF 업로드 관리) ===== -->
   <div id="section-risk" class="section">
     <div class="card" style="margin-bottom:16px;">
@@ -1227,7 +1293,7 @@ const DB = {
 // ============================================================
 const pageTitles = {
   dashboard:'📊 대시보드', docmgr:'📋 서류·이행 통합관리', patrol:'🔍 패트롤+TBM 통합 체크리스트',
-  education:'📚 교육 관리', meetcal:'📅 교육 & 운영 관리', risk:'⚠️ 위험성 평가',
+  education:'📚 교육 관리', meetcal:'📅 교육 & 운영 관리', officialdoc:'📨 공문서 관리 대장', risk:'⚠️ 위험성 평가',
   accident:'🚨 아차사고 (카톡방)', schedule:'📅 연간 일정',
   signs:'🪧 안전 비표 관리', cardnews:'📢 카드뉴스 시리즈', posters:'🖼️ 게시판 포스터', settings:'⚙️ 설정'
 };
@@ -1249,6 +1315,7 @@ function showSection(id){
   if(id==='meetcal') renderMeetCal();
   if(id==='patrol') { showPatrolView('home'); }
   if(id==='signs') renderSigns();
+  if(id==='officialdoc') renderOfficialDoc();
   if(id==='risk') renderRiskStatus();
 }
 function switchTab(section, tab){
@@ -2203,6 +2270,171 @@ function saveEducation(){
   };
   DB.push('education', record);
   alert('✅ 교육 기록이 저장되었습니다!');
+}
+
+// ============================================================
+// 공문서 관리 대장 (Official Document Management)
+// ============================================================
+function getOdList(){ return DB.get('officialDocs'); }
+function setOdList(list){ DB.set('officialDocs', list); }
+
+function openOdForm(editId){
+  document.getElementById('od-edit-id').value = editId||'';
+  document.getElementById('od-modal-title').textContent = editId ? '📨 공문서 수정' : '📨 공문서 등록';
+  if(editId){
+    const item = getOdList().find(d=>d.id===editId);
+    if(item){
+      document.getElementById('od-date').value = item.date||'';
+      document.getElementById('od-direction').value = item.direction||'수신';
+      document.getElementById('od-sender').value = item.sender||'';
+      document.getElementById('od-status').value = item.status||'미대응';
+      document.getElementById('od-title').value = item.title||'';
+      document.getElementById('od-memo').value = item.memo||'';
+    }
+  } else {
+    document.getElementById('od-date').value = new Date().toISOString().split('T')[0];
+    document.getElementById('od-direction').value = '수신';
+    document.getElementById('od-sender').value = '';
+    document.getElementById('od-status').value = '미대응';
+    document.getElementById('od-title').value = '';
+    document.getElementById('od-memo').value = '';
+  }
+  document.getElementById('od-file').value = '';
+  document.getElementById('od-file-status').textContent = '';
+  document.getElementById('od-file-preview').innerHTML = '';
+  document.getElementById('od-modal').style.display = 'flex';
+}
+
+function saveOfficialDoc(){
+  const editId = document.getElementById('od-edit-id').value;
+  const date = document.getElementById('od-date').value;
+  const direction = document.getElementById('od-direction').value;
+  const sender = document.getElementById('od-sender').value.trim();
+  const status = document.getElementById('od-status').value;
+  const title = document.getElementById('od-title').value.trim();
+  const memo = document.getElementById('od-memo').value.trim();
+  if(!date||!sender||!title){ alert('날짜, 기관/업체, 제목은 필수입니다.'); return; }
+
+  const list = getOdList();
+  const fileInput = document.getElementById('od-file');
+  const files = fileInput.files;
+
+  const save = (fileRecords) => {
+    if(editId){
+      const idx = list.findIndex(d=>d.id===editId);
+      if(idx>=0){
+        list[idx].date=date; list[idx].direction=direction; list[idx].sender=sender;
+        list[idx].status=status; list[idx].title=title; list[idx].memo=memo;
+        if(fileRecords.length>0) list[idx].files = (list[idx].files||[]).concat(fileRecords);
+      }
+    } else {
+      list.unshift({id:'od_'+Date.now(), date, direction, sender, status, title, memo, files:fileRecords, created:new Date().toISOString()});
+    }
+    setOdList(list);
+    document.getElementById('od-modal').style.display='none';
+    renderOfficialDoc();
+  };
+
+  if(files.length>0 && DRIVE_UPLOAD_URL){
+    const statusEl = document.getElementById('od-file-status');
+    statusEl.textContent = '업로드 중...';
+    let uploaded = [];
+    let count = 0;
+    Array.from(files).forEach(file=>{
+      const reader = new FileReader();
+      reader.onload = function(e){
+        const base64 = e.target.result.split(',')[1];
+        fetch(DRIVE_UPLOAD_URL, {
+          method:'POST', mode:'no-cors',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({fileName:file.name, fileData:base64, mimeType:file.type, subfolder:'공문서관리'})
+        }).then(()=>{
+          uploaded.push({name:file.name, url:'https://drive.google.com/drive/folders/10a7V0ao6Qf-_9XeiK4Bd2NRmfAX7rgB5', date:new Date().toISOString().split('T')[0]});
+          count++;
+          if(count===files.length){ statusEl.textContent='✅ 완료'; save(uploaded); }
+        }).catch(()=>{
+          uploaded.push({name:file.name, url:'', date:new Date().toISOString().split('T')[0]});
+          count++;
+          if(count===files.length){ statusEl.textContent='⚠️ 일부 실패'; save(uploaded); }
+        });
+      };
+      reader.readAsDataURL(file);
+    });
+  } else if(files.length>0){
+    const fileRecords = Array.from(files).map(f=>({name:f.name, url:'', date:new Date().toISOString().split('T')[0]}));
+    save(fileRecords);
+  } else {
+    save([]);
+  }
+}
+
+function deleteOfficialDoc(id){
+  if(!confirm('이 공문서를 삭제하시겠습니까?')) return;
+  const list = getOdList().filter(d=>d.id!==id);
+  setOdList(list);
+  renderOfficialDoc();
+}
+
+function toggleOdStatus(id){
+  const list = getOdList();
+  const item = list.find(d=>d.id===id);
+  if(!item) return;
+  const cycle = {'미대응':'대응중','대응중':'대응완료','대응완료':'미대응'};
+  item.status = cycle[item.status]||'미대응';
+  setOdList(list);
+  renderOfficialDoc();
+}
+
+function renderOfficialDoc(){
+  const el = document.getElementById('od-list');
+  if(!el) return;
+  let list = getOdList();
+  const filterStatus = document.getElementById('od-filter-status');
+  const searchInput = document.getElementById('od-search');
+  const status = filterStatus ? filterStatus.value : 'all';
+  const search = searchInput ? searchInput.value.trim().toLowerCase() : '';
+
+  if(status!=='all') list = list.filter(d=>d.status===status);
+  if(search) list = list.filter(d=>(d.title||'').toLowerCase().includes(search)||(d.sender||'').toLowerCase().includes(search));
+
+  if(list.length===0){
+    el.innerHTML = '<div style="text-align:center;color:#9ca3af;padding:40px 0;font-size:13px;">등록된 공문서가 없습니다.</div>';
+    return;
+  }
+
+  const statusBadge = (s, id) => {
+    const colors = {'대응완료':['#dcfce7','#166534'],'대응중':['#fef9c3','#92400e'],'미대응':['#fef2f2','#991b1b']};
+    const c = colors[s]||['#f1f5f9','#374151'];
+    return `<span style="padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;background:${c[0]};color:${c[1]};cursor:pointer;user-select:none;" title="클릭하여 상태 변경" onclick="event.stopPropagation();toggleOdStatus('${id}')">${s}</span>`;
+  };
+
+  el.innerHTML = `<div class="table-wrap"><table style="font-size:12px;width:100%;">
+    <thead><tr style="background:#0d1f3c;color:#fff;">
+      <th style="width:40px;">No</th>
+      <th style="width:90px;">날짜</th>
+      <th style="width:50px;">구분</th>
+      <th style="min-width:100px;">기관/업체</th>
+      <th style="min-width:160px;">제목</th>
+      <th style="width:70px;">상태</th>
+      <th style="width:50px;">첨부</th>
+      <th style="width:90px;">관리</th>
+    </tr></thead>
+    <tbody>${list.map((d,i)=>{
+      const fileCount = (d.files||[]).length;
+      return `<tr style="border-bottom:1px solid #f1f5f9;">
+        <td style="text-align:center;color:#6b7280;">${i+1}</td>
+        <td style="white-space:nowrap;">${d.date||'-'}</td>
+        <td style="text-align:center;"><span style="padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600;background:${d.direction==='수신'?'#dbeafe':'#fce7f3'};color:${d.direction==='수신'?'#1e40af':'#9d174d'};">${d.direction||'수신'}</span></td>
+        <td style="font-weight:600;">${d.sender||'-'}</td>
+        <td>${d.title||'-'}${d.memo?`<div style="font-size:11px;color:#9ca3af;margin-top:2px;max-width:250px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${d.memo}</div>`:''}</td>
+        <td style="text-align:center;">${statusBadge(d.status, d.id)}</td>
+        <td style="text-align:center;">${fileCount>0?`<span style="color:#1e5096;font-weight:700;">📎 ${fileCount}</span>`:'<span style="color:#d1d5db;">-</span>'}</td>
+        <td style="text-align:center;white-space:nowrap;">
+          <button class="btn btn-outline btn-sm" style="font-size:10px;padding:3px 8px;" onclick="openOdForm('${d.id}')">수정</button>
+          <button class="btn btn-sm" style="font-size:10px;padding:3px 8px;background:#fef2f2;color:#dc2626;border:1px solid #fecaca;" onclick="deleteOfficialDoc('${d.id}')">삭제</button>
+        </td>
+      </tr>`;
+    }).join('')}</tbody></table></div>`;
 }
 
 // ============================================================
