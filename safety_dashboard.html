@@ -730,69 +730,58 @@ table tr:hover td{background:#f8fafc;}
       </div>
     </div>
 
-    <!-- ===== 지적사항 추적 뷰 (Google Tasks 스타일) ===== -->
+    <!-- ===== 지적사항 추적 뷰 (엑셀 스프레드시트 스타일) ===== -->
     <div id="issues-view" style="display:none;">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
         <h3 style="font-size:16px;font-weight:800;color:#0d1f3c;">📋 현장 지적사항 추적</h3>
-        <button class="btn btn-outline btn-sm" onclick="showPatrolView('home')">← 돌아가기</button>
-      </div>
-
-      <!-- 요약 통계 -->
-      <div class="grid-3" style="margin-bottom:16px;">
-        <div class="stat-card red"><div class="label">미완료</div><div class="value" id="issue-stat-open">0</div><div class="sub">건 개선 필요</div></div>
-        <div class="stat-card green"><div class="label">이번주 완료</div><div class="value" id="issue-stat-done-week">0</div><div class="sub">건 조치 완료</div></div>
-        <div class="stat-card blue"><div class="label">전체 누적</div><div class="value" id="issue-stat-total">0</div><div class="sub">건 등록</div></div>
-      </div>
-
-      <!-- 새 지적사항 입력 -->
-      <div class="card" style="margin-bottom:16px;">
-        <div class="card-title" style="margin-bottom:12px;">+ 새 지적사항 등록</div>
-        <div style="display:grid;grid-template-columns:1fr 2fr 1fr;gap:10px;align-items:end;">
-          <div class="form-group" style="margin:0;"><label>사업장</label>
-            <select id="iss-site" style="padding:8px 12px;border:1px solid #d1d5db;border-radius:8px;font-size:13px;width:100%;">
-              <option value="suwon">수원공장</option><option value="hwaseong">화성공장</option>
-            </select>
-          </div>
-          <div class="form-group" style="margin:0;"><label>지적사항 내용</label>
-            <input type="text" id="iss-desc" placeholder="예: 사출기 3번 안전문 고정핀 파손" style="padding:8px 12px;border:1px solid #d1d5db;border-radius:8px;font-size:13px;width:100%;">
-          </div>
-          <div class="form-group" style="margin:0;"><label>위치/구역</label>
-            <input type="text" id="iss-location" placeholder="예: 1층 사출라인" style="padding:8px 12px;border:1px solid #d1d5db;border-radius:8px;font-size:13px;width:100%;">
-          </div>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:10px;align-items:end;margin-top:10px;">
-          <div class="form-group" style="margin:0;"><label>발견일</label>
-            <input type="date" id="iss-date" style="padding:8px 12px;border:1px solid #d1d5db;border-radius:8px;font-size:13px;width:100%;">
-          </div>
-          <div class="form-group" style="margin:0;"><label>개선기한</label>
-            <input type="date" id="iss-deadline" style="padding:8px 12px;border:1px solid #d1d5db;border-radius:8px;font-size:13px;width:100%;">
-          </div>
-          <div class="form-group" style="margin:0;"><label>우선순위</label>
-            <select id="iss-priority" style="padding:8px 12px;border:1px solid #d1d5db;border-radius:8px;font-size:13px;width:100%;">
-              <option value="normal">일반</option><option value="high">긴급</option>
-            </select>
-          </div>
-          <button class="btn btn-success" onclick="addSiteIssue()" style="height:38px;white-space:nowrap;">+ 등록</button>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <span class="badge red" id="issue-stat-open-badge" style="font-size:12px;padding:4px 12px;">미완료 0건</span>
+          <span class="badge green" id="issue-stat-done-badge" style="font-size:12px;padding:4px 12px;">완료 0건</span>
+          <button class="btn btn-outline btn-sm" onclick="showPatrolView('home')">← 돌아가기</button>
         </div>
       </div>
 
-      <!-- 미완료 지적사항 (할일 목록) -->
-      <div class="card" style="margin-bottom:16px;">
-        <div class="card-title">
-          <span style="color:#dc2626;">●</span> 미완료 지적사항
-          <span class="badge red" id="issue-open-badge">0건</span>
+      <!-- 빠른 입력 (엑셀 행 추가하듯) -->
+      <div class="card" style="margin-bottom:2px;padding:12px 16px;border-radius:10px 10px 0 0;">
+        <div style="display:flex;gap:8px;align-items:center;">
+          <select id="iss-site" style="padding:7px 8px;border:1.5px solid #d1d5db;border-radius:6px;font-size:12px;width:80px;flex-shrink:0;">
+            <option value="suwon">수원</option><option value="hwaseong">화성</option>
+          </select>
+          <input type="text" id="iss-desc" placeholder="지적사항 내용 입력 후 Enter (예: 사출기 3번 안전문 고정핀 파손)"
+            style="flex:1;padding:7px 12px;border:1.5px solid #d1d5db;border-radius:6px;font-size:13px;"
+            onkeydown="if(event.key==='Enter')addSiteIssue()">
+          <input type="text" id="iss-location" placeholder="위치" style="width:100px;padding:7px 8px;border:1.5px solid #d1d5db;border-radius:6px;font-size:12px;flex-shrink:0;">
+          <button class="btn btn-success btn-sm" onclick="addSiteIssue()" style="white-space:nowrap;flex-shrink:0;">+ 등록</button>
         </div>
-        <div id="issue-open-list" style="min-height:40px;"></div>
       </div>
 
-      <!-- 완료 지적사항 (접을 수 있는 목록) -->
-      <div class="card">
-        <div class="card-title" style="cursor:pointer;" onclick="toggleDoneIssues()">
-          <span style="color:#16a34a;">●</span> 완료된 지적사항
-          <span class="badge green" id="issue-done-badge">0건</span>
-          <span style="font-size:11px;color:#9ca3af;margin-left:auto;" id="done-toggle-icon">▼ 펼치기</span>
+      <!-- 스프레드시트 테이블 -->
+      <div class="card" style="padding:0;border-radius:0 0 10px 10px;overflow:hidden;">
+        <div class="table-wrap" style="border:none;">
+          <table id="issue-sheet" style="font-size:12px;border-collapse:collapse;width:100%;">
+            <thead>
+              <tr style="background:#0d1f3c;color:#fff;">
+                <th style="width:32px;padding:8px 6px;text-align:center;font-size:11px;">No</th>
+                <th style="width:82px;padding:8px 6px;font-size:11px;">등록일</th>
+                <th style="width:46px;padding:8px 6px;font-size:11px;">사업장</th>
+                <th style="padding:8px 6px;font-size:11px;">지적사항 내용</th>
+                <th style="width:75px;padding:8px 6px;font-size:11px;">위치</th>
+                <th style="width:45px;padding:8px 6px;text-align:center;font-size:11px;">개선</th>
+                <th style="width:82px;padding:8px 6px;font-size:11px;">개선일</th>
+                <th style="width:130px;padding:8px 6px;font-size:11px;">개선내역/비고</th>
+                <th style="width:46px;padding:8px 6px;text-align:center;font-size:11px;">사진</th>
+                <th style="width:32px;padding:8px 6px;text-align:center;font-size:11px;" class="no-print">×</th>
+              </tr>
+            </thead>
+            <tbody id="issue-sheet-body"></tbody>
+          </table>
         </div>
-        <div id="issue-done-list" style="display:none;"></div>
+        <div style="padding:8px 16px;background:#f8fafc;border-top:1px solid #e5e7eb;display:flex;justify-content:space-between;align-items:center;font-size:11px;color:#6b7280;">
+          <span id="issue-sheet-summary">전체 0건</span>
+          <label class="no-print" style="display:flex;align-items:center;gap:4px;cursor:pointer;">
+            <input type="checkbox" id="issue-show-done" onchange="renderSiteIssues()" checked style="accent-color:#1e5096;"> 완료 항목 표시
+          </label>
+        </div>
       </div>
     </div>
 
@@ -1694,7 +1683,7 @@ function updatePatrolTotal(){
 }
 
 // ============================================================
-// 지적사항 추적 (Google Tasks 스타일, 누적)
+// 지적사항 추적 (엑셀 스프레드시트 스타일, 누적)
 // ============================================================
 function getSiteIssues(){ return DB.get('siteIssues'); }
 function saveSiteIssues(list){ DB.set('siteIssues', list); }
@@ -1706,19 +1695,19 @@ function addSiteIssue(){
   const today = new Date().toISOString().split('T')[0];
   issues.push({
     id: Date.now(),
-    date: document.getElementById('iss-date').value || today,
+    date: today,
     site: document.getElementById('iss-site').value,
     desc: desc,
     location: document.getElementById('iss-location').value.trim(),
-    deadline: document.getElementById('iss-deadline').value || '',
-    priority: document.getElementById('iss-priority').value || 'normal',
     status: 'open',
     resolvedDate: '',
-    createdAt: new Date().toISOString()
+    memo: '',
+    photo: ''
   });
   saveSiteIssues(issues);
   document.getElementById('iss-desc').value = '';
   document.getElementById('iss-location').value = '';
+  document.getElementById('iss-desc').focus();
   renderSiteIssues();
 }
 
@@ -1738,112 +1727,124 @@ function toggleIssueStatus(id){
 }
 
 function deleteSiteIssue(id){
-  if(!confirm('이 지적사항을 삭제하시겠습니까?')) return;
+  if(!confirm('삭제하시겠습니까?')) return;
   saveSiteIssues(getSiteIssues().filter(i=>i.id!==id));
   renderSiteIssues();
 }
 
-function toggleDoneIssues(){
-  const list = document.getElementById('issue-done-list');
-  const icon = document.getElementById('done-toggle-icon');
-  if(list.style.display==='none'){
-    list.style.display='block';
-    icon.textContent='▲ 접기';
+function updateIssueMemo(id){
+  const issues = getSiteIssues();
+  const issue = issues.find(i=>i.id===id);
+  if(!issue) return;
+  const el = document.getElementById('iss-memo-'+id);
+  if(el) issue.memo = el.value;
+  saveSiteIssues(issues);
+}
+
+function handleIssuePhoto(id, input){
+  if(!input.files||!input.files[0]) return;
+  const file = input.files[0];
+  if(file.size > 500000){
+    // 큰 파일은 리사이즈
+    const reader = new FileReader();
+    reader.onload = function(e){
+      const img = new Image();
+      img.onload = function(){
+        const canvas = document.createElement('canvas');
+        const max = 400;
+        let w=img.width, h=img.height;
+        if(w>h){h=h*(max/w);w=max;} else {w=w*(max/h);h=max;}
+        canvas.width=w; canvas.height=h;
+        canvas.getContext('2d').drawImage(img,0,0,w,h);
+        saveIssuePhoto(id, canvas.toDataURL('image/jpeg',0.6));
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
   } else {
-    list.style.display='none';
-    icon.textContent='▼ 펼치기';
+    const reader = new FileReader();
+    reader.onload = function(e){ saveIssuePhoto(id, e.target.result); };
+    reader.readAsDataURL(file);
   }
+}
+
+function saveIssuePhoto(id, dataUrl){
+  const issues = getSiteIssues();
+  const issue = issues.find(i=>i.id===id);
+  if(!issue) return;
+  issue.photo = dataUrl;
+  saveSiteIssues(issues);
+  const preview = document.getElementById('iss-photo-preview-'+id);
+  if(preview) preview.innerHTML = `<img src="${dataUrl}" style="width:32px;height:32px;object-fit:cover;border-radius:4px;cursor:pointer;" onclick="window.open('${dataUrl}')">`;
 }
 
 function renderSiteIssues(){
   const issues = getSiteIssues();
   const siteNames = {suwon:'수원', hwaseong:'화성'};
   const today = new Date().toISOString().split('T')[0];
+  const showDone = document.getElementById('issue-show-done')?.checked !== false;
 
-  // 이번주 범위 계산
-  const now = new Date();
-  const dayOfWeek = now.getDay();
-  const monDiff = dayOfWeek===0 ? -6 : 1-dayOfWeek;
-  const mon = new Date(now); mon.setDate(now.getDate()+monDiff);
-  const monStr = mon.toISOString().split('T')[0];
-  const sun = new Date(mon); sun.setDate(mon.getDate()+6);
-  const sunStr = sun.toISOString().split('T')[0];
-
-  const openIssues = issues.filter(i=>i.status==='open').sort((a,b)=>{
-    if(a.priority==='high' && b.priority!=='high') return -1;
-    if(b.priority==='high' && a.priority!=='high') return 1;
-    return new Date(b.date) - new Date(a.date);
+  // 미완료 먼저, 완료 나중 (각각 최신순)
+  const sorted = [...issues].sort((a,b)=>{
+    if(a.status!==b.status) return a.status==='open'?-1:1;
+    return new Date(b.date)-new Date(a.date);
   });
-  const doneIssues = issues.filter(i=>i.status==='done').sort((a,b)=> new Date(b.resolvedDate||b.date) - new Date(a.resolvedDate||a.date));
-  const doneThisWeek = doneIssues.filter(i=> i.resolvedDate >= monStr && i.resolvedDate <= sunStr);
+  const filtered = showDone ? sorted : sorted.filter(i=>i.status==='open');
 
-  // 통계
-  document.getElementById('issue-stat-open').textContent = openIssues.length;
-  document.getElementById('issue-stat-done-week').textContent = doneThisWeek.length;
-  document.getElementById('issue-stat-total').textContent = issues.length;
-  document.getElementById('issue-open-badge').textContent = openIssues.length+'건';
-  document.getElementById('issue-done-badge').textContent = doneIssues.length+'건';
+  const openCount = issues.filter(i=>i.status==='open').length;
+  const doneCount = issues.filter(i=>i.status==='done').length;
+
+  // 배지 업데이트
+  const ob = document.getElementById('issue-stat-open-badge');
+  if(ob) ob.textContent = `미완료 ${openCount}건`;
+  const db = document.getElementById('issue-stat-done-badge');
+  if(db) db.textContent = `완료 ${doneCount}건`;
 
   // 배너 통계
   const bannerStat = document.getElementById('issue-banner-stat');
-  if(bannerStat) bannerStat.textContent = `미완료 ${openIssues.length}건 / 이번주 완료 ${doneThisWeek.length}건`;
+  if(bannerStat) bannerStat.textContent = `미완료 ${openCount}건 / 완료 ${doneCount}건`;
 
-  // 기본 날짜 세팅
-  const dateEl = document.getElementById('iss-date');
-  if(dateEl && !dateEl.value) dateEl.value = today;
-  const dlEl = document.getElementById('iss-deadline');
-  if(dlEl && !dlEl.value){
-    const nextFri = new Date(now);
-    const daysToFri = (5-now.getDay()+7)%7;
-    nextFri.setDate(now.getDate() + (daysToFri===0?7:daysToFri));
-    dlEl.value = nextFri.toISOString().split('T')[0];
-  }
-
-  // 미완료 목록 (Tasks 스타일)
-  const openEl = document.getElementById('issue-open-list');
-  if(openIssues.length===0){
-    openEl.innerHTML = '<div style="text-align:center;color:#9ca3af;padding:20px;font-size:13px;">모든 지적사항이 완료되었습니다!</div>';
+  // 테이블 렌더링
+  const tbody = document.getElementById('issue-sheet-body');
+  if(!filtered.length){
+    tbody.innerHTML = `<tr><td colspan="10" style="text-align:center;color:#9ca3af;padding:24px;">지적사항을 등록하세요. 위 입력란에 내용을 쓰고 Enter!</td></tr>`;
   } else {
-    openEl.innerHTML = openIssues.map(issue => {
-      const isOverdue = issue.deadline && issue.deadline < today;
-      const isHigh = issue.priority==='high';
-      const borderColor = isOverdue ? '#dc2626' : isHigh ? '#ea580c' : '#e5e7eb';
-      const bgColor = isOverdue ? '#fef2f2' : isHigh ? '#fff7ed' : '#fff';
-      return `<div style="display:flex;align-items:flex-start;gap:12px;padding:12px 16px;border:1.5px solid ${borderColor};border-radius:10px;margin-bottom:8px;background:${bgColor};transition:all 0.15s;">
-        <input type="checkbox" onclick="toggleIssueStatus(${issue.id})" style="width:20px;height:20px;accent-color:#16a34a;cursor:pointer;margin-top:2px;flex-shrink:0;">
-        <div style="flex:1;min-width:0;">
-          <div style="font-size:13px;font-weight:600;color:#1a202c;line-height:1.5;">
-            ${isHigh?'<span style="color:#ea580c;font-size:11px;font-weight:700;">[긴급]</span> ':''}${issue.desc}
-          </div>
-          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:4px;font-size:11px;color:#6b7280;">
-            <span>📍 ${siteNames[issue.site]||issue.site} ${issue.location?'· '+issue.location:''}</span>
-            <span>📅 ${issue.date}</span>
-            ${issue.deadline ? `<span style="color:${isOverdue?'#dc2626':'#6b7280'};">${isOverdue?'⚠️':'🏁'} 기한: ${issue.deadline}${isOverdue?' (기한 초과!)':''}</span>` : ''}
-          </div>
-        </div>
-        <button onclick="deleteSiteIssue(${issue.id})" style="background:none;border:none;color:#d1d5db;cursor:pointer;font-size:16px;padding:0 4px;flex-shrink:0;" title="삭제">&times;</button>
-      </div>`;
+    tbody.innerHTML = filtered.map((issue, idx) => {
+      const isDone = issue.status==='done';
+      const rowBg = isDone ? '#f0fdf4' : (idx%2===0?'#fff':'#fafbfc');
+      const textStyle = isDone ? 'color:#9ca3af;text-decoration:line-through;' : '';
+      const photoPreview = issue.photo
+        ? `<img src="${issue.photo}" style="width:32px;height:32px;object-fit:cover;border-radius:4px;cursor:pointer;" onclick="window.open(this.src)">`
+        : '';
+      return `<tr style="background:${rowBg};">
+        <td style="text-align:center;padding:6px;border-bottom:1px solid #e5e7eb;font-size:11px;color:#9ca3af;">${issues.length - issues.indexOf(issue)}</td>
+        <td style="padding:6px;border-bottom:1px solid #e5e7eb;font-size:11px;white-space:nowrap;">${issue.date}</td>
+        <td style="padding:6px;border-bottom:1px solid #e5e7eb;font-size:11px;">${siteNames[issue.site]||issue.site}</td>
+        <td style="padding:6px;border-bottom:1px solid #e5e7eb;font-size:12px;font-weight:500;${textStyle}">${issue.desc}</td>
+        <td style="padding:6px;border-bottom:1px solid #e5e7eb;font-size:11px;">${issue.location||''}</td>
+        <td style="text-align:center;padding:6px;border-bottom:1px solid #e5e7eb;">
+          <input type="checkbox" ${isDone?'checked':''} onchange="toggleIssueStatus(${issue.id})" style="width:18px;height:18px;accent-color:#16a34a;cursor:pointer;">
+        </td>
+        <td style="padding:6px;border-bottom:1px solid #e5e7eb;font-size:11px;">${isDone?issue.resolvedDate:''}</td>
+        <td style="padding:4px 6px;border-bottom:1px solid #e5e7eb;">
+          <input type="text" id="iss-memo-${issue.id}" value="${(issue.memo||'').replace(/"/g,'&quot;')}" placeholder="개선내역 기재"
+            style="width:100%;border:none;border-bottom:1px dotted #d1d5db;font-size:11px;padding:2px 4px;background:transparent;"
+            onchange="updateIssueMemo(${issue.id})">
+        </td>
+        <td style="text-align:center;padding:4px;border-bottom:1px solid #e5e7eb;" class="no-print">
+          <div id="iss-photo-preview-${issue.id}" style="display:inline-block;">${photoPreview}</div>
+          ${!issue.photo?`<label style="cursor:pointer;font-size:10px;color:#6b7280;" title="사진 첨부"><input type="file" accept="image/*" style="display:none;" onchange="handleIssuePhoto(${issue.id},this)">📷</label>`:''}
+        </td>
+        <td style="text-align:center;padding:4px;border-bottom:1px solid #e5e7eb;" class="no-print">
+          <button onclick="deleteSiteIssue(${issue.id})" style="background:none;border:none;color:#d1d5db;cursor:pointer;font-size:14px;" title="삭제">&times;</button>
+        </td>
+      </tr>`;
     }).join('');
   }
 
-  // 완료 목록
-  const doneEl = document.getElementById('issue-done-list');
-  if(doneIssues.length===0){
-    doneEl.innerHTML = '<div style="text-align:center;color:#9ca3af;padding:16px;font-size:13px;">완료된 항목이 없습니다.</div>';
-  } else {
-    doneEl.innerHTML = doneIssues.map(issue => {
-      return `<div style="display:flex;align-items:flex-start;gap:12px;padding:10px 16px;border-bottom:1px solid #f1f5f9;opacity:0.7;">
-        <input type="checkbox" checked onclick="toggleIssueStatus(${issue.id})" style="width:18px;height:18px;accent-color:#16a34a;cursor:pointer;margin-top:2px;flex-shrink:0;">
-        <div style="flex:1;min-width:0;">
-          <div style="font-size:13px;color:#9ca3af;text-decoration:line-through;line-height:1.5;">${issue.desc}</div>
-          <div style="font-size:11px;color:#9ca3af;margin-top:2px;">
-            ${siteNames[issue.site]||issue.site} ${issue.location?'· '+issue.location:''} · 완료: ${issue.resolvedDate||'-'}
-          </div>
-        </div>
-        <button onclick="deleteSiteIssue(${issue.id})" style="background:none;border:none;color:#d1d5db;cursor:pointer;font-size:16px;padding:0 4px;flex-shrink:0;" title="삭제">&times;</button>
-      </div>`;
-    }).join('');
-  }
+  // 요약
+  const summary = document.getElementById('issue-sheet-summary');
+  if(summary) summary.textContent = `전체 ${issues.length}건 (미완료 ${openCount} / 완료 ${doneCount})`;
 }
 
 // ============================================================
@@ -2467,16 +2468,9 @@ function renderDashboard(){
 function updateIssueBannerStat(){
   const issues = DB.get('siteIssues');
   const openCount = issues.filter(i=>i.status==='open').length;
-  const now = new Date();
-  const dayOfWeek = now.getDay();
-  const monDiff = dayOfWeek===0 ? -6 : 1-dayOfWeek;
-  const mon = new Date(now); mon.setDate(now.getDate()+monDiff);
-  const monStr = mon.toISOString().split('T')[0];
-  const sun = new Date(mon); sun.setDate(mon.getDate()+6);
-  const sunStr = sun.toISOString().split('T')[0];
-  const doneWeek = issues.filter(i=>i.status==='done' && i.resolvedDate >= monStr && i.resolvedDate <= sunStr).length;
+  const doneCount = issues.filter(i=>i.status==='done').length;
   const el = document.getElementById('issue-banner-stat');
-  if(el) el.textContent = `미완료 ${openCount}건 / 이번주 완료 ${doneWeek}건`;
+  if(el) el.textContent = `미완료 ${openCount}건 / 완료 ${doneCount}건`;
 }
 
 // ── 일일 현장관리 5대 항목 ──

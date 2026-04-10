@@ -182,68 +182,49 @@ body{font-family:'Noto Sans KR','Malgun Gothic',sans-serif;background:#f0f2f5;co
 </div>
 
 <!-- ══════════════════════════════════════════════
-     TAB 2: 지적사항 추적 (Google Tasks 스타일 누적)
+     TAB 2: 지적사항 추적 (엑셀 스프레드시트 스타일)
      ══════════════════════════════════════════════ -->
 <div class="tab-content" id="tab-issue">
 
-  <!-- 요약 통계 -->
-  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:16px;">
-    <div class="card" style="text-align:center;padding:16px;">
-      <div style="font-size:11px;color:#dc2626;font-weight:600;">미완료</div>
-      <div style="font-size:28px;font-weight:900;color:#dc2626;" id="iss-stat-open">0</div>
-      <div style="font-size:10px;color:#9ca3af;">건 개선 필요</div>
-    </div>
-    <div class="card" style="text-align:center;padding:16px;">
-      <div style="font-size:11px;color:#16a34a;font-weight:600;">이번주 완료</div>
-      <div style="font-size:28px;font-weight:900;color:#16a34a;" id="iss-stat-done">0</div>
-      <div style="font-size:10px;color:#9ca3af;">건 조치 완료</div>
-    </div>
-    <div class="card" style="text-align:center;padding:16px;">
-      <div style="font-size:11px;color:#1e5096;font-weight:600;">전체 누적</div>
-      <div style="font-size:28px;font-weight:900;color:#1e5096;" id="iss-stat-total">0</div>
-      <div style="font-size:10px;color:#9ca3af;">건 등록</div>
+  <!-- 빠른 입력 (엑셀 행 추가) -->
+  <div class="card no-print" style="margin-bottom:2px;padding:12px 16px;border-radius:10px 10px 0 0;">
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+      <select id="newSite" style="padding:7px 8px;border:1.5px solid #d1d5db;border-radius:6px;font-size:12px;width:76px;flex-shrink:0;">
+        <option value="suwon">수원</option><option value="hwaseong">화성</option>
+      </select>
+      <input type="text" id="newDesc" placeholder="지적사항 내용 입력 후 Enter"
+        style="flex:1;min-width:200px;padding:7px 12px;border:1.5px solid #d1d5db;border-radius:6px;font-size:13px;"
+        onkeydown="if(event.key==='Enter')addIssue()">
+      <input type="text" id="newLocation" placeholder="위치" style="width:100px;padding:7px 8px;border:1.5px solid #d1d5db;border-radius:6px;font-size:12px;flex-shrink:0;">
+      <button class="btn btn-success btn-sm" onclick="addIssue()" style="white-space:nowrap;flex-shrink:0;">+ 등록</button>
     </div>
   </div>
 
-  <!-- 새 지적사항 입력 -->
-  <div class="card no-print" style="margin-bottom:16px;">
-    <div class="card-title">+ 새 지적사항 등록</div>
-    <div style="display:grid;grid-template-columns:100px 1fr 120px;gap:8px;align-items:end;">
-      <div><label style="font-size:11px;font-weight:600;display:block;margin-bottom:2px;">사업장</label>
-        <select id="newSite" style="width:100%;padding:6px 8px;border:1.5px solid #d1d5db;border-radius:6px;font-size:12px;">
-          <option value="suwon">수원</option><option value="hwaseong">화성</option>
-        </select></div>
-      <div><label style="font-size:11px;font-weight:600;display:block;margin-bottom:2px;">지적사항 내용</label>
-        <input type="text" id="newDesc" placeholder="예: 사출기 3번 안전문 고정핀 파손" style="width:100%;padding:6px 8px;border:1.5px solid #d1d5db;border-radius:6px;font-size:12px;"></div>
-      <div><label style="font-size:11px;font-weight:600;display:block;margin-bottom:2px;">위치/구역</label>
-        <input type="text" id="newLocation" placeholder="예: 1층 사출라인" style="width:100%;padding:6px 8px;border:1.5px solid #d1d5db;border-radius:6px;font-size:12px;"></div>
+  <!-- 스프레드시트 테이블 -->
+  <div class="card" style="padding:0;border-radius:0 0 10px 10px;overflow-x:auto;">
+    <table id="pp-issue-sheet" style="font-size:12px;border-collapse:collapse;width:100%;min-width:700px;">
+      <thead>
+        <tr style="background:#0d1f3c;color:#fff;">
+          <th style="width:30px;padding:7px 5px;text-align:center;font-size:10px;">No</th>
+          <th style="width:78px;padding:7px 5px;font-size:10px;">등록일</th>
+          <th style="width:44px;padding:7px 5px;font-size:10px;">사업장</th>
+          <th style="padding:7px 5px;font-size:10px;">지적사항 내용</th>
+          <th style="width:70px;padding:7px 5px;font-size:10px;">위치</th>
+          <th style="width:40px;padding:7px 5px;text-align:center;font-size:10px;">개선</th>
+          <th style="width:78px;padding:7px 5px;font-size:10px;">개선일</th>
+          <th style="width:120px;padding:7px 5px;font-size:10px;">개선내역/비고</th>
+          <th style="width:44px;padding:7px 5px;text-align:center;font-size:10px;">사진</th>
+          <th style="width:28px;padding:7px 5px;text-align:center;font-size:10px;" class="no-print">x</th>
+        </tr>
+      </thead>
+      <tbody id="pp-issue-body"></tbody>
+    </table>
+    <div style="padding:6px 16px;background:#f8fafc;border-top:1px solid #e5e7eb;display:flex;justify-content:space-between;align-items:center;font-size:11px;color:#6b7280;">
+      <span id="pp-issue-summary">전체 0건</span>
+      <label class="no-print" style="display:flex;align-items:center;gap:4px;cursor:pointer;">
+        <input type="checkbox" id="pp-show-done" onchange="renderIssues()" checked style="accent-color:#1e5096;"> 완료 항목 표시
+      </label>
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:8px;align-items:end;margin-top:8px;">
-      <div><label style="font-size:11px;font-weight:600;display:block;margin-bottom:2px;">발견일</label>
-        <input type="date" id="newDate" style="width:100%;padding:6px 8px;border:1.5px solid #d1d5db;border-radius:6px;font-size:12px;"></div>
-      <div><label style="font-size:11px;font-weight:600;display:block;margin-bottom:2px;">개선기한</label>
-        <input type="date" id="newDeadline" style="width:100%;padding:6px 8px;border:1.5px solid #d1d5db;border-radius:6px;font-size:12px;"></div>
-      <div><label style="font-size:11px;font-weight:600;display:block;margin-bottom:2px;">우선순위</label>
-        <select id="newPriority" style="width:100%;padding:6px 8px;border:1.5px solid #d1d5db;border-radius:6px;font-size:12px;">
-          <option value="normal">일반</option><option value="high">긴급</option>
-        </select></div>
-      <button class="btn btn-success" onclick="addIssue()" style="height:34px;white-space:nowrap;">+ 등록</button>
-    </div>
-  </div>
-
-  <!-- 미완료 목록 (Tasks 스타일) -->
-  <div class="card" style="margin-bottom:16px;">
-    <div class="card-title"><span style="color:#dc2626;">&#9679;</span> 미완료 지적사항 <span class="badge" style="background:#fef2f2;color:#dc2626;" id="openBadge">0건</span></div>
-    <div id="issueOpenList" style="min-height:40px;"></div>
-  </div>
-
-  <!-- 완료 목록 (접을 수 있음) -->
-  <div class="card">
-    <div class="card-title" style="cursor:pointer;" onclick="toggleDoneList()">
-      <span style="color:#16a34a;">&#9679;</span> 완료된 지적사항 <span class="badge" style="background:#dcfce7;color:#16a34a;" id="doneBadge">0건</span>
-      <span style="font-size:11px;color:#9ca3af;margin-left:auto;" id="doneToggle">&#9660; 펼치기</span>
-    </div>
-    <div id="issueDoneList" style="display:none;"></div>
   </div>
 </div>
 
@@ -616,7 +597,7 @@ function exportPatrolData(){
 }
 
 /* ═══════════════════════════════════════════
-   TAB 2: 지적사항 추적 (Google Tasks 스타일 누적)
+   TAB 2: 지적사항 추적 (엑셀 스프레드시트 스타일)
    ═══════════════════════════════════════════ */
 function getIssues(){ return lsGet(LS_ISSUE, []); }
 function saveIssues(issues){ lsSet(LS_ISSUE, issues); }
@@ -627,18 +608,19 @@ function addIssue(){
   const issues = getIssues();
   issues.push({
     id: Date.now(),
-    date: document.getElementById('newDate').value || formatDate(new Date()),
+    date: formatDate(new Date()),
     site: document.getElementById('newSite').value || 'suwon',
     desc: desc,
     location: document.getElementById('newLocation').value.trim(),
-    deadline: document.getElementById('newDeadline').value || '',
-    priority: document.getElementById('newPriority').value || 'normal',
     status: 'open',
-    resolvedDate: ''
+    resolvedDate: '',
+    memo: '',
+    photo: ''
   });
   saveIssues(issues);
   document.getElementById('newDesc').value = '';
   document.getElementById('newLocation').value = '';
+  document.getElementById('newDesc').focus();
   renderIssues();
 }
 
@@ -658,99 +640,103 @@ function toggleIssueStatus(id){
 }
 
 function deleteIssue(id){
-  if(!confirm('이 지적사항을 삭제하시겠습니까?')) return;
+  if(!confirm('삭제하시겠습니까?')) return;
   saveIssues(getIssues().filter(i=>i.id!==id));
   renderIssues();
 }
 
-function toggleDoneList(){
-  const list = document.getElementById('issueDoneList');
-  const icon = document.getElementById('doneToggle');
-  if(list.style.display==='none'){ list.style.display='block'; icon.innerHTML='\u25B2 접기'; }
-  else { list.style.display='none'; icon.innerHTML='\u25BC 펼치기'; }
+function updateIssueMemo(id){
+  const issues = getIssues();
+  const issue = issues.find(i=>i.id===id);
+  if(!issue) return;
+  const el = document.getElementById('pp-memo-'+id);
+  if(el) issue.memo = el.value;
+  saveIssues(issues);
+}
+
+function handleIssuePhoto(id, input){
+  if(!input.files||!input.files[0]) return;
+  const file = input.files[0];
+  const reader = new FileReader();
+  reader.onload = function(e){
+    if(file.size > 500000){
+      const img = new Image();
+      img.onload = function(){
+        const canvas = document.createElement('canvas');
+        const max=400; let w=img.width,h=img.height;
+        if(w>h){h=h*(max/w);w=max;}else{w=w*(max/h);h=max;}
+        canvas.width=w;canvas.height=h;
+        canvas.getContext('2d').drawImage(img,0,0,w,h);
+        saveIssuePhoto(id, canvas.toDataURL('image/jpeg',0.6));
+      };
+      img.src = e.target.result;
+    } else {
+      saveIssuePhoto(id, e.target.result);
+    }
+  };
+  reader.readAsDataURL(file);
+}
+
+function saveIssuePhoto(id, dataUrl){
+  const issues = getIssues();
+  const issue = issues.find(i=>i.id===id);
+  if(!issue) return;
+  issue.photo = dataUrl;
+  saveIssues(issues);
+  renderIssues();
 }
 
 function renderIssues(){
   const issues = getIssues();
-  const today = formatDate(new Date());
-  const now = new Date();
-  const dayOfWeek = now.getDay();
-  const monDiff = dayOfWeek===0 ? -6 : 1-dayOfWeek;
-  const mon = new Date(now); mon.setDate(now.getDate()+monDiff);
-  const monStr = formatDate(mon);
-  const sun = new Date(mon); sun.setDate(mon.getDate()+6);
-  const sunStr = formatDate(sun);
+  const showDone = document.getElementById('pp-show-done')?.checked !== false;
 
-  const openIssues = issues.filter(i=>i.status==='open').sort((a,b)=>{
-    if(a.priority==='high' && b.priority!=='high') return -1;
-    if(b.priority==='high' && a.priority!=='high') return 1;
-    return new Date(b.date) - new Date(a.date);
+  const sorted = [...issues].sort((a,b)=>{
+    if(a.status!==b.status) return a.status==='open'?-1:1;
+    return new Date(b.date)-new Date(a.date);
   });
-  const doneIssues = issues.filter(i=>i.status==='done').sort((a,b)=> new Date(b.resolvedDate||b.date) - new Date(a.resolvedDate||a.date));
-  const doneThisWeek = doneIssues.filter(i=> i.resolvedDate >= monStr && i.resolvedDate <= sunStr);
+  const filtered = showDone ? sorted : sorted.filter(i=>i.status==='open');
+  const openCount = issues.filter(i=>i.status==='open').length;
+  const doneCount = issues.filter(i=>i.status==='done').length;
 
-  // 통계
-  document.getElementById('iss-stat-open').textContent = openIssues.length;
-  document.getElementById('iss-stat-done').textContent = doneThisWeek.length;
-  document.getElementById('iss-stat-total').textContent = issues.length;
-  document.getElementById('openBadge').textContent = openIssues.length+'건';
-  document.getElementById('doneBadge').textContent = doneIssues.length+'건';
-
-  // 기본 날짜
-  const dateEl = document.getElementById('newDate');
-  if(dateEl && !dateEl.value) dateEl.value = today;
-  const dlEl = document.getElementById('newDeadline');
-  if(dlEl && !dlEl.value){
-    const daysToFri = (5-now.getDay()+7)%7;
-    const nextFri = new Date(now); nextFri.setDate(now.getDate()+(daysToFri===0?7:daysToFri));
-    dlEl.value = formatDate(nextFri);
-  }
-
-  // 미완료 목록 (Tasks 스타일)
-  const openEl = document.getElementById('issueOpenList');
-  if(openIssues.length===0){
-    openEl.innerHTML = '<div style="text-align:center;color:#9ca3af;padding:20px;font-size:13px;">모든 지적사항이 완료되었습니다!</div>';
+  const tbody = document.getElementById('pp-issue-body');
+  if(!filtered.length){
+    tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;color:#9ca3af;padding:24px;">지적사항을 등록하세요. 위 입력란에 내용을 쓰고 Enter!</td></tr>';
   } else {
-    openEl.innerHTML = openIssues.map(issue => {
-      const isOverdue = issue.deadline && issue.deadline < today;
-      const isHigh = issue.priority==='high';
-      const borderColor = isOverdue ? '#dc2626' : isHigh ? '#ea580c' : '#e5e7eb';
-      const bgColor = isOverdue ? '#fef2f2' : isHigh ? '#fff7ed' : '#fff';
-      return `<div style="display:flex;align-items:flex-start;gap:12px;padding:12px 16px;border:1.5px solid ${borderColor};border-radius:10px;margin-bottom:8px;background:${bgColor};">
-        <input type="checkbox" onclick="toggleIssueStatus(${issue.id})" style="width:20px;height:20px;accent-color:#16a34a;cursor:pointer;margin-top:2px;flex-shrink:0;">
-        <div style="flex:1;min-width:0;">
-          <div style="font-size:13px;font-weight:600;color:#1a1a1a;line-height:1.5;">
-            ${isHigh?'<span style="color:#ea580c;font-size:11px;font-weight:700;">[긴급]</span> ':''}${issue.desc}
-          </div>
-          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:4px;font-size:11px;color:#6b7280;">
-            <span>${siteLabels[issue.site]||issue.site} ${issue.location?'- '+issue.location:''}</span>
-            <span>${issue.date}</span>
-            ${issue.deadline ? `<span style="color:${isOverdue?'#dc2626':'#6b7280'};">${isOverdue?'! ':''}기한: ${issue.deadline}${isOverdue?' (초과)':''}</span>` : ''}
-          </div>
-        </div>
-        <button onclick="deleteIssue(${issue.id})" style="background:none;border:none;color:#d1d5db;cursor:pointer;font-size:16px;padding:0 4px;flex-shrink:0;" class="no-print">&times;</button>
-      </div>`;
+    tbody.innerHTML = filtered.map((issue, idx) => {
+      const isDone = issue.status==='done';
+      const rowBg = isDone ? '#f0fdf4' : (idx%2===0?'#fff':'#fafbfc');
+      const textStyle = isDone ? 'color:#9ca3af;text-decoration:line-through;' : '';
+      const photoPreview = issue.photo
+        ? `<img src="${issue.photo}" style="width:28px;height:28px;object-fit:cover;border-radius:3px;cursor:pointer;" onclick="window.open(this.src)">`
+        : '';
+      return `<tr style="background:${rowBg};">
+        <td style="text-align:center;padding:5px;border-bottom:1px solid #e5e7eb;font-size:10px;color:#9ca3af;">${issues.length - issues.indexOf(issue)}</td>
+        <td style="padding:5px;border-bottom:1px solid #e5e7eb;font-size:11px;white-space:nowrap;">${issue.date}</td>
+        <td style="padding:5px;border-bottom:1px solid #e5e7eb;font-size:11px;">${siteLabels[issue.site]||issue.site}</td>
+        <td style="padding:5px;border-bottom:1px solid #e5e7eb;font-size:12px;font-weight:500;${textStyle}">${issue.desc}</td>
+        <td style="padding:5px;border-bottom:1px solid #e5e7eb;font-size:11px;">${issue.location||''}</td>
+        <td style="text-align:center;padding:5px;border-bottom:1px solid #e5e7eb;">
+          <input type="checkbox" ${isDone?'checked':''} onchange="toggleIssueStatus(${issue.id})" style="width:16px;height:16px;accent-color:#16a34a;cursor:pointer;">
+        </td>
+        <td style="padding:5px;border-bottom:1px solid #e5e7eb;font-size:11px;">${isDone?issue.resolvedDate:''}</td>
+        <td style="padding:3px 5px;border-bottom:1px solid #e5e7eb;">
+          <input type="text" id="pp-memo-${issue.id}" value="${(issue.memo||'').replace(/"/g,'&quot;')}" placeholder="개선내역"
+            style="width:100%;border:none;border-bottom:1px dotted #d1d5db;font-size:11px;padding:2px 3px;background:transparent;"
+            onchange="updateIssueMemo(${issue.id})">
+        </td>
+        <td style="text-align:center;padding:3px;border-bottom:1px solid #e5e7eb;" class="no-print">
+          ${photoPreview}
+          ${!issue.photo?`<label style="cursor:pointer;font-size:10px;color:#6b7280;"><input type="file" accept="image/*" style="display:none;" onchange="handleIssuePhoto(${issue.id},this)">📷</label>`:''}
+        </td>
+        <td style="text-align:center;padding:3px;border-bottom:1px solid #e5e7eb;" class="no-print">
+          <button onclick="deleteIssue(${issue.id})" style="background:none;border:none;color:#d1d5db;cursor:pointer;font-size:13px;">&times;</button>
+        </td>
+      </tr>`;
     }).join('');
   }
 
-  // 완료 목록
-  const doneEl = document.getElementById('issueDoneList');
-  if(doneIssues.length===0){
-    doneEl.innerHTML = '<div style="text-align:center;color:#9ca3af;padding:16px;font-size:13px;">완료된 항목이 없습니다.</div>';
-  } else {
-    doneEl.innerHTML = doneIssues.map(issue => {
-      return `<div style="display:flex;align-items:flex-start;gap:12px;padding:10px 16px;border-bottom:1px solid #f0f0f0;opacity:0.7;">
-        <input type="checkbox" checked onclick="toggleIssueStatus(${issue.id})" style="width:18px;height:18px;accent-color:#16a34a;cursor:pointer;margin-top:2px;flex-shrink:0;">
-        <div style="flex:1;min-width:0;">
-          <div style="font-size:13px;color:#9ca3af;text-decoration:line-through;line-height:1.5;">${issue.desc}</div>
-          <div style="font-size:11px;color:#9ca3af;margin-top:2px;">
-            ${siteLabels[issue.site]||issue.site} ${issue.location?'- '+issue.location:''} | 완료: ${issue.resolvedDate||'-'}
-          </div>
-        </div>
-        <button onclick="deleteIssue(${issue.id})" style="background:none;border:none;color:#d1d5db;cursor:pointer;font-size:16px;padding:0 4px;flex-shrink:0;" class="no-print">&times;</button>
-      </div>`;
-    }).join('');
-  }
+  const summary = document.getElementById('pp-issue-summary');
+  if(summary) summary.textContent = `전체 ${issues.length}건 (미완료 ${openCount} / 완료 ${doneCount})`;
 }
 
 /* ═══════════════════════════════════════════
