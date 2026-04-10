@@ -3762,6 +3762,10 @@ function openCN(id){
   mf.textContent=c.footer; mf.style.background=c.fb; mf.style.color=c.fc;
   const d=c.detail;
   document.getElementById('cn-modal-body').innerHTML=`
+    <div style="background:#f0fdf4;border-radius:10px;padding:14px;margin-bottom:14px;border-left:4px solid #22c55e;">
+      <div style="font-size:13px;font-weight:700;color:#166534;margin-bottom:8px;">⚡ 핵심 포인트</div>
+      <ul style="list-style:none;padding:0;margin:0;">${c.preview.map(p=>`<li style="padding:6px 0;border-bottom:1px solid #dcfce7;font-size:12px;color:#374151;display:flex;gap:8px;"><span style="color:#22c55e;font-weight:700;">●</span><span style="font-weight:600;">${p}</span></li>`).join('')}</ul>
+    </div>
     <p style="font-size:13px;color:#374151;line-height:1.6;margin-bottom:12px;">${d.intro}</p>
     ${d.sections.map(s=>`<div style="font-size:13px;font-weight:700;color:#0d1f3c;margin:12px 0 6px;">${s.t}</div><ul style="list-style:none;padding:0;">${s.i.map(x=>`<li style="padding:6px 0;border-bottom:1px solid #f1f5f9;font-size:12px;color:#374151;display:flex;gap:8px;"><span>✓</span><span>${x}</span></li>`).join('')}</ul>`).join('')}
     <div style="background:#fef9c3;border-radius:8px;padding:12px;font-size:12px;color:#92400e;margin:12px 0;border-left:4px solid #f59e0b;">💡 ${d.hl}</div>
@@ -3779,7 +3783,9 @@ function closeCnModal(e){
 }
 function cnCopy(id){
   const c=cnCards.find(x=>x.id===id);
-  let t=`[${c.ep}] ${c.title.replace(/\n/g,' ')}\n\n${c.detail.intro}\n\n`;
+  let t=`[${c.ep}] ${c.title.replace(/\n/g,' ')}\n\n⚡ 핵심 포인트\n`;
+  c.preview.forEach(p=>t+=`● ${p}\n`);
+  t+=`\n${c.detail.intro}\n\n`;
   c.detail.sections.forEach(s=>{t+=`${s.t}\n`;s.i.forEach(x=>t+=`• ${x}\n`);t+='\n';});
   t+=`💡 ${c.detail.hl}\n${c.footer}`;
   navigator.clipboard.writeText(t).then(()=>alert('카카오톡에 붙여넣기하세요!'));
@@ -3824,6 +3830,10 @@ function cnPrint(id){
       </div>
       <div class="body">
         <div class="content">
+          <div style="background:#f0fdf4;border-radius:10px;padding:14px;margin-bottom:14px;border-left:4px solid #22c55e;-webkit-print-color-adjustment:exact !important;print-color-adjust:exact !important;">
+            <div style="font-size:15px;font-weight:800;color:#166534;margin-bottom:8px;">⚡ 핵심 포인트</div>
+            <ul>${c.preview.map(p=>`<li><span style="color:#22c55e;font-weight:700;flex-shrink:0;">●</span><span style="font-weight:600;">${p}</span></li>`).join('')}</ul>
+          </div>
           <div class="intro">${c.detail.intro.replace(/\n/g,'<br>')}</div>
           ${c.detail.sections.map(s=>`<div class="sec">${s.t}</div><ul>${s.i.map(x=>`<li><span style="color:#1e5096;flex-shrink:0;">✓</span><span>${x}</span></li>`).join('')}</ul>`).join('')}
           <div class="hl">💡 ${c.detail.hl}</div>
