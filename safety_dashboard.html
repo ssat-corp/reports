@@ -2347,7 +2347,7 @@ function saveOfficialDoc(){
         fetch(DRIVE_UPLOAD_URL, {
           method:'POST', mode:'no-cors',
           headers:{'Content-Type':'application/json'},
-          body:JSON.stringify({fileName:file.name, fileData:base64, mimeType:file.type, subfolder:'공문서관리'})
+          body:JSON.stringify({fileName:file.name.replace(/(\.[^.]+)$/,'_'+new Date().toISOString().split('T')[0]+'$1'), fileData:base64, mimeType:file.type, subfolder:'공문서관리'})
         }).then(()=>{
           uploaded.push({name:file.name, url:'https://drive.google.com/drive/folders/10a7V0ao6Qf-_9XeiK4Bd2NRmfAX7rgB5', date:new Date().toISOString().split('T')[0]});
           count++;
@@ -3214,7 +3214,7 @@ function dmUploadToDrive(docId, input) {
     fetch(DRIVE_UPLOAD_URL, {
       method:'POST', mode:'no-cors',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({fileName:file.name, fileData:base64, mimeType:file.type, subfolder:'서류관리'})
+      body:JSON.stringify({fileName:file.name.replace(/(\.[^.]+)$/,'_'+new Date().toISOString().split('T')[0]+'$1'), fileData:base64, mimeType:file.type, subfolder:'서류관리'})
     }).then(()=>{
       addFileRecord('https://drive.google.com/drive/folders/10a7V0ao6Qf-_9XeiK4Bd2NRmfAX7rgB5');
     }).catch(err=>{
@@ -3585,10 +3585,10 @@ function addESGFileUpload(idx, containerId, input){
       mode: 'no-cors',
       headers: {'Content-Type':'application/json'},
       body: JSON.stringify({
-        fileName: file.name,
+        fileName: itemName+'_'+file.name.replace(/(\.[^.]+)$/,'_'+new Date().toISOString().split('T')[0]+'$1'),
         fileData: base64,
         mimeType: file.type,
-        subfolder: itemName
+        subfolder: 'ESG교육'
       })
     }).then(()=>{
       // no-cors 모드에서는 응답을 읽을 수 없으므로 URL 추정
