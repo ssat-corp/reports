@@ -609,15 +609,15 @@ body {
     transform: rotate(-45deg);
   }
   .quarter-print-page .q-card .q-rule {
-    font-size: 15px;
-    font-weight: 700;
+    font-size: 20px;
+    font-weight: 900;
     color: #1a1a1a;
-    line-height: 1.5;
-    margin-bottom: 1mm;
+    line-height: 1.4;
+    margin-bottom: 2mm;
   }
   .quarter-print-page .q-card .q-rule-cn {
-    font-size: 12px;
-    font-weight: 500;
+    font-size: 15px;
+    font-weight: 600;
     color: #555;
     line-height: 1.4;
   }
@@ -775,8 +775,8 @@ body {
       <div class="rule">
         <span class="rule-icon">1</span>
         <div class="rule-text">
-          <div class="rule-kr">작업 전 반드시 잠금·태그(LOTO) 실시</div>
-          <div class="rule-cn">作业前必须执行上锁挂牌(LOTO)</div>
+          <div class="rule-kr">허가자 외 접근 금지</div>
+          <div class="rule-cn">非授权人员严禁靠近</div>
         </div>
       </div>
     </div>
@@ -1294,7 +1294,7 @@ const signMeta = {
   s01: { title: '크레인 작업 구역', type: 'red', label: '금지', loc: '천장주행크레인 / 크레인 작업 구역', summary: '정격하중 초과 금지, 안전모 반드시 착용' },
   s02: { title: '금형 취급 구역', type: 'blue', label: '지시', loc: '금형 보관대 / 금형 취급 구역', summary: '2인 1조 필수, 안전화·안전모 착용' },
   s03: { title: '고소작업 구역', type: 'yellow', label: '경고', loc: '고소작업 구역 / 사다리 사용 구역', summary: '안전대 착용 필수, 추락 위험' },
-  s04: { title: '분전반 / 전기 패널함', type: 'red', label: '금지', loc: '분전반 / 전기 패널함', summary: 'LOTO 실시 (A4 1/4 ×4)' },
+  s04: { title: '분전반 / 전기 패널함', type: 'red', label: '금지', loc: '분전반 / 전기 패널함', summary: '허가자 외 접근 금지 (A4 1/4 ×4)' },
   s05: { title: '공장 출입구', type: 'blue', label: '지시', loc: '공장 출입구', summary: '안전모·안전화 착용 후 입장' },
   s06: { title: '지게차 이동 통로', type: 'red', label: '금지', loc: '지게차 이동 통로', summary: '보행자 출입 금지, 열쇠 분리 보관' },
   s07: { title: '화학물질 보관소', type: 'yellow', label: '경고', loc: '화학물질 보관소', summary: 'MSDS 비치, 개인보호구 착용 필수' },
@@ -1396,8 +1396,8 @@ function printQuarter(id) {
         <div class="q-title">분전반 / 전기 패널함</div>
         <div class="q-title-cn">配电箱 / 电气控制柜</div>
         <div class="q-symbol"></div>
-        <div class="q-rule">작업 전 반드시<br>잠금·태그(LOTO) 실시</div>
-        <div class="q-rule-cn">作业前必须执行上锁挂牌(LOTO)</div>
+        <div class="q-rule">허가자 외 접근 금지</div>
+        <div class="q-rule-cn">非授权人员严禁靠近</div>
         <div class="q-footer">신성오토텍 안전보건관리</div>
       </div>`;
   }
