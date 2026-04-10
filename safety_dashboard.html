@@ -799,8 +799,8 @@ table tr:hover td{background:#f8fafc;}
   <!-- ===== 교육 & 운영 관리 ===== -->
   <div id="section-meetcal" class="section">
 
-    <!-- 상단 알림 배너 -->
-    <div id="meetcal-alerts" style="margin-bottom:16px;"></div>
+    <!-- 상단 알림 배너 (비활성) -->
+    <!-- <div id="meetcal-alerts" style="margin-bottom:16px;"></div> -->
 
     <!-- 상단: 주간/월간/분기 완료 현황 -->
     <div class="grid-3" style="margin-bottom:16px;">
@@ -3176,9 +3176,10 @@ function renderESGPlan(containerId){
       <td style="white-space:nowrap;">${item.manager}</td>
       ${item.plan.map((p,mi)=>{
         const d = isESGDone(globalIdx, mi);
-        if(d) return `<td class="esg-month-cell esg-done esg-clickable" title="${mi+1}월 - 클릭하여 미시행으로 변경" onclick="toggleESGDone(${globalIdx},${mi},'${containerId}')">●</td>`;
-        if(p) return `<td class="esg-month-cell esg-plan esg-clickable" title="${mi+1}월 - 클릭하여 시행완료 처리" onclick="toggleESGDone(${globalIdx},${mi},'${containerId}')">○</td>`;
-        return `<td class="esg-month-cell esg-empty">-</td>`;
+        if(d && p) return `<td class="esg-month-cell esg-done esg-clickable" title="${mi+1}월 - 계획+시행완료 (클릭: 시행취소)" onclick="toggleESGDone(${globalIdx},${mi},'${containerId}')">●</td>`;
+        if(d && !p) return `<td class="esg-month-cell esg-done esg-clickable" title="${mi+1}월 - 시행완료 (클릭: 시행취소)" onclick="toggleESGDone(${globalIdx},${mi},'${containerId}')" style="position:relative;">●</td>`;
+        if(p) return `<td class="esg-month-cell esg-plan esg-clickable" title="${mi+1}월 - 계획 (클릭: 시행완료 처리)" onclick="toggleESGDone(${globalIdx},${mi},'${containerId}')">○</td>`;
+        return `<td class="esg-month-cell esg-empty esg-clickable" title="${mi+1}월 - 클릭하여 시행완료 처리" onclick="toggleESGDone(${globalIdx},${mi},'${containerId}')" style="cursor:pointer;">-</td>`;
       }).join('')}
       <td style="text-align:right;white-space:nowrap;">${item.cost}</td>
       <td style="text-align:center;position:relative;">
@@ -3316,6 +3317,7 @@ function toggleESGDone(idx, month, containerId){
   if(Object.keys(saved[idx]).length === 0) delete saved[idx];
   setESGDone(saved);
   renderESGPlan('esg-plan-edu');
+  renderESGPlan('esg-plan-meetcal');
   renderESGPlan('esg-plan-schedule');
 }
 
