@@ -457,67 +457,73 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* ===== EXTENDED SIGN (s17 사출성형기) ===== */
+/* ===== EXTENDED SIGN (s17 사출성형기) — A4 1페이지 정밀 맞춤 ===== */
 .sign-extended {
   height: var(--page-h);
   max-height: var(--page-h);
+  min-height: var(--page-h);
   overflow: hidden;
 }
 .sign-extended .sign-header {
-  padding: 4mm 5mm 3mm;
-  border-top-width: 8mm;
+  padding: 3mm 5mm 2mm;
+  border-top-width: 6mm;
+  flex-shrink: 0;
 }
 .sign-extended .sign-symbol {
-  transform: scale(0.65);
-  margin: -3mm 0;
+  transform: scale(0.55);
+  margin: -4mm 0 -2mm;
 }
 .sign-extended .sign-title {
-  font-size: 26pt;
-  margin-top: 1.5mm;
-}
-.sign-extended .sign-title-cn {
-  font-size: 14pt;
+  font-size: 24pt;
   margin-top: 1mm;
 }
+.sign-extended .sign-title-cn {
+  font-size: 12pt;
+  margin-top: 0.5mm;
+}
 .sign-extended .category-badge {
-  font-size: 10pt;
-  padding: 1.5mm 5mm;
-  margin-bottom: 1mm;
+  font-size: 9pt;
+  padding: 1mm 4mm;
+  margin-bottom: 0.5mm;
 }
 .sign-extended .sign-body {
   flex: 1;
-  padding: 3mm 5mm 2mm;
+  padding: 2mm 5mm 1mm;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 .sign-extended .sign-location {
-  font-size: 10pt;
-  padding: 2.5mm 5mm;
-  margin-bottom: 3mm;
+  font-size: 9pt;
+  padding: 1.5mm 4mm;
+  margin-bottom: 2mm;
+  flex-shrink: 0;
 }
 .sign-extended .sign-footer {
-  padding: 3mm 5mm;
+  padding: 2.5mm 5mm;
+  flex-shrink: 0;
 }
 
 /* 위험 요인 박스 */
 .danger-box {
   background: #FFF3E0;
   border: 2px solid var(--red);
-  border-radius: 6px;
-  padding: 3mm 5mm 3.5mm;
-  margin-bottom: 3mm;
+  border-radius: 5px;
+  padding: 2mm 4mm 2.5mm;
+  margin-bottom: 2mm;
+  flex-shrink: 0;
 }
 .danger-box-title {
-  font-size: 12pt;
+  font-size: 11pt;
   font-weight: 900;
   color: var(--red-dark);
-  margin-bottom: 2.5mm;
+  margin-bottom: 1.5mm;
   display: flex;
   align-items: center;
   gap: 2mm;
 }
 .danger-box-title-cn {
-  font-size: 9.5pt;
+  font-size: 8.5pt;
   font-weight: 700;
   color: #999;
   font-family: 'Noto Sans SC', sans-serif !important;
@@ -525,16 +531,16 @@ body {
 .danger-list {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1.5mm 6mm;
+  gap: 1mm 5mm;
   list-style: none;
 }
 .danger-list li {
-  font-size: 10pt;
+  font-size: 9pt;
   font-weight: 700;
   color: #333;
-  padding-left: 5mm;
+  padding-left: 4mm;
   position: relative;
-  line-height: 1.45;
+  line-height: 1.35;
   white-space: nowrap;
 }
 .danger-list li::before {
@@ -545,7 +551,7 @@ body {
   font-weight: 900;
 }
 .danger-list li .cn {
-  font-size: 8pt;
+  font-size: 7.5pt;
   color: #888;
   font-weight: 500;
   font-family: 'Noto Sans SC', sans-serif !important;
@@ -554,184 +560,193 @@ body {
 
 /* 작업 안전 수칙 제목 */
 .rules-section-title {
-  font-size: 12pt;
+  font-size: 11pt;
   font-weight: 900;
   color: #222;
-  margin-bottom: 2mm;
-  padding: 2mm 0;
-  border-bottom: 2.5px solid var(--yellow-dark);
+  margin-bottom: 1mm;
+  padding: 1.5mm 0;
+  border-bottom: 2px solid var(--yellow-dark);
   display: flex;
   align-items: center;
   gap: 2mm;
+  flex-shrink: 0;
 }
 .rules-section-title-cn {
-  font-size: 9.5pt;
+  font-size: 8.5pt;
   font-weight: 700;
   color: #999;
   font-family: 'Noto Sans SC', sans-serif !important;
 }
 
-/* 확장형 규칙 — 한 줄 꽉 차게 */
+/* 확장형 규칙 — 컴팩트 1줄 */
 .sign-extended .sign-rules {
   flex: 1;
-  gap: 1.2mm;
-  justify-content: space-between;
+  gap: 0;
+  justify-content: space-evenly;
 }
 .sign-extended .rule {
-  padding: 1.8mm 4mm;
-  gap: 3mm;
+  padding: 1mm 3mm;
+  gap: 2.5mm;
 }
 .sign-extended .rule-icon {
-  width: 22px;
-  height: 22px;
-  font-size: 11px;
+  width: 18px;
+  height: 18px;
+  font-size: 10px;
   margin-top: 1px;
 }
 .sign-extended .rule-kr {
-  font-size: 10.5pt;
+  font-size: 9pt;
   font-weight: 700;
-  line-height: 1.35;
+  line-height: 1.3;
 }
 .sign-extended .rule-cn {
-  font-size: 8.5pt;
+  font-size: 7.5pt;
   font-weight: 500;
-  line-height: 1.3;
-  color: #666;
+  line-height: 1.2;
+  color: #777;
 }
 
-/* 하단 픽토그램 바 */
+/* ===== 하단 픽토그램 바 (강렬·대형) ===== */
 .picto-bar {
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  gap: 12mm;
+  gap: 6mm;
   padding: 4mm 0 2mm;
   margin-top: auto;
-  border-top: 1.5px solid #e0e0e0;
+  border-top: 2.5px solid #ccc;
+  flex-shrink: 0;
 }
 .picto-item {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 2mm;
-  width: 52mm;
+  width: 58mm;
 }
 .picto-icon {
-  width: 48px;
-  height: 48px;
+  width: 56px;
+  height: 56px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 22px;
+  font-size: 26px;
   font-weight: 900;
 }
-/* 금지 원형 — 손 넣지 마시오 (강렬) */
+/* 금지 원형 — 손 넣지 마시오 */
 .picto-icon.picto-prohibit {
-  width: 56px;
-  height: 56px;
-  border: 6px solid var(--red);
+  width: 60px;
+  height: 60px;
+  border: 7px solid var(--red);
   color: var(--red);
   background: #fff;
   position: relative;
-  font-size: 24px;
-  box-shadow: 0 0 0 2px rgba(211,47,47,0.15);
+  font-size: 26px;
+  box-shadow: 0 0 0 3px rgba(211,47,47,0.15);
 }
 .picto-icon.picto-prohibit::after {
   content: '';
   position: absolute;
-  width: 72%;
-  height: 6px;
+  width: 74%;
+  height: 7px;
   background: var(--red);
   border-radius: 3px;
   transform: rotate(-45deg);
 }
-/* 경고 삼각형 — 고온주의 (강렬) */
+/* 경고 삼각형 — 고온주의 */
 .picto-icon.picto-warn-triangle {
   width: 0; height: 0;
-  border-left: 30px solid transparent;
-  border-right: 30px solid transparent;
-  border-bottom: 52px solid #222;
+  border-left: 32px solid transparent;
+  border-right: 32px solid transparent;
+  border-bottom: 56px solid #222;
   border-radius: 0;
   background: none;
   position: relative;
-  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));
+  filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3));
 }
 .picto-icon.picto-warn-triangle::before {
   content: '';
   position: absolute;
   top: 5px;
-  left: -26px;
+  left: -28px;
   width: 0; height: 0;
-  border-left: 26px solid transparent;
-  border-right: 26px solid transparent;
-  border-bottom: 45px solid var(--yellow);
+  border-left: 28px solid transparent;
+  border-right: 28px solid transparent;
+  border-bottom: 48px solid var(--yellow);
   z-index: 0;
 }
 .picto-icon.picto-warn-triangle::after {
   content: '!';
   position: absolute;
   top: 16px;
-  left: -6px;
-  font-size: 24px;
+  left: -7px;
+  font-size: 26px;
   font-weight: 900;
   color: #222;
   z-index: 1;
 }
-/* 경고 삼각형 — 고압전기 (강렬) */
+/* 경고 삼각형 — 고압전기 */
 .picto-icon.picto-highvolt {
   width: 0; height: 0;
-  border-left: 30px solid transparent;
-  border-right: 30px solid transparent;
-  border-bottom: 52px solid #222;
+  border-left: 32px solid transparent;
+  border-right: 32px solid transparent;
+  border-bottom: 56px solid #222;
   border-radius: 0;
   background: none;
   position: relative;
-  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));
+  filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3));
 }
 .picto-icon.picto-highvolt::before {
   content: '';
   position: absolute;
   top: 5px;
-  left: -26px;
+  left: -28px;
   width: 0; height: 0;
-  border-left: 26px solid transparent;
-  border-right: 26px solid transparent;
-  border-bottom: 45px solid var(--yellow);
+  border-left: 28px solid transparent;
+  border-right: 28px solid transparent;
+  border-bottom: 48px solid var(--yellow);
   z-index: 0;
 }
 .picto-icon.picto-highvolt::after {
   content: '\26A1';
   position: absolute;
   top: 14px;
-  left: -10px;
-  font-size: 24px;
+  left: -11px;
+  font-size: 26px;
   font-weight: 900;
   color: #222;
   z-index: 1;
 }
 .picto-label {
-  font-size: 10pt;
+  font-size: 13pt;
   font-weight: 900;
-  color: #222;
+  color: #111;
   text-align: center;
-  line-height: 1.35;
+  line-height: 1.3;
 }
 .picto-label .cn {
   display: block;
+  font-size: 9pt;
+  font-weight: 700;
+  color: #555;
+  font-family: 'Noto Sans SC', sans-serif !important;
+}
+.picto-label .en {
+  display: block;
   font-size: 7.5pt;
   font-weight: 500;
-  color: #777;
-  font-family: 'Noto Sans SC', sans-serif !important;
+  color: #999;
 }
 
 /* 법적 근거 */
 .legal-ref {
-  font-size: 7.5pt;
+  font-size: 7pt;
   color: #aaa;
   text-align: center;
-  padding: 1.5mm 0 0;
+  padding: 1mm 0 0;
   font-weight: 500;
+  flex-shrink: 0;
 }
 
 /* 확장형 푸터 — 로고 + 안전협회 */
@@ -739,10 +754,10 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 3mm 6mm !important;
+  padding: 2.5mm 6mm !important;
 }
 .sign-footer-ext .footer-left img {
-  height: 30px;
+  height: 26px;
 }
 .sign-footer-ext .footer-right {
   font-size: 8pt;
@@ -756,10 +771,11 @@ body {
   .sign-extended {
     height: 297mm !important;
     max-height: 297mm !important;
+    min-height: 297mm !important;
     overflow: hidden !important;
   }
   .sign-extended .sign-header {
-    border-top-width: 8mm !important;
+    border-top-width: 6mm !important;
   }
 }
 
@@ -1641,93 +1657,92 @@ body {
     <div class="sign-title-cn">注塑成型机操作作业</div>
   </div>
   <div class="sign-body">
-    <div class="sign-location">설치위치: 사출성형기 작업 구역<br><span class="sign-location-cn">安装位置：注塑成型机作业区域</span></div>
 
     <!-- 위험 요인 -->
     <div class="danger-box">
       <div class="danger-box-title">&#9888; 위험 요인 <span class="danger-box-title-cn">危险因素</span></div>
       <ul class="danger-list">
-        <li>호퍼에 원료 투입 시 추락<br><span class="cn">向料斗投入原料时坠落</span></li>
-        <li>바렐 고온부 접촉에 의한 화상<br><span class="cn">接触料筒高温部位导致烫伤</span></li>
-        <li>바렐 충전부 접촉에 의한 감전<br><span class="cn">接触料筒带电部位导致触电</span></li>
-        <li>금형 사이에 협착<br><span class="cn">被模具夹伤</span></li>
+        <li>호퍼에 원료 투입 시 추락<br><span class="cn">向料斗投入原料时发生坠落</span></li>
+        <li>바렐 고온부 접촉에 의한 화상<br><span class="cn">接触料筒高温部位造成烫伤</span></li>
+        <li>바렐 충전부 접촉에 의한 감전<br><span class="cn">接触料筒带电部位造成触电</span></li>
+        <li>금형 사이에 협착<br><span class="cn">模具之间发生夹压伤害</span></li>
       </ul>
     </div>
 
     <!-- 작업 안전 수칙 -->
-    <div class="rules-section-title">&#128736; 작업 안전 수칙 <span class="rules-section-title-cn">作业安全规则</span></div>
+    <div class="rules-section-title">&#128736; 작업 안전 수칙 <span class="rules-section-title-cn">作业安全守则</span></div>
     <div class="sign-rules">
       <div class="rule">
         <span class="rule-icon">1</span>
         <div class="rule-text">
-          <div class="rule-kr">작업시작 전 사출기 실린더, 금형 내, 제품취출장치 등의 정상상태를 확인할 것</div>
-          <div class="rule-cn">开始作业前确认注塑机料筒、模具内部、取出装置等正常状态</div>
+          <div class="rule-kr">작업시작 전 사출기 실린더, 금형 내부, 제품취출장치 등의 청소상태를 확인할 것.</div>
+          <div class="rule-cn">开始作业前须确认注塑机料筒、模具内部及制品取出装置等的清洁状态。</div>
         </div>
       </div>
       <div class="rule">
         <span class="rule-icon">2</span>
         <div class="rule-text">
-          <div class="rule-kr">운전조작 S/W를 수동으로 놓고 영폐·형개를 작동하여 이상 유무를 확인할 것</div>
-          <div class="rule-cn">将操作开关置于手动模式，运行合模·开模确认是否异常</div>
+          <div class="rule-kr">운전조작 S/W를 수동으로 놓고 형폐, 형개 작동 이상 유무를 확인할 것.</div>
+          <div class="rule-cn">将操作开关置于手动模式，运行合模及开模并确认有无异常。</div>
         </div>
       </div>
       <div class="rule">
         <span class="rule-icon">3</span>
         <div class="rule-text">
-          <div class="rule-kr">안전문, 연동장치, 양수조작스위치, 비상정지스위치 등의 안전장치 작동 유무를 확인할 것</div>
-          <div class="rule-cn">确认安全门、联锁装置、双手操作开关、紧急停止开关等安全装置是否正常</div>
+          <div class="rule-kr">안전문, 연동장치, 양수조작스위치, 비상정지스위치 등 안전장치의 작동 유무를 확인할 것.</div>
+          <div class="rule-cn">确认安全门、联锁装置、双手操控开关及紧急停止开关等安全装置的运行状况。</div>
         </div>
       </div>
       <div class="rule">
         <span class="rule-icon">4</span>
         <div class="rule-text">
-          <div class="rule-kr">각부의 온도가 일정하게 유지되도록 주의할 것</div>
-          <div class="rule-cn">注意保持各部位温度恒定</div>
+          <div class="rule-kr">각부의 온도가 일정하게 유지되도록 주의할 것.</div>
+          <div class="rule-cn">注意确保各部位温度保持恒定。</div>
         </div>
       </div>
       <div class="rule">
         <span class="rule-icon">5</span>
         <div class="rule-text">
-          <div class="rule-kr">최초 압력조절은 형체압력을 적정수준으로, 사출압은 최소로 설정하여 단계적으로 조정할 것</div>
-          <div class="rule-cn">初始压力调节应将合模压力设为适当水平，注射压力设为最低，逐步调整</div>
+          <div class="rule-kr">최초 압력조절시 형체압력은 적정수준으로, 사출압은 최소로 설정해 작동시키며, 단계적으로 사출압을 높여 적정압력으로 조정할 것.</div>
+          <div class="rule-cn">初次调压时将合模压力设为适当水平、注射压力设为最低并启动，逐步提高注射压力至适当值。</div>
         </div>
       </div>
       <div class="rule">
         <span class="rule-icon">6</span>
         <div class="rule-text">
-          <div class="rule-kr">작업 중 공급 이상 발생 시 비상정지스위치를 작동시키고 필요한 조치를 취할 것</div>
-          <div class="rule-cn">作业中发生供料异常时，启动紧急停止开关并采取必要措施</div>
+          <div class="rule-kr">작업 중 굉음이나 이상이 발생할 경우 비상정지스위치를 작동시키고 필요한 조치를 취할 것.</div>
+          <div class="rule-cn">作业中发生异响或异常时，须立即启动紧急停止开关并采取必要措施。</div>
         </div>
       </div>
       <div class="rule">
         <span class="rule-icon">7</span>
         <div class="rule-text">
-          <div class="rule-kr">기계를 조정할 때는 수동으로 놓고 기계를 정지시킨 후 조정할 것</div>
-          <div class="rule-cn">调整机器时须切换至手动模式并停机后方可操作</div>
+          <div class="rule-kr">기계를 조정할 때는 수동으로 놓고 기계를 정지시킨 후 진행할 것.</div>
+          <div class="rule-cn">调整机器时须将开关切换至手动模式并停机后方可进行。</div>
         </div>
       </div>
       <div class="rule">
         <span class="rule-icon">8</span>
         <div class="rule-text">
-          <div class="rule-kr">금형 보수점검·교환 시 금형 구간 내 신체 진입 전 반드시 제어전원 및 펌프구동 모터를 차단할 것</div>
-          <div class="rule-cn">模具维修检查·更换时，身体进入模具区间前必须切断控制电源及泵驱动电机</div>
+          <div class="rule-kr">금형의 보수점검, 금형 교환 등 연속운전을 하는 경우 외의 상황에서, 금형 내 손이나 신체 일부가 들어갈 때는 반드시 제어전원 및 펌프구동용 모터 스위치를 차단할 것.</div>
+          <div class="rule-cn">模具维修检查、模具更换等非连续运转情况下，手部或身体进入模具内时，必须切断控制电源及泵驱动电机开关。</div>
         </div>
       </div>
     </div>
 
-    <!-- 하단 픽토그램 -->
+    <!-- 하단 픽토그램 (강렬·대형) -->
     <div class="picto-bar">
       <div class="picto-item">
         <div class="picto-icon picto-prohibit">&#9995;</div>
-        <div class="picto-label">손 넣지 마시오<span class="cn">禁止伸手 Keep hands away</span></div>
+        <div class="picto-label">손 넣지 마시오<span class="cn">禁止伸入</span><span class="en">Keep hands away</span></div>
       </div>
       <div class="picto-item">
         <div class="picto-icon picto-warn-triangle"></div>
-        <div class="picto-label">고온주의<span class="cn">注意高温 Caution-High temperature</span></div>
+        <div class="picto-label">고온주의<span class="cn">注意高温</span><span class="en">Caution–High temperature</span></div>
       </div>
       <div class="picto-item">
         <div class="picto-icon picto-highvolt"></div>
-        <div class="picto-label">고압전기<span class="cn">注意高压电 Caution-High voltage</span></div>
+        <div class="picto-label">고압전기<span class="cn">注意高压电</span><span class="en">Caution–High voltage</span></div>
       </div>
     </div>
     <div class="legal-ref">산업안전보건기준에 관한 규칙 제93조(사출성형기 등) / 산업안전보건법 제38조(안전조치)</div>
@@ -1857,6 +1872,20 @@ function printQuarter(id) {
     page.remove();
   }, 1000);
 }
+
+// ===== Font-ready print — 중국어 폰트 로딩 대기 후 인쇄 =====
+const _origPrint = window.print.bind(window);
+window.print = function() {
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(() => {
+      // 강제 reflow로 폰트 적용 확정
+      document.body.offsetHeight;
+      setTimeout(_origPrint, 100);
+    });
+  } else {
+    setTimeout(_origPrint, 500);
+  }
+};
 
 // Init
 buildGrid();
