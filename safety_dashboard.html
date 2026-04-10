@@ -802,11 +802,11 @@ table tr:hover td{background:#f8fafc;}
     <!-- 상단 알림 배너 (비활성) -->
     <!-- <div id="meetcal-alerts" style="margin-bottom:16px;"></div> -->
 
-    <!-- 상단: 주간/월간/분기 완료 현황 -->
+    <!-- 상단: 월/분기/연간 ESG 교육계획 완료 현황 -->
     <div class="grid-3" style="margin-bottom:16px;">
-      <div class="stat-card blue"><div class="label">이번 주</div><div class="value" id="mc-week-pending">-</div><div class="sub">완료 / 전체</div></div>
-      <div class="stat-card orange"><div class="label">이번 달</div><div class="value" id="mc-month-pending">-</div><div class="sub">완료 / 전체</div></div>
-      <div class="stat-card green"><div class="label">이번 분기</div><div class="value" id="mc-quarter-pending">-</div><div class="sub">완료 / 전체</div></div>
+      <div class="stat-card blue"><div class="label">이번 달</div><div class="value" id="mc-month-pending">-</div><div class="sub">완료 / 계획</div></div>
+      <div class="stat-card orange"><div class="label">이번 분기</div><div class="value" id="mc-quarter-pending">-</div><div class="sub">완료 / 계획</div></div>
+      <div class="stat-card green"><div class="label">연간 누적</div><div class="value" id="mc-year-pending">-</div><div class="sub">완료 / 계획</div></div>
     </div>
 
     <div style="margin-bottom:16px;">
@@ -3319,6 +3319,7 @@ function toggleESGDone(idx, month, containerId){
   renderESGPlan('esg-plan-edu');
   renderESGPlan('esg-plan-meetcal');
   renderESGPlan('esg-plan-schedule');
+  if(typeof renderMcOverview==='function') renderMcOverview();
 }
 
 // === ESG File upload via Google Drive ===
@@ -4100,23 +4101,40 @@ function mcQuickLog(typeId){
 }
 
 function renderMcOverview(){
-  // 통계 카드: 완료/전체
-  let weekDone=0, weekTotal=0, monthDone=0, monthTotal=0, quarterDone=0, quarterTotal=0;
-  mcMasterItems.forEach(item=>{
-    let range;
-    if(item.id==='prod-monthly') range = getMcCurrentMonthRange();
-    else range = getMcRangeForCycle(item.cycle);
-    const done = getMcLogsInRange(item.id, range).length > 0;
-    if(item.cycle==='weekly' || (item.cycle==='prod' && item.id!=='prod-monthly')){ weekTotal++; if(done) weekDone++; }
-    if(item.cycle==='monthly' || item.id==='prod-monthly'){ monthTotal++; if(done) monthDone++; }
-    if(item.cycle==='quarterly'){ quarterTotal++; if(done) quarterDone++; }
+  // ESG 교육계획 기반 통계: 계획 수 vs 시행완료 수
+  const now = new Date();
+  const curMonth = now.getMonth(); // 0-based
+  const curQ = Math.floor(curMonth / 3);
+  const qStart = curQ * 3;
+  const qEnd = qStart + 2;
+
+  let monthPlan=0, monthDone=0;
+  let quarterPlan=0, quarterDone=0;
+  let yearPlan=0, yearDone=0;
+
+  esgData.forEach((item, idx) => {
+    item.plan.forEach((p, mi) => {
+      // 계획 수 집계
+      if(p) {
+        if(mi === curMonth) monthPlan++;
+        if(mi >= qStart && mi <= qEnd) quarterPlan++;
+        yearPlan++;
+      }
+      // 시행완료 집계 (해당 달에 완료 표시된 것)
+      if(isESGDone(idx, mi)) {
+        if(mi === curMonth) monthDone++;
+        if(mi >= qStart && mi <= qEnd) quarterDone++;
+        yearDone++;
+      }
+    });
   });
-  const wEl = document.getElementById('mc-week-pending');
+
   const mEl = document.getElementById('mc-month-pending');
   const qEl = document.getElementById('mc-quarter-pending');
-  if(wEl) wEl.textContent = `${weekDone}/${weekTotal}`;
-  if(mEl) mEl.textContent = `${monthDone}/${monthTotal}`;
-  if(qEl) qEl.textContent = `${quarterDone}/${quarterTotal}`;
+  const yEl = document.getElementById('mc-year-pending');
+  if(mEl) mEl.textContent = `${monthDone}/${monthPlan}`;
+  if(qEl) qEl.textContent = `${quarterDone}/${quarterPlan}`;
+  if(yEl) yEl.textContent = `${yearDone}/${yearPlan}`;
 }
 
 // 분기별 표 렌더
