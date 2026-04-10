@@ -2645,10 +2645,7 @@ function renderDashNotices(){
   if(missingDocs>0) notices.push({icon:'📋', text:`미보유 서류 ${missingDocs}건 — 확보 필요`});
   const wwsMissing = docs.filter(d=>d.wwsCode && d.status==='미보유').length;
   if(wwsMissing>0) notices.push({icon:'🏢', text:`WWS 미이행 항목 ${wwsMissing}건`});
-  // 교육&운영 관리 알림 통합
-  const mcAlerts = getMcAlerts();
-  mcAlerts.filter(a=>a.level==='urgent').forEach(a=>notices.push({icon:'🔴', text:a.text}));
-  mcAlerts.filter(a=>a.level==='warn').slice(0,3).forEach(a=>notices.push({icon:'🟡', text:a.text}));
+  // 교육&운영 관리 알림은 해당 섹션에서 별도 관리
   if(notices.length===0) notices.push({icon:'✅', text:'현재 특별한 알림이 없습니다.'});
   el.innerHTML = notices.map(n=>`<div class="dash-notice-item"><span>${n.icon}</span><span>${n.text}</span></div>`).join('');
 }
