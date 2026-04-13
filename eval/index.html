@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>신성오토텍 2026 인사평가 시스템</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ── 헤더 ─────────────────────────────────────── -->
+<header>
+  <div class="logo">
+    신성오토텍
+    <span>2026년 상반기 인사평가 시스템</span>
+  </div>
+  <nav>
+    <button class="active" onclick="showPage('home')">🏠 홈</button>
+    <button onclick="showPage('self')">📝 자기평가</button>
+    <button onclick="showPage('manager')">💬 팀장 피드백</button>
+    <button onclick="showPage('admin')">🔒 관리자</button>
+  </nav>
+</header>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- 홈 화면                                        -->
+<!-- ══════════════════════════════════════════════ -->
+<main id="page-home">
+  <div id="home-status-bar"></div>
+
+  <div class="home-grid">
+    <div class="home-card self" onclick="showPage('self')">
+      <div class="icon">📝</div>
+      <h2>자기평가 입력</h2>
+      <p>본인의 KPI 달성 현황과<br>자기 평가 점수를 입력합니다.</p>
+      <div class="badge">연봉직 · 시급직 공통</div>
+    </div>
+    <div class="home-card manager" onclick="showPage('manager')">
+      <div class="icon">💬</div>
+      <h2>팀장 피드백 작성</h2>
+      <p>팀원에 대한 평가 점수와<br>강점 · 개선점 피드백을 작성합니다.</p>
+      <div class="badge">팀장 전용</div>
+    </div>
+    <div class="home-card admin" onclick="showPage('admin')">
+      <div class="icon">🔒</div>
+      <h2>관리자 대시보드</h2>
+      <p>전체 평가 결과를 취합하고<br>팀별 현황을 조회합니다.</p>
+      <div class="badge">경영진 전용</div>
+    </div>
+  </div>
+
+  <!-- 평가 프로세스 안내 -->
+  <div class="card" style="margin-top:24px;">
+    <div class="section-title" style="font-size:16px;">📋 2026 인사평가 프로세스</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:12px;">
+      <div style="text-align:center;padding:16px;background:#f8fafc;border-radius:10px;border:2px solid #BDD7EE;">
+        <div style="font-size:24px;">1️⃣</div>
+        <div style="font-weight:bold;color:#1F3864;margin-top:8px;">자기평가</div>
+        <div style="font-size:12px;color:#718096;margin-top:4px;">본인이 직접 입력<br>KPI 자기 점수 + 코멘트</div>
+      </div>
+      <div style="text-align:center;padding:16px;background:#f8fafc;border-radius:10px;border:2px solid #E2EFDA;">
+        <div style="font-size:24px;">2️⃣</div>
+        <div style="font-weight:bold;color:#1F3864;margin-top:8px;">팀장 평가</div>
+        <div style="font-size:12px;color:#718096;margin-top:4px;">팀장이 팀원 평가<br>점수 입력 + 피드백 작성</div>
+      </div>
+      <div style="text-align:center;padding:16px;background:#f8fafc;border-radius:10px;border:2px solid #FCE4D6;">
+        <div style="font-size:24px;">3️⃣</div>
+        <div style="font-weight:bold;color:#1F3864;margin-top:8px;">경영진 취합</div>
+        <div style="font-size:12px;color:#718096;margin-top:4px;">관리자 대시보드에서<br>전체 결과 조회·확정</div>
+      </div>
+      <div style="text-align:center;padding:16px;background:#f8fafc;border-radius:10px;border:2px solid #FFF2CC;">
+        <div style="font-size:24px;">4️⃣</div>
+        <div style="font-weight:bold;color:#1F3864;margin-top:8px;">피드백 면담</div>
+        <div style="font-size:12px;color:#718096;margin-top:4px;">팀장-팀원 1:1 면담<br>목표 설정 및 최종 확정</div>
+      </div>
+    </div>
+    <div class="alert alert-info mt-16" style="font-size:12px;">
+      📌 평가 기간: 2026년 상반기 (1월~6월) | 입력 마감: 추후 공지 |
+      종합 점수 = 자기평가 40% + 팀장평가 60%
+    </div>
+  </div>
+</main>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- 자기평가 입력                                   -->
+<!-- ══════════════════════════════════════════════ -->
+<main id="page-self" class="hidden">
+  <div class="section-title">📝 자기평가 입력</div>
+
+  <div class="card">
+    <div class="form-group">
+      <label>📌 본인 이름을 선택하세요</label>
+      <select id="self-name-select" onchange="loadSelfForm()">
+        <option value="">-- 이름 선택 --</option>
+      </select>
+    </div>
+    <div id="self-person-info" class="hidden" style="background:#f0f4f8;padding:12px 16px;border-radius:8px;font-size:13px;color:#4a5568;"></div>
+  </div>
+
+  <div id="self-form-container" class="hidden">
+    <div class="card">
+      <div class="section-title" style="font-size:15px;">📊 KPI 자기 평가 점수</div>
+      <div class="alert alert-info" style="font-size:12px;">
+        💡 각 항목에 대해 자신의 달성도를 솔직하게 입력해주세요. (자기평가는 최종 점수의 40% 반영)
+      </div>
+
+      <!-- 자동화 항목 선택 토글 (연봉직만 표시) -->
+      <div id="self-auto-toggle" class="hidden" style="background:#EBF8FF;border:1px solid #BEE3F8;border-radius:8px;padding:14px 16px;margin-bottom:16px;">
+        <div style="font-weight:600;color:#2B6CB0;margin-bottom:10px;">🤖 자동화·AI 혁신 항목 참여 여부 <span style="font-size:11px;font-weight:400;color:#4a5568;">(자동화·MES 활용 항목: 15점)</span></div>
+        <div style="display:flex;gap:24px;align-items:center;flex-wrap:wrap;">
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:14px;">
+            <input type="radio" name="self-auto" value="yes" checked onchange="onAutoToggle('self')">
+            <span>✅ <strong>참여</strong> — 자동화·MES 항목 포함 (15점)</span>
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:14px;">
+            <input type="radio" name="self-auto" value="no" onchange="onAutoToggle('self')">
+            <span>⏭️ <strong>미참여</strong> — 업무 KPI 3개에 각 5점 가중 (KPI 각 20점)</span>
+          </label>
+        </div>
+        <div style="font-size:11px;color:#718096;margin-top:8px;">※ 현업이 바빠 자동화 활동 참여가 어려운 경우 '미참여' 선택 → 기존 업무 KPI 배점이 상향됩니다.</div>
+      </div>
+
+      <table class="kpi-table" id="self-kpi-table">
+        <thead>
+          <tr>
+            <th style="width:30%">평가 항목</th>
+            <th>세부 KPI 내용</th>
+            <th style="width:180px;text-align:center;">자기평가 점수</th>
+          </tr>
+        </thead>
+        <tbody id="self-kpi-body"></tbody>
+        <tfoot>
+          <tr style="background:#1F3864;color:white;">
+            <td colspan="2" style="text-align:right;padding:10px 14px;font-weight:bold;">합계</td>
+            <td style="text-align:center;font-size:18px;font-weight:bold;" id="self-total-display">0 / 100</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="section-title" style="font-size:15px;">💬 자기평가 코멘트</div>
+      <div class="form-group">
+        <label>상반기 주요 업무 성과 (자유 기술)</label>
+        <textarea id="self-achievement" rows="4" placeholder="이번 상반기에 달성한 주요 성과나 기여 내용을 기술해주세요."></textarea>
+      </div>
+      <div class="form-group">
+        <label>아쉬웠던 점 / 개선 목표</label>
+        <textarea id="self-improvement" rows="3" placeholder="미흡했던 부분이나 하반기에 개선하고 싶은 점을 기술해주세요."></textarea>
+      </div>
+      <div class="form-group">
+        <label>팀장/회사에 바라는 점 (선택)</label>
+        <textarea id="self-request" rows="3" placeholder="팀장이나 회사에 건의하고 싶은 사항을 자유롭게 기술해주세요. (선택사항)"></textarea>
+      </div>
+    </div>
+
+    <div class="text-right">
+      <button class="btn btn-success" onclick="submitSelfEval()">✅ 자기평가 제출</button>
+    </div>
+    <div id="self-submit-msg" class="hidden mt-16"></div>
+  </div>
+</main>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- 팀장 피드백                                     -->
+<!-- ══════════════════════════════════════════════ -->
+<main id="page-manager" class="hidden">
+  <div class="section-title">💬 팀장 피드백 작성</div>
+
+  <div class="card">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+      <div class="form-group">
+        <label>👤 평가자 (팀장) 이름</label>
+        <select id="mgr-evaluator-select">
+          <option value="">-- 팀장 이름 선택 --</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>👥 평가 대상 (팀원) 이름</label>
+        <select id="mgr-target-select" onchange="loadManagerForm()">
+          <option value="">-- 팀원 이름 선택 --</option>
+        </select>
+      </div>
+    </div>
+    <div id="mgr-person-info" class="hidden" style="background:#f0f4f8;padding:12px 16px;border-radius:8px;font-size:13px;color:#4a5568;"></div>
+  </div>
+
+  <div id="mgr-form-container" class="hidden">
+    <!-- 팀장 평가 점수 -->
+    <div class="card">
+      <div class="section-title" style="font-size:15px;">📊 팀장 평가 점수</div>
+      <div class="alert alert-warning" style="font-size:12px;">
+        ⚠️ 팀장 평가 점수는 최종 점수의 60%로 반영됩니다. 객관적이고 공정하게 평가해주세요.
+      </div>
+
+      <!-- 자동화 항목 선택 토글 (연봉직만 표시) -->
+      <div id="mgr-auto-toggle" class="hidden" style="background:#FFFFF0;border:1px solid #F6E05E;border-radius:8px;padding:14px 16px;margin-bottom:16px;">
+        <div style="font-weight:600;color:#744210;margin-bottom:10px;">🤖 자동화·AI 혁신 항목 참여 여부 <span style="font-size:11px;font-weight:400;color:#4a5568;">(자동화·MES 활용 항목: 15점)</span></div>
+        <div style="display:flex;gap:24px;align-items:center;flex-wrap:wrap;">
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:14px;">
+            <input type="radio" name="mgr-auto" value="yes" checked onchange="onAutoToggle('mgr')">
+            <span>✅ <strong>참여</strong> — 자동화·MES 항목 포함 (15점)</span>
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:14px;">
+            <input type="radio" name="mgr-auto" value="no" onchange="onAutoToggle('mgr')">
+            <span>⏭️ <strong>미참여</strong> — 업무 KPI 3개에 각 5점 가중 (KPI 각 20점)</span>
+          </label>
+        </div>
+        <div style="font-size:11px;color:#718096;margin-top:8px;">※ 해당 팀원의 자동화 활동 참여 여부에 따라 선택해주세요.</div>
+      </div>
+
+      <table class="kpi-table" id="mgr-kpi-table">
+        <thead>
+          <tr>
+            <th style="width:30%">평가 항목</th>
+            <th>세부 KPI 내용</th>
+            <th style="width:180px;text-align:center;">팀장 평가 점수</th>
+          </tr>
+        </thead>
+        <tbody id="mgr-kpi-body"></tbody>
+        <tfoot>
+          <tr style="background:#1F3864;color:white;">
+            <td colspan="2" style="text-align:right;padding:10px 14px;font-weight:bold;">합계</td>
+            <td style="text-align:center;font-size:18px;font-weight:bold;" id="mgr-total-display">0 / 100</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <!-- 팀장 피드백 텍스트 -->
+    <div class="card">
+      <div class="section-title" style="font-size:15px;">📝 팀원 피드백 내용</div>
+
+      <div class="form-group">
+        <label>✅ 강점 / 잘한 점</label>
+        <textarea id="mgr-strengths" rows="4"
+          placeholder="이번 상반기 팀원이 특히 잘 수행한 부분, 칭찬할 점을 구체적으로 기술해주세요.
+예) 납기 준수율 98% 달성으로 고객 불만 0건 유지, MES 데이터 정확도 향상에 크게 기여함"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>🔧 개선이 필요한 점</label>
+        <textarea id="mgr-improvements" rows="4"
+          placeholder="개선이 필요한 부분을 구체적이고 건설적으로 기술해주세요.
+예) 이슈 발생 시 즉각 보고보다는 자체 해결을 시도하는 경향이 있어 공유 속도 개선 필요"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>💼 종합 의견 및 평가</label>
+        <textarea id="mgr-overall" rows="4"
+          placeholder="팀원에 대한 전반적인 평가와 성장 가능성, 역할 기대 등을 기술해주세요."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>🎯 하반기 목표 제안 (팀장 → 팀원)</label>
+        <textarea id="mgr-goals" rows="3"
+          placeholder="하반기에 집중적으로 개선하거나 달성했으면 하는 목표를 제안해주세요.
+예) ① 외주 발주 리드타임 20% 단축  ② MES 활용률 90% 이상 유지"></textarea>
+      </div>
+
+      <!-- 면담 일정 -->
+      <div class="form-group">
+        <label>📅 피드백 면담 예정일</label>
+        <input type="date" id="mgr-interview-date">
+      </div>
+    </div>
+
+    <div class="text-right">
+      <button class="btn btn-success" onclick="submitManagerFeedback()">✅ 팀장 피드백 제출</button>
+    </div>
+    <div id="mgr-submit-msg" class="hidden mt-16"></div>
+  </div>
+</main>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- 관리자 대시보드                                  -->
+<!-- ══════════════════════════════════════════════ -->
+<main id="page-admin" class="hidden">
+
+  <!-- 로그인 화면 -->
+  <div id="admin-login" class="login-wrap">
+    <div class="icon">🔒</div>
+    <h2>관리자 인증</h2>
+    <p>경영진 전용 페이지입니다.<br>관리자 비밀번호를 입력하세요.</p>
+    <div class="form-group" style="text-align:left;">
+      <label>비밀번호</label>
+      <input type="password" id="admin-pw" placeholder="비밀번호 입력"
+        onkeydown="if(event.key==='Enter')adminLogin()">
+    </div>
+    <button class="btn btn-primary" style="width:100%;margin-top:8px;" onclick="adminLogin()">로그인</button>
+    <div id="admin-login-err" class="hidden alert alert-error mt-8"></div>
+  </div>
+
+  <!-- 대시보드 -->
+  <div id="admin-dashboard" class="hidden">
+
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+      <div class="section-title" style="margin-bottom:0;">🔒 관리자 대시보드</div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-outline btn-sm" onclick="exportCSV()">📥 CSV 내보내기</button>
+        <button class="btn btn-warning btn-sm" onclick="adminLogout()">로그아웃</button>
+      </div>
+    </div>
+
+    <!-- 통계 카드 -->
+    <div class="admin-stats" id="admin-stats"></div>
+
+    <!-- 탭 -->
+    <div class="tabs">
+      <button class="tab active" onclick="showAdminTab('all')">전체 현황</button>
+      <button class="tab" onclick="showAdminTab('team')">팀별 현황</button>
+      <button class="tab" onclick="showAdminTab('incomplete')">미완료 현황</button>
+    </div>
+
+    <!-- 전체 현황 테이블 -->
+    <div id="admin-tab-all" class="card" style="overflow-x:auto;padding:0;">
+      <table class="result-table" id="admin-all-table">
+        <thead>
+          <tr>
+            <th>팀</th><th>성명</th><th>직급</th><th>구분</th>
+            <th>자기평가</th><th>팀장평가</th><th>종합점수</th><th>등급</th>
+            <th>자기평가 상태</th><th>팀장 피드백 상태</th>
+            <th>상세</th>
+          </tr>
+        </thead>
+        <tbody id="admin-all-body"></tbody>
+      </table>
+    </div>
+
+    <!-- 팀별 현황 -->
+    <div id="admin-tab-team" class="hidden">
+      <div id="admin-team-content"></div>
+    </div>
+
+    <!-- 미완료 현황 -->
+    <div id="admin-tab-incomplete" class="hidden">
+      <div id="admin-incomplete-content"></div>
+    </div>
+
+    <!-- 상세 모달 -->
+    <div id="detail-modal" class="hidden" style="
+      position:fixed;top:0;left:0;width:100%;height:100%;
+      background:rgba(0,0,0,0.5);z-index:1000;overflow-y:auto;">
+      <div style="max-width:700px;margin:40px auto;background:white;border-radius:16px;padding:32px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+          <h2 id="modal-title" style="color:#1F3864;font-size:18px;"></h2>
+          <button onclick="closeModal()" style="background:none;border:none;font-size:20px;cursor:pointer;">✕</button>
+        </div>
+        <div id="modal-content"></div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- JavaScript                                      -->
+<!-- ══════════════════════════════════════════════ -->
+<script src="employees.js"></script>
+<script>
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  Google Apps Script 연동 설정
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// ⚠️ 아래 URL을 본인의 Google Apps Script 웹 앱 URL로 교체하세요
+const API_URL = 'YOUR_APPS_SCRIPT_URL_HERE';
+
+/** Apps Script GET 요청 */
+async function apiGet(action, params = {}) {
+  const url = new URL(API_URL);
+  url.searchParams.set('action', action);
+  Object.entries(params).forEach(([k, v]) => url.searchParams.set(k, v));
+  const res = await fetch(url.toString());
+  return res.json();
+}
+
+/** Apps Script POST 요청 */
+async function apiPost(action, body = {}) {
+  body.action = action;
+  const res = await fetch(API_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain' },
+    body: JSON.stringify(body)
+  });
+  return res.json();
+}
+
+// 팀별 그룹핑 헬퍼
+function getEmployeesByTeam() {
+  const teams = {};
+  ALL_EMPLOYEES.forEach(e => {
+    if (!teams[e.team]) teams[e.team] = [];
+    teams[e.team].push(e);
+  });
+  return teams;
+}
+
+// ── 페이지 전환 ──────────────────────────────────
+function showPage(page) {
+  ['home','self','manager','admin'].forEach(p => {
+    document.getElementById('page-'+p).classList.toggle('hidden', p !== page);
+  });
+  document.querySelectorAll('header nav button').forEach((btn, i) => {
+    btn.classList.toggle('active', ['home','self','manager','admin'][i] === page);
+  });
+  if (page === 'home') loadHomeStatus();
+  if (page === 'self') initSelfPage();
+  if (page === 'manager') initManagerPage();
+}
+
+// ── 홈 현황 표시 ──────────────────────────────────
+async function loadHomeStatus() {
+  try {
+    const result = await apiGet('status');
+    const data = result.data || {};
+    const total = ALL_EMPLOYEES.length;
+    let selfDone = 0, mgrDone = 0;
+    ALL_EMPLOYEES.forEach(e => {
+      if (data[e.name]?.selfDone) selfDone++;
+      if (data[e.name]?.managerDone) mgrDone++;
+    });
+    document.getElementById('home-status-bar').innerHTML = `
+      <div class="status-summary">
+        <div class="stat"><div class="num">${total}</div><div class="label">전체 인원</div></div>
+        <div class="stat"><div class="num" style="color:#2E75B6">${selfDone}</div><div class="label">자기평가 완료</div></div>
+        <div class="stat"><div class="num" style="color:#70AD47">${mgrDone}</div><div class="label">팀장 피드백 완료</div></div>
+        <div class="progress-bar-wrap">
+          <div class="pb-label">자기평가 진행률 (${selfDone}/${total})</div>
+          <div class="progress-bar"><div class="fill self" style="width:${Math.round(selfDone/total*100)}%"></div></div>
+          <div class="pb-label">팀장 피드백 진행률 (${mgrDone}/${total})</div>
+          <div class="progress-bar"><div class="fill mgr" style="width:${Math.round(mgrDone/total*100)}%"></div></div>
+        </div>
+      </div>`;
+  } catch(e) {
+    document.getElementById('home-status-bar').innerHTML =
+      `<div class="alert alert-warning">⚠️ 서버 연결 확인 중... Google Apps Script 웹 앱 URL을 설정해주세요.</div>`;
+  }
+}
+
+// ── 자기평가 페이지 초기화 ───────────────────────
+function initSelfPage() {
+  const sel = document.getElementById('self-name-select');
+  if (sel.options.length > 1) return;
+  ALL_EMPLOYEES.forEach(e => {
+    const opt = document.createElement('option');
+    opt.value = e.name;
+    opt.textContent = `${e.name} (${e.team} / ${e.rank})`;
+    sel.appendChild(opt);
+  });
+}
+
+function loadSelfForm() {
+  const name = document.getElementById('self-name-select').value;
+  const emp = getEmployee(name);
+  if (!emp) {
+    document.getElementById('self-person-info').classList.add('hidden');
+    document.getElementById('self-form-container').classList.add('hidden');
+    return;
+  }
+
+  document.getElementById('self-person-info').innerHTML = `
+    <span class="tag tag-${emp.type}">${emp.type === 'annual' ? '연봉직' : '시급직'}</span>
+    <strong style="margin-left:8px;">${emp.name}</strong> ${emp.rank} — ${emp.team}`;
+  document.getElementById('self-person-info').classList.remove('hidden');
+  document.getElementById('self-form-container').classList.remove('hidden');
+
+  const autoToggle = document.getElementById('self-auto-toggle');
+  if (emp.type === 'annual') {
+    autoToggle.classList.remove('hidden');
+    document.querySelector('input[name="self-auto"][value="yes"]').checked = true;
+  } else {
+    autoToggle.classList.add('hidden');
+  }
+
+  const criteria = getEffectiveCriteria(emp, 'self');
+  renderKpiTable('self-kpi-body', 'self-total-display', criteria, 'self');
+  document.getElementById('self-submit-msg').classList.add('hidden');
+}
+
+function renderKpiTable(tbodyId, totalId, criteria, prefix) {
+  const tbody = document.getElementById(tbodyId);
+  tbody.innerHTML = '';
+  criteria.forEach(item => {
+    const catClass = item.category
+      ? item.category.replace(' ', '')
+      : (item.id.startsWith('h') ? '사훈ESG' : '직무역량');
+    const grades = [
+      { g:'S', label:'탁월', pct:1.0,  color:'#1a6634' },
+      { g:'A', label:'우수', pct:0.8,  color:'#2E75B6' },
+      { g:'B', label:'양호', pct:0.6,  color:'#5a6ea8' },
+      { g:'C', label:'보통', pct:0.4,  color:'#7F6000' },
+      { g:'D', label:'미흡', pct:0.2,  color:'#C00000' },
+    ];
+    const gradeButtons = grades.map(gd => {
+      const pts = Math.round(item.max * gd.pct);
+      return `<button class="grade-btn" data-grade="${gd.g}" data-pts="${pts}"
+        style="--gc:${gd.color}"
+        onclick="selectGrade('${prefix}','${item.id}',${pts},this)">
+        <span class="g-letter">${gd.g}</span>
+        <span class="g-label">${gd.label}</span>
+        <span class="g-pts">${pts}점</span>
+      </button>`;
+    }).join('');
+
+    tbody.insertAdjacentHTML('beforeend', `
+      <tr>
+        <td>
+          <span class="category-badge ${catClass}">${item.label}</span>
+          <div style="font-size:10px;color:#a0aec0;margin-top:4px;">만점 ${item.max}점</div>
+        </td>
+        <td style="color:#4a5568;font-size:12px;">${item.desc}</td>
+        <td>
+          <div class="grade-row">${gradeButtons}</div>
+          <div class="grade-selected" id="${prefix}-selected-${item.id}">
+            — 미선택 —
+          </div>
+          <input type="hidden" id="${prefix}-input-${item.id}" value="0">
+        </td>
+      </tr>`);
+  });
+  updateTotal(prefix, totalId, criteria);
+}
+
+function selectGrade(prefix, id, pts, btn) {
+  const row = btn.closest('tr');
+  row.querySelectorAll('.grade-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+
+  document.getElementById(`${prefix}-input-${id}`).value = pts;
+
+  const selEl = document.getElementById(`${prefix}-selected-${id}`);
+  const grade = btn.dataset.grade;
+  const gradeColors = {S:'#1a6634',A:'#2E75B6',B:'#5a6ea8',C:'#7F6000',D:'#C00000'};
+  selEl.innerHTML = `<span style="color:${gradeColors[grade]};font-weight:700;">${grade}등급</span> <span style="color:#555;">${pts}점 선택됨</span>`;
+
+  updateTotal(prefix, prefix === 'self' ? 'self-total-display' : 'mgr-total-display',
+    getCurrentCriteria(prefix));
+}
+
+function getCurrentCriteria(prefix) {
+  const nameEl = document.getElementById(prefix === 'self' ? 'self-name-select' : 'mgr-target-select');
+  const emp = getEmployee(nameEl.value);
+  if (!emp) return [];
+  return getEffectiveCriteria(emp, prefix);
+}
+
+function getEffectiveCriteria(emp, prefix) {
+  if (emp.type !== 'annual') return HOURLY_CRITERIA;
+
+  const radioName = prefix === 'self' ? 'self-auto' : 'mgr-auto';
+  const autoRadio = document.querySelector(`input[name="${radioName}"]:checked`);
+  const isAuto = !autoRadio || autoRadio.value === 'yes';
+
+  if (isAuto) return emp.kpis;
+
+  return emp.kpis
+    .filter(item => item.id !== 'mes')
+    .map(item => {
+      if (['kpi1','kpi2','kpi3'].includes(item.id)) {
+        return { ...item, max: item.max + 5 };
+      }
+      return item;
+    });
+}
+
+function onAutoToggle(prefix) {
+  const nameEl = document.getElementById(prefix === 'self' ? 'self-name-select' : 'mgr-target-select');
+  const emp = getEmployee(nameEl.value);
+  if (!emp || emp.type !== 'annual') return;
+
+  const tbodyId = prefix === 'self' ? 'self-kpi-body' : 'mgr-kpi-body';
+  const totalId = prefix === 'self' ? 'self-total-display' : 'mgr-total-display';
+  const criteria = getEffectiveCriteria(emp, prefix);
+  renderKpiTable(tbodyId, totalId, criteria, prefix);
+}
+
+function updateTotal(prefix, totalId, criteria) {
+  let total = 0, maxTotal = 0;
+  criteria.forEach(item => {
+    total += parseInt(document.getElementById(`${prefix}-input-${item.id}`)?.value || 0);
+    maxTotal += item.max;
+  });
+  const el = document.getElementById(totalId);
+  if (el) {
+    el.textContent = `${total} / ${maxTotal}`;
+    el.style.color = total >= 90 ? '#375623' : total >= 75 ? '#2E75B6' : total >= 60 ? '#7F6000' : '#E53E3E';
+  }
+}
+
+// ── 자기평가 제출 ────────────────────────────────
+async function submitSelfEval() {
+  const name = document.getElementById('self-name-select').value;
+  const emp = getEmployee(name);
+  if (!emp) return alert('이름을 선택해주세요.');
+
+  const criteria = getEffectiveCriteria(emp, 'self');
+  const scores = {};
+  criteria.forEach(item => {
+    scores[item.id] = parseInt(document.getElementById(`self-input-${item.id}`)?.value || 0);
+  });
+
+  const autoRadio = document.querySelector('input[name="self-auto"]:checked');
+  const autoParticipation = emp.type !== 'annual' ? null : (!autoRadio || autoRadio.value === 'yes');
+
+  const payload = {
+    name,
+    team: emp.team,
+    rank: emp.rank,
+    type: emp.type,
+    scores,
+    autoParticipation,
+    comment: {
+      achievement: document.getElementById('self-achievement').value,
+      improvement: document.getElementById('self-improvement').value,
+      request:     document.getElementById('self-request').value,
+    },
+    timestamp: new Date().toISOString()
+  };
+
+  try {
+    const result = await apiPost('self-eval', payload);
+    const msgEl = document.getElementById('self-submit-msg');
+    if (result.success) {
+      msgEl.className = 'alert alert-success';
+      msgEl.textContent = `✅ ${result.message}`;
+      msgEl.classList.remove('hidden');
+      window.scrollTo(0, 0);
+    } else {
+      msgEl.className = 'alert alert-error';
+      msgEl.textContent = `❌ 오류: ${result.error}`;
+      msgEl.classList.remove('hidden');
+    }
+  } catch(e) {
+    alert('서버 연결 오류. Google Apps Script 웹 앱 URL을 확인하세요.\n\n' + e.message);
+  }
+}
+
+// ── 팀장 피드백 페이지 초기화 ───────────────────
+function initManagerPage() {
+  const evalSel = document.getElementById('mgr-evaluator-select');
+  const targSel = document.getElementById('mgr-target-select');
+  if (evalSel.options.length > 1) return;
+
+  ALL_EMPLOYEES.forEach(e => {
+    const opt1 = document.createElement('option');
+    opt1.value = e.name;
+    opt1.textContent = `${e.name} (${e.team} / ${e.rank})`;
+    evalSel.appendChild(opt1);
+
+    const opt2 = document.createElement('option');
+    opt2.value = e.name;
+    opt2.textContent = `${e.name} (${e.team} / ${e.rank})`;
+    targSel.appendChild(opt2);
+  });
+}
+
+function loadManagerForm() {
+  const name = document.getElementById('mgr-target-select').value;
+  const emp = getEmployee(name);
+  if (!emp) {
+    document.getElementById('mgr-person-info').classList.add('hidden');
+    document.getElementById('mgr-form-container').classList.add('hidden');
+    return;
+  }
+
+  document.getElementById('mgr-person-info').innerHTML = `
+    <span class="tag tag-${emp.type}">${emp.type === 'annual' ? '연봉직' : '시급직'}</span>
+    <strong style="margin-left:8px;">${emp.name}</strong> ${emp.rank} — ${emp.team}
+    <span style="margin-left:16px;color:#718096;font-size:12px;">※ 평가 대상자의 KPI 항목입니다</span>`;
+  document.getElementById('mgr-person-info').classList.remove('hidden');
+  document.getElementById('mgr-form-container').classList.remove('hidden');
+
+  const mgrAutoToggle = document.getElementById('mgr-auto-toggle');
+  if (emp.type === 'annual') {
+    mgrAutoToggle.classList.remove('hidden');
+    document.querySelector('input[name="mgr-auto"][value="yes"]').checked = true;
+  } else {
+    mgrAutoToggle.classList.add('hidden');
+  }
+
+  const criteria = getEffectiveCriteria(emp, 'mgr');
+  renderKpiTable('mgr-kpi-body', 'mgr-total-display', criteria, 'mgr');
+  document.getElementById('mgr-submit-msg').classList.add('hidden');
+}
+
+// ── 팀장 피드백 제출 ─────────────────────────────
+async function submitManagerFeedback() {
+  const evaluatorName = document.getElementById('mgr-evaluator-select').value;
+  const targetName    = document.getElementById('mgr-target-select').value;
+  const emp = getEmployee(targetName);
+
+  if (!evaluatorName) return alert('평가자(팀장) 이름을 선택해주세요.');
+  if (!targetName) return alert('평가 대상자(팀원) 이름을 선택해주세요.');
+  if (evaluatorName === targetName) return alert('본인 평가는 자기평가 메뉴를 이용해주세요.');
+
+  const criteria = getEffectiveCriteria(emp, 'mgr');
+  const scores = {};
+  criteria.forEach(item => {
+    scores[item.id] = parseInt(document.getElementById(`mgr-input-${item.id}`)?.value || 0);
+  });
+
+  const mgrAutoRadio = document.querySelector('input[name="mgr-auto"]:checked');
+  const autoParticipation = emp.type !== 'annual' ? null : (!mgrAutoRadio || mgrAutoRadio.value === 'yes');
+
+  const payload = {
+    evaluatorName, targetName,
+    targetTeam: emp.team,
+    targetRank: emp.rank,
+    targetType: emp.type,
+    scores,
+    autoParticipation,
+    strengths:     document.getElementById('mgr-strengths').value,
+    improvements:  document.getElementById('mgr-improvements').value,
+    overall:       document.getElementById('mgr-overall').value,
+    goals:         document.getElementById('mgr-goals').value,
+    interviewDate: document.getElementById('mgr-interview-date').value,
+    timestamp:     new Date().toISOString()
+  };
+
+  try {
+    const result = await apiPost('manager-feedback', payload);
+    const msgEl = document.getElementById('mgr-submit-msg');
+    if (result.success) {
+      msgEl.className = 'alert alert-success';
+      msgEl.textContent = `✅ ${result.message}`;
+      msgEl.classList.remove('hidden');
+      window.scrollTo(0, 0);
+    } else {
+      msgEl.className = 'alert alert-error';
+      msgEl.textContent = `❌ 오류: ${result.error}`;
+      msgEl.classList.remove('hidden');
+    }
+  } catch(e) {
+    alert('서버 연결 오류. Google Apps Script 웹 앱 URL을 확인하세요.\n\n' + e.message);
+  }
+}
+
+// ── 관리자 로그인 ─────────────────────────────────
+let adminToken = null;
+
+async function adminLogin() {
+  const pw = document.getElementById('admin-pw').value;
+  try {
+    const result = await apiPost('admin-login', { password: pw });
+    if (result.success) {
+      adminToken = result.token;
+      document.getElementById('admin-login').classList.add('hidden');
+      document.getElementById('admin-dashboard').classList.remove('hidden');
+      loadAdminDashboard();
+    } else {
+      const err = document.getElementById('admin-login-err');
+      err.textContent = '❌ ' + (result.error || '비밀번호가 올바르지 않습니다.');
+      err.classList.remove('hidden');
+    }
+  } catch(e) {
+    alert('서버 연결 오류. Google Apps Script 웹 앱 URL을 확인하세요.\n\n' + e.message);
+  }
+}
+
+function adminLogout() {
+  adminToken = null;
+  document.getElementById('admin-login').classList.remove('hidden');
+  document.getElementById('admin-dashboard').classList.add('hidden');
+  document.getElementById('admin-pw').value = '';
+}
+
+// ── Google Sheets 응답 → 렌더링 형식 변환 ──────────
+function transformAdminData(selfEvals, mgrEvals) {
+  const evaluations = {};
+
+  selfEvals.forEach(row => {
+    const name = row['성명'];
+    if (!name) return;
+    evaluations[name] = evaluations[name] || {};
+    evaluations[name].selfEval = {
+      submitted: true,
+      scores: {
+        mes:  Number(row['MES/자동화']) || 0,
+        kpi1: Number(row['KPI1'])      || 0,
+        kpi2: Number(row['KPI2'])      || 0,
+        kpi3: Number(row['KPI3'])      || 0,
+        h1:   Number(row['사훈1'])     || 0,
+        h2:   Number(row['사훈2'])     || 0,
+        h3:   Number(row['사훈3'])     || 0,
+      },
+      total: Number(row['합계']) || 0,
+      comment: {
+        achievement: row['주요성과'] || '',
+        improvement: row['아쉬운점'] || '',
+        request:     row['건의사항'] || '',
+      },
+      timestamp: row['제출시간'] || '',
+    };
+  });
+
+  mgrEvals.forEach(row => {
+    const name = row['피평가자'];
+    if (!name) return;
+    evaluations[name] = evaluations[name] || {};
+    evaluations[name].managerEval = {
+      submitted: true,
+      evaluatorName: row['평가자'] || '',
+      scores: {
+        mes:  Number(row['MES/자동화']) || 0,
+        kpi1: Number(row['KPI1'])      || 0,
+        kpi2: Number(row['KPI2'])      || 0,
+        kpi3: Number(row['KPI3'])      || 0,
+        h1:   Number(row['사훈1'])     || 0,
+        h2:   Number(row['사훈2'])     || 0,
+        h3:   Number(row['사훈3'])     || 0,
+      },
+      total:        Number(row['합계']) || 0,
+      strengths:    row['강점']      || '',
+      improvements: row['개선점']    || '',
+      overall:      row['종합의견']  || '',
+      goals:        row['하반기목표'] || '',
+      interviewDate: row['면담예정일'] || '',
+      timestamp:    row['제출시간'] || '',
+    };
+  });
+
+  return { evaluations };
+}
+
+// ── 관리자 대시보드 로드 ──────────────────────────
+async function loadAdminDashboard() {
+  try {
+    const result = await apiGet('admin-results');
+    const data = result.data || { selfEvals: [], mgrEvals: [] };
+    const transformed = transformAdminData(data.selfEvals || [], data.mgrEvals || []);
+    renderAdminStats(transformed);
+    renderAdminAll(transformed);
+    renderAdminTeam(transformed);
+    renderAdminIncomplete(transformed);
+  } catch(e) {
+    console.error('[대시보드 로드 오류]', e);
+  }
+}
+
+function calcScores(evalData) {
+  if (!evalData?.submitted) return null;
+  if (evalData.total != null) return Number(evalData.total);
+  if (!evalData.scores) return null;
+  return Object.values(evalData.scores).reduce((a, b) => a + Number(b), 0);
+}
+
+function getGrade(score) {
+  if (score === null || score === undefined || isNaN(score)) return '-';
+  if (score >= 95) return 'S';
+  if (score >= 85) return 'A';
+  if (score >= 75) return 'B';
+  if (score >= 65) return 'C';
+  return 'D';
+}
+
+function renderAdminStats(data) {
+  const total = ALL_EMPLOYEES.length;
+  let selfDone = 0, mgrDone = 0, bothDone = 0;
+  ALL_EMPLOYEES.forEach(e => {
+    const d = data.evaluations[e.name];
+    const s = d?.selfEval?.submitted;
+    const m = d?.managerEval?.submitted;
+    if (s) selfDone++;
+    if (m) mgrDone++;
+    if (s && m) bothDone++;
+  });
+
+  document.getElementById('admin-stats').innerHTML = `
+    <div class="admin-stat-card blue">
+      <div class="big-num">${total}</div><div class="label">전체 평가 대상</div>
+    </div>
+    <div class="admin-stat-card green">
+      <div class="big-num">${selfDone}</div><div class="label">자기평가 완료</div>
+    </div>
+    <div class="admin-stat-card orange">
+      <div class="big-num">${mgrDone}</div><div class="label">팀장 피드백 완료</div>
+    </div>
+    <div class="admin-stat-card ${bothDone===total?'green':'red'}">
+      <div class="big-num">${bothDone}</div><div class="label">최종 완료 (양쪽 모두)</div>
+    </div>`;
+}
+
+function renderAdminAll(data) {
+  const tbody = document.getElementById('admin-all-body');
+  tbody.innerHTML = '';
+  ALL_EMPLOYEES.forEach(emp => {
+    const d = data.evaluations[emp.name] || {};
+    const selfScore = calcScores(d.selfEval);
+    const mgrScore  = calcScores(d.managerEval);
+    const combined  = (selfScore !== null && mgrScore !== null)
+      ? Math.round(selfScore * 0.4 + mgrScore * 0.6) : null;
+    const grade = getGrade(combined);
+
+    tbody.insertAdjacentHTML('beforeend', `
+      <tr>
+        <td>${emp.team}</td>
+        <td><strong>${emp.name}</strong></td>
+        <td>${emp.rank}</td>
+        <td><span class="tag tag-${emp.type}">${emp.type==='annual'?'연봉':'시급'}</span></td>
+        <td>${selfScore !== null ? `<span class="score-${getScoreClass(selfScore)}">${selfScore}점</span>` : '-'}</td>
+        <td>${mgrScore  !== null ? `<span class="score-${getScoreClass(mgrScore)}">${mgrScore}점</span>`  : '-'}</td>
+        <td>${combined  !== null ? `<strong>${combined}점</strong>` : '-'}</td>
+        <td>${combined !== null ? `<span class="grade ${grade}">${grade}</span>` : '-'}</td>
+        <td>${d.selfEval?.submitted ? '<span class="done-check">✅</span>' : '<span class="pending-icon">⏳</span>'}</td>
+        <td>${d.managerEval?.submitted ? '<span class="done-check">✅</span>' : '<span class="pending-icon">⏳</span>'}</td>
+        <td><button class="btn btn-outline btn-sm" onclick="showDetail('${emp.name}')">상세</button></td>
+      </tr>`);
+  });
+}
+
+function getScoreClass(s) {
+  if (s >= 90) return 'excellent';
+  if (s >= 75) return 'good';
+  if (s >= 60) return 'average';
+  return 'poor';
+}
+
+function renderAdminTeam(data) {
+  const teams = getEmployeesByTeam();
+  let html = '';
+  Object.entries(teams).forEach(([team, emps]) => {
+    let scores = [];
+    emps.forEach(emp => {
+      const d = data.evaluations[emp.name] || {};
+      const s = calcScores(d.selfEval);
+      const m = calcScores(d.managerEval);
+      const c = (s !== null && m !== null) ? Math.round(s*0.4+m*0.6) : null;
+      if (c !== null) scores.push(c);
+    });
+    const avg = scores.length ? Math.round(scores.reduce((a,b)=>a+b,0)/scores.length) : '-';
+    html += `
+      <div class="card" style="margin-bottom:16px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+          <strong style="font-size:15px;color:#1F3864;">${team}</strong>
+          <span style="font-size:13px;color:#718096;">
+            ${emps.length}명 | 팀 평균: <strong style="color:#1F3864;">${avg}점</strong>
+          </span>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;">
+          ${emps.map(emp => {
+            const d = data.evaluations[emp.name] || {};
+            const s = calcScores(d.selfEval);
+            const m = calcScores(d.managerEval);
+            const c = (s!==null&&m!==null) ? Math.round(s*0.4+m*0.6) : null;
+            const g = getGrade(c);
+            return `<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px 14px;min-width:140px;">
+              <div style="font-weight:bold;font-size:13px;">${emp.name}</div>
+              <div style="font-size:11px;color:#718096;">${emp.rank}</div>
+              <div style="margin-top:6px;">
+                ${c!==null ? `<span class="grade ${g}" style="font-size:14px;">${g}</span>
+                <span style="font-size:13px;margin-left:6px;font-weight:bold;">${c}점</span>` : '<span style="color:#a0aec0;font-size:12px;">미완료</span>'}
+              </div>
+            </div>`;
+          }).join('')}
+        </div>
+      </div>`;
+  });
+  document.getElementById('admin-team-content').innerHTML = html;
+}
+
+function renderAdminIncomplete(data) {
+  const incomplete = ALL_EMPLOYEES.filter(emp => {
+    const d = data.evaluations[emp.name] || {};
+    return !d.selfEval?.submitted || !d.managerEval?.submitted;
+  });
+
+  if (incomplete.length === 0) {
+    document.getElementById('admin-incomplete-content').innerHTML =
+      '<div class="alert alert-success">🎉 모든 인원의 평가가 완료되었습니다!</div>';
+    return;
+  }
+
+  let rows = '';
+  incomplete.forEach(emp => {
+    const d = data.evaluations[emp.name] || {};
+    rows += `
+      <tr>
+        <td>${emp.team}</td><td><strong>${emp.name}</strong></td><td>${emp.rank}</td>
+        <td>${d.selfEval?.submitted ? '✅' : '⏳ 미완료'}</td>
+        <td>${d.managerEval?.submitted ? '✅' : '⏳ 미완료'}</td>
+      </tr>`;
+  });
+
+  document.getElementById('admin-incomplete-content').innerHTML = `
+    <div class="alert alert-warning">⚠️ 미완료 인원: ${incomplete.length}명</div>
+    <div class="card" style="overflow-x:auto;padding:0;">
+      <table class="result-table">
+        <thead><tr><th>팀</th><th>성명</th><th>직급</th><th>자기평가</th><th>팀장 피드백</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>`;
+}
+
+// ── 상세 모달 ─────────────────────────────────────
+let adminData = null;
+async function showDetail(name) {
+  if (!adminData) {
+    const result = await apiGet('admin-results');
+    const data = result.data || { selfEvals: [], mgrEvals: [] };
+    adminData = transformAdminData(data.selfEvals || [], data.mgrEvals || []);
+  }
+  const emp = getEmployee(name);
+  const d = adminData.evaluations[name] || {};
+  const criteria = emp.type === 'annual' ? emp.kpis : HOURLY_CRITERIA;
+
+  const selfTotal = calcScores(d.selfEval);
+  const mgrTotal  = calcScores(d.managerEval);
+  const combined  = (selfTotal!==null&&mgrTotal!==null) ? Math.round(selfTotal*0.4+mgrTotal*0.6) : null;
+
+  let kpiRows = '';
+  criteria.forEach(item => {
+    const ss = d.selfEval?.scores?.[item.id] ?? '-';
+    const ms = d.managerEval?.scores?.[item.id] ?? '-';
+    kpiRows += `<tr>
+      <td>${item.label}</td>
+      <td style="text-align:center;">${ss} / ${item.max}</td>
+      <td style="text-align:center;">${ms} / ${item.max}</td>
+    </tr>`;
+  });
+
+  document.getElementById('modal-title').textContent = `${name} (${emp.team} / ${emp.rank}) 상세 결과`;
+  document.getElementById('modal-content').innerHTML = `
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px;">
+      <div style="text-align:center;padding:16px;background:#f0f4f8;border-radius:10px;">
+        <div style="font-size:24px;font-weight:bold;color:#2E75B6;">${selfTotal ?? '-'}점</div>
+        <div style="font-size:12px;color:#718096;">자기평가 (40%)</div>
+      </div>
+      <div style="text-align:center;padding:16px;background:#f0f4f8;border-radius:10px;">
+        <div style="font-size:24px;font-weight:bold;color:#70AD47;">${mgrTotal ?? '-'}점</div>
+        <div style="font-size:12px;color:#718096;">팀장평가 (60%)</div>
+      </div>
+      <div style="text-align:center;padding:16px;background:#1F3864;border-radius:10px;">
+        <div style="font-size:28px;font-weight:bold;color:white;">${combined ?? '-'}점</div>
+        <div style="font-size:12px;color:#BDD7EE;">종합 점수 / 등급: ${getGrade(combined)}</div>
+      </div>
+    </div>
+
+    <table class="kpi-table" style="font-size:12px;">
+      <thead>
+        <tr><th>항목</th><th>자기평가</th><th>팀장평가</th></tr>
+      </thead>
+      <tbody>${kpiRows}</tbody>
+    </table>
+
+    ${d.selfEval?.comment ? `
+    <div style="margin-top:16px;padding:14px;background:#f8fafc;border-radius:8px;">
+      <strong>📝 자기평가 코멘트</strong>
+      <p style="font-size:13px;margin-top:8px;color:#4a5568;">${d.selfEval.comment.achievement || '-'}</p>
+    </div>` : ''}
+
+    ${d.managerEval ? `
+    <div style="margin-top:16px;padding:14px;background:#f0fff4;border-radius:8px;">
+      <strong>💬 팀장 피드백 (by ${d.managerEval.evaluatorName})</strong>
+      <div style="font-size:13px;margin-top:8px;color:#4a5568;">
+        <p><strong>강점:</strong> ${d.managerEval.strengths || '-'}</p>
+        <p style="margin-top:8px;"><strong>개선점:</strong> ${d.managerEval.improvements || '-'}</p>
+        <p style="margin-top:8px;"><strong>종합의견:</strong> ${d.managerEval.overall || '-'}</p>
+        <p style="margin-top:8px;"><strong>하반기 목표:</strong> ${d.managerEval.goals || '-'}</p>
+      </div>
+    </div>` : ''}
+  `;
+
+  document.getElementById('detail-modal').classList.remove('hidden');
+  adminData = null;
+}
+
+function closeModal() {
+  document.getElementById('detail-modal').classList.add('hidden');
+}
+
+// ── 관리자 탭 전환 ───────────────────────────────
+function showAdminTab(tab) {
+  ['all','team','incomplete'].forEach(t => {
+    document.getElementById('admin-tab-'+t).classList.toggle('hidden', t !== tab);
+  });
+  document.querySelectorAll('.tabs .tab').forEach((btn, i) => {
+    btn.classList.toggle('active', ['all','team','incomplete'][i] === tab);
+  });
+}
+
+// ── CSV 내보내기 (클라이언트사이드) ─────────────────
+async function exportCSV() {
+  try {
+    const result = await apiGet('admin-results');
+    const data = result.data || { selfEvals: [], mgrEvals: [] };
+    const transformed = transformAdminData(data.selfEvals || [], data.mgrEvals || []);
+
+    const mgrMap = {};
+    (data.mgrEvals || []).forEach(r => { mgrMap[r['피평가자']] = r; });
+
+    let csv = '\uFEFF';
+    csv += '팀,성명,직급,구분,자기평가합계,팀장평가합계,종합점수,강점,개선점,종합의견\n';
+
+    ALL_EMPLOYEES.forEach(emp => {
+      const d = transformed.evaluations[emp.name] || {};
+      const st = calcScores(d.selfEval) || 0;
+      const mt = calcScores(d.managerEval) || 0;
+      const combined = st && mt ? Math.round(st * 0.4 + mt * 0.6) : '';
+      const m = d.managerEval || {};
+      const row = [
+        emp.team, emp.name, emp.rank, emp.type === 'annual' ? '연봉직' : '시급직',
+        st || '', mt || '', combined,
+        (m.strengths    ||'').replace(/\n/g,' '),
+        (m.improvements ||'').replace(/\n/g,' '),
+        (m.overall      ||'').replace(/\n/g,' '),
+      ];
+      csv += row.map(v => `"${v}"`).join(',') + '\n';
+    });
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = '2026_인사평가결과.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+  } catch(e) {
+    alert('CSV 내보내기 실패: ' + e.message);
+  }
+}
+
+// ── 초기화 ────────────────────────────────────────
+window.onload = () => {
+  showPage('home');
+};
+</script>
+</body>
+</html>

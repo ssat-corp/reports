@@ -1,0 +1,338 @@
+/* ── 기본 설정 ─────────────────────────────────── */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+  background: #f0f4f8;
+  color: #1a202c;
+  min-height: 100vh;
+}
+
+/* ── 상단 헤더 ──────────────────────────────────── */
+header {
+  background: linear-gradient(135deg, #1F3864 0%, #2E75B6 100%);
+  color: white;
+  padding: 16px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  position: sticky; top: 0; z-index: 100;
+}
+header .logo { font-size: 18px; font-weight: bold; letter-spacing: 1px; }
+header .logo span { color: #BDD7EE; font-size: 13px; display: block; font-weight: normal; }
+header nav { display: flex; gap: 8px; }
+header nav button {
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.3);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-family: inherit;
+  transition: all 0.2s;
+}
+header nav button:hover { background: rgba(255,255,255,0.3); }
+header nav button.active { background: white; color: #1F3864; font-weight: bold; }
+
+/* ── 메인 콘텐츠 ────────────────────────────────── */
+main { max-width: 1100px; margin: 0 auto; padding: 32px 16px; }
+
+/* ── 홈 화면 ────────────────────────────────────── */
+.home-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 16px;
+}
+.home-card {
+  background: white;
+  border-radius: 16px;
+  padding: 40px 32px;
+  text-align: center;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  cursor: pointer;
+  transition: all 0.3s;
+  border: 2px solid transparent;
+}
+.home-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.15); }
+.home-card.self:hover { border-color: #2E75B6; }
+.home-card.manager:hover { border-color: #70AD47; }
+.home-card.admin:hover { border-color: #ED7D31; }
+.home-card .icon { font-size: 48px; margin-bottom: 16px; }
+.home-card h2 { font-size: 18px; margin-bottom: 8px; color: #1F3864; }
+.home-card p { font-size: 13px; color: #718096; line-height: 1.6; }
+.home-card .badge {
+  display: inline-block; margin-top: 16px;
+  padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: bold;
+}
+.home-card.self .badge { background: #BDD7EE; color: #1F3864; }
+.home-card.manager .badge { background: #E2EFDA; color: #375623; }
+.home-card.admin .badge { background: #FCE4D6; color: #843C0C; }
+
+/* ── 진행 현황 바 ───────────────────────────────── */
+.status-summary {
+  background: white;
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+.status-summary .stat { text-align: center; }
+.status-summary .stat .num { font-size: 28px; font-weight: bold; color: #1F3864; }
+.status-summary .stat .label { font-size: 12px; color: #718096; }
+.progress-bar-wrap { flex: 1; }
+.progress-bar-wrap .pb-label { font-size: 13px; color: #4a5568; margin-bottom: 6px; }
+.progress-bar { height: 12px; background: #e2e8f0; border-radius: 6px; overflow: hidden; margin-bottom: 8px; }
+.progress-bar .fill { height: 100%; border-radius: 6px; transition: width 0.5s; }
+.progress-bar .fill.self { background: #2E75B6; }
+.progress-bar .fill.mgr  { background: #70AD47; }
+
+/* ── 섹션 타이틀 ────────────────────────────────── */
+.section-title {
+  font-size: 20px; font-weight: bold; color: #1F3864;
+  margin-bottom: 20px; padding-bottom: 8px;
+  border-bottom: 3px solid #2E75B6;
+  display: flex; align-items: center; gap: 8px;
+}
+
+/* ── 카드 ─────────────────────────────────────────── */
+.card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  padding: 24px;
+  margin-bottom: 20px;
+}
+
+/* ── 폼 요소 ─────────────────────────────────────── */
+.form-group { margin-bottom: 16px; }
+.form-group label { display: block; font-size: 13px; font-weight: bold; color: #4a5568; margin-bottom: 6px; }
+.form-group select, .form-group input, .form-group textarea {
+  width: 100%; padding: 10px 12px;
+  border: 1px solid #e2e8f0; border-radius: 8px;
+  font-size: 14px; font-family: inherit;
+  transition: border-color 0.2s;
+  background: #f8fafc;
+}
+.form-group select:focus, .form-group input:focus, .form-group textarea:focus {
+  outline: none; border-color: #2E75B6; background: white;
+}
+.form-group textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
+
+/* ── 점수 입력 테이블 ───────────────────────────── */
+.kpi-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+.kpi-table th {
+  background: #1F3864; color: white; padding: 10px 14px;
+  text-align: left; font-size: 13px;
+}
+.kpi-table td {
+  padding: 10px 14px; border-bottom: 1px solid #e2e8f0;
+  font-size: 13px; vertical-align: middle;
+}
+.kpi-table tr:nth-child(even) td { background: #f8fafc; }
+.kpi-table tr:hover td { background: #eef2ff; }
+.kpi-table .category-badge {
+  display: inline-block; padding: 2px 8px; border-radius: 10px;
+  font-size: 11px; font-weight: bold; margin-right: 6px;
+}
+.category-badge.직무역량 { background: #BDD7EE; color: #1F3864; }
+.category-badge.사훈실천 { background: #E2EFDA; color: #375623; }
+.category-badge.태도안전 { background: #FFF2CC; color: #7F6000; }
+.category-badge.사훈ESG  { background: #E2EFDA; color: #375623; }
+
+.score-input {
+  width: 70px; padding: 6px 8px; text-align: center;
+  border: 1px solid #cbd5e0; border-radius: 6px;
+  font-size: 14px; font-weight: bold; color: #1F3864;
+}
+.score-input:focus { outline: none; border-color: #2E75B6; }
+.max-score { color: #a0aec0; font-size: 12px; margin-left: 4px; }
+
+/* ── 슬라이더 + 숫자 ────────────────────────────── */
+.score-row { display: flex; align-items: center; gap: 8px; }
+.score-slider { flex: 1; accent-color: #2E75B6; cursor: pointer; }
+
+/* ── 버튼 ─────────────────────────────────────────── */
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 10px 24px; border-radius: 8px; border: none;
+  font-size: 14px; font-weight: bold; font-family: inherit;
+  cursor: pointer; transition: all 0.2s;
+}
+.btn-primary { background: #1F3864; color: white; }
+.btn-primary:hover { background: #2E75B6; }
+.btn-success { background: #70AD47; color: white; }
+.btn-success:hover { background: #548235; }
+.btn-warning { background: #ED7D31; color: white; }
+.btn-warning:hover { background: #C55A11; }
+.btn-outline { background: transparent; color: #1F3864; border: 2px solid #1F3864; }
+.btn-outline:hover { background: #1F3864; color: white; }
+.btn-sm { padding: 6px 14px; font-size: 12px; }
+
+/* ── 알림 ─────────────────────────────────────────── */
+.alert {
+  padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; font-size: 13px;
+}
+.alert-success { background: #E2EFDA; color: #375623; border: 1px solid #A9D18E; }
+.alert-error   { background: #FFE2E2; color: #822727; border: 1px solid #FC8181; }
+.alert-info    { background: #BDD7EE; color: #1F3864; border: 1px solid #2E75B6; }
+.alert-warning { background: #FFF2CC; color: #7F6000; border: 1px solid #FFD966; }
+
+/* ── 관리자 대시보드 ────────────────────────────── */
+.admin-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.admin-stat-card {
+  background: white; border-radius: 12px; padding: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06); text-align: center;
+}
+.admin-stat-card .big-num { font-size: 36px; font-weight: bold; }
+.admin-stat-card .label   { font-size: 13px; color: #718096; margin-top: 4px; }
+.admin-stat-card.blue  .big-num { color: #1F3864; }
+.admin-stat-card.green .big-num { color: #70AD47; }
+.admin-stat-card.orange .big-num { color: #ED7D31; }
+.admin-stat-card.red    .big-num { color: #E53E3E; }
+
+.result-table {
+  width: 100%; border-collapse: collapse; font-size: 13px;
+  background: white;
+}
+.result-table th {
+  background: #1F3864; color: white; padding: 10px 12px;
+  text-align: center; position: sticky; top: 60px;
+}
+.result-table td { padding: 9px 12px; border-bottom: 1px solid #e2e8f0; text-align: center; }
+.result-table tr:hover td { background: #eef2ff; }
+.result-table .grade {
+  display: inline-block; padding: 2px 10px; border-radius: 10px;
+  font-weight: bold; font-size: 12px;
+}
+.grade.S { background: #FFF2CC; color: #7F6000; }
+.grade.A { background: #E2EFDA; color: #375623; }
+.grade.B { background: #BDD7EE; color: #1F3864; }
+.grade.C { background: #FCE4D6; color: #843C0C; }
+.grade.D { background: #FFE2E2; color: #822727; }
+
+/* ── 탭 ──────────────────────────────────────────── */
+.tabs { display: flex; gap: 4px; margin-bottom: 20px; border-bottom: 2px solid #e2e8f0; }
+.tab {
+  padding: 10px 20px; border: none; background: none;
+  font-size: 14px; font-family: inherit; cursor: pointer;
+  border-bottom: 3px solid transparent; margin-bottom: -2px;
+  color: #718096; transition: all 0.2s;
+}
+.tab.active { border-bottom-color: #2E75B6; color: #1F3864; font-weight: bold; }
+.tab:hover { color: #2E75B6; }
+
+/* ── 점수 색상 ──────────────────────────────────── */
+.score-excellent { color: #375623; font-weight: bold; }
+.score-good      { color: #1F3864; font-weight: bold; }
+.score-average   { color: #7F6000; }
+.score-poor      { color: #822727; }
+
+/* ── 비밀번호 화면 ──────────────────────────────── */
+.login-wrap {
+  max-width: 400px; margin: 60px auto;
+  background: white; border-radius: 16px; padding: 40px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.1); text-align: center;
+}
+.login-wrap .icon { font-size: 48px; margin-bottom: 16px; }
+.login-wrap h2 { font-size: 20px; color: #1F3864; margin-bottom: 8px; }
+.login-wrap p  { font-size: 13px; color: #718096; margin-bottom: 24px; }
+
+/* ── 반응형 ─────────────────────────────────────── */
+@media (max-width: 768px) {
+  .home-grid { grid-template-columns: 1fr; }
+  .admin-stats { grid-template-columns: repeat(2, 1fr); }
+  header { flex-direction: column; gap: 12px; }
+  header nav { flex-wrap: wrap; justify-content: center; }
+}
+
+/* ── 유틸 ────────────────────────────────────────── */
+.hidden { display: none !important; }
+.mt-8   { margin-top: 8px; }
+.mt-16  { margin-top: 16px; }
+.mt-24  { margin-top: 24px; }
+.flex   { display: flex; }
+.gap-16 { gap: 16px; }
+.flex-1 { flex: 1; }
+.text-right { text-align: right; }
+.text-muted { color: #718096; font-size: 12px; }
+.tag {
+  display: inline-block; padding: 2px 8px; border-radius: 10px;
+  font-size: 11px; font-weight: bold;
+}
+.tag-annual { background: #BDD7EE; color: #1F3864; }
+.tag-hourly { background: #E2EFDA; color: #375623; }
+.done-check { color: #70AD47; font-size: 16px; }
+.pending-icon { color: #ED7D31; font-size: 16px; }
+
+/* ── 등급 버튼 (S/A/B/C/D) ─────────────────────── */
+.grade-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 6px;
+}
+
+.grade-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  padding: 6px 4px;
+  border: 2px solid var(--gc, #ccc);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--gc, #555);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: inherit;
+  line-height: 1.3;
+}
+.grade-btn:hover {
+  background: var(--gc, #eee);
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+}
+.grade-btn.selected {
+  background: var(--gc, #555);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+  transform: translateY(-1px);
+}
+.grade-btn .g-letter {
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 1;
+}
+.grade-btn .g-label {
+  font-size: 9px;
+  margin-top: 2px;
+  opacity: 0.85;
+}
+.grade-btn .g-pts {
+  font-size: 10px;
+  font-weight: 600;
+  margin-top: 1px;
+}
+
+.grade-selected {
+  font-size: 11px;
+  color: #a0aec0;
+  margin-top: 4px;
+  min-height: 16px;
+}
+
+/* 기존 score-row 숨김 (혹시 남아있을 경우) */
+.score-slider { display: none; }
