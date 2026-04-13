@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>2026 신성오토텍 성과관리 및 직무지원 시스템(PMS) 안내</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans KR', '맑은 고딕', sans-serif;
+    background: #F0F4F8;
+    padding: 32px 20px 60px;
+    color: #1A202C;
+  }
+
+  h1.page-title {
+    text-align: center;
+    font-size: 15px;
+    font-weight: 500;
+    color: #718096;
+    margin-bottom: 32px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  /* ── 카드 공통 ── */
+  .card {
+    max-width: 680px;
+    margin: 0 auto 28px;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+  }
+
+  .card-header {
+    padding: 28px 32px 22px;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .card-icon {
+    font-size: 36px;
+    line-height: 1;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .card-header-text {}
+  .card-tag {
+    display: inline-block;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-bottom: 8px;
+    opacity: 0.85;
+  }
+  .card-title {
+    font-size: 14px;
+    font-weight: 500;
+    opacity: 0.75;
+    margin-bottom: 6px;
+    line-height: 1.4;
+  }
+  .card-main {
+    font-size: 22px;
+    font-weight: 900;
+    line-height: 1.35;
+  }
+  .card-subtitle {
+    font-size: 15px;
+    margin-top: 6px;
+    opacity: 0.8;
+    font-weight: 400;
+    line-height: 1.6;
+  }
+  .card-body {
+    padding: 0 32px 28px;
+  }
+
+  /* ── CARD 1: 목적 ── */
+  .card-1 .card-header { background: #1F3864; color: #fff; }
+  .card-1 .card-tag    { background: rgba(255,255,255,0.2); color: #fff; }
+  .card-1 .card-body   { background: #fff; }
+
+  .purpose-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 4px;
+  }
+  .purpose-item {
+    background: #F7FAFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+    padding: 14px 16px;
+  }
+  .purpose-item .p-icon { font-size: 22px; margin-bottom: 6px; }
+  .purpose-item .p-title {
+    font-size: 15px; font-weight: 700; color: #1F3864; margin-bottom: 4px;
+  }
+  .purpose-item .p-desc {
+    font-size: 15px; color: #4A5568; line-height: 1.6;
+  }
+  .purpose-note {
+    margin-top: 14px;
+    background: #EBF4FF;
+    border-left: 4px solid #2E75B6;
+    padding: 10px 14px;
+    font-size: 15px;
+    color: #2C5282;
+    border-radius: 0 8px 8px 0;
+    line-height: 1.7;
+  }
+
+  /* ── CARD 2: 방향성 ── */
+  .card-2 .card-header { background: #276749; color: #fff; }
+  .card-2 .card-tag    { background: rgba(255,255,255,0.2); color: #fff; }
+  .card-2 .card-body   { background: #fff; }
+
+  .flow-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+  }
+  .flow-box {
+    flex: 1;
+    min-width: 120px;
+    text-align: center;
+    padding: 12px 10px;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 700;
+  }
+  .flow-arrow { font-size: 18px; color: #A0AEC0; flex-shrink: 0; }
+
+  .f-d { background: #FFF5F5; color: #C00000; border: 2px solid #FED7D7; }
+  .f-c { background: #FFFFF0; color: #7F6000; border: 2px solid #FAF089; }
+  .f-b { background: #EEF2FF; color: #5a6ea8; border: 2px solid #C3DAFE; }
+  .f-a { background: #EBF8FF; color: #2E75B6; border: 2px solid #BEE3F8; }
+  .f-s { background: #F0FFF4; color: #1a6634; border: 2px solid #9AE6B4; }
+
+  .flow-box .fb-grade { font-size: 18px; font-weight: 900; display: block; }
+  .flow-box .fb-name  { font-size: 15px; display: block; margin-top: 2px; }
+  .flow-box .fb-key   { font-size: 15px; font-weight: 400; display: block; margin-top: 3px; opacity: 0.8; }
+
+  .philosophy-box {
+    margin-top: 14px;
+    background: linear-gradient(135deg, #F0FFF4 0%, #EBF8FF 100%);
+    border: 1px solid #9AE6B4;
+    border-radius: 12px;
+    padding: 14px 18px;
+    font-size: 15px;
+    color: #276749;
+    font-weight: 600;
+    text-align: center;
+    line-height: 1.8;
+  }
+  .philosophy-box span { font-size: 15px; font-weight: 400; color: #4A5568; display: block; margin-top: 4px; }
+
+  /* ── CARD 3: 점수 구조 ── */
+  .card-3 .card-header { background: #2E75B6; color: #fff; }
+  .card-3 .card-tag    { background: rgba(255,255,255,0.2); color: #fff; }
+  .card-3 .card-body   { background: #fff; }
+
+  .score-visual {
+    display: flex;
+    gap: 8px;
+    align-items: flex-end;
+    margin-bottom: 14px;
+  }
+  .score-bar-wrap {
+    flex: 1;
+    text-align: center;
+  }
+  .score-bar-label {
+    font-size: 15px;
+    color: #718096;
+    margin-bottom: 4px;
+    font-weight: 500;
+  }
+  .score-bar {
+    border-radius: 8px 8px 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-weight: 900;
+    font-size: 15px;
+  }
+  .score-bar-pts {
+    font-size: 15px;
+    color: #4A5568;
+    margin-top: 4px;
+    font-weight: 600;
+  }
+
+  .score-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .score-item {
+    flex: 1;
+    padding: 10px 12px;
+    border-radius: 10px;
+    text-align: center;
+  }
+  .score-item .si-num  { font-size: 20px; font-weight: 900; }
+  .score-item .si-name { font-size: 15px; margin-top: 2px; opacity: 0.85; }
+  .score-item .si-desc { font-size: 15px; color: #4A5568; margin-top: 4px; }
+
+  .si-kpi1  { background: #EBF4FF; color: #1F3864; }
+  .si-kpi2  { background: #EBF4FF; color: #1F3864; }
+  .si-kpi3  { background: #EBF4FF; color: #1F3864; }
+  .si-hun1  { background: #F3E8FF; color: #553C9A; }
+  .si-hun2  { background: #F3E8FF; color: #553C9A; }
+  .si-hun3  { background: #F3E8FF; color: #553C9A; }
+
+  .score-total {
+    background: #1F3864;
+    color: #fff;
+    border-radius: 12px;
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .score-total .st-left  { font-size: 15px; }
+  .score-total .st-right { font-size: 28px; font-weight: 900; }
+  .score-total .st-bonus {
+    font-size: 15px;
+    background: #276749;
+    color: #fff;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-left: 8px;
+    font-weight: 600;
+  }
+
+  /* ── CARD 4: 고려 상황 (직원에게) ── */
+  .card-4 .card-header { background: #744210; color: #fff; }
+  .card-4 .card-tag    { background: rgba(255,255,255,0.2); color: #fff; }
+  .card-4 .card-body   { background: #fff; }
+
+  /* ── CARD 4: 채팅 말풍선 ── */
+  .chat-list { margin-top: 4px; }
+  .chat-item { margin-bottom: 18px; }
+  .chat-item:last-child { margin-bottom: 0; }
+
+  .chat-q-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .chat-a-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding-left: 8px;
+  }
+  .chat-avatar {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+    background: #FFF3CD;
+  }
+  .chat-avatar-ans {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+    background: #EBF8FF;
+  }
+  .bubble-q {
+    background: #FFF8E6;
+    border: 1.5px solid #F6C90E;
+    border-radius: 4px 16px 16px 16px;
+    padding: 10px 14px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #2D3748;
+    line-height: 1.5;
+    flex: 1;
+  }
+  .bubble-a {
+    background: #F0F7FF;
+    border: 1.5px solid #BEE3F8;
+    border-radius: 4px 16px 16px 16px;
+    padding: 12px 16px;
+    font-size: 15px;
+    color: #2D3748;
+    line-height: 1.8;
+    flex: 1;
+  }
+  .si-q { display: none; }
+  .si-a { display: none; }
+  .situation-list { display: none; }
+  .si-highlight {
+    display: inline;
+    background: #FFF3CD;
+    border-radius: 4px;
+    padding: 2px 5px;
+    color: #744210;
+    font-weight: 700;
+  }
+
+  /* ── CARD 5: 일정 ── */
+  .card-5 .card-header { background: #553C9A; color: #fff; }
+  .card-5 .card-tag    { background: rgba(255,255,255,0.2); color: #fff; }
+  .card-5 .card-body   { background: #fff; }
+
+  .timeline {
+    position: relative;
+    padding-left: 24px;
+    margin-top: 4px;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 10px; top: 8px; bottom: 8px;
+    width: 2px;
+    background: linear-gradient(to bottom, #553C9A, #2E75B6, #276749);
+    border-radius: 2px;
+  }
+  .tl-item {
+    position: relative;
+    padding: 10px 0 10px 20px;
+  }
+  .tl-item::before {
+    content: '';
+    position: absolute;
+    left: -16px; top: 15px;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    border: 2px solid #553C9A;
+    background: #fff;
+  }
+  .tl-date  { font-size: 15px; color: #718096; font-weight: 600; }
+  .tl-title { font-size: 15px; font-weight: 700; color: #1A202C; margin: 2px 0; }
+  .tl-desc  { font-size: 15px; color: #4A5568; line-height: 1.6; }
+
+  .footer-note {
+    max-width: 680px;
+    margin: 0 auto;
+    text-align: center;
+    font-size: 15px;
+    color: #A0AEC0;
+    padding-top: 8px;
+  }
+
+  /* ── 인트로 박스 ── */
+  .intro-box {
+    max-width: 680px;
+    margin: 0 auto 28px;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+    background: linear-gradient(135deg, #1e3a5f 0%, #2a5298 60%, #1e3a5f 100%);
+    color: #fff;
+    padding: 32px 32px 28px;
+    position: relative;
+  }
+  .intro-box::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 160px; height: 160px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 50%;
+  }
+  .intro-box::after {
+    content: '';
+    position: absolute;
+    bottom: -20px; left: -20px;
+    width: 100px; height: 100px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 50%;
+  }
+  .intro-label {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    opacity: 0.6;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .intro-headline {
+    font-size: 20px;
+    font-weight: 900;
+    line-height: 1.45;
+    margin-bottom: 18px;
+  }
+  .intro-body {
+    font-size: 15px;
+    line-height: 1.9;
+    opacity: 0.88;
+  }
+  .intro-highlight {
+    display: inline;
+    background: rgba(255,215,0,0.25);
+    border-radius: 3px;
+    padding: 1px 5px;
+    color: #FFD700;
+    font-weight: 700;
+  }
+  .intro-divider {
+    border: none;
+    border-top: 1px solid rgba(255,255,255,0.15);
+    margin: 18px 0;
+  }
+  .intro-pms-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 20px;
+    padding: 5px 16px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    margin-top: 4px;
+  }
+
+  @media print {
+    body { background: #fff; padding: 0; }
+    .card { box-shadow: none; border: 1px solid #E2E8F0; break-inside: avoid; margin-bottom: 16px; }
+    .page-title { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<h1 class="page-title">2026 신성오토텍 성과관리 및 직무지원 시스템(PMS) 안내</h1>
+
+<!-- ══════════════════════════════════════
+     INTRO BOX
+════════════════════════════════════════ -->
+<div class="intro-box">
+  <div class="intro-label">📢 신성오토텍 임직원 여러분께</div>
+  <div class="intro-headline">
+    함께해 주셔서 감사합니다.
+  </div>
+  <div class="intro-body">
+    쉽지 않은 환경 속에서도 묵묵히 자리를 지켜주신 덕분에, 회사도 함께 앞으로 나아갈 수 있습니다.<br><br>
+    <span class="intro-highlight">열심히 일하는 분들을 더 잘 들여다보고</span>, 그 노력이 제대로 보이며 서로에게 느껴질 수 있도록 — <b>성과관리 및 직무지원 시스템(PMS)을 함께 시작합니다.</b>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     CARD 1 — 왜 하나요?
+════════════════════════════════════════ -->
+<div class="card card-1">
+  <div class="card-header">
+    <div class="card-icon">🎯</div>
+    <div class="card-header-text">
+      <div class="card-tag">CARD 01 · 도입 목적</div>
+      <div class="card-title">이 시스템, 왜 도입하는 건가요?</div>
+      <div class="card-main">하반기 노력을 제대로 인정받고,<br>2027년 방향을 함께 잡기 위해서입니다.</div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="purpose-grid">
+      <div class="purpose-item">
+        <div class="p-icon">🏅</div>
+        <div class="p-title">노력을 기록으로 남기기</div>
+        <div class="p-desc">말로만 "열심히 했다"가 아니라,<br>실제 한 일이 점수로 남습니다.</div>
+      </div>
+      <div class="purpose-item">
+        <div class="p-icon">💬</div>
+        <div class="p-title">팀장과 솔직하게 대화하기</div>
+        <div class="p-desc">연 1회, 제대로 된<br>1:1 피드백 시간입니다.</div>
+      </div>
+      <div class="purpose-item">
+        <div class="p-icon">📈</div>
+        <div class="p-title">성장 방향 함께 정하기</div>
+        <div class="p-desc">향후의 목표와 지원이<br>필요한 부분을 함께 정합니다.</div>
+      </div>
+      <div class="purpose-item">
+        <div class="p-icon">💰</div>
+        <div class="p-title">보상과 공정하게 연결하기</div>
+        <div class="p-desc">임금·승진 결정의<br>공식 근거가 됩니다.</div>
+      </div>
+    </div>
+    <div class="purpose-note">
+      💡 <b>중요:</b> 이 시스템은 "잘못을 찾는 감사"가 아닙니다.<br>
+      잘한 것은 인정받고, 어려운 점은 드러내어 <b>함께 더 좋게 나아가기</b> 위한 과정입니다.
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     CARD 2 — 어떤 기준으로?
+════════════════════════════════════════ -->
+<div class="card card-2">
+  <div class="card-header">
+    <div class="card-icon">🌱</div>
+    <div class="card-header-text">
+      <div class="card-tag">CARD 02 · 운영 방향성</div>
+      <div class="card-title">점수는 어떻게 정해지나요?</div>
+      <div class="card-main">노력한 과정과 이력이 점수에 반영됩니다.</div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="flow-row">
+      <div class="flow-box f-c">
+        <span class="fb-grade">C</span>
+        <span class="fb-name">노력 단계</span>
+        <span class="fb-key">의지·계획 있음<br>아직 성과 미미</span>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box f-b">
+        <span class="fb-grade">B</span>
+        <span class="fb-name">개선 진행</span>
+        <span class="fb-key">활동 이력 존재<br>성과 가시화 중</span>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box f-a">
+        <span class="fb-grade">A</span>
+        <span class="fb-name">실적 일부</span>
+        <span class="fb-key">핵심 지표 달성<br>이력 문서화됨</span>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box f-s">
+        <span class="fb-grade">S</span>
+        <span class="fb-name">개선 실적</span>
+        <span class="fb-key">전 지표 달성<br>수치로 증명</span>
+      </div>
+    </div>
+    <div class="philosophy-box">
+      "결과가 없어도 진심으로 노력한 과정은 B~C 점수로 인정합니다"
+      <span>단, 구체적인 활동 이력(보고서·기록·건수)이 있어야 더 높은 점수를 받을 수 있습니다.</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     CARD 3 — 점수 구조
+════════════════════════════════════════ -->
+<div class="card card-3">
+  <div class="card-header">
+    <div class="card-icon">📊</div>
+    <div class="card-header-text">
+      <div class="card-tag">CARD 03 · 점수 구조</div>
+      <div class="card-title">총점은 어떻게 계산되나요?</div>
+      <div class="card-main">내 일(KPI) 60점 + 함께 일하는 방식(사훈) 40점<br>= 기본 100점 + 자율보너스 최대 5점</div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="score-row">
+      <div class="score-item si-kpi1">
+        <div class="si-num">20점</div>
+        <div class="si-name">KPI 1</div>
+        <div class="si-desc">내 핵심 업무<br>주요 성과</div>
+      </div>
+      <div class="score-item si-kpi2">
+        <div class="si-num">20점</div>
+        <div class="si-name">KPI 2</div>
+        <div class="si-desc">원가절감·효율화<br>또는 신규실적</div>
+      </div>
+      <div class="score-item si-kpi3">
+        <div class="si-num">20점</div>
+        <div class="si-name">KPI 3</div>
+        <div class="si-desc">품질·안전·<br>프로세스 개선</div>
+      </div>
+      <div class="score-item si-hun1">
+        <div class="si-num">13점</div>
+        <div class="si-name">사훈 1</div>
+        <div class="si-desc">근면성실</div>
+      </div>
+      <div class="score-item si-hun2">
+        <div class="si-num">14점</div>
+        <div class="si-name">사훈 2</div>
+        <div class="si-desc">책임완수</div>
+      </div>
+      <div class="score-item si-hun3">
+        <div class="si-num">13점</div>
+        <div class="si-name">사훈 3</div>
+        <div class="si-desc">인화단결</div>
+      </div>
+    </div>
+    <div class="score-total">
+      <div class="st-left">
+        <div style="font-size: 15px;opacity:0.7;margin-bottom:6px;">자기평가 40% + 팀장평가 60% = 최종 점수</div>
+        <div style="font-size: 16px;font-weight:700;line-height:1.8;">
+          기본 합계 <b style="font-size:20px;">100점</b>
+          &nbsp;+&nbsp; 자율보너스 <b style="font-size:20px;">+5점</b>
+          <span class="st-bonus">A점수 기준</span>
+        </div>
+        <div style="font-size: 15px;opacity:0.6;margin-top:6px;">※ 보너스는 선택사항, 안 해도 불이익 없음</div>
+      </div>
+      <div class="st-right">최대<br><span style="font-size:34px;">105점</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     CARD 4 — 직원들이 알아야 할 것
+════════════════════════════════════════ -->
+<div class="card card-4">
+  <div class="card-header">
+    <div class="card-icon">🙋</div>
+    <div class="card-header-text">
+      <div class="card-tag">CARD 04 · 자주 묻는 것들</div>
+      <div class="card-title">이런 게 걱정되시나요?</div>
+      <div class="card-main">미리 알아두면 더 잘 할 수 있습니다.</div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="chat-list">
+
+      <div class="chat-item">
+        <div class="chat-q-row">
+          <div class="chat-avatar">🙋</div>
+          <div class="bubble-q">바쁘게 일했는데 딱히 "실적"이라 부를 게 없어요.</div>
+        </div>
+        <div class="chat-a-row">
+          <div class="chat-avatar-ans">💼</div>
+          <div class="bubble-a">괜찮습니다. <span class="si-highlight">노력하고 움직인 이력 자체가 점수</span>입니다.
+            보고서, 회의록, 건수 등 기록만 있으면 B~C는 충분히 받습니다.
+            중요한 건 <span class="si-highlight">"무엇을 하고 있고, 어떤 걸 특히 잘했다"</span>는 걸 보여주는 것입니다.</div>
+        </div>
+      </div>
+
+      <div class="chat-item">
+        <div class="chat-q-row">
+          <div class="chat-avatar">😟</div>
+          <div class="bubble-q">내 KPI 목표가 처음부터 너무 어렵게 잡힌 것 같아요.</div>
+        </div>
+        <div class="chat-a-row">
+          <div class="chat-avatar-ans">💼</div>
+          <div class="bubble-a">목표치 합의 단계가 있습니다. 팀장과 사전에 조율하고,
+            <span class="si-highlight">현실적인 목표와 방향을 함께 정하는 것</span>이 이 시스템의 출발점입니다.
+            무조건 높은 목표가 좋은 게 아닙니다.
+            너무 부담스러운 숙제가 있다면, 방향성을 다시 잡아서 진행해보는 것이 더 중요합니다.</div>
+        </div>
+      </div>
+
+      <div class="chat-item">
+        <div class="chat-q-row">
+          <div class="chat-avatar">🤔</div>
+          <div class="bubble-q">자기평가를 낮게 쓰면 불리한가요?</div>
+        </div>
+        <div class="chat-a-row">
+          <div class="chat-avatar-ans">💼</div>
+          <div class="bubble-a">솔직하게 쓰는 게 오히려 좋습니다.
+            <span class="si-highlight">자기평가는 40%만 반영</span>되고, 팀장 평가가 60%입니다.
+            자기평가를 높게 쓴다고 점수가 크게 올라가지 않으며,
+            면담 시 신뢰도에 영향을 줄 수 있습니다.</div>
+        </div>
+      </div>
+
+      <div class="chat-item">
+        <div class="chat-q-row">
+          <div class="chat-avatar">😮</div>
+          <div class="bubble-q">점수에 이의가 있으면요?</div>
+        </div>
+        <div class="chat-a-row">
+          <div class="chat-avatar-ans">💼</div>
+          <div class="bubble-a">평가 결과 공개 후 <span class="si-highlight">이의신청 기간</span>이 있습니다.
+            근거 자료를 가지고 팀장 또는 경영기획실에 요청하면 검토합니다.
+            "그냥 억울하다"가 아니라, 구체적 사실로 이야기하면 됩니다.</div>
+        </div>
+      </div>
+
+      <div class="chat-item">
+        <div class="chat-q-row">
+          <div class="chat-avatar">🙋‍♀️</div>
+          <div class="bubble-q">올해의 기록이 어떤 영향을 미치나요?</div>
+        </div>
+        <div class="chat-a-row">
+          <div class="chat-avatar-ans">💼</div>
+          <div class="bubble-a">올해는 <span class="si-highlight">파일럿 기간</span>입니다.
+            성과관리 시스템(PMS)의 틀을 준비하는 기간으로, 올해 진행한 내용을 바탕으로
+            내년의 본격적인 PMS 운영이 시작됩니다.
+            모두 먼저 경험해보고, 향후 평가·관리에 대한 방향성을 함께 체험해보는 과정입니다.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     CARD 5 — 일정
+════════════════════════════════════════ -->
+<div class="card card-5">
+  <div class="card-header">
+    <div class="card-icon">📅</div>
+    <div class="card-header-text">
+      <div class="card-tag">CARD 05 · 진행 일정</div>
+      <div class="card-title">언제, 무엇을 해야 하나요?</div>
+      <div class="card-main">순서대로 따라오시면 됩니다. 어렵지 않아요.</div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-date">STEP 1 · 5월 내</div>
+        <div class="tl-title">목표치 합의</div>
+        <div class="tl-desc">팀장과 내 KPI 목표치를 함께 확인·조율합니다. 처음이라 모르면 팀장에게 물어보세요.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">STEP 2 · 11월 마지막 주</div>
+        <div class="tl-title">자기평가 작성</div>
+        <div class="tl-desc">한 해 동안 내가 한 일을 솔직하게 정리합니다. 웹 시스템 또는 종이 양식 사용.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">STEP 3 · 12월</div>
+        <div class="tl-title">팀장 면담 (1:1)</div>
+        <div class="tl-desc">팀장이 평가 점수를 설명하고, 내년 방향을 함께 이야기합니다. 30분 내외.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">STEP 4 · 1월</div>
+        <div class="tl-title">결과 공개 & 이의신청</div>
+        <div class="tl-desc">최종 점수 확인 후 이의가 있으면 신청 기간 내에 접수합니다.</div>
+      </div>
+    </div>
+
+    <div style="margin-top: 18px; background: linear-gradient(135deg, #F3E8FF 0%, #EBF4FF 100%); border: 1.5px solid #C3DAFE; border-radius: 14px; padding: 14px 18px;">
+      <div style="font-size: 16px; font-weight: 800; color: #553C9A; margin-bottom: 6px;">📬 단계별 알림 이메일을 보내드립니다</div>
+      <div style="font-size: 15px; color: #4A5568; line-height: 1.8;">
+        각 STEP 시작 전 <b>일정 안내 이메일</b>을 미리 발송해 드립니다.<br>
+        또한 <b>매월 1회</b>, 진행 상황을 함께 체크할 수 있도록 정기 알림도 드릴 예정입니다.<br>
+        <span style="font-size: 14px; color: #718096;">별도로 챙기지 않아도 됩니다. 때가 되면 알려드릴게요. 😊</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="footer-note">
+  신성오토텍 경영기획실 · 2026 하반기 PMS · 문의: 박제성 부장
+</div>
+
+</body>
+</html>

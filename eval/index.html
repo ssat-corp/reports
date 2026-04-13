@@ -12,7 +12,7 @@
 <header>
   <div class="logo">
     신성오토텍
-    <span>2026년 상반기 성과 관리 및 직무 지원 시스템(PMS)</span>
+    <span>2026년 하반기 성과 관리 및 직무 지원 시스템(PMS)</span>
   </div>
   <nav>
     <button class="active" onclick="showPage('home')">🏠 홈</button>
@@ -26,6 +26,19 @@
 <!-- 홈 화면                                        -->
 <!-- ══════════════════════════════════════════════ -->
 <main id="page-home">
+  <!-- 성과관리 진행 가이드 배너 -->
+  <a href="guide.html" target="_blank" style="display:block;text-decoration:none;margin-bottom:24px;background:linear-gradient(135deg,#1F3864,#2E75B6);border-radius:12px;padding:18px 32px;color:white;box-shadow:0 4px 16px rgba(31,56,100,0.3);transition:transform 0.2s;"
+     onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
+    <div style="display:flex;align-items:center;justify-content:space-between;">
+      <div>
+        <div style="font-size:11px;opacity:0.7;letter-spacing:2px;margin-bottom:4px;">2026 PERFORMANCE MANAGEMENT</div>
+        <div style="font-size:18px;font-weight:bold;">📋 성과 관리 진행 가이드 · 안내사항</div>
+        <div style="font-size:13px;opacity:0.8;margin-top:4px;">PMS 평가 방식, 일정, 채점 기준 등 전체 안내를 확인하세요</div>
+      </div>
+      <div style="font-size:24px;opacity:0.6;">→</div>
+    </div>
+  </a>
+
   <div class="home-grid">
     <div class="home-card self" onclick="showPage('self')">
       <div class="icon">📝</div>
@@ -47,34 +60,55 @@
     </div>
   </div>
 
-  <!-- 평가 프로세스 안내 -->
+  <!-- 성과관리 프로세스 (타임라인) -->
   <div class="card" style="margin-top:24px;">
-    <div class="section-title" style="font-size:16px;">📋 2026 성과관리 프로세스</div>
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:12px;">
-      <div style="text-align:center;padding:16px;background:#f8fafc;border-radius:10px;border:2px solid #BDD7EE;">
-        <div style="font-size:24px;">1️⃣</div>
-        <div style="font-weight:bold;color:#1F3864;margin-top:8px;">자기평가</div>
-        <div style="font-size:12px;color:#718096;margin-top:4px;">본인이 직접 입력<br>KPI 자기 점수 + 코멘트</div>
+    <div class="section-title" style="font-size:16px;">📋 2026 하반기 성과관리 프로세스</div>
+    <div style="display:flex;align-items:stretch;gap:0;margin-top:16px;position:relative;">
+      <!-- 연결선 -->
+      <div style="position:absolute;top:50%;left:40px;right:40px;height:3px;background:linear-gradient(90deg,#2E75B6,#70AD47,#ED7D31,#7F6000);z-index:0;"></div>
+
+      <!-- STEP 1 -->
+      <div style="flex:1;text-align:center;position:relative;z-index:1;">
+        <div style="width:48px;height:48px;margin:0 auto;background:#2E75B6;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:900;font-size:18px;box-shadow:0 2px 8px rgba(46,117,182,0.4);">1</div>
+        <div style="background:white;border:2px solid #BDD7EE;border-radius:12px;padding:14px 12px;margin-top:12px;">
+          <div style="font-size:11px;color:#2E75B6;font-weight:700;letter-spacing:1px;">5월 내</div>
+          <div style="font-weight:bold;color:#1F3864;font-size:14px;margin-top:4px;">목표치 합의</div>
+          <div style="font-size:11px;color:#718096;margin-top:6px;line-height:1.5;">팀장과 내 KPI 목표치를<br>함께 확인·조율합니다</div>
+        </div>
       </div>
-      <div style="text-align:center;padding:16px;background:#f8fafc;border-radius:10px;border:2px solid #E2EFDA;">
-        <div style="font-size:24px;">2️⃣</div>
-        <div style="font-weight:bold;color:#1F3864;margin-top:8px;">팀장 평가</div>
-        <div style="font-size:12px;color:#718096;margin-top:4px;">팀장이 팀원 평가<br>점수 입력 + 피드백 작성</div>
+
+      <!-- STEP 2 -->
+      <div style="flex:1;text-align:center;position:relative;z-index:1;">
+        <div style="width:48px;height:48px;margin:0 auto;background:#70AD47;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:900;font-size:18px;box-shadow:0 2px 8px rgba(112,173,71,0.4);">2</div>
+        <div style="background:white;border:2px solid #E2EFDA;border-radius:12px;padding:14px 12px;margin-top:12px;">
+          <div style="font-size:11px;color:#70AD47;font-weight:700;letter-spacing:1px;">11월 마지막 주</div>
+          <div style="font-weight:bold;color:#1F3864;font-size:14px;margin-top:4px;">자기평가 작성</div>
+          <div style="font-size:11px;color:#718096;margin-top:6px;line-height:1.5;">한 해 동안 한 일을<br>솔직하게 정리합니다</div>
+        </div>
       </div>
-      <div style="text-align:center;padding:16px;background:#f8fafc;border-radius:10px;border:2px solid #FCE4D6;">
-        <div style="font-size:24px;">3️⃣</div>
-        <div style="font-weight:bold;color:#1F3864;margin-top:8px;">경영진 취합</div>
-        <div style="font-size:12px;color:#718096;margin-top:4px;">관리자 대시보드에서<br>전체 결과 조회·확정</div>
+
+      <!-- STEP 3 -->
+      <div style="flex:1;text-align:center;position:relative;z-index:1;">
+        <div style="width:48px;height:48px;margin:0 auto;background:#ED7D31;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:900;font-size:18px;box-shadow:0 2px 8px rgba(237,125,49,0.4);">3</div>
+        <div style="background:white;border:2px solid #FCE4D6;border-radius:12px;padding:14px 12px;margin-top:12px;">
+          <div style="font-size:11px;color:#ED7D31;font-weight:700;letter-spacing:1px;">12월</div>
+          <div style="font-weight:bold;color:#1F3864;font-size:14px;margin-top:4px;">팀장 면담 (1:1)</div>
+          <div style="font-size:11px;color:#718096;margin-top:6px;line-height:1.5;">평가 점수 설명 및<br>내년 방향 이야기 (30분)</div>
+        </div>
       </div>
-      <div style="text-align:center;padding:16px;background:#f8fafc;border-radius:10px;border:2px solid #FFF2CC;">
-        <div style="font-size:24px;">4️⃣</div>
-        <div style="font-weight:bold;color:#1F3864;margin-top:8px;">피드백 면담</div>
-        <div style="font-size:12px;color:#718096;margin-top:4px;">팀장-팀원 1:1 면담<br>목표 설정 및 최종 확정</div>
+
+      <!-- STEP 4 -->
+      <div style="flex:1;text-align:center;position:relative;z-index:1;">
+        <div style="width:48px;height:48px;margin:0 auto;background:#7F6000;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:900;font-size:18px;box-shadow:0 2px 8px rgba(127,96,0,0.4);">4</div>
+        <div style="background:white;border:2px solid #FFF2CC;border-radius:12px;padding:14px 12px;margin-top:12px;">
+          <div style="font-size:11px;color:#7F6000;font-weight:700;letter-spacing:1px;">1월</div>
+          <div style="font-weight:bold;color:#1F3864;font-size:14px;margin-top:4px;">결과 공개 · 이의신청</div>
+          <div style="font-size:11px;color:#718096;margin-top:6px;line-height:1.5;">최종 점수 확인 후<br>이의 신청 기간 내 접수</div>
+        </div>
       </div>
     </div>
     <div class="alert alert-info mt-16" style="font-size:12px;">
-      📌 평가 기간: 2026년 상반기 (1월~6월) | 입력 마감: 추후 공지 |
-      종합 점수 = 자기평가 40% + 팀장평가 60%
+      📌 평가 기간: 2026년 하반기 (6월~12월) | 종합 점수 = 자기평가 40% + 팀장평가 60% | 기본 100점 + 보너스 최대 5점
     </div>
   </div>
 </main>
@@ -142,8 +176,8 @@
     <div class="card">
       <div class="section-title" style="font-size:15px;">💬 자기평가 코멘트</div>
       <div class="form-group">
-        <label>상반기 주요 업무 성과 (자유 기술)</label>
-        <textarea id="self-achievement" rows="4" placeholder="이번 상반기에 달성한 주요 성과나 기여 내용을 기술해주세요."></textarea>
+        <label>하반기 주요 업무 성과 (자유 기술)</label>
+        <textarea id="self-achievement" rows="4" placeholder="이번 하반기에 달성한 주요 성과나 기여 내용을 기술해주세요."></textarea>
       </div>
       <div class="form-group">
         <label>아쉬웠던 점 / 개선 목표</label>
@@ -238,7 +272,7 @@
       <div class="form-group">
         <label>✅ 강점 / 잘한 점</label>
         <textarea id="mgr-strengths" rows="4"
-          placeholder="이번 상반기 팀원이 특히 잘 수행한 부분, 칭찬할 점을 구체적으로 기술해주세요.
+          placeholder="이번 하반기 팀원이 특히 잘 수행한 부분, 칭찬할 점을 구체적으로 기술해주세요.
 예) 납기 준수율 98% 달성으로 고객 불만 0건 유지, MES 데이터 정확도 향상에 크게 기여함"></textarea>
       </div>
 
