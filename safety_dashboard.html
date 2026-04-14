@@ -1034,6 +1034,7 @@ table tr:hover td{background:#f8fafc;}
         <button class="tab" onclick="dmFilter('wws',this)">🏢 WWS 이행항목</button>
         <button class="tab" onclick="dmFilter('legal',this)">⚖️ 법정 필수</button>
       </div>
+      <button class="btn btn-primary btn-sm" onclick="dmAddDoc()" style="white-space:nowrap;">+ 서류 추가</button>
     </div>
 
     <!-- 메인 테이블 -->
@@ -2986,6 +2987,16 @@ const docMasterList = [
   {id:'d40', wwsCode:'', wwsNo:'', name:'합동 안전점검 기록부', basis:'산안법 §64', period:'분기1회', status:'미보유', updated:'', expires:'', note:'원·하청 합동, 노·사 및 도급사 참여', category:'legal', hasTemplate:false, localFile:''},
 ];
 
+// 사용자가 추가한 서류(인증서 등) 복원
+(function loadCustomDocs(){
+  try{
+    const custom = DB.get('doc_custom');
+    if(Array.isArray(custom)){
+      custom.forEach(c=>{ if(!docMasterList.some(d=>d.id===c.id)) docMasterList.push(c); });
+    }
+  }catch(e){}
+})();
+
 function getDMList(){
   const saved = DB.getObj('doclist');
   if(Object.keys(saved).length===0) return docMasterList;
@@ -3113,7 +3124,7 @@ function renderDocMgr(){
         </td>
         <td style="font-size:13px;">${fileDisplay}<span id="dm-upload-status-${d.id}" style="font-size:10px;"></span></td>
         <td style="text-align:center;">
-          <button class="btn btn-outline btn-sm" onclick="dmNote('${d.id}')" style="font-size:12px;" title="메모 편집">✏️</button>
+          <button class="btn btn-outline btn-sm" onclick="dmNote('${d.id}')" style="font-size:12px;" title="메모 편집">✏️</button>${d.id.startsWith('custom_')?`<button class="btn btn-outline btn-sm" onclick="dmDeleteCustom('${d.id}')" style="font-size:12px;color:#dc2626;margin-left:4px;" title="항목 삭제">🗑</button>`:''}
         </td>
       </tr>`;
     }).join('');
@@ -3236,17 +3247,30 @@ function dmRemoveFile(docId, fileIdx){
   renderDocMgr();
 }
 
-// 서류 추가
+// 서류 추가 (인증서 등)
 function dmAddDoc(){
-  const name = prompt('서류명을 입력하세요:');
+  const name = prompt('서류명을 입력하세요 (예: ISO 14001 인증서):');
   if(!name) return;
-  const wwsCode = prompt('WWS 코드 (없으면 빈칸):', '') || '';
-  const basis = prompt('법적 근거:', '자율관리') || '자율관리';
-  const period = prompt('주기 (예: 연1회, 매월, 상시):', '상시') || '상시';
+  const basis = prompt('법적 근거 / 출처:', '자율관리') || '자율관리';
+  const period = prompt('주기 (예: 연1회, 3년1회, 상시):', '상시') || '상시';
   const id = 'custom_' + Date.now();
-  const newDoc = {id, wwsCode, wwsNo:'', name, basis, period, status:'미보유', updated:'', expires:'', note:'사용자 추가 항목', category: wwsCode?'wws':'self', hasTemplate:false, localFile:''};
-  // docMasterList에 런타임 추가
+  const newDoc = {id, wwsCode:'', wwsNo:'', name, basis, period, status:'미보유', updated:'', expires:'', note:'사용자 추가 항목', category:'self', hasTemplate:false, localFile:''};
   docMasterList.push(newDoc);
+  // 영구 저장
+  const custom = DB.get('doc_custom');
+  custom.push(newDoc);
+  DB.set('doc_custom', custom);
+  renderDocMgr();
+}
+
+// 사용자 추가 서류 삭제
+function dmDeleteCustom(id){
+  if(!id.startsWith('custom_')) return;
+  if(!confirm('이 서류 항목을 삭제하시겠습니까? (첨부 파일은 드라이브에 남습니다)')) return;
+  const idx = docMasterList.findIndex(d=>d.id===id);
+  if(idx>=0) docMasterList.splice(idx,1);
+  const custom = DB.get('doc_custom').filter(c=>c.id!==id);
+  DB.set('doc_custom', custom);
   renderDocMgr();
 }
 
@@ -3327,6 +3351,55 @@ const esgData = [
   {cat:'기타',name:'비상사태교육',target:'전체 직원',eval:'위기대응 매뉴얼 교육',basis:'교육일지',cycle:'년2회',manager:'임정인',agency:'',plan:[0,0,1,0,0,0,0,0,0,1,0,0],done:[0,0,0,0,0,0,0,0,0,0,0,0],cost:'-'}
 ];
 
+// 사용자가 추가한 ESG 교육 항목 복원 (기타 카테고리)
+(function loadCustomESGItems(){
+  try{
+    const custom = DB.get('esg_custom');
+    if(Array.isArray(custom)){
+      custom.forEach(c=>{
+        if(!esgData.some(e=>e.custom && e.name===c.name)) esgData.push({...c, custom:true});
+      });
+    }
+  }catch(e){}
+})();
+
+function addCustomESGItem(){
+  const name = prompt('항목명 (예: 외부 세미나):'); if(!name) return;
+  const cat = prompt('영역 (안전/소방/보건/환경/전기/윤리인권/자격관리/정보보안/기타):', '기타') || '기타';
+  const target = prompt('대상:', '') || '';
+  const evalText = prompt('평가내용:', '') || '';
+  const basis = prompt('근거 서류/비고:', '') || '';
+  const cycle = prompt('주기 (예: 년1회, 반기, 월1회):', '년1회') || '';
+  const manager = prompt('담당자:', '') || '';
+  const monthsStr = prompt('계획 월 (쉼표로, 예: 3,6,9,12 / 없으면 빈칸):', '') || '';
+  const plan = Array(12).fill(0);
+  monthsStr.split(',').map(s=>parseInt(s.trim(),10)).forEach(m=>{
+    if(m>=1 && m<=12) plan[m-1] = 1;
+  });
+  const newItem = {cat, name, target, eval:evalText, basis, cycle, manager, agency:'', plan, done:Array(12).fill(0), cost:'-', custom:true};
+  esgData.push(newItem);
+  const custom = DB.get('esg_custom');
+  custom.push(newItem);
+  DB.set('esg_custom', custom);
+  if(typeof renderESGPlan==='function'){
+    if(document.getElementById('esg-plan-edu')) renderESGPlan('esg-plan-edu');
+    if(document.getElementById('esg-plan-meetcal')) renderESGPlan('esg-plan-meetcal');
+    if(document.getElementById('esg-plan-schedule')) renderESGPlan('esg-plan-schedule');
+  }
+}
+
+function removeCustomESGItem(globalIdx){
+  const item = esgData[globalIdx];
+  if(!item || !item.custom) return;
+  if(!confirm(`'${item.name}' 항목을 삭제하시겠습니까?`)) return;
+  esgData.splice(globalIdx,1);
+  const custom = DB.get('esg_custom').filter(c=>c.name !== item.name);
+  DB.set('esg_custom', custom);
+  if(document.getElementById('esg-plan-edu')) renderESGPlan('esg-plan-edu');
+  if(document.getElementById('esg-plan-meetcal')) renderESGPlan('esg-plan-meetcal');
+  if(document.getElementById('esg-plan-schedule')) renderESGPlan('esg-plan-schedule');
+}
+
 // ★ 구글 드라이브 업로드 Apps Script URL
 // Apps Script 웹앱 배포 후 여기에 URL을 붙여넣으세요
 const DRIVE_UPLOAD_URL = 'https://script.google.com/macros/s/AKfycbyiZ5j5XH7G3gOMXzlSxbX9hJ5WxCf2J3PMUGGZfaQI3jQC7s0NOn-T8grEmi7LRpIZuA/exec';
@@ -3363,9 +3436,10 @@ function renderESGPlan(containerId){
   const months = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
   const files = getESGFiles();
 
-  let filterHtml = `<div class="esg-filter-bar">
+  let filterHtml = `<div class="esg-filter-bar" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
     <button class="esg-filter-btn ${activeFilter==='all'?'active':''}" style="${activeFilter==='all'?'background:#0d1f3c;color:#fff;':''}" onclick="filterESG('${containerId}','all')">전체</button>
     ${cats.map(c=>`<button class="esg-filter-btn ${activeFilter===c?'active':''}" style="${activeFilter===c?'background:'+esgCatColors[c]+';color:#fff;border-color:'+esgCatColors[c]+';':''}" onclick="filterESG('${containerId}','${c}')">${c}</button>`).join('')}
+    <button class="esg-filter-btn" style="margin-left:auto;background:#1e5096;color:#fff;border-color:#1e5096;" onclick="addCustomESGItem()" title="기타 항목 추가">+ 항목 추가</button>
   </div>
   <div class="esg-scroll-hint">\u2190 좌우로 스크롤하여 전체 내용을 확인하세요 \u2192</div>`;
 
@@ -3402,7 +3476,7 @@ function renderESGPlan(containerId){
     tableHtml += `<tr>
       <td style="text-align:center;">${num}</td>
       ${isFiltered?'':`<td><span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:12px;font-weight:600;background:${esgCatColors[item.cat]}22;color:${esgCatColors[item.cat]};">${item.cat}</span></td>`}
-      <td style="font-weight:600;">${item.name}${item.agency?`<div style="font-size:10px;color:#6b7280;font-weight:400;margin-top:2px;">${item.agency}</div>`:''}</td>
+      <td style="font-weight:600;">${item.name}${item.custom?` <button onclick="removeCustomESGItem(${globalIdx})" style="background:none;border:none;color:#dc2626;cursor:pointer;font-size:11px;padding:0 2px;" title="사용자 추가 항목 삭제">🗑</button>`:''}${item.agency?`<div style="font-size:10px;color:#6b7280;font-weight:400;margin-top:2px;">${item.agency}</div>`:''}</td>
       <td>${item.target}</td>
       <td>${item.eval}${item.basis?`<div style="font-size:10px;color:#9ca3af;margin-top:2px;">${item.basis}</div>`:''}</td>
       <td style="text-align:center;white-space:nowrap;">${item.cycle}</td>
