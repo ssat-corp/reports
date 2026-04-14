@@ -4279,6 +4279,9 @@ const ptPosters = [
   {id:'p16',cat:'rule',color:'#065f46',accent:'#10b981',badge:'📌 건강관리 健康管理',emoji:'🦴',title:'근골격계 질환 예방 肌骨预防',sub:'바른 자세+스트레칭=건강 | 正确姿势+拉伸',
    rules:[{n:'1',t:'작업 전 스트레칭 5분 拉伸5分',d:'목·어깨·허리·손목 颈·肩·腰·腕'},{n:'2',t:'바른 자세 유지 正确姿势',d:'허리 세우고 무릎 굽혀 들기 挺腰弯膝搬举'},{n:'3',t:'1시간마다 휴식 每时休息',d:'5분 스트레칭 拉伸5分钟'},{n:'4',t:'보조기구 사용 用辅助工具',d:'리프트, 대차, 크레인 升降机·推车·天车'},{n:'5',t:'이상 즉시 보고 异常报告',d:'손저림·허리통증 등 手麻·腰痛等'},{n:'6',t:'올바른 들기 자세 正确搬举',d:'발 어깨너비, 무릎 들기 双脚与肩同宽'}],
    footer:'근골격계 질환은 누적됩니다 | 肌骨病会累积',fb:'#065f46',fc:'#fff'},
+  {id:'p17',cat:'rule',color:'#7f1d1d',accent:'#ef4444',badge:'📌 안전수칙 安全规则',emoji:'🔥',title:'화재·폭발 방지 작업 防火防爆作业',sub:'화기 작업 전 필수 준수 | 动火作业必须遵守',
+   rules:[{n:'🚫',t:'위험 장소 화기 사용 금지 易燃区禁用火源',d:'인화성·가연성 물질 존재 시 存在易燃·可燃物时'},{n:'🛡️',t:'불티 비산 방지·가연물 제거 防火花·清可燃物',d:'사내 화기 작업 원칙 금지 厂内原则禁止动火'},{n:'⚠️',t:'인화성 액체 용기 용접·용단 금지 易燃液体容器禁焊割',d:'폭발 위험 有爆炸风险'},{n:'🧪',t:'화기 작업 전 내부 액체 제거·세척 动火前清液体·清洗',d:'잔류 인화 물질 완전 제거 彻底清除残留易燃物'},{n:'💨',t:'인화성 증기 체류 공간 충분 환기 易燃蒸气区充分通风',d:'작업 전·중 환기 유지 作业前后保持通风'}],
+   footer:'화기 작업 = 사전 허가·감시인 배치 필수 | 动火=须许可·设监护人',fb:'#7f1d1d',fc:'#fff'},
   {id:'p8',cat:'monthly',color:'#0f4c75',accent:'#1b98e0',badge:'📅 이달의 안전 목표 本月目标',emoji:'🎯',title:'이달의 안전 목표 本月目标',sub:'함께 지킵시다 | 一起遵守',
    rules:[{n:'①',t:'TBM 100% 참석 全员参加',d:'매일 작업 전 10분 每天工作前10分钟'},{n:'②',t:'아차사고 1건↑ 신고 报告险情',d:'공유=예방 分享=预防'},{n:'③',t:'보호구 완전 착용 穿戴防护',d:'예외 없이 无例外'},{n:'④',t:'퇴근 전 정리 下班整理',d:'내 구역은 내 책임 我的区域我负责'}],
    footer:'무재해 목표 달성! | 零事故！',fb:'#0f4c75',fc:'#fff'},
@@ -4476,50 +4479,58 @@ function ptPrint(id){
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;800;900&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
     <style>
-    @page{size:A4;margin:0;}
+    @page{size:A3;margin:0;}
     *{margin:0;padding:0;box-sizing:border-box;}
-    html,body{width:210mm;height:297mm;font-family:'Noto Sans KR','Noto Sans SC','Microsoft YaHei','SimHei','Malgun Gothic',sans-serif;
+    html,body{width:297mm;height:420mm;font-family:'Noto Sans KR','Noto Sans SC','Microsoft YaHei','SimHei','Malgun Gothic',sans-serif;background:#fff;
       -webkit-print-color-adjustment:exact !important;print-color-adjust:exact !important;color-adjust:exact !important;}
-    .poster{width:210mm;height:297mm;display:flex;flex-direction:column;overflow:hidden;}
-    .header{padding:28px 28px 22px;background:${p.color};text-align:center;position:relative;display:flex;flex-direction:column;justify-content:center;
+    /* A3 용지 위에 A4 인쇄 시 보이는 정도의 여백(약 18mm)을 두고 콘텐츠 배치 */
+    .sheet{width:297mm;height:420mm;padding:18mm;display:flex;align-items:center;justify-content:center;}
+    .poster{width:100%;height:100%;display:flex;flex-direction:column;overflow:hidden;border-radius:6mm;box-shadow:0 0 0 1px #e5e7eb;}
+    /* 제목 박스 — 모든 포스터 동일 높이로 통일 */
+    .header{height:130mm;flex-shrink:0;padding:12mm 14mm;background:${p.color};text-align:center;position:relative;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:4mm;
       -webkit-print-color-adjustment:exact !important;print-color-adjust:exact !important;}
-    .logo{position:absolute;top:16px;right:16px;height:36px;opacity:0.7;}
-    .badge{font-size:14px;font-weight:700;color:rgba(255,255,255,0.8);letter-spacing:0.1em;margin-bottom:6px;}
-    .emoji{font-size:64px;margin:6px 0;}
-    .title{font-size:36px;font-weight:900;color:#fff;line-height:1.2;white-space:pre-line;}
-    .subtitle{font-size:16px;color:rgba(255,255,255,0.9);margin-top:6px;}
-    .body{flex:1;padding:24px 28px;display:flex;flex-direction:column;justify-content:center;}
-    ul{list-style:none;padding:0;flex:1;display:flex;flex-direction:column;justify-content:space-around;}
-    li{display:flex;gap:18px;align-items:center;padding:16px 0;border-bottom:2px solid #f1f5f9;}
+    .logo{position:absolute;top:8mm;right:8mm;height:14mm;opacity:0.75;}
+    .badge{font-size:14pt;font-weight:700;color:rgba(255,255,255,0.85);letter-spacing:0.1em;}
+    /* 이모티콘 — 고정 크기로 통일 */
+    .emoji{font-size:46pt;line-height:1;height:50pt;display:flex;align-items:center;justify-content:center;}
+    .title{font-size:34pt;font-weight:900;color:#fff;line-height:1.18;white-space:pre-line;letter-spacing:-0.5px;}
+    .subtitle{font-size:15pt;color:rgba(255,255,255,0.92);font-weight:500;}
+    /* 본문 — 수직 중앙 정렬 */
+    .body{flex:1;padding:14mm 16mm;display:flex;flex-direction:column;justify-content:center;min-height:0;}
+    ul{list-style:none;padding:0;flex:1;display:flex;flex-direction:column;justify-content:center;gap:6mm;}
+    li{display:flex;gap:10mm;align-items:center;padding:5mm 0;border-bottom:2px solid #f1f5f9;}
     li:last-child{border-bottom:none;}
-    .num{flex-shrink:0;width:44px;height:44px;border-radius:50%;background:${p.accent};color:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;
+    .num{flex-shrink:0;width:18mm;height:18mm;border-radius:50%;background:${p.accent};color:#fff;display:flex;align-items:center;justify-content:center;font-size:18pt;font-weight:800;
       -webkit-print-color-adjustment:exact !important;print-color-adjust:exact !important;}
-    .rule-title{display:block;font-size:22px;font-weight:800;color:#0d1f3c;line-height:1.35;}
-    .rule-desc{font-size:16px;color:#555;margin-top:4px;display:block;line-height:1.4;}
-    .footer{padding:20px 24px;text-align:center;font-size:20px;font-weight:900;letter-spacing:0.03em;
+    .rule-title{display:block;font-size:20pt;font-weight:800;color:#0d1f3c;line-height:1.3;}
+    .rule-desc{font-size:14pt;color:#555;margin-top:2mm;display:block;line-height:1.35;}
+    /* 푸터 — 통일된 높이 */
+    .footer{height:22mm;flex-shrink:0;padding:0 16mm;display:flex;align-items:center;justify-content:center;text-align:center;font-size:18pt;font-weight:900;letter-spacing:0.02em;
       background:${p.fb};color:${p.fc};
       -webkit-print-color-adjustment:exact !important;print-color-adjust:exact !important;}
     @media print{
-      html,body{width:210mm;height:297mm;}
-      .poster{width:210mm;height:297mm;}
+      html,body{width:297mm;height:420mm;}
+      .sheet{width:297mm;height:420mm;}
       .header,.num,.footer{-webkit-print-color-adjustment:exact !important;print-color-adjust:exact !important;color-adjust:exact !important;}
     }
   </style></head><body>
-    <div class="poster">
-      <div class="header">
-        <img class="logo" src="logo_s_white.png" alt="S">
-        <div class="badge">${p.badge}</div>
-        <div class="emoji">${p.emoji}</div>
-        <div class="title">${p.title}</div>
-        <div class="subtitle">${p.sub}</div>
+    <div class="sheet">
+      <div class="poster">
+        <div class="header">
+          <img class="logo" src="logo_s_white.png" alt="S">
+          <div class="badge">${p.badge}</div>
+          <div class="emoji">${p.emoji}</div>
+          <div class="title">${p.title}</div>
+          <div class="subtitle">${p.sub}</div>
+        </div>
+        <div class="body">
+          <ul>${p.rules.map(r=>`<li>
+            <span class="num">${r.n}</span>
+            <div><span class="rule-title">${r.t}</span>${r.d?`<span class="rule-desc">${r.d}</span>`:''}</div>
+          </li>`).join('')}</ul>
+        </div>
+        <div class="footer">${p.footer}</div>
       </div>
-      <div class="body">
-        <ul>${p.rules.map(r=>`<li>
-          <span class="num">${r.n}</span>
-          <div><span class="rule-title">${r.t}</span>${r.d?`<span class="rule-desc">${r.d}</span>`:''}</div>
-        </li>`).join('')}</ul>
-      </div>
-      <div class="footer">${p.footer}</div>
     </div>
   </body></html>`);
   w.document.close();
