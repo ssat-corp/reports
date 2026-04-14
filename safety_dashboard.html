@@ -1201,13 +1201,17 @@ table tr:hover td{background:#f8fafc;}
     <div class="card" style="margin-bottom:16px;">
       <div class="card-title">🖼️ 게시판 포스터 — A4 인쇄 후 현장 부착용</div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
-        <button class="btn btn-outline btn-sm" onclick="ptFilter('all',this)" id="pt-btn-all" style="background:#0d1f3c;color:#fff;">전체 16종 (한국어+중국어)</button>
+        <button class="btn btn-outline btn-sm" onclick="ptFilter('all',this)" id="pt-btn-all" style="background:#0d1f3c;color:#fff;">전체 22종 (한국어+중국어)</button>
         <button class="btn btn-outline btn-sm" onclick="ptFilter('notice',this)">📋 법정 필수</button>
         <button class="btn btn-outline btn-sm" onclick="ptFilter('rule',this)">📌 안전수칙</button>
         <button class="btn btn-outline btn-sm" onclick="ptFilter('monthly',this)">📅 월별 교체</button>
         <button class="btn btn-outline btn-sm" onclick="ptFilter('sign',this)">🪧 현장 비표</button>
       </div>
-      <div style="font-size:12px;color:#6b7280;">🖨️ 인쇄(A4) → 코팅 후 게시판 부착 | 📋 텍스트복사 → 카카오톡 공유</div>
+      <div style="font-size:12px;color:#6b7280;">🖨️ 인쇄(A3) → 코팅 후 게시판 부착 | 📋 텍스트복사 → 카카오톡 공유</div>
+      <div id="pt-status-summary" style="margin-top:10px;padding:10px 12px;background:#f0fdf4;border-left:4px solid #22c55e;border-radius:6px;font-size:13px;color:#166534;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;">
+        <span><strong>✅ 현장 게시 중:</strong> <span id="pt-printed-count">0</span> / <span id="pt-total-count">0</span>종</span>
+        <button onclick="ptResetAll()" class="btn btn-outline btn-sm" style="font-size:11px;padding:4px 10px;">🔄 전체 해제</button>
+      </div>
     </div>
     <div id="pt-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;"></div>
   </div>
@@ -4455,10 +4459,43 @@ function ptFilter(cat, btn){
   btn.style.background='#0d1f3c'; btn.style.color='#fff';
   renderPT(cat);
 }
+// ===== 포스터 게시 상태 관리 (localStorage) =====
+const PT_STORAGE_KEY = 'safety_posters_printed';
+function ptGetPrinted(){ try{return JSON.parse(localStorage.getItem(PT_STORAGE_KEY)||'{}');}catch(e){return {};} }
+function ptSavePrinted(data){ localStorage.setItem(PT_STORAGE_KEY, JSON.stringify(data)); }
+function ptTogglePrinted(id, ev){
+  if(ev) ev.stopPropagation();
+  const data = ptGetPrinted();
+  if(data[id]){ delete data[id]; }
+  else { const d=new Date(); data[id] = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
+  ptSavePrinted(data);
+  const activeBtn = document.querySelector('#section-posters .btn[style*="background: rgb(13, 31, 60)"]') || document.getElementById('pt-btn-all');
+  const activeCat = activeBtn && activeBtn.textContent.includes('전체') ? 'all' : (activeBtn && activeBtn.onclick ? activeBtn.onclick.toString().match(/ptFilter\('(\w+)'/)?.[1] : 'all');
+  renderPT(activeCat || 'all');
+}
+function ptResetAll(){
+  if(!confirm('현장 게시 상태를 모두 해제하시겠습니까?\n(출력 이력이 전부 초기화됩니다)')) return;
+  ptSavePrinted({});
+  renderPT('all');
+}
+function ptUpdateSummary(){
+  const printed = ptGetPrinted();
+  const printedCount = Object.keys(printed).filter(k=>ptPosters.some(p=>p.id===k)).length;
+  const totalCount = ptPosters.length;
+  const cntEl = document.getElementById('pt-printed-count');
+  const totEl = document.getElementById('pt-total-count');
+  if(cntEl) cntEl.textContent = printedCount;
+  if(totEl) totEl.textContent = totalCount;
+}
 function renderPT(cat){
   const list = cat==='all' ? ptPosters : ptPosters.filter(p=>p.cat===cat);
-  document.getElementById('pt-grid').innerHTML = list.map(p=>`
-    <div style="background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,0.1);display:flex;flex-direction:column;min-height:620px;">
+  const printed = ptGetPrinted();
+  document.getElementById('pt-grid').innerHTML = list.map(p=>{
+    const isPrinted = !!printed[p.id];
+    const printedDate = printed[p.id] || '';
+    return `
+    <div style="background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,0.1);display:flex;flex-direction:column;min-height:620px;position:relative;${isPrinted?'opacity:0.78;border:2px solid #22c55e;':''}">
+      ${isPrinted?`<div style="position:absolute;top:10px;left:10px;z-index:5;background:#22c55e;color:#fff;padding:4px 10px;border-radius:20px;font-size:10px;font-weight:800;box-shadow:0 2px 6px rgba(0,0,0,0.2);">✅ ${printedDate} 게시중</div>`:''}
       <div style="padding:22px 20px 16px;background:${p.color};text-align:center;height:200px;display:flex;flex-direction:column;justify-content:center;position:relative;">
         <img src="logo_s_white.png" style="position:absolute;top:12px;right:12px;height:28px;opacity:0.7;" alt="S">
         <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,0.7);letter-spacing:0.08em;margin-bottom:6px;">${p.badge}</div>
@@ -4472,12 +4509,17 @@ function renderPT(cat){
         </ul>
       </div>
       <div style="padding:10px 8px;text-align:center;font-size:10px;font-weight:700;background:${p.fb};color:${p.fc};margin-top:auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${p.footer}</div>
+      <label style="display:flex;align-items:center;gap:6px;padding:8px 12px;background:${isPrinted?'#dcfce7':'#f8fafc'};cursor:pointer;font-size:11px;font-weight:700;color:${isPrinted?'#166534':'#64748b'};border-top:1px solid ${isPrinted?'#86efac':'#e5e7eb'};">
+        <input type="checkbox" ${isPrinted?'checked':''} onchange="ptTogglePrinted('${p.id}', event)" style="cursor:pointer;width:14px;height:14px;">
+        ${isPrinted?`현장 게시 중 (${printedDate}) — 클릭 해제`:'☐ 출력하여 게시 완료'}
+      </label>
       <div style="display:flex;gap:6px;padding:8px 12px;background:#f8fafc;">
         <button onclick="ptCopy('${p.id}')" class="btn btn-outline btn-sm" style="flex:1;font-size:11px;">📋 텍스트 복사</button>
-        <button onclick="ptPrint('${p.id}')" class="btn btn-primary btn-sm" style="flex:1;font-size:11px;">🖨️ A4 인쇄</button>
+        <button onclick="ptPrint('${p.id}')" class="btn btn-primary btn-sm" style="flex:1;font-size:11px;">🖨️ A3 인쇄</button>
       </div>
-    </div>
-  `).join('');
+    </div>`;
+  }).join('');
+  ptUpdateSummary();
 }
 function ptCopy(id){
   const p=ptPosters.find(x=>x.id===id);
