@@ -3572,8 +3572,12 @@ function addESGFileUpload(idx, containerId, input){
     return;
   }
 
-  // 구글 드라이브 업로드
-  const itemName = esgData[idx] ? esgData[idx].cat + '_' + esgData[idx].name : '';
+  // 구글 드라이브 업로드 — 파일명: 서류명_YYYY-MM-DD.ext
+  const docName = esgData[idx] ? esgData[idx].name : '문서';
+  const safeName = docName.replace(/[\\/:*?"<>|]/g, '_');
+  const today = new Date().toISOString().split('T')[0];
+  const ext = (file.name.match(/\.[^.]+$/) || [''])[0];
+  const finalName = safeName + '_' + today + ext;
   const btn = input.closest('.esg-file-popup').querySelector('.esg-upload-status');
   if(btn) btn.innerHTML = '<span style="color:#1e5096;">업로드 중...</span>';
 
@@ -3585,7 +3589,7 @@ function addESGFileUpload(idx, containerId, input){
       mode: 'no-cors',
       headers: {'Content-Type':'application/json'},
       body: JSON.stringify({
-        fileName: itemName+'_'+file.name.replace(/(\.[^.]+)$/,'_'+new Date().toISOString().split('T')[0]+'$1'),
+        fileName: finalName,
         fileData: base64,
         mimeType: file.type,
         subfolder: 'ESG교육'
