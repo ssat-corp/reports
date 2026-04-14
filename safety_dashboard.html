@@ -468,6 +468,7 @@ table tr:hover td{background:#f8fafc;}
     <a onclick="showSection('patrol')"><span class="icon">🔍</span> 패트롤+TBM 통합</a>
     <div class="section-title">교육·평가</div>
     <a onclick="showSection('meetcal')"><span class="icon">📅</span> 교육 & 운영 관리</a>
+    <a onclick="showSection('officialdoc')"><span class="icon">📨</span> 공문서 관리 대장</a>
     <a onclick="showSection('risk')"><span class="icon">⚠️</span> 위험성 평가</a>
     <div class="section-title">기록·서류</div>
     <a onclick="showSection('docmgr')"><span class="icon">📋</span> 서류·이행 통합관리</a>
@@ -799,14 +800,15 @@ table tr:hover td{background:#f8fafc;}
   <!-- ===== 교육 & 운영 관리 ===== -->
   <div id="section-meetcal" class="section">
 
-    <!-- 상단 알림 배너 -->
-    <div id="meetcal-alerts" style="margin-bottom:16px;"></div>
+    <!-- 상단 알림 배너 (비활성) -->
+    <!-- <div id="meetcal-alerts" style="margin-bottom:16px;"></div> -->
 
-    <!-- 상단: 주간/월간/분기 완료 현황 -->
-    <div class="grid-3" style="margin-bottom:16px;">
-      <div class="stat-card blue"><div class="label">이번 주</div><div class="value" id="mc-week-pending">-</div><div class="sub">완료 / 전체</div></div>
-      <div class="stat-card orange"><div class="label">이번 달</div><div class="value" id="mc-month-pending">-</div><div class="sub">완료 / 전체</div></div>
-      <div class="stat-card green"><div class="label">이번 분기</div><div class="value" id="mc-quarter-pending">-</div><div class="sub">완료 / 전체</div></div>
+    <!-- 상단: 지난분기/이번분기/이번달/연간 ESG 교육계획 완료 현황 -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px;">
+      <div class="stat-card" style="border-left:4px solid #94a3b8;"><div class="label">지난 분기</div><div class="value" id="mc-prevq-pending">-</div><div class="sub">완료 / 계획</div></div>
+      <div class="stat-card orange"><div class="label">이번 분기</div><div class="value" id="mc-quarter-pending">-</div><div class="sub">완료 / 계획</div></div>
+      <div class="stat-card blue"><div class="label">이번 달</div><div class="value" id="mc-month-pending">-</div><div class="sub">완료 / 계획</div></div>
+      <div class="stat-card green"><div class="label">연간 누적</div><div class="value" id="mc-year-pending">-</div><div class="sub">완료 / 계획</div></div>
     </div>
 
     <div style="margin-bottom:16px;">
@@ -876,6 +878,71 @@ table tr:hover td{background:#f8fafc;}
         <div style="display:flex;gap:8px;">
           <button class="btn btn-primary" onclick="saveMeetingLog()" style="flex:1;">💾 저장</button>
           <button class="btn btn-outline" onclick="document.getElementById('mc-log-modal').style.display='none'">취소</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 공문서 관리 대장 ===== -->
+  <div id="section-officialdoc" class="section">
+    <div class="card" style="margin-bottom:16px;">
+      <div class="card-title">📨 공문서 관리 대장</div>
+      <p style="font-size:13px;color:#6b7280;margin-bottom:12px;">수신·발신 공문서를 등록하고 대응 현황을 관리합니다. 첨부 파일은 Google Drive에 자동 저장됩니다.</p>
+      <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;align-items:center;">
+        <button class="btn btn-primary btn-sm" onclick="openOdForm()">➕ 공문서 등록</button>
+        <select id="od-filter-status" onchange="renderOfficialDoc()" style="padding:5px 10px;border:1px solid #d1d5db;border-radius:8px;font-size:12px;">
+          <option value="all">전체</option>
+          <option value="대응완료">대응완료</option>
+          <option value="대응중">대응중</option>
+          <option value="미대응">미대응</option>
+        </select>
+        <input type="text" id="od-search" placeholder="검색 (제목, 기관명)" oninput="renderOfficialDoc()" style="padding:5px 10px;border:1px solid #d1d5db;border-radius:8px;font-size:12px;width:200px;">
+      </div>
+      <div id="od-list"></div>
+    </div>
+
+    <!-- 등록/수정 모달 -->
+    <div id="od-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;align-items:center;justify-content:center;padding:20px;" onclick="if(event.target===this)this.style.display='none'">
+      <div style="background:#fff;border-radius:16px;width:100%;max-width:560px;padding:24px;max-height:90vh;overflow-y:auto;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+          <div style="font-size:16px;font-weight:800;color:#0d1f3c;" id="od-modal-title">📨 공문서 등록</div>
+          <button onclick="document.getElementById('od-modal').style.display='none'" style="background:none;border:none;font-size:20px;cursor:pointer;color:#6b7280;">✕</button>
+        </div>
+        <input type="hidden" id="od-edit-id">
+        <div class="form-row">
+          <div class="form-group"><label>수신/발신일</label><input type="date" id="od-date"></div>
+          <div class="form-group"><label>구분</label>
+            <select id="od-direction" style="width:100%;padding:8px 12px;border:1px solid #d1d5db;border-radius:8px;font-size:13px;">
+              <option value="수신">수신</option>
+              <option value="발신">발신</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>발송 기관 / 업체</label><input type="text" id="od-sender" placeholder="예: 고용노동부, 소방서, 협력사"></div>
+          <div class="form-group"><label>대응 상태</label>
+            <select id="od-status" style="width:100%;padding:8px 12px;border:1px solid #d1d5db;border-radius:8px;font-size:13px;">
+              <option value="미대응">미대응</option>
+              <option value="대응중">대응중</option>
+              <option value="대응완료">대응완료</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group"><label>공문 제목</label><input type="text" id="od-title" placeholder="공문 제목"></div>
+        <div class="form-group"><label>내용 / 메모</label><textarea id="od-memo" placeholder="공문 요약, 대응 내역 등" style="min-height:60px;"></textarea></div>
+        <div class="form-group">
+          <label>서류 첨부 (파일/이미지)</label>
+          <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
+            <label style="font-size:12px;color:#1e5096;cursor:pointer;display:flex;align-items:center;gap:3px;padding:6px 12px;background:#eef4ff;border-radius:8px;font-weight:600;">
+              <input type="file" id="od-file" style="display:none;" multiple accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.hwp">📁 파일 선택 (드라이브 업로드)
+            </label>
+            <span id="od-file-status" style="font-size:12px;color:#6b7280;"></span>
+          </div>
+          <div id="od-file-preview" style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;"></div>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:12px;">
+          <button class="btn btn-primary" onclick="saveOfficialDoc()" style="flex:1;">💾 저장</button>
+          <button class="btn btn-outline" onclick="document.getElementById('od-modal').style.display='none'">취소</button>
         </div>
       </div>
     </div>
@@ -1217,159 +1284,16 @@ async function supaSync(key) {
 const DB = {
   get(key){ try{return JSON.parse(localStorage.getItem('safety_'+key))||[];}catch{return [];} },
   getObj(key){ try{return JSON.parse(localStorage.getItem('safety_'+key))||{};}catch{return {};} },
-  set(key,val){ localStorage.setItem('safety_'+key, JSON.stringify(val)); supaSync(key); try{CloudDB.syncKey(key);}catch(e){} },
+  set(key,val){ localStorage.setItem('safety_'+key, JSON.stringify(val)); supaSync(key); },
   push(key,item){ const arr=DB.get(key); arr.unshift(item); DB.set(key,arr); return arr; }
 };
-
-// ============================================================
-// CloudDB — Apps Script(스프레드시트 + 드라이브) 통합 원격 저장소
-// JSONP(GET) + text/plain POST 로 CORS 우회
-// 모든 기기에서 동일한 최신 상태를 공유하기 위한 레이어
-// ============================================================
-const CloudDB = (() => {
-  const URL = (typeof APPS_SCRIPT_URL !== 'undefined') ? APPS_SCRIPT_URL :
-              (typeof DRIVE_UPLOAD_URL !== 'undefined') ? DRIVE_UPLOAD_URL : '';
-  // localStorage 키 → 스프레드시트 탭 매핑
-  const TABLE_OF_KEY = {
-    patrol:'패트롤', tbm:'TBM', education:'교육',
-    accident:'아차사고', siteIssues:'지적사항',
-    risk:'위험성평가', equipment:'설비점검', signs:'비표',
-    esg_done:'ESG체크'
-  };
-
-  function getJSONP(params){
-    return new Promise((resolve,reject)=>{
-      if(!URL){ reject(new Error('APPS_SCRIPT_URL not set')); return; }
-      const cb = '_cb_' + Date.now() + '_' + Math.floor(Math.random()*1e6);
-      const s = document.createElement('script');
-      const to = setTimeout(()=>{ cleanup(); reject(new Error('JSONP timeout')); }, 25000);
-      const cleanup = ()=>{ try{delete window[cb];}catch(e){} s.remove(); clearTimeout(to); };
-      window[cb] = (data)=>{ cleanup(); resolve(data); };
-      const q = Object.entries({...params, callback: cb})
-        .map(([k,v])=>encodeURIComponent(k)+'='+encodeURIComponent(v)).join('&');
-      s.src = URL + '?' + q;
-      s.onerror = ()=>{ cleanup(); reject(new Error('JSONP network error')); };
-      document.body.appendChild(s);
-    });
-  }
-  async function postJSON(body){
-    if(!URL) throw new Error('APPS_SCRIPT_URL not set');
-    const res = await fetch(URL, {
-      method:'POST',
-      headers:{'Content-Type':'text/plain;charset=utf-8'},
-      body: JSON.stringify(body),
-      redirect:'follow'
-    });
-    return res.json();
-  }
-
-  async function loadTable(table){ return (await getJSONP({action:'load', table})).rows || []; }
-  async function loadAll(){ return (await getJSONP({action:'loadAll'})).tables || {}; }
-  async function saveRow(table, row){ return postJSON({action:'save', table, row}); }
-  async function deleteRow(table, id){ return postJSON({action:'delete', table, id}); }
-  async function clearTable(table){ return postJSON({action:'clear', table}); }
-
-  async function listFiles(subfolder){ return (await getJSONP({action:'listFiles', subfolder:subfolder||''})).files || []; }
-  async function deleteFile(fileId){ return postJSON({action:'deleteFile', fileId}); }
-  function uploadFile(file, opts){
-    return new Promise((resolve,reject)=>{
-      const r = new FileReader();
-      r.onload = async (e) => {
-        try{
-          const base64 = e.target.result.split(',')[1];
-          const out = await postJSON({
-            action:'upload',
-            fileName: file.name,
-            fileData: base64,
-            mimeType: file.type || 'application/octet-stream',
-            subfolder: (opts && opts.subfolder) || '',
-            renameBase: (opts && opts.renameBase) || '',
-            overwrite: (opts && opts.overwrite !== false)
-          });
-          resolve(out);
-        }catch(err){ reject(err); }
-      };
-      r.onerror = reject;
-      r.readAsDataURL(file);
-    });
-  }
-
-  // DB.set() 호출 시 원격 시트에 동기화 (debounced)
-  const _pending = {};
-  async function syncKey(key){
-    const table = TABLE_OF_KEY[key];
-    if(!table || !URL) return;
-    clearTimeout(_pending[key]);
-    _pending[key] = setTimeout(async ()=>{
-      try{
-        const raw = localStorage.getItem('safety_'+key);
-        const val = raw ? JSON.parse(raw) : null;
-        if(Array.isArray(val)){
-          await postJSON({action:'clear', table});
-          if(val.length) await postJSON({action:'saveMany', table, rows:val});
-        } else if(val && typeof val==='object' && key==='esg_done'){
-          const rows=[];
-          Object.keys(val).forEach(idx=>{
-            const months = val[idx] || {};
-            Object.keys(months).forEach(m=>{
-              rows.push({idx:`${idx}_${m}`, month:m, done:months[m]?1:0, updatedAt:new Date().toISOString()});
-            });
-          });
-          await postJSON({action:'clear', table});
-          if(rows.length) await postJSON({action:'saveMany', table, rows});
-        }
-      }catch(e){ console.warn('[CloudDB.syncKey]', key, e.message); }
-    }, 400);
-  }
-
-  // 초기 hydrate: 시트 → localStorage 캐시 → 활성 섹션 리렌더
-  async function hydrate(){
-    if(!URL) return;
-    try{
-      const tables = await loadAll();
-      const R2K = {'패트롤':'patrol','TBM':'tbm','교육':'education','아차사고':'accident',
-                   '지적사항':'siteIssues','위험성평가':'risk','설비점검':'equipment','비표':'signs'};
-      Object.keys(R2K).forEach(t=>{
-        const rows = tables[t] || [];
-        if(Array.isArray(rows)) localStorage.setItem('safety_'+R2K[t], JSON.stringify(rows));
-      });
-      const esgRows = tables['ESG체크'] || [];
-      const esg = {};
-      esgRows.forEach(r=>{
-        const m = String(r.idx||'').match(/^(.+)_(\d+)$/);
-        if(!m) return;
-        if(!esg[m[1]]) esg[m[1]]={};
-        esg[m[1]][m[2]] = r.done?1:0;
-      });
-      if(esgRows.length) localStorage.setItem('safety_esg_done', JSON.stringify(esg));
-      // 현재 활성 섹션 리렌더
-      const active = document.querySelector('.section.active');
-      if(active){
-        const sid = active.id.replace('section-','');
-        if(sid==='dashboard' && typeof renderDashboard==='function') renderDashboard();
-        if(sid==='patrol' && typeof showPatrolView==='function') showPatrolView('home');
-        if(sid==='accident' && typeof renderHistories==='function') renderHistories('acc');
-        if(sid==='risk' && typeof renderRiskStatus==='function') renderRiskStatus();
-        if(sid==='docmgr' && typeof renderDocMgr==='function') renderDocMgr();
-      }
-      console.log('✅ CloudDB hydrated');
-    }catch(e){ console.warn('CloudDB hydrate 실패:', e.message); }
-  }
-
-  return { URL, loadTable, loadAll, saveRow, deleteRow, clearTable,
-           listFiles, deleteFile, uploadFile, syncKey, hydrate };
-})();
-
-if (typeof window !== 'undefined') {
-  window.addEventListener('DOMContentLoaded', () => { setTimeout(()=>CloudDB.hydrate(), 500); });
-}
 
 // ============================================================
 // NAVIGATION
 // ============================================================
 const pageTitles = {
   dashboard:'📊 대시보드', docmgr:'📋 서류·이행 통합관리', patrol:'🔍 패트롤+TBM 통합 체크리스트',
-  education:'📚 교육 관리', meetcal:'📅 교육 & 운영 관리', risk:'⚠️ 위험성 평가',
+  education:'📚 교육 관리', meetcal:'📅 교육 & 운영 관리', officialdoc:'📨 공문서 관리 대장', risk:'⚠️ 위험성 평가',
   accident:'🚨 아차사고 (카톡방)', schedule:'📅 연간 일정',
   signs:'🪧 안전 비표 관리', cardnews:'📢 카드뉴스 시리즈', posters:'🖼️ 게시판 포스터', settings:'⚙️ 설정'
 };
@@ -1385,12 +1309,13 @@ function showSection(id){
   event && event.currentTarget && event.currentTarget.classList.add('active');
   document.getElementById('page-title').textContent = pageTitles[id]||id;
   if(id==='dashboard') renderDashboard();
-  if(id==='docmgr'){ renderDocMgr(); if(typeof dmLoadDrive==='function') dmLoadDrive(); }
+  if(id==='docmgr') renderDocMgr();
   if(id==='schedule') renderSchedule();
   if(id==='education') { renderESGPlan('esg-plan-edu'); }
   if(id==='meetcal') renderMeetCal();
   if(id==='patrol') { showPatrolView('home'); }
   if(id==='signs') renderSigns();
+  if(id==='officialdoc') renderOfficialDoc();
   if(id==='risk') renderRiskStatus();
 }
 function switchTab(section, tab){
@@ -2348,6 +2273,171 @@ function saveEducation(){
 }
 
 // ============================================================
+// 공문서 관리 대장 (Official Document Management)
+// ============================================================
+function getOdList(){ return DB.get('officialDocs'); }
+function setOdList(list){ DB.set('officialDocs', list); }
+
+function openOdForm(editId){
+  document.getElementById('od-edit-id').value = editId||'';
+  document.getElementById('od-modal-title').textContent = editId ? '📨 공문서 수정' : '📨 공문서 등록';
+  if(editId){
+    const item = getOdList().find(d=>d.id===editId);
+    if(item){
+      document.getElementById('od-date').value = item.date||'';
+      document.getElementById('od-direction').value = item.direction||'수신';
+      document.getElementById('od-sender').value = item.sender||'';
+      document.getElementById('od-status').value = item.status||'미대응';
+      document.getElementById('od-title').value = item.title||'';
+      document.getElementById('od-memo').value = item.memo||'';
+    }
+  } else {
+    document.getElementById('od-date').value = new Date().toISOString().split('T')[0];
+    document.getElementById('od-direction').value = '수신';
+    document.getElementById('od-sender').value = '';
+    document.getElementById('od-status').value = '미대응';
+    document.getElementById('od-title').value = '';
+    document.getElementById('od-memo').value = '';
+  }
+  document.getElementById('od-file').value = '';
+  document.getElementById('od-file-status').textContent = '';
+  document.getElementById('od-file-preview').innerHTML = '';
+  document.getElementById('od-modal').style.display = 'flex';
+}
+
+function saveOfficialDoc(){
+  const editId = document.getElementById('od-edit-id').value;
+  const date = document.getElementById('od-date').value;
+  const direction = document.getElementById('od-direction').value;
+  const sender = document.getElementById('od-sender').value.trim();
+  const status = document.getElementById('od-status').value;
+  const title = document.getElementById('od-title').value.trim();
+  const memo = document.getElementById('od-memo').value.trim();
+  if(!date||!sender||!title){ alert('날짜, 기관/업체, 제목은 필수입니다.'); return; }
+
+  const list = getOdList();
+  const fileInput = document.getElementById('od-file');
+  const files = fileInput.files;
+
+  const save = (fileRecords) => {
+    if(editId){
+      const idx = list.findIndex(d=>d.id===editId);
+      if(idx>=0){
+        list[idx].date=date; list[idx].direction=direction; list[idx].sender=sender;
+        list[idx].status=status; list[idx].title=title; list[idx].memo=memo;
+        if(fileRecords.length>0) list[idx].files = (list[idx].files||[]).concat(fileRecords);
+      }
+    } else {
+      list.unshift({id:'od_'+Date.now(), date, direction, sender, status, title, memo, files:fileRecords, created:new Date().toISOString()});
+    }
+    setOdList(list);
+    document.getElementById('od-modal').style.display='none';
+    renderOfficialDoc();
+  };
+
+  if(files.length>0 && DRIVE_UPLOAD_URL){
+    const statusEl = document.getElementById('od-file-status');
+    statusEl.textContent = '업로드 중...';
+    let uploaded = [];
+    let count = 0;
+    Array.from(files).forEach(file=>{
+      const reader = new FileReader();
+      reader.onload = function(e){
+        const base64 = e.target.result.split(',')[1];
+        fetch(DRIVE_UPLOAD_URL, {
+          method:'POST', mode:'no-cors',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({fileName:file.name.replace(/(\.[^.]+)$/,'_'+new Date().toISOString().split('T')[0]+'$1'), fileData:base64, mimeType:file.type, subfolder:'공문서관리'})
+        }).then(()=>{
+          uploaded.push({name:file.name, url:'https://drive.google.com/drive/folders/10a7V0ao6Qf-_9XeiK4Bd2NRmfAX7rgB5', date:new Date().toISOString().split('T')[0]});
+          count++;
+          if(count===files.length){ statusEl.textContent='✅ 완료'; save(uploaded); }
+        }).catch(()=>{
+          uploaded.push({name:file.name, url:'', date:new Date().toISOString().split('T')[0]});
+          count++;
+          if(count===files.length){ statusEl.textContent='⚠️ 일부 실패'; save(uploaded); }
+        });
+      };
+      reader.readAsDataURL(file);
+    });
+  } else if(files.length>0){
+    const fileRecords = Array.from(files).map(f=>({name:f.name, url:'', date:new Date().toISOString().split('T')[0]}));
+    save(fileRecords);
+  } else {
+    save([]);
+  }
+}
+
+function deleteOfficialDoc(id){
+  if(!confirm('이 공문서를 삭제하시겠습니까?')) return;
+  const list = getOdList().filter(d=>d.id!==id);
+  setOdList(list);
+  renderOfficialDoc();
+}
+
+function toggleOdStatus(id){
+  const list = getOdList();
+  const item = list.find(d=>d.id===id);
+  if(!item) return;
+  const cycle = {'미대응':'대응중','대응중':'대응완료','대응완료':'미대응'};
+  item.status = cycle[item.status]||'미대응';
+  setOdList(list);
+  renderOfficialDoc();
+}
+
+function renderOfficialDoc(){
+  const el = document.getElementById('od-list');
+  if(!el) return;
+  let list = getOdList();
+  const filterStatus = document.getElementById('od-filter-status');
+  const searchInput = document.getElementById('od-search');
+  const status = filterStatus ? filterStatus.value : 'all';
+  const search = searchInput ? searchInput.value.trim().toLowerCase() : '';
+
+  if(status!=='all') list = list.filter(d=>d.status===status);
+  if(search) list = list.filter(d=>(d.title||'').toLowerCase().includes(search)||(d.sender||'').toLowerCase().includes(search));
+
+  if(list.length===0){
+    el.innerHTML = '<div style="text-align:center;color:#9ca3af;padding:40px 0;font-size:13px;">등록된 공문서가 없습니다.</div>';
+    return;
+  }
+
+  const statusBadge = (s, id) => {
+    const colors = {'대응완료':['#dcfce7','#166534'],'대응중':['#fef9c3','#92400e'],'미대응':['#fef2f2','#991b1b']};
+    const c = colors[s]||['#f1f5f9','#374151'];
+    return `<span style="padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;background:${c[0]};color:${c[1]};cursor:pointer;user-select:none;" title="클릭하여 상태 변경" onclick="event.stopPropagation();toggleOdStatus('${id}')">${s}</span>`;
+  };
+
+  el.innerHTML = `<div class="table-wrap"><table style="font-size:12px;width:100%;">
+    <thead><tr style="background:#0d1f3c;color:#fff;">
+      <th style="width:40px;">No</th>
+      <th style="width:90px;">날짜</th>
+      <th style="width:50px;">구분</th>
+      <th style="min-width:100px;">기관/업체</th>
+      <th style="min-width:160px;">제목</th>
+      <th style="width:70px;">상태</th>
+      <th style="width:50px;">첨부</th>
+      <th style="width:90px;">관리</th>
+    </tr></thead>
+    <tbody>${list.map((d,i)=>{
+      const fileCount = (d.files||[]).length;
+      return `<tr style="border-bottom:1px solid #f1f5f9;">
+        <td style="text-align:center;color:#6b7280;">${i+1}</td>
+        <td style="white-space:nowrap;">${d.date||'-'}</td>
+        <td style="text-align:center;"><span style="padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600;background:${d.direction==='수신'?'#dbeafe':'#fce7f3'};color:${d.direction==='수신'?'#1e40af':'#9d174d'};">${d.direction||'수신'}</span></td>
+        <td style="font-weight:600;">${d.sender||'-'}</td>
+        <td>${d.title||'-'}${d.memo?`<div style="font-size:11px;color:#9ca3af;margin-top:2px;max-width:250px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${d.memo}</div>`:''}</td>
+        <td style="text-align:center;">${statusBadge(d.status, d.id)}</td>
+        <td style="text-align:center;">${fileCount>0?`<span style="color:#1e5096;font-weight:700;">📎 ${fileCount}</span>`:'<span style="color:#d1d5db;">-</span>'}</td>
+        <td style="text-align:center;white-space:nowrap;">
+          <button class="btn btn-outline btn-sm" style="font-size:10px;padding:3px 8px;" onclick="openOdForm('${d.id}')">수정</button>
+          <button class="btn btn-sm" style="font-size:10px;padding:3px 8px;background:#fef2f2;color:#dc2626;border:1px solid #fecaca;" onclick="deleteOfficialDoc('${d.id}')">삭제</button>
+        </td>
+      </tr>`;
+    }).join('')}</tbody></table></div>`;
+}
+
+// ============================================================
 // RISK ASSESSMENT (PDF 업로드 관리 방식)
 // ============================================================
 function uploadRiskFile(round, input){
@@ -2788,10 +2878,7 @@ function renderDashNotices(){
   if(missingDocs>0) notices.push({icon:'📋', text:`미보유 서류 ${missingDocs}건 — 확보 필요`});
   const wwsMissing = docs.filter(d=>d.wwsCode && d.status==='미보유').length;
   if(wwsMissing>0) notices.push({icon:'🏢', text:`WWS 미이행 항목 ${wwsMissing}건`});
-  // 교육&운영 관리 알림 통합
-  const mcAlerts = getMcAlerts();
-  mcAlerts.filter(a=>a.level==='urgent').forEach(a=>notices.push({icon:'🔴', text:a.text}));
-  mcAlerts.filter(a=>a.level==='warn').slice(0,3).forEach(a=>notices.push({icon:'🟡', text:a.text}));
+  // 교육&운영 관리 알림은 해당 섹션에서 별도 관리
   if(notices.length===0) notices.push({icon:'✅', text:'현재 특별한 알림이 없습니다.'});
   el.innerHTML = notices.map(n=>`<div class="dash-notice-item"><span>${n.icon}</span><span>${n.text}</span></div>`).join('');
 }
@@ -2899,51 +2986,10 @@ const docMasterList = [
   {id:'d40', wwsCode:'', wwsNo:'', name:'합동 안전점검 기록부', basis:'산안법 §64', period:'분기1회', status:'미보유', updated:'', expires:'', note:'원·하청 합동, 노·사 및 도급사 참여', category:'legal', hasTemplate:false, localFile:''},
 ];
 
-// 드라이브 파일 캐시 (docId → [files])
-let dmDriveCache = {};
-let dmDriveLoaded = false;
-
-function dmSanitizeName(name){ return (name||'').replace(/[\\/:*?"<>|]/g, '_'); }
-
-async function dmLoadDrive(){
-  if(!CloudDB || !CloudDB.URL) return;
-  try{
-    const files = await CloudDB.listFiles('서류관리');
-    const cache = {};
-    docMasterList.forEach(d=>{
-      const base = dmSanitizeName(d.name);
-      const escaped = base.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-      const re = new RegExp('^' + escaped + '_(\\d{4}-\\d{2}-\\d{2})\\.([^.]+)$');
-      const matched = files
-        .filter(f=>re.test(f.name))
-        .map(f=>{
-          const m = f.name.match(re);
-          return { id:f.id, name:f.name, date:m[1], url:f.fileUrl, previewUrl:f.previewUrl };
-        })
-        .sort((a,b)=>b.date.localeCompare(a.date));
-      cache[d.id] = matched;
-    });
-    dmDriveCache = cache;
-    dmDriveLoaded = true;
-    if(typeof renderDocMgr==='function') renderDocMgr();
-  }catch(e){ console.warn('dmLoadDrive 실패:', e.message); }
-}
-
 function getDMList(){
   const saved = DB.getObj('doclist');
-  return docMasterList.map(d=>{
-    const files = dmDriveCache[d.id] || [];
-    const autoStatus = files.length > 0 ? '보유' : '미보유';
-    const autoUpdated = files.length > 0 ? files[0].date : '';
-    const ov = saved[d.id] || {};
-    return {
-      ...d,
-      status: ov.status || autoStatus,
-      updated: ov.updated || autoUpdated,
-      note: ov.note !== undefined ? ov.note : (d.note || ''),
-      expires: ov.expires || d.expires || ''
-    };
-  });
+  if(Object.keys(saved).length===0) return docMasterList;
+  return docMasterList.map(d=>({...d,...(saved[d.id]||{})}));
 }
 function saveDMItem(id, field, value){
   const saved = DB.getObj('doclist');
@@ -3120,9 +3166,13 @@ function dmNote(id){
   if(note!==null){ saveDMItem(id,'note',note); renderDocMgr(); }
 }
 
-// 다중 파일 관리 (드라이브 매칭 기반)
-function getDMFiles(docId){ return dmDriveCache[docId] || []; }
-function setDMFiles(docId, files){ dmDriveCache[docId] = files; } // no-op 유지(하위호환)
+// 다중 파일 관리
+function getDMFiles(docId){
+  try{ const all=JSON.parse(localStorage.getItem('safety_dm_files')||'{}'); return all[docId]||[]; }catch(e){ return []; }
+}
+function setDMFiles(docId, files){
+  try{ const all=JSON.parse(localStorage.getItem('safety_dm_files')||'{}'); all[docId]=files; localStorage.setItem('safety_dm_files',JSON.stringify(all)); }catch(e){}
+}
 function dmGetRequiredCount(period){
   if(!period) return 0;
   if(period.includes('매월')||period==='월1회') return 12;
@@ -3135,49 +3185,55 @@ function dmGetRequiredCount(period){
   if(period.includes('연16시간')) return 1;
   return 0;
 }
-async function dmUploadToDrive(docId, input){
+function dmUploadToDrive(docId, input) {
   if(!input.files || !input.files[0]) return;
   const file = input.files[0];
-  const doc = docMasterList.find(d=>d.id===docId);
-  if(!doc){ alert('서류 정보를 찾을 수 없습니다'); return; }
+  const today = new Date().toISOString().split('T')[0];
   const statusEl = document.getElementById('dm-upload-status-' + docId);
-  if(!CloudDB || !CloudDB.URL){ alert('서버 URL이 설정되지 않았습니다'); return; }
+
+  const addFileRecord = (url) => {
+    const files = getDMFiles(docId);
+    files.push({name:file.name, url:url||'', date:today});
+    setDMFiles(docId, files);
+    saveDMItem(docId, 'status', '보유');
+    saveDMItem(docId, 'updated', today);
+    input.value='';
+    if(statusEl){ statusEl.textContent='✅'; setTimeout(()=>{statusEl.textContent='';},1500); }
+    renderDocMgr();
+  };
+
+  if(!DRIVE_UPLOAD_URL){
+    addFileRecord('');
+    return;
+  }
 
   if(statusEl) statusEl.textContent = '업로드 중...';
-  try{
-    const res = await CloudDB.uploadFile(file, {
-      subfolder: '서류관리',
-      renameBase: doc.name,   // 서류명_YYYY-MM-DD.ext 로 저장
-      overwrite: true
+  const reader = new FileReader();
+  reader.onload = function(e){
+    const base64 = e.target.result.split(',')[1];
+    fetch(DRIVE_UPLOAD_URL, {
+      method:'POST', mode:'no-cors',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({fileName:file.name.replace(/(\.[^.]+)$/,'_'+new Date().toISOString().split('T')[0]+'$1'), fileData:base64, mimeType:file.type, subfolder:'서류관리'})
+    }).then(()=>{
+      addFileRecord('https://drive.google.com/drive/folders/10a7V0ao6Qf-_9XeiK4Bd2NRmfAX7rgB5');
+    }).catch(err=>{
+      if(statusEl) statusEl.textContent='❌ 실패';
+      console.error(err);
     });
-    input.value = '';
-    if(res && res.success){
-      if(statusEl){ statusEl.textContent = '✅'; setTimeout(()=>{statusEl.textContent='';}, 1500); }
-      await dmLoadDrive();
-    } else {
-      if(statusEl) statusEl.textContent = '❌ ' + (res && res.message ? res.message : '실패');
-    }
-  }catch(err){
-    if(statusEl) statusEl.textContent = '❌ 실패';
-    console.error('업로드 오류:', err);
-  }
+  };
+  reader.readAsDataURL(file);
 }
-
-async function dmRemoveFile(docId, fileIdx){
-  if(!confirm('이 파일을 드라이브 휴지통으로 이동하시겠습니까?')) return;
-  const files = dmDriveCache[docId] || [];
-  const target = files[fileIdx];
-  if(!target || !target.id) return;
-  try{
-    const res = await CloudDB.deleteFile(target.id);
-    if(res && res.success){
-      await dmLoadDrive();
-    } else {
-      alert('삭제 실패: ' + (res && res.message ? res.message : ''));
-    }
-  }catch(err){
-    alert('삭제 실패: ' + err.message);
+function dmRemoveFile(docId, fileIdx){
+  if(!confirm('이 파일을 삭제하시겠습니까?')) return;
+  const files = getDMFiles(docId);
+  files.splice(fileIdx, 1);
+  setDMFiles(docId, files);
+  if(files.length===0){
+    saveDMItem(docId, 'status', '미보유');
+    saveDMItem(docId, 'updated', '');
   }
+  renderDocMgr();
 }
 
 // 서류 추가
@@ -3274,7 +3330,6 @@ const esgData = [
 // ★ 구글 드라이브 업로드 Apps Script URL
 // Apps Script 웹앱 배포 후 여기에 URL을 붙여넣으세요
 const DRIVE_UPLOAD_URL = 'https://script.google.com/macros/s/AKfycbyiZ5j5XH7G3gOMXzlSxbX9hJ5WxCf2J3PMUGGZfaQI3jQC7s0NOn-T8grEmi7LRpIZuA/exec';
-const APPS_SCRIPT_URL = DRIVE_UPLOAD_URL; // 스프레드시트 CRUD 통합 엔드포인트
 
 function getESGFiles(){
   try{ return JSON.parse(localStorage.getItem('safety_esg_files')||'{}'); }catch(e){ return {}; }
@@ -3354,9 +3409,10 @@ function renderESGPlan(containerId){
       <td style="white-space:nowrap;">${item.manager}</td>
       ${item.plan.map((p,mi)=>{
         const d = isESGDone(globalIdx, mi);
-        if(d) return `<td class="esg-month-cell esg-done esg-clickable" title="${mi+1}월 - 클릭하여 미시행으로 변경" onclick="toggleESGDone(${globalIdx},${mi},'${containerId}')">●</td>`;
-        if(p) return `<td class="esg-month-cell esg-plan esg-clickable" title="${mi+1}월 - 클릭하여 시행완료 처리" onclick="toggleESGDone(${globalIdx},${mi},'${containerId}')">○</td>`;
-        return `<td class="esg-month-cell esg-empty">-</td>`;
+        if(d && p) return `<td class="esg-month-cell esg-done esg-clickable" title="${mi+1}월 - 계획+시행완료 (클릭: 시행취소)" onclick="toggleESGDone(${globalIdx},${mi},'${containerId}')">●</td>`;
+        if(d && !p) return `<td class="esg-month-cell esg-done esg-clickable" title="${mi+1}월 - 시행완료 (클릭: 시행취소)" onclick="toggleESGDone(${globalIdx},${mi},'${containerId}')" style="position:relative;">●</td>`;
+        if(p) return `<td class="esg-month-cell esg-plan esg-clickable" title="${mi+1}월 - 계획 (클릭: 시행완료 처리)" onclick="toggleESGDone(${globalIdx},${mi},'${containerId}')">○</td>`;
+        return `<td class="esg-month-cell esg-empty esg-clickable" title="${mi+1}월 - 클릭하여 시행완료 처리" onclick="toggleESGDone(${globalIdx},${mi},'${containerId}')" style="cursor:pointer;">-</td>`;
       }).join('')}
       <td style="text-align:right;white-space:nowrap;">${item.cost}</td>
       <td style="text-align:center;position:relative;">
@@ -3494,7 +3550,9 @@ function toggleESGDone(idx, month, containerId){
   if(Object.keys(saved[idx]).length === 0) delete saved[idx];
   setESGDone(saved);
   renderESGPlan('esg-plan-edu');
+  renderESGPlan('esg-plan-meetcal');
   renderESGPlan('esg-plan-schedule');
+  if(typeof renderMcOverview==='function') renderMcOverview();
 }
 
 // === ESG File upload via Google Drive ===
@@ -3527,10 +3585,10 @@ function addESGFileUpload(idx, containerId, input){
       mode: 'no-cors',
       headers: {'Content-Type':'application/json'},
       body: JSON.stringify({
-        fileName: file.name,
+        fileName: itemName+'_'+file.name.replace(/(\.[^.]+)$/,'_'+new Date().toISOString().split('T')[0]+'$1'),
         fileData: base64,
         mimeType: file.type,
-        subfolder: itemName
+        subfolder: 'ESG교육'
       })
     }).then(()=>{
       // no-cors 모드에서는 응답을 읽을 수 없으므로 URL 추정
@@ -3817,10 +3875,10 @@ const cnCards = [
    detail:{intro:'개인보호구(PPE)는 모든 안전조치가 완료된 후에도 남은 위험으로부터 몸을 지키는 마지막 방어선입니다.\nPPE是保护身体的最后防线。',sections:[{t:'🪖 작업별 필수 보호구 各作业必备防护',i:['천장주행크레인: 안전모+안전화 (필수) 安全帽+安全鞋','금형 작업: 안전장갑+안전화+안전모 模具:手套+安全鞋+安全帽','사출 작업: 방열장갑+보안경+안전화 注塑:隔热手套+护目镜+安全鞋','화학물질: 방독마스크+내화학장갑+보안경 化学品:防毒面具+耐化学手套+护目镜']},{t:'❌ 이런 행동은 안 됩니다 禁止事项',i:['"잠깐이니까 괜찮아" → 사고는 잠깐에 발생 "就一会儿"→事故瞬间发生','파손된 보호구 계속 착용 禁止使用损坏的防护装备','본인 것 아닌 보호구 무단 사용 禁止擅用他人防护装备']}],hl:'보호구 미착용 사고 발생 시 산재보상 감액 + 회사 행정처분. 不戴防护发生事故→工伤赔偿减少+公司处罚。',law:'산업안전보건법 제38조'}},
   {id:4,series:'basic',color:'linear-gradient(135deg,#312e81,#6366f1)',ep:'SERIES 04 · 기초편 基础篇',title:'아차사고\n신고하면 포상합니다!\n报告险情有奖励！',emoji:'🚨',footer:'아차사고 1건 = 중대사고 30건 예방 | 1次险情=预防30次事故',fb:'#312e81',fc:'#fff',
    preview:['아차사고 = 다칠 뻔 했지만 부상은 없는 상황 险情=差点受伤','신고해도 절대 불이익 없음, 포상 있음 报告无处罚，有奖励','하인리히 법칙: 아차사고 300 → 중상 1 海因里希:险情300→重伤1'],
-   detail:{intro:'하인리히 법칙에 따르면 중대사고 1건 전에 아차사고 300건이 있습니다.\n海因里希法则：1次重大事故前有300次险情。',sections:[{t:'📌 아차사고란? 什么是险情？',i:['발 헛디뎌 넘어질 뻔 했지만 안 넘어짐 差点摔倒','금형 이동 중 미끄러졌지만 다치지 않음 模具搬运中滑但未受伤','지게차가 나와 충돌할 뻔 했지만 피함 差点与叉车碰撞但躲开了']},{t:'📝 신고 방법 报告方法',i:['안전지킴이 카카오톡 채팅방으로 보고 通过KakaoTalk报告','안전담당자에게 구두 보고도 가능 也可口头报告安全员','사진과 함께 보고하면 더 좋습니다 附照片报告更好']},{t:'🎁 신고 포상 奖励',i:['신고 1건: 소정의 포상 每次报告有奖励','우수 제안: 분기 1회 표창 优秀建议：季度表彰']}],hl:'신고한다고 처벌받지 않습니다! 报告不会受到处罚！',law:'산업안전보건법 제52조'}},
+   detail:{intro:'하인리히 법칙에 따르면 중대사고 1건 전에 아차사고 300건이 있습니다.\n海因里希法则：1次重大事故前有300次险情。',sections:[{t:'📌 아차사고란? 什么是险情？',i:['발 헛디뎌 넘어질 뻔 했지만 안 넘어짐 差点摔倒','금형 이동 중 미끄러졌지만 다치지 않음 模具搬运中滑但未受伤','지게차가 나와 충돌할 뻔 했지만 피함 差点与叉车碰撞但躲开了']},{t:'📝 신고 방법 报告方法',i:['안전지킴이 카카오톡 채팅방으로 보고 通过KakaoTalk报告','안전담당자에게 구두 보고도 가능 也可口头报告安全员','사진과 함께 보고하면 더 좋습니다 附照片报告更好']},{t:'🎁 신고 포상 奖励',i:['우수 제안: 운영 일정에 따라 표창 및 포상 优秀建议：按运营计划进行表彰及奖励']}],hl:'작은 신고가 모여 더 나은 안전환경을 만듭니다. 小小的报告汇聚成更好的安全环境。',law:'산업안전보건법 제52조'}},
   {id:5,series:'field',color:'linear-gradient(135deg,#78350f,#d97706)',ep:'SERIES 05 · 현장편 现场篇',title:'천장주행크레인\n안전수칙\n天车安全规则',emoji:'🏗️',footer:'인양물 아래에는 절대 서지 마세요 | 严禁站在吊物下方',fb:'#78350f',fc:'#fff',
    preview:['체인·훅·안전장치 반드시 점검 链条·吊钩必须检查','사람 키 이상 높이 절대 금지 严禁超过人身高度','안전모 착용 의무 必须戴安全帽'],
-   detail:{intro:'천장주행크레인 사고는 대부분 사망으로 이어집니다.\n天车事故大多导致死亡。',sections:[{t:'🔴 절대 하면 안 되는 것 绝对禁止',i:['인양물 아래에 사람이 있을 때 작업 有人在下方时禁止作业','최대하중 초과 운반 禁止超载','사람 키 이상으로 인양물 이동 禁止高于人身高度移动','혼자 대형 금형 이동 禁止独自移动大型模具']},{t:'✅ 작업 전 반드시 확인 作业前必须确认',i:['체인·와이어: 마모, 변형, 균열 없는지 链条磨损·变形·裂纹','훅: 해지장치 정상 작동 吊钩脱钩装置正常','비상정지 버튼 작동 확인 确认紧急停止按钮','작업 구역 인원 대피 완료 作业区人员撤离完毕']},{t:'📋 2인 1조 기준 2人1组标准',i:['금형 1톤 이상 → 반드시 2인 1조 模具1吨以上必须2人1组','신호수 1명 별도 배치 另配1名信号员','운전자는 신호수 지시에만 따름 驾驶员只听信号员指挥']}],hl:'현장 비표: "최대하중 ___kg / 키 이상 운반 금지 / 안전모 필수" 现场标牌："最大载重___kg / 禁超高 / 必须戴安全帽"',law:'산업안전보건법 시행규칙 제88조'}},
+   detail:{intro:'천장주행크레인 사고는 대부분 큰 사고로 이어집니다.\n天车事故大多会导致重大事故。',sections:[{t:'🔴 절대 하면 안 되는 것 绝对禁止',i:['인양물 아래에 사람이 있을 때 작업 有人在下方时禁止作业','최대하중 초과 운반 禁止超载','사람 키 이상으로 인양물 이동 禁止高于人身高度移动','혼자 대형 금형 이동 禁止独自移动大型模具']},{t:'✅ 작업 전 반드시 확인 作业前必须确认',i:['체인·와이어: 마모, 변형, 균열 없는지 链条磨损·变形·裂纹','훅: 해지장치 정상 작동 吊钩脱钩装置正常','비상정지 버튼 작동 확인 确认紧急停止按钮','작업 구역 인원 대피 완료 作业区人员撤离完毕']},{t:'📋 2인 1조 기준 2人1组标准',i:['금형 1톤 이상 → 반드시 2인 1조 模具1吨以上必须2人1组','신호수 1명 별도 배치 另配1名信号员','운전자는 신호수 지시에만 따름 驾驶员只听信号员指挥']}],hl:'현장 비표 반드시 참조 请务必参照现场标牌',law:'산업안전보건법 시행규칙 제88조'}},
   {id:6,series:'field',color:'linear-gradient(135deg,#134e4a,#0d9488)',ep:'SERIES 06 · 현장편 现场篇',title:'비정형 작업 안전\n+LOTO 절차\n非常规作业安全+上锁挂牌',emoji:'🔒',footer:'비정형 작업 = 사전 허가 + LOTO 필수 | 非常规作业=事前许可+LOTO',fb:'#134e4a',fc:'#fff',
    preview:['비정형 작업: 일상적이지 않은 특수 작업 非常规作业','LOTO = Lock Out / Tag Out (잠금·태깅) 上锁挂牌','전원 차단 없이 설비 접근 = 즉사 위험 未断电接触设备=致命'],
    detail:{intro:'비정형 작업은 일상 반복 작업이 아닌 설비 수리, 금형 교체, 청소, 시운전 등 특수 작업을 말합니다. 사고 발생률이 일반 작업의 3배 이상입니다.\n非常规作业是指设备维修、模具更换、清洁等特殊作业，事故率是普通作业的3倍以上。',sections:[{t:'🔴 비정형 작업 시 필수 절차 非常规作业必须步骤',i:['① 작업 허가서 발행 (관리감독자 승인) 发行作业许可证','② 위험성평가 실시 (참여 작업자 전원) 全员参与风险评估','③ 안전조치 확인 (LOTO, 가림막 등) 确认安全措施','④ 작업 중 안전 감시 (감시인 배치) 配置监护人','⑤ 작업 완료 후 원상 복구 확인 完工后恢复确认']},{t:'🔒 LOTO 절차 (잠금·태깅) 上锁挂牌步骤',i:['① 설비 전원 차단 (해당 차단기) 断电','② 잠금장치(Lock) 설치 + 본인 이름표(Tag) 부착 上锁+挂牌','③ 잔류 에너지 제거 (기압·열·관성 등) 释放残余能量','④ 작업 완료 후 본인만 잠금 해제 只有本人可以解锁','⑤ 안전장치 복구 확인 → 가동 确认安全装置恢复后启动']},{t:'📋 비정형 작업 예시 非常规作业示例',i:['금형 교체 작업 模具更换','설비 내부 청소·수리 设备内部清洁维修','전기 배선 작업 电气布线作业','고소 작업 (사다리, 비계) 高空作业']}],hl:'LOTO 없이 설비 접근 = 중대재해 직결! 未LOTO接触设备=直接导致重大灾害！',law:'산업안전보건기준에 관한 규칙 제92조, 제301조'}},
@@ -3841,7 +3899,7 @@ const cnCards = [
    detail:{intro:'전기 감전 사고는 순식간에 사망으로 이어집니다.\n触电事故瞬间导致死亡。',sections:[{t:'🔴 절대 금지 绝对禁止',i:['허가없이 분전반 개방 未授权禁止打开配电箱','물기 있는 손으로 조작 湿手操作','전선 위에 자재 올려두기 禁止在电线上放材料','자가 수리·개조 禁止自行维修改造']},{t:'✅ 발견 시 즉시 신고 发现时立即报告',i:['전선 피복 벗겨짐·손상 电线破损','콘센트·플러그 파손 插座破损','이상한 냄새·소리 异常气味或声音']},{t:'🛑 작업 전 잠금·태깅(LOTO) 上锁挂牌',i:['설비 수리 전 전원 차단 维修前断电','잠금(Lock) + 이름표(Tag) 부착 上锁+挂牌','본인만 잠금 해제 가능 只有本人可解锁']}],hl:'감전 사고 시 전류 차단부터! 맨손으로 피해자 잡지 마세요.\n触电时先断电！禁止徒手接触触电者。',law:'산업안전보건기준에 관한 규칙 제301조'}},
   {id:12,series:'culture',color:'linear-gradient(135deg,#1c1917,#57534e)',ep:'SERIES 12 · 문화편 文化篇',title:'안전문화\n우리가 만들어 갑니다\n我们共同打造安全文化',emoji:'🤝',footer:'"안전은 규정이 아닌 우리의 약속입니다" | "安全是我们的承诺"',fb:'#1c1917',fc:'#fff',
    preview:['안전을 지키는 것이 동료를 지키는 것 守护安全就是守护同事','위험 발견 = 즉시 멈추고 보고 发现危险=立即停止报告','안전 제안 적극 참여 → 더 안전한 현장 积极参与安全建议'],
-   detail:{intro:'안전문화는 우리 모두가 함께 만들어 가는 것입니다.\n安全文化是我们共同打造的。',sections:[{t:'🤝 안전문화 4원칙 安全文化4原则',i:['동료 안전도 내 책임 同事安全也是我的责任','멈추는 용기: 위험하면 작업 중지 후 보고 (처벌 없음) 危险时停工报告(无处罚)','작은 것도 신고: 아차사고·개선 아이디어 모두 제안 小事也报告','기록이 문화: TBM·점검·교육 기록이 우리의 안전 역사 记录就是文化']},{t:'🏆 안전 포상 제도 安全奖励制度',i:['아차사고 신고: 소정의 포상 报告险情有奖励','위험발견 제안: 분기 우수 제안 선정 发现危险建议：季度优秀评选','안전수칙 준수 우수자: 연 1회 표창 遵守安全者：年度表彰']}],hl:'안전을 말할 수 있는 문화 = 사고가 없는 문화!\n能说出安全问题的文化=无事故的文化！',law:'산업안전보건법 제52조'}}
+   detail:{intro:'안전문화는 우리 모두가 함께 만들어 가는 것입니다.\n安全文化是我们共同打造的。',sections:[{t:'🤝 안전문화 4원칙 安全文化4原则',i:['동료 안전도 내 책임 同事安全也是我的责任','멈추는 용기: 위험하면 작업 중지 후 보고 (처벌 없음) 危险时停工报告(无处罚)','작은 것도 신고: 아차사고·개선 아이디어 모두 제안 小事也报告','기록이 문화: TBM·점검·교육 기록이 우리의 안전 역사 记录就是文化']},{t:'🏆 안전 포상 제도 安全奖励制度',i:['우수 제안: 운영 일정에 따라 표창 및 포상 优秀建议：按运营计划进行表彰及奖励']}],hl:'안전을 말할 수 있는 문화 = 사고가 없는 문화!\n能说出安全问题的文化=无事故的文化！',law:'산업안전보건법 제52조'}}
 ];
 
 // ============================================================
@@ -3937,6 +3995,10 @@ function openCN(id){
   mf.textContent=c.footer; mf.style.background=c.fb; mf.style.color=c.fc;
   const d=c.detail;
   document.getElementById('cn-modal-body').innerHTML=`
+    <div style="background:#f0fdf4;border-radius:10px;padding:14px;margin-bottom:14px;border-left:4px solid #22c55e;">
+      <div style="font-size:13px;font-weight:700;color:#166534;margin-bottom:8px;">⚡ 핵심 포인트</div>
+      <ul style="list-style:none;padding:0;margin:0;">${c.preview.map(p=>`<li style="padding:6px 0;border-bottom:1px solid #dcfce7;font-size:12px;color:#374151;display:flex;gap:8px;"><span style="color:#22c55e;font-weight:700;">●</span><span style="font-weight:600;">${p}</span></li>`).join('')}</ul>
+    </div>
     <p style="font-size:13px;color:#374151;line-height:1.6;margin-bottom:12px;">${d.intro}</p>
     ${d.sections.map(s=>`<div style="font-size:13px;font-weight:700;color:#0d1f3c;margin:12px 0 6px;">${s.t}</div><ul style="list-style:none;padding:0;">${s.i.map(x=>`<li style="padding:6px 0;border-bottom:1px solid #f1f5f9;font-size:12px;color:#374151;display:flex;gap:8px;"><span>✓</span><span>${x}</span></li>`).join('')}</ul>`).join('')}
     <div style="background:#fef9c3;border-radius:8px;padding:12px;font-size:12px;color:#92400e;margin:12px 0;border-left:4px solid #f59e0b;">💡 ${d.hl}</div>
@@ -3954,7 +4016,9 @@ function closeCnModal(e){
 }
 function cnCopy(id){
   const c=cnCards.find(x=>x.id===id);
-  let t=`[${c.ep}] ${c.title.replace(/\n/g,' ')}\n\n${c.detail.intro}\n\n`;
+  let t=`[${c.ep}] ${c.title.replace(/\n/g,' ')}\n\n⚡ 핵심 포인트\n`;
+  c.preview.forEach(p=>t+=`● ${p}\n`);
+  t+=`\n${c.detail.intro}\n\n`;
   c.detail.sections.forEach(s=>{t+=`${s.t}\n`;s.i.forEach(x=>t+=`• ${x}\n`);t+='\n';});
   t+=`💡 ${c.detail.hl}\n${c.footer}`;
   navigator.clipboard.writeText(t).then(()=>alert('카카오톡에 붙여넣기하세요!'));
@@ -3962,11 +4026,14 @@ function cnCopy(id){
 function cnPrint(id){
   const c=cnCards.find(x=>x.id===id);
   const w=window.open('','_blank','width=800,height=1100');
-  w.document.write(`<html><head><meta charset="UTF-8"><style>
-    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;800;900&family=Noto+Sans+SC:wght@400;500;700;900&display=swap');
+  w.document.write(`<html><head><meta charset="UTF-8">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;800;900&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
     @page{size:A4;margin:0;}
     *{margin:0;padding:0;box-sizing:border-box;}
-    html,body{width:210mm;height:297mm;font-family:'Noto Sans KR','Noto Sans SC','Malgun Gothic',sans-serif;
+    html,body{width:210mm;height:297mm;font-family:'Noto Sans KR','Noto Sans SC','Microsoft YaHei','SimHei','Malgun Gothic',sans-serif;
       -webkit-print-color-adjustment:exact !important;print-color-adjust:exact !important;color-adjust:exact !important;}
     .card{width:210mm;height:297mm;display:flex;flex-direction:column;overflow:hidden;}
     .header{padding:28px 28px 20px;background:${c.color};position:relative;display:flex;flex-direction:column;justify-content:flex-end;
@@ -3999,6 +4066,10 @@ function cnPrint(id){
       </div>
       <div class="body">
         <div class="content">
+          <div style="background:#f0fdf4;border-radius:10px;padding:14px;margin-bottom:14px;border-left:4px solid #22c55e;-webkit-print-color-adjustment:exact !important;print-color-adjust:exact !important;">
+            <div style="font-size:15px;font-weight:800;color:#166534;margin-bottom:8px;">⚡ 핵심 포인트</div>
+            <ul>${c.preview.map(p=>`<li><span style="color:#22c55e;font-weight:700;flex-shrink:0;">●</span><span style="font-weight:600;">${p}</span></li>`).join('')}</ul>
+          </div>
           <div class="intro">${c.detail.intro.replace(/\n/g,'<br>')}</div>
           ${c.detail.sections.map(s=>`<div class="sec">${s.t}</div><ul>${s.i.map(x=>`<li><span style="color:#1e5096;flex-shrink:0;">✓</span><span>${x}</span></li>`).join('')}</ul>`).join('')}
           <div class="hl">💡 ${c.detail.hl}</div>
@@ -4008,7 +4079,8 @@ function cnPrint(id){
       <div class="footer">${c.footer}</div>
     </div>
   </body></html>`);
-  w.document.close(); setTimeout(()=>w.print(),500);
+  w.document.close();
+  w.document.fonts.ready.then(()=>{ setTimeout(()=>w.print(),300); });
 }
 
 // ============================================================
@@ -4053,11 +4125,14 @@ function ptCopy(id){
 function ptPrint(id){
   const p=ptPosters.find(x=>x.id===id);
   const w=window.open('','_blank','width=800,height=1100');
-  w.document.write(`<html><head><meta charset="UTF-8"><style>
-    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;800;900&family=Noto+Sans+SC:wght@400;500;700;900&display=swap');
+  w.document.write(`<html><head><meta charset="UTF-8">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;800;900&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
     @page{size:A4;margin:0;}
     *{margin:0;padding:0;box-sizing:border-box;}
-    html,body{width:210mm;height:297mm;font-family:'Noto Sans KR','Noto Sans SC','Malgun Gothic',sans-serif;
+    html,body{width:210mm;height:297mm;font-family:'Noto Sans KR','Noto Sans SC','Microsoft YaHei','SimHei','Malgun Gothic',sans-serif;
       -webkit-print-color-adjustment:exact !important;print-color-adjust:exact !important;color-adjust:exact !important;}
     .poster{width:210mm;height:297mm;display:flex;flex-direction:column;overflow:hidden;}
     .header{padding:28px 28px 22px;background:${p.color};text-align:center;position:relative;display:flex;flex-direction:column;justify-content:center;
@@ -4101,7 +4176,8 @@ function ptPrint(id){
       <div class="footer">${p.footer}</div>
     </div>
   </body></html>`);
-  w.document.close(); setTimeout(()=>w.print(),500);
+  w.document.close();
+  w.document.fonts.ready.then(()=>{ setTimeout(()=>w.print(),300); });
 }
 
 // ============================================================
@@ -4192,7 +4268,7 @@ function getMcLastLog(itemId){
 function getMcAlerts(){
   const alerts = [];
   const now = new Date();
-  mcMasterItems.forEach(item=>{
+  mcMasterItems.filter(item=>item.id!=='weekly-env'&&item.id!=='prod-weekly').forEach(item=>{
     let range;
     if(item.id==='prod-monthly'){
       range = getMcCurrentMonthRange();
@@ -4258,23 +4334,46 @@ function mcQuickLog(typeId){
 }
 
 function renderMcOverview(){
-  // 통계 카드: 완료/전체
-  let weekDone=0, weekTotal=0, monthDone=0, monthTotal=0, quarterDone=0, quarterTotal=0;
-  mcMasterItems.forEach(item=>{
-    let range;
-    if(item.id==='prod-monthly') range = getMcCurrentMonthRange();
-    else range = getMcRangeForCycle(item.cycle);
-    const done = getMcLogsInRange(item.id, range).length > 0;
-    if(item.cycle==='weekly' || (item.cycle==='prod' && item.id!=='prod-monthly')){ weekTotal++; if(done) weekDone++; }
-    if(item.cycle==='monthly' || item.id==='prod-monthly'){ monthTotal++; if(done) monthDone++; }
-    if(item.cycle==='quarterly'){ quarterTotal++; if(done) quarterDone++; }
+  // ESG 교육계획 기반 통계: 계획 수 vs 시행완료 수
+  const now = new Date();
+  const curMonth = now.getMonth(); // 0-based
+  const curQ = Math.floor(curMonth / 3);
+  const qStart = curQ * 3;
+  const qEnd = qStart + 2;
+  const prevQ = curQ > 0 ? curQ - 1 : -1;
+  const pqStart = prevQ >= 0 ? prevQ * 3 : -1;
+  const pqEnd = prevQ >= 0 ? pqStart + 2 : -1;
+
+  let monthPlan=0, monthDone=0;
+  let quarterPlan=0, quarterDone=0;
+  let prevqPlan=0, prevqDone=0;
+  let yearPlan=0, yearDone=0;
+
+  esgData.forEach((item, idx) => {
+    item.plan.forEach((p, mi) => {
+      if(p) {
+        if(mi === curMonth) monthPlan++;
+        if(mi >= qStart && mi <= qEnd) quarterPlan++;
+        if(pqStart >= 0 && mi >= pqStart && mi <= pqEnd) prevqPlan++;
+        yearPlan++;
+      }
+      if(isESGDone(idx, mi)) {
+        if(mi === curMonth) monthDone++;
+        if(mi >= qStart && mi <= qEnd) quarterDone++;
+        if(pqStart >= 0 && mi >= pqStart && mi <= pqEnd) prevqDone++;
+        yearDone++;
+      }
+    });
   });
-  const wEl = document.getElementById('mc-week-pending');
+
+  const pqEl = document.getElementById('mc-prevq-pending');
   const mEl = document.getElementById('mc-month-pending');
   const qEl = document.getElementById('mc-quarter-pending');
-  if(wEl) wEl.textContent = `${weekDone}/${weekTotal}`;
-  if(mEl) mEl.textContent = `${monthDone}/${monthTotal}`;
-  if(qEl) qEl.textContent = `${quarterDone}/${quarterTotal}`;
+  const yEl = document.getElementById('mc-year-pending');
+  if(pqEl) pqEl.textContent = prevQ >= 0 ? `${prevqDone}/${prevqPlan}` : '-';
+  if(mEl) mEl.textContent = `${monthDone}/${monthPlan}`;
+  if(qEl) qEl.textContent = `${quarterDone}/${quarterPlan}`;
+  if(yEl) yEl.textContent = `${yearDone}/${yearPlan}`;
 }
 
 // 분기별 표 렌더
