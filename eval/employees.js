@@ -473,5 +473,15 @@ const HOURLY_EMPLOYEES = [
   { team:'후가공팀-품질', name:'도성화', rank:'주임', type:'hourly' },
 ];
 
-const ALL_EMPLOYEES = [...ANNUAL_EMPLOYEES, ...HOURLY_EMPLOYEES];
+/** 평가만 수행하는 분들 (본인은 평가 대상 아님) — KPI 없음, evaluatorOnly 플래그 */
+const EVALUATOR_ONLY = [
+  { team:'대표이사', name:'김승규', rank:'대표이사', type:'annual', evaluatorOnly:true, kpis:[] },
+  { team:'부사장',   name:'강동길', rank:'부사장',   type:'annual', evaluatorOnly:true, kpis:[] },
+  { team:'개발팀',   name:'조경환', rank:'이사',     type:'annual', evaluatorOnly:true, kpis:[] },
+  { team:'후가공팀', name:'임문호', rank:'이사',     type:'annual', evaluatorOnly:true, kpis:[] },
+  { team:'경영기획실', name:'김은진', rank:'이사',   type:'annual', evaluatorOnly:true, kpis:[] },
+  { team:'생산총괄', name:'박재걸', rank:'공장장',   type:'annual', evaluatorOnly:true, kpis:[] },
+];
+
+const ALL_EMPLOYEES = [...ANNUAL_EMPLOYEES, ...HOURLY_EMPLOYEES, ...EVALUATOR_ONLY];
 function getEmployee(name) { return ALL_EMPLOYEES.find(e => e.name === name); }

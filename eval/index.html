@@ -26,6 +26,22 @@
 <!-- 홈 화면                                        -->
 <!-- ══════════════════════════════════════════════ -->
 <main id="page-home">
+  <!-- ▼ 1차 단계 안내 배너 -->
+  <div style="background:linear-gradient(135deg,#fff4e6,#ffe0b3);border-left:6px solid #ED7D31;border-radius:10px;padding:18px 24px;margin-bottom:18px;">
+    <div style="font-size:12px;color:#9C5400;font-weight:700;letter-spacing:1.5px;">CURRENT PHASE</div>
+    <div style="font-size:18px;font-weight:bold;color:#7F3300;margin-top:4px;">🤝 1차 단계 — KPI 평가항목 합의</div>
+    <div style="font-size:13px;color:#5a3000;margin-top:8px;line-height:1.6;">
+      현재는 <b>합의 단계</b>입니다. 팀장과 팀원이 평가 항목을 함께 검토하고, "이대로 평가받을지" 또는 "수정이 필요한지" 의견을 남겨주세요.<br>
+      합의 완료 후 <b>12월 자기평가 → 1월 팀장평가</b> 순으로 실제 점수 입력이 오픈됩니다. (현재 점수 입력은 잠금)
+    </div>
+  </div>
+
+  <!-- ▼ 로그인 방법 안내 -->
+  <div style="background:#f0f7ff;border:1px solid #BDD7EE;border-radius:10px;padding:14px 20px;margin-bottom:18px;font-size:13px;color:#1F3864;">
+    🔑 <b>로그인 방법</b> &nbsp;&nbsp;|&nbsp;&nbsp; 이름 선택 + 생년월일 6자리 (YYMMDD, 예: 1985년 3월 15일 → <code style="background:#fff;padding:1px 6px;border-radius:4px;">850315</code>)
+    <br><span style="font-size:12px;color:#4a5568;">권한은 직원인증 시트의 값에 따라 자동 구분됩니다 — <b>관리자 / 팀장 / 팀원</b></span>
+  </div>
+
   <!-- 성과관리 진행 가이드 배너 -->
   <a href="guide.html" target="_blank" style="display:block;text-decoration:none;margin-bottom:24px;background:linear-gradient(135deg,#1F3864,#2E75B6);border-radius:12px;padding:18px 32px;color:white;box-shadow:0 4px 16px rgba(31,56,100,0.3);transition:transform 0.2s;"
      onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
@@ -42,14 +58,14 @@
   <div class="home-grid">
     <div class="home-card self" onclick="showPage('self')">
       <div class="icon">📝</div>
-      <h2>자기평가 입력</h2>
-      <p>본인의 KPI 달성 현황과<br>자기 평가 점수를 입력합니다.</p>
-      <div class="badge">연봉직 · 시급직 공통</div>
+      <h2>내 KPI 확인 · 합의 의견</h2>
+      <p>본인의 평가 항목을 확인하고<br>합의 / 수정 의견을 남깁니다.</p>
+      <div class="badge">팀원 · 팀장 모두</div>
     </div>
     <div class="home-card manager" onclick="showPage('manager')">
       <div class="icon">💬</div>
-      <h2>팀장 피드백 작성</h2>
-      <p>팀원에 대한 평가 점수와<br>강점 · 개선점 피드백을 작성합니다.</p>
+      <h2>팀원 KPI 합의</h2>
+      <p>본인 팀원의 평가 항목을 확인하고<br>합의 / 수정 의견을 작성합니다.</p>
       <div class="badge">팀장 전용</div>
     </div>
     <div class="home-card admin" onclick="showPage('admin')">
@@ -117,18 +133,17 @@
 <!-- 자기평가 입력                                   -->
 <!-- ══════════════════════════════════════════════ -->
 <main id="page-self" class="hidden">
-  <div class="section-title">📝 자기평가 입력</div>
+  <div class="section-title">📝 내 KPI 확인 · 합의 의견 (1차 단계)</div>
 
   <!-- 인증 화면 -->
   <div id="self-auth" class="login-wrap">
     <div class="icon">📝</div>
     <h2>본인 인증</h2>
-    <p>자기평가를 위해 이름과 생년월일을 입력하세요.</p>
+    <p>이름 선택 후 생년월일 6자리(YYMMDD)를 입력하세요.</p>
     <div class="form-group" style="text-align:left;">
       <label>이름</label>
-      <select id="self-auth-name">
-        <option value="">-- 이름 선택 --</option>
-      </select>
+      <input type="text" id="self-auth-name" placeholder="본인 이름 입력"
+        onkeydown="if(event.key==='Enter')document.getElementById('self-auth-birth').focus()">
     </div>
     <div class="form-group" style="text-align:left;">
       <label>생년월일 (6자리)</label>
@@ -146,51 +161,39 @@
     </div>
 
   <div id="self-form-container" class="hidden">
+    <div class="alert alert-warning" style="font-size:13px;background:#FFF8E1;border:1px solid #FFE082;color:#7F6000;">
+      🔒 <b>점수 입력은 12월에 오픈됩니다.</b> 지금은 평가 항목을 검토하고 합의/수정 의견만 제출해주세요.
+    </div>
+
     <div class="card">
-      <div class="section-title" style="font-size:15px;">📊 KPI 자기 평가 점수</div>
+      <div class="section-title" style="font-size:15px;">🤝 KPI 항목별 합의 의견</div>
       <div class="alert alert-info" style="font-size:12px;">
-        💡 각 항목에 대해 자신의 달성도를 솔직하게 입력해주세요. (자기평가는 최종 점수의 40% 반영)
+        💡 각 항목별로 <b>"합의"</b>(이대로 평가받겠음) 또는 <b>"수정요청"</b>(항목 변경 필요)을 선택하고, 수정요청인 경우 어떻게 바꿀지 적어주세요.
       </div>
 
-      <!-- 보너스 항목 (연봉직만 표시) -->
-      <div id="self-bonus-section" class="hidden"></div>
-
-      <table class="kpi-table" id="self-kpi-table">
+      <table class="kpi-table" id="self-consensus-table">
         <thead>
           <tr>
-            <th style="width:30%">평가 항목</th>
+            <th style="width:22%">평가 항목</th>
             <th>세부 KPI 내용</th>
-            <th style="width:180px;text-align:center;">자기평가 점수</th>
+            <th style="width:120px;text-align:center;">합의 상태</th>
+            <th style="width:30%">수정 요청 / 메모</th>
           </tr>
         </thead>
-        <tbody id="self-kpi-body"></tbody>
-        <tfoot>
-          <tr style="background:#1F3864;color:white;">
-            <td colspan="2" style="text-align:right;padding:10px 14px;font-weight:bold;">합계</td>
-            <td style="text-align:center;font-size:18px;font-weight:bold;" id="self-total-display">0 / 100</td>
-          </tr>
-        </tfoot>
+        <tbody id="self-consensus-body"></tbody>
       </table>
     </div>
 
     <div class="card">
-      <div class="section-title" style="font-size:15px;">💬 자기평가 코멘트</div>
+      <div class="section-title" style="font-size:15px;">💬 종합 의견 (선택)</div>
       <div class="form-group">
-        <label>하반기 주요 업무 성과 (자유 기술)</label>
-        <textarea id="self-achievement" rows="4" placeholder="이번 하반기에 달성한 주요 성과나 기여 내용을 기술해주세요."></textarea>
-      </div>
-      <div class="form-group">
-        <label>아쉬웠던 점 / 개선 목표</label>
-        <textarea id="self-improvement" rows="3" placeholder="미흡했던 부분이나 하반기에 개선하고 싶은 점을 기술해주세요."></textarea>
-      </div>
-      <div class="form-group">
-        <label>팀장/회사에 바라는 점 (선택)</label>
-        <textarea id="self-request" rows="3" placeholder="팀장이나 회사에 건의하고 싶은 사항을 자유롭게 기술해주세요. (선택사항)"></textarea>
+        <label>팀장과 합의 미팅에서 다루고 싶은 추가 의견</label>
+        <textarea id="self-consensus-memo" rows="4" placeholder="평가 항목 외 전반적인 의견, 합의 미팅에서 논의하고 싶은 내용을 자유롭게 적어주세요."></textarea>
       </div>
     </div>
 
     <div class="text-right">
-      <button class="btn btn-success" onclick="submitSelfEval()">✅ 자기평가 제출</button>
+      <button class="btn btn-success" onclick="submitSelfConsensus()">✅ 합의 의견 제출</button>
     </div>
     <div id="self-submit-msg" class="hidden mt-16"></div>
   </div>
@@ -201,18 +204,17 @@
 <!-- 팀장 피드백                                     -->
 <!-- ══════════════════════════════════════════════ -->
 <main id="page-manager" class="hidden">
-  <div class="section-title">💬 팀장 피드백 작성</div>
+  <div class="section-title">💬 팀원 KPI 합의 (1차 단계)</div>
 
   <!-- 인증 화면 -->
   <div id="mgr-auth" class="login-wrap">
     <div class="icon">💬</div>
     <h2>팀장 인증</h2>
-    <p>팀원 평가를 위해 이름과 생년월일을 입력하세요.</p>
+    <p>팀원과의 합의 미팅 의견을 기록하기 위해 이름·생년월일을 입력하세요.</p>
     <div class="form-group" style="text-align:left;">
       <label>이름</label>
-      <select id="mgr-auth-name">
-        <option value="">-- 이름 선택 --</option>
-      </select>
+      <input type="text" id="mgr-auth-name" placeholder="본인 이름 입력"
+        onkeydown="if(event.key==='Enter')document.getElementById('mgr-auth-birth').focus()">
     </div>
     <div class="form-group" style="text-align:left;">
       <label>생년월일 (6자리)</label>
@@ -228,83 +230,53 @@
     <div class="card">
       <div id="mgr-evaluator-info" style="background:#f0f4f8;padding:12px 16px;border-radius:8px;font-size:13px;color:#4a5568;margin-bottom:16px;"></div>
       <div class="form-group">
-        <label>👥 평가 대상 (팀원) 이름</label>
+        <label>👥 본인 팀원 선택 (한 명씩 합의 의견 작성)</label>
         <select id="mgr-target-select" onchange="loadManagerForm()">
           <option value="">-- 팀원 이름 선택 --</option>
         </select>
+        <div style="font-size:12px;color:#718096;margin-top:6px;">※ 본인 팀원만 목록에 표시됩니다. 팀원별로 따로 저장하세요.</div>
       </div>
       <div id="mgr-person-info" class="hidden" style="background:#f0f4f8;padding:12px 16px;border-radius:8px;font-size:13px;color:#4a5568;"></div>
     </div>
 
   <div id="mgr-form-container" class="hidden">
-    <!-- 팀장 평가 점수 -->
+    <div class="alert alert-warning" style="font-size:13px;background:#FFF8E1;border:1px solid #FFE082;color:#7F6000;">
+      🔒 <b>점수 입력은 1월에 오픈됩니다.</b> 지금은 팀원과 합의한 평가 항목 의견만 기록해주세요.
+    </div>
+
     <div class="card">
-      <div class="section-title" style="font-size:15px;">📊 팀장 평가 점수</div>
-      <div class="alert alert-warning" style="font-size:12px;">
-        ⚠️ 팀장 평가 점수는 최종 점수의 60%로 반영됩니다. 객관적이고 공정하게 평가해주세요.
+      <div class="section-title" style="font-size:15px;">🤝 팀원 KPI 항목별 합의 의견</div>
+      <div class="alert alert-info" style="font-size:12px;">
+        💡 팀원과의 합의 미팅에서 논의한 결과를 항목별로 <b>"합의"</b> 또는 <b>"수정요청"</b>으로 기록하고, 수정이 필요하면 어떻게 바꿀지 적어주세요.
       </div>
 
-      <!-- 보너스 항목 (연봉직만 표시) -->
-      <div id="mgr-bonus-section" class="hidden"></div>
-
-      <table class="kpi-table" id="mgr-kpi-table">
+      <table class="kpi-table" id="mgr-consensus-table">
         <thead>
           <tr>
-            <th style="width:30%">평가 항목</th>
+            <th style="width:22%">평가 항목</th>
             <th>세부 KPI 내용</th>
-            <th style="width:180px;text-align:center;">팀장 평가 점수</th>
+            <th style="width:120px;text-align:center;">합의 상태</th>
+            <th style="width:30%">수정 요청 / 메모</th>
           </tr>
         </thead>
-        <tbody id="mgr-kpi-body"></tbody>
-        <tfoot>
-          <tr style="background:#1F3864;color:white;">
-            <td colspan="2" style="text-align:right;padding:10px 14px;font-weight:bold;">합계</td>
-            <td style="text-align:center;font-size:18px;font-weight:bold;" id="mgr-total-display">0 / 100</td>
-          </tr>
-        </tfoot>
+        <tbody id="mgr-consensus-body"></tbody>
       </table>
     </div>
 
-    <!-- 팀장 피드백 텍스트 -->
     <div class="card">
-      <div class="section-title" style="font-size:15px;">📝 팀원 피드백 내용</div>
-
+      <div class="section-title" style="font-size:15px;">📝 합의 미팅 종합 메모 (선택)</div>
       <div class="form-group">
-        <label>✅ 강점 / 잘한 점</label>
-        <textarea id="mgr-strengths" rows="4"
-          placeholder="이번 하반기 팀원이 특히 잘 수행한 부분, 칭찬할 점을 구체적으로 기술해주세요.
-예) 납기 준수율 98% 달성으로 고객 불만 0건 유지, MES 데이터 정확도 향상에 크게 기여함"></textarea>
+        <label>미팅 주요 논의사항 / 합의 결과</label>
+        <textarea id="mgr-consensus-memo" rows="4" placeholder="합의 미팅에서 다뤄진 주요 내용, 결론, 추가 기록할 사항을 적어주세요."></textarea>
       </div>
-
       <div class="form-group">
-        <label>🔧 개선이 필요한 점</label>
-        <textarea id="mgr-improvements" rows="4"
-          placeholder="개선이 필요한 부분을 구체적이고 건설적으로 기술해주세요.
-예) 이슈 발생 시 즉각 보고보다는 자체 해결을 시도하는 경향이 있어 공유 속도 개선 필요"></textarea>
-      </div>
-
-      <div class="form-group">
-        <label>💼 종합 의견 및 평가</label>
-        <textarea id="mgr-overall" rows="4"
-          placeholder="팀원에 대한 전반적인 평가와 성장 가능성, 역할 기대 등을 기술해주세요."></textarea>
-      </div>
-
-      <div class="form-group">
-        <label>🎯 하반기 목표 제안 (팀장 → 팀원)</label>
-        <textarea id="mgr-goals" rows="3"
-          placeholder="하반기에 집중적으로 개선하거나 달성했으면 하는 목표를 제안해주세요.
-예) ① 외주 발주 리드타임 20% 단축  ② MES 활용률 90% 이상 유지"></textarea>
-      </div>
-
-      <!-- 면담 일정 -->
-      <div class="form-group">
-        <label>📅 피드백 면담 예정일</label>
+        <label>📅 합의 미팅 일자</label>
         <input type="date" id="mgr-interview-date">
       </div>
     </div>
 
     <div class="text-right">
-      <button class="btn btn-success" onclick="submitManagerFeedback()">✅ 팀장 피드백 제출</button>
+      <button class="btn btn-success" onclick="submitManagerConsensus()">✅ 합의 의견 제출</button>
     </div>
     <div id="mgr-submit-msg" class="hidden mt-16"></div>
   </div>
@@ -352,6 +324,9 @@
       <button class="tab active" onclick="showAdminTab('all')">전체 현황</button>
       <button class="tab" onclick="showAdminTab('team')">팀별 현황</button>
       <button class="tab" onclick="showAdminTab('incomplete')">미완료 현황</button>
+      <button class="tab" onclick="showAdminTab('kpi')">📋 전체 KPI 항목</button>
+      <button class="tab" onclick="showAdminTab('consensus')">🤝 합의 현황</button>
+      <button class="tab" onclick="showAdminTab('final')">🏆 최종 합산 결과</button>
     </div>
 
     <!-- 전체 현황 테이블 -->
@@ -377,6 +352,21 @@
     <!-- 미완료 현황 -->
     <div id="admin-tab-incomplete" class="hidden">
       <div id="admin-incomplete-content"></div>
+    </div>
+
+    <!-- 전체 KPI 항목 -->
+    <div id="admin-tab-kpi" class="hidden">
+      <div id="admin-kpi-content"></div>
+    </div>
+
+    <!-- 합의 현황 -->
+    <div id="admin-tab-consensus" class="hidden">
+      <div id="admin-consensus-content"></div>
+    </div>
+
+    <!-- 최종 합산 결과 -->
+    <div id="admin-tab-final" class="hidden">
+      <div id="admin-final-content"></div>
     </div>
 
     <!-- 상세 모달 -->
@@ -439,6 +429,7 @@ function getEmployeesByTeam() {
 // ── 인증 상태 ────────────────────────────────────
 let selfVerifiedName = null;   // 자기평가 인증된 사용자
 let mgrVerifiedName = null;    // 팀장 인증된 사용자
+let mgrAssignedTargets = [];   // 평가관계 시트 기반 평가대상 목록
 
 // ── 페이지 전환 ──────────────────────────────────
 function showPage(page) {
@@ -479,21 +470,12 @@ async function loadAdminStatusBar() {
 }
 
 // ── 자기평가 인증 페이지 초기화 ────────────────────
-function initSelfAuthPage() {
-  const sel = document.getElementById('self-auth-name');
-  if (sel.options.length > 1) return;
-  ALL_EMPLOYEES.forEach(e => {
-    const opt = document.createElement('option');
-    opt.value = e.name;
-    opt.textContent = `${e.name} (${e.team} / ${e.rank})`;
-    sel.appendChild(opt);
-  });
-}
+function initSelfAuthPage() { /* 이름 직접 입력 방식 — 초기화 불필요 */ }
 
 async function verifySelf() {
-  const name = document.getElementById('self-auth-name').value;
-  const birth = document.getElementById('self-auth-birth').value;
-  if (!name) return alert('이름을 선택해주세요.');
+  const name = (document.getElementById('self-auth-name').value || '').trim();
+  const birth = (document.getElementById('self-auth-birth').value || '').trim();
+  if (!name) return alert('이름을 입력해주세요.');
   if (!birth || birth.length !== 6) return alert('생년월일 6자리를 입력해주세요.');
 
   const errEl = document.getElementById('self-auth-err');
@@ -523,17 +505,56 @@ function loadSelfFormForUser(name) {
   document.getElementById('self-person-info').innerHTML = `
     <span class="tag tag-${emp.type}">${emp.type === 'annual' ? '연봉직' : '시급직'}</span>
     <strong style="margin-left:8px;">${emp.name}</strong> ${emp.rank} — ${emp.team}`;
-  document.getElementById('self-form-container').classList.remove('hidden');
-
-  if (emp.type === 'annual' && emp.bonus) {
-    renderBonusSection('self', emp);
-  } else {
-    document.getElementById('self-bonus-section').classList.add('hidden');
-  }
 
   const criteria = getEffectiveCriteria(emp);
-  renderKpiTable('self-kpi-body', 'self-total-display', criteria, 'self');
+
+  // 평가만 하는 사람(evaluator-only) — 평가 항목이 없으면 합의 폼 숨김
+  if (!criteria || criteria.length === 0 || emp.evaluatorOnly) {
+    document.getElementById('self-form-container').classList.add('hidden');
+    document.getElementById('self-person-info').insertAdjacentHTML('afterend', `
+      <div class="alert alert-info mt-16" style="font-size:13px;">
+        ℹ️ <b>${emp.name}</b>님은 <b>평가만 수행</b>하는 역할로 등록되어 있어, 본인에 대한 평가 항목은 없습니다.<br>
+        팀원 KPI 합의는 상단 메뉴의 <b>"팀원 KPI 합의"</b>에서 진행해주세요.
+      </div>`);
+    return;
+  }
+
+  document.getElementById('self-form-container').classList.remove('hidden');
+  renderConsensusTable('self-consensus-body', criteria, 'self', emp);
   document.getElementById('self-submit-msg').classList.add('hidden');
+}
+
+/** 합의 의견 테이블 렌더링 (1차 단계) */
+function renderConsensusTable(tbodyId, criteria, prefix, emp) {
+  const tbody = document.getElementById(tbodyId);
+  tbody.innerHTML = '';
+  const rows = criteria.slice();
+  if (emp.type === 'annual' && emp.bonus) {
+    rows.push({ id:'bonus', label:'🚀 자율 혁신 보너스', desc: emp.bonus.label + ' — ' + emp.bonus.desc, max:5 });
+  }
+  rows.forEach(item => {
+    const catClass = item.id === 'bonus' ? 'bonus'
+      : (item.id.startsWith('h') || item.id.startsWith('c')) ? '사훈ESG' : '직무역량';
+    tbody.insertAdjacentHTML('beforeend', `
+      <tr data-id="${item.id}" data-label="${item.label.replace(/"/g,'&quot;')}" data-desc="${item.desc.replace(/"/g,'&quot;')}">
+        <td>
+          <span class="category-badge ${catClass}">${item.label}</span>
+          <div style="font-size:10px;color:#a0aec0;margin-top:4px;">만점 ${item.max}점</div>
+        </td>
+        <td style="color:#4a5568;font-size:12px;">${item.desc}</td>
+        <td style="text-align:center;">
+          <label style="display:block;margin-bottom:6px;cursor:pointer;font-size:13px;">
+            <input type="radio" name="${prefix}-status-${item.id}" value="합의" checked> ✅ 합의
+          </label>
+          <label style="display:block;cursor:pointer;font-size:13px;">
+            <input type="radio" name="${prefix}-status-${item.id}" value="수정요청"> ✏️ 수정요청
+          </label>
+        </td>
+        <td>
+          <textarea id="${prefix}-revision-${item.id}" rows="2" style="width:100%;font-size:12px;padding:6px;" placeholder="수정요청 시 어떻게 변경할지 또는 메모를 적어주세요."></textarea>
+        </td>
+      </tr>`);
+  });
 }
 
 function renderKpiTable(tbodyId, totalId, criteria, prefix) {
@@ -672,37 +693,43 @@ function updateTotal(prefix, totalId, criteria) {
   }
 }
 
-// ── 자기평가 제출 ────────────────────────────────
-async function submitSelfEval() {
+// ── 합의 의견 수집 헬퍼 ─────────────────────────
+function collectConsensusItems(prefix) {
+  const rows = document.querySelectorAll(`#${prefix}-consensus-body tr[data-id]`);
+  const items = [];
+  rows.forEach(tr => {
+    const id = tr.dataset.id;
+    const label = tr.dataset.label;
+    const desc = tr.dataset.desc;
+    const status = (document.querySelector(`input[name="${prefix}-status-${id}"]:checked`) || {}).value || '합의';
+    const revision = (document.getElementById(`${prefix}-revision-${id}`) || {}).value || '';
+    items.push({ id, label, desc, status, revision, memo: '' });
+  });
+  return items;
+}
+
+// ── 자기 KPI 합의 의견 제출 (1차) ────────────────
+async function submitSelfConsensus() {
   const name = selfVerifiedName;
   const emp = getEmployee(name);
   if (!emp) return alert('인증 정보가 없습니다. 다시 로그인해주세요.');
 
-  const criteria = getEffectiveCriteria(emp);
-  const scores = {};
-  criteria.forEach(item => {
-    scores[item.id] = parseInt(document.getElementById(`self-input-${item.id}`)?.value || 0);
-  });
-
-  const bonusScore = parseInt(document.getElementById('self-input-bonus')?.value || 0);
+  const items = collectConsensusItems('self');
+  const memo = document.getElementById('self-consensus-memo').value || '';
+  if (memo) items.push({ id:'_memo', label:'종합 의견', desc:'', status:'-', revision:'', memo });
 
   const payload = {
-    name,
-    team: emp.team,
-    rank: emp.rank,
-    type: emp.type,
-    scores,
-    bonusScore,
-    comment: {
-      achievement: document.getElementById('self-achievement').value,
-      improvement: document.getElementById('self-improvement').value,
-      request:     document.getElementById('self-request').value,
-    },
-    timestamp: new Date().toISOString()
+    author: name,
+    authorRole: '본인',
+    target: name,
+    targetTeam: emp.team,
+    targetRank: emp.rank,
+    targetType: emp.type,
+    items
   };
 
   try {
-    const result = await apiPost('self-eval', payload);
+    const result = await apiPost('consensus-save', payload);
     const msgEl = document.getElementById('self-submit-msg');
     if (result.success) {
       msgEl.className = 'alert alert-success';
@@ -720,21 +747,12 @@ async function submitSelfEval() {
 }
 
 // ── 팀장 인증 페이지 초기화 ─────────────────────
-function initMgrAuthPage() {
-  const sel = document.getElementById('mgr-auth-name');
-  if (sel.options.length > 1) return;
-  ALL_EMPLOYEES.forEach(e => {
-    const opt = document.createElement('option');
-    opt.value = e.name;
-    opt.textContent = `${e.name} (${e.team} / ${e.rank})`;
-    sel.appendChild(opt);
-  });
-}
+function initMgrAuthPage() { /* 이름 직접 입력 방식 — 초기화 불필요 */ }
 
 async function verifyManager() {
-  const name = document.getElementById('mgr-auth-name').value;
-  const birth = document.getElementById('mgr-auth-birth').value;
-  if (!name) return alert('이름을 선택해주세요.');
+  const name = (document.getElementById('mgr-auth-name').value || '').trim();
+  const birth = (document.getElementById('mgr-auth-birth').value || '').trim();
+  if (!name) return alert('이름을 입력해주세요.');
   if (!birth || birth.length !== 6) return alert('생년월일 6자리를 입력해주세요.');
 
   const errEl = document.getElementById('mgr-auth-err');
@@ -743,12 +761,13 @@ async function verifyManager() {
   try {
     const result = await apiPost('verify', { name, birthdate: birth });
     if (result.success) {
-      if (result.role !== '팀장') {
+      if (result.role !== '팀장' && result.role !== '관리자') {
         errEl.textContent = '❌ 팀장 권한이 없습니다. 관리자에게 문의하세요.';
         errEl.classList.remove('hidden');
         return;
       }
       mgrVerifiedName = name;
+      mgrAssignedTargets = Array.isArray(result.assignedTargets) ? result.assignedTargets : [];
       document.getElementById('mgr-auth').classList.add('hidden');
       document.getElementById('mgr-verified').classList.remove('hidden');
       loadManagerTargetList(name);
@@ -769,37 +788,39 @@ function loadManagerTargetList(evaluatorName) {
     <span class="tag tag-${emp.type}">${emp.type === 'annual' ? '연봉직' : '시급직'}</span>
     <strong style="margin-left:8px;">${emp.name}</strong> ${emp.rank} — ${emp.team}`;
 
-  // 팀원 목록 생성 (같은 팀 우선, 나머지 전체)
   const targSel = document.getElementById('mgr-target-select');
-  targSel.innerHTML = '<option value="">-- 팀원 이름 선택 --</option>';
+  targSel.innerHTML = '<option value="">-- 평가 대상 선택 --</option>';
 
-  const myTeam = emp.team;
-  const teamMembers = ALL_EMPLOYEES.filter(e => e.team === myTeam && e.name !== evaluatorName);
-  const others = ALL_EMPLOYEES.filter(e => e.team !== myTeam && e.name !== evaluatorName);
+  // 1순위: 평가관계 시트에서 지정된 대상 (실장 → 팀장, 팀장 → 팀원 등 자유 매핑)
+  let targets = mgrAssignedTargets
+    .map(n => getEmployee(n))
+    .filter(e => e);
 
-  if (teamMembers.length > 0) {
-    const grp1 = document.createElement('optgroup');
-    grp1.label = `📌 ${myTeam} (내 팀)`;
-    teamMembers.forEach(e => {
-      const opt = document.createElement('option');
-      opt.value = e.name;
-      opt.textContent = `${e.name} (${e.rank})`;
-      grp1.appendChild(opt);
-    });
-    targSel.appendChild(grp1);
+  let sourceLabel = '📌 지정된 평가 대상';
+
+  // 2순위 (fallback): 평가관계 시트에 등록 안 된 경우 → 본인 팀원
+  if (targets.length === 0) {
+    targets = ALL_EMPLOYEES.filter(e => e.team === emp.team && e.name !== evaluatorName);
+    sourceLabel = `📌 ${emp.team} (본인 팀)`;
   }
 
-  if (others.length > 0) {
-    const grp2 = document.createElement('optgroup');
-    grp2.label = '기타 부서';
-    others.forEach(e => {
-      const opt = document.createElement('option');
-      opt.value = e.name;
-      opt.textContent = `${e.name} (${e.team} / ${e.rank})`;
-      grp2.appendChild(opt);
-    });
-    targSel.appendChild(grp2);
+  if (targets.length === 0) {
+    const opt = document.createElement('option');
+    opt.disabled = true;
+    opt.textContent = '※ 평가 대상이 없습니다. 관리자에게 문의하세요.';
+    targSel.appendChild(opt);
+    return;
   }
+
+  const grp = document.createElement('optgroup');
+  grp.label = sourceLabel;
+  targets.forEach(e => {
+    const opt = document.createElement('option');
+    opt.value = e.name;
+    opt.textContent = `${e.name} (${e.team} / ${e.rank})`;
+    grp.appendChild(opt);
+  });
+  targSel.appendChild(grp);
 }
 
 function loadManagerForm() {
@@ -814,55 +835,44 @@ function loadManagerForm() {
   document.getElementById('mgr-person-info').innerHTML = `
     <span class="tag tag-${emp.type}">${emp.type === 'annual' ? '연봉직' : '시급직'}</span>
     <strong style="margin-left:8px;">${emp.name}</strong> ${emp.rank} — ${emp.team}
-    <span style="margin-left:16px;color:#718096;font-size:12px;">※ 평가 대상자의 KPI 항목입니다</span>`;
+    <span style="margin-left:16px;color:#718096;font-size:12px;">※ 아래 KPI 항목을 팀원과 합의한 결과를 기록하세요</span>`;
   document.getElementById('mgr-person-info').classList.remove('hidden');
   document.getElementById('mgr-form-container').classList.remove('hidden');
 
-  if (emp.type === 'annual' && emp.bonus) {
-    renderBonusSection('mgr', emp);
-  } else {
-    document.getElementById('mgr-bonus-section').classList.add('hidden');
-  }
-
   const criteria = getEffectiveCriteria(emp);
-  renderKpiTable('mgr-kpi-body', 'mgr-total-display', criteria, 'mgr');
+  renderConsensusTable('mgr-consensus-body', criteria, 'mgr', emp);
   document.getElementById('mgr-submit-msg').classList.add('hidden');
+  document.getElementById('mgr-consensus-memo').value = '';
 }
 
-// ── 팀장 피드백 제출 ─────────────────────────────
-async function submitManagerFeedback() {
+// ── 팀장 KPI 합의 의견 제출 (1차) ────────────────
+async function submitManagerConsensus() {
   const evaluatorName = mgrVerifiedName;
   const targetName    = document.getElementById('mgr-target-select').value;
   const emp = getEmployee(targetName);
 
   if (!evaluatorName) return alert('팀장 인증이 필요합니다. 다시 로그인해주세요.');
-  if (!targetName) return alert('평가 대상자(팀원) 이름을 선택해주세요.');
+  if (!targetName) return alert('팀원 이름을 선택해주세요.');
 
-  const criteria = getEffectiveCriteria(emp);
-  const scores = {};
-  criteria.forEach(item => {
-    scores[item.id] = parseInt(document.getElementById(`mgr-input-${item.id}`)?.value || 0);
-  });
-
-  const bonusScore = parseInt(document.getElementById('mgr-input-bonus')?.value || 0);
+  const items = collectConsensusItems('mgr');
+  const memo = document.getElementById('mgr-consensus-memo').value || '';
+  const meetingDate = document.getElementById('mgr-interview-date').value || '';
+  if (memo || meetingDate) {
+    items.push({ id:'_memo', label:'합의 미팅 메모', desc: meetingDate ? '미팅일: '+meetingDate : '', status:'-', revision:'', memo });
+  }
 
   const payload = {
-    evaluatorName, targetName,
+    author: evaluatorName,
+    authorRole: '팀장',
+    target: targetName,
     targetTeam: emp.team,
     targetRank: emp.rank,
     targetType: emp.type,
-    scores,
-    bonusScore,
-    strengths:     document.getElementById('mgr-strengths').value,
-    improvements:  document.getElementById('mgr-improvements').value,
-    overall:       document.getElementById('mgr-overall').value,
-    goals:         document.getElementById('mgr-goals').value,
-    interviewDate: document.getElementById('mgr-interview-date').value,
-    timestamp:     new Date().toISOString()
+    items
   };
 
   try {
-    const result = await apiPost('manager-feedback', payload);
+    const result = await apiPost('consensus-save', payload);
     const msgEl = document.getElementById('mgr-submit-msg');
     if (result.success) {
       msgEl.className = 'alert alert-success';
@@ -1215,12 +1225,173 @@ function closeModal() {
 
 // ── 관리자 탭 전환 ───────────────────────────────
 function showAdminTab(tab) {
-  ['all','team','incomplete'].forEach(t => {
+  const tabs = ['all','team','incomplete','kpi','consensus','final'];
+  tabs.forEach(t => {
     document.getElementById('admin-tab-'+t).classList.toggle('hidden', t !== tab);
   });
   document.querySelectorAll('.tabs .tab').forEach((btn, i) => {
-    btn.classList.toggle('active', ['all','team','incomplete'][i] === tab);
+    btn.classList.toggle('active', tabs[i] === tab);
   });
+  if (tab === 'kpi') renderAdminKpi();
+  if (tab === 'consensus') renderAdminConsensus();
+  if (tab === 'final') renderAdminFinal();
+}
+
+/** 전체 KPI 항목 조회 (하드코딩 + 보너스) */
+function renderAdminKpi() {
+  const container = document.getElementById('admin-kpi-content');
+  const teams = getEmployeesByTeam();
+  let html = '<div class="alert alert-info" style="font-size:12px;">💡 현재 하드코딩된 KPI 평가 항목 전체 목록입니다. 합의 완료 후 수정 필요 시 관리자가 반영합니다.</div>';
+  Object.keys(teams).sort().forEach(team => {
+    html += `<div class="card" style="margin-bottom:16px;"><div class="section-title" style="font-size:14px;">🏢 ${team}</div>`;
+    teams[team].forEach(emp => {
+      const criteria = getEffectiveCriteria(emp);
+      html += `<div style="border-left:3px solid #2E75B6;padding:10px 14px;margin:10px 0;background:#f8fafc;">
+        <div style="font-weight:700;color:#1F3864;">${emp.name} <span style="font-size:11px;color:#718096;font-weight:normal;">${emp.rank} · ${emp.type==='annual'?'연봉직':'시급직'}</span></div>
+        <table style="width:100%;font-size:12px;margin-top:8px;">
+          <thead><tr style="background:#edf2f7;"><th style="padding:4px 6px;text-align:left;">항목</th><th style="padding:4px 6px;text-align:left;">내용</th><th style="padding:4px 6px;width:50px;">배점</th></tr></thead>
+          <tbody>`;
+      criteria.forEach(it => {
+        html += `<tr><td style="padding:4px 6px;"><b>${it.label}</b></td><td style="padding:4px 6px;color:#4a5568;">${it.desc}</td><td style="padding:4px 6px;text-align:center;">${it.max}</td></tr>`;
+      });
+      if (emp.bonus) {
+        html += `<tr style="background:#EBF8FF;"><td style="padding:4px 6px;"><b>🚀 보너스</b></td><td style="padding:4px 6px;color:#4a5568;">${emp.bonus.label} — ${emp.bonus.desc}</td><td style="padding:4px 6px;text-align:center;">+5</td></tr>`;
+      }
+      html += '</tbody></table></div>';
+    });
+    html += '</div>';
+  });
+  container.innerHTML = html;
+}
+
+/** KPI 합의 현황 조회 */
+async function renderAdminConsensus() {
+  const container = document.getElementById('admin-consensus-content');
+  container.innerHTML = '<div class="alert alert-info">불러오는 중…</div>';
+  try {
+    const result = await apiGet('consensus-list');
+    const rows = (result.data || []).filter(r => r['항목ID'] !== '_memo');
+    const memos = (result.data || []).filter(r => r['항목ID'] === '_memo');
+
+    const byTarget = {};
+    rows.forEach(r => {
+      const t = r['대상자'];
+      byTarget[t] = byTarget[t] || { self: [], mgr: [] };
+      if (r['작성자역할'] === '팀장') byTarget[t].mgr.push(r);
+      else byTarget[t].self.push(r);
+    });
+
+    let html = `<div class="alert alert-info" style="font-size:12px;">📊 1차 단계 합의 의견 제출 현황. <b>합의/수정요청</b> 상태와 작성자별로 확인합니다.</div>`;
+
+    const totalEmp = ALL_EMPLOYEES.length;
+    const selfSubmitted = new Set(rows.filter(r => r['작성자역할']==='본인').map(r => r['대상자'])).size;
+    const mgrSubmitted = new Set(rows.filter(r => r['작성자역할']==='팀장').map(r => r['대상자'])).size;
+
+    html += `<div class="admin-stats" style="margin-bottom:16px;">
+      <div class="stat-card"><div class="stat-label">전체 대상</div><div class="stat-value">${totalEmp}명</div></div>
+      <div class="stat-card"><div class="stat-label">본인 의견 제출</div><div class="stat-value">${selfSubmitted}명</div></div>
+      <div class="stat-card"><div class="stat-label">팀장 의견 제출</div><div class="stat-value">${mgrSubmitted}명</div></div>
+    </div>`;
+
+    html += `<div class="card" style="padding:0;overflow-x:auto;"><table class="result-table">
+      <thead><tr><th>팀</th><th>성명</th><th>본인</th><th>팀장</th><th>수정요청 건수</th><th>상세</th></tr></thead><tbody>`;
+    ALL_EMPLOYEES.forEach(emp => {
+      const d = byTarget[emp.name] || { self: [], mgr: [] };
+      const selfMark = d.self.length ? `<span style="color:#2F855A;">✅ ${d.self.length}건</span>` : '<span style="color:#a0aec0;">—</span>';
+      const mgrMark = d.mgr.length ? `<span style="color:#2F855A;">✅ ${d.mgr.length}건</span>` : '<span style="color:#a0aec0;">—</span>';
+      const revCount = [...d.self, ...d.mgr].filter(r => r['합의상태']==='수정요청').length;
+      const revBadge = revCount ? `<span style="color:#C05621;font-weight:700;">✏️ ${revCount}건</span>` : '<span style="color:#a0aec0;">0</span>';
+      html += `<tr>
+        <td>${emp.team}</td><td><b>${emp.name}</b> <span style="color:#718096;font-size:11px;">${emp.rank}</span></td>
+        <td style="text-align:center;">${selfMark}</td>
+        <td style="text-align:center;">${mgrMark}</td>
+        <td style="text-align:center;">${revBadge}</td>
+        <td style="text-align:center;"><button class="btn btn-sm btn-outline" onclick="showConsensusDetail('${emp.name}')">상세 보기</button></td>
+      </tr>`;
+    });
+    html += '</tbody></table></div>';
+    container.innerHTML = html;
+    window._consensusCache = rows.concat(memos);
+  } catch(e) {
+    container.innerHTML = '<div class="alert alert-error">조회 실패: ' + e.message + '</div>';
+  }
+}
+
+function showConsensusDetail(name) {
+  const rows = (window._consensusCache || []).filter(r => r['대상자'] === name);
+  if (rows.length === 0) {
+    alert(name + '에 대한 합의 의견이 아직 없습니다.');
+    return;
+  }
+  document.getElementById('modal-title').textContent = `${name}님 KPI 합의 이력`;
+  let html = '';
+  ['본인','팀장'].forEach(role => {
+    const list = rows.filter(r => r['작성자역할'] === role);
+    if (list.length === 0) return;
+    html += `<div style="margin-bottom:16px;"><h3 style="color:#2E75B6;font-size:14px;margin-bottom:8px;">${role} 제출 (${list.length}건)</h3>`;
+    list.forEach(r => {
+      const statusColor = r['합의상태'] === '수정요청' ? '#C05621' : r['합의상태'] === '합의' ? '#2F855A' : '#718096';
+      html += `<div style="border:1px solid #e2e8f0;border-radius:6px;padding:10px 12px;margin-bottom:6px;font-size:12px;">
+        <div><b>${r['항목명'] || r['항목ID']}</b> <span style="color:${statusColor};font-weight:700;margin-left:8px;">[${r['합의상태']}]</span></div>
+        ${r['수정요청'] ? `<div style="margin-top:4px;color:#4a5568;">✏️ ${r['수정요청']}</div>` : ''}
+        ${r['참고메모'] ? `<div style="margin-top:4px;color:#4a5568;">💬 ${r['참고메모']}</div>` : ''}
+        <div style="margin-top:4px;color:#a0aec0;font-size:11px;">${r['제출시간']}</div>
+      </div>`;
+    });
+    html += '</div>';
+  });
+  document.getElementById('modal-content').innerHTML = html;
+  document.getElementById('detail-modal').classList.remove('hidden');
+}
+
+/** 최종 합산 결과 (자기 40% + 팀장 60% + 보너스) */
+async function renderAdminFinal() {
+  const container = document.getElementById('admin-final-content');
+  container.innerHTML = '<div class="alert alert-info">불러오는 중…</div>';
+  try {
+    const result = await apiGet('admin-all');
+    const { selfEvals = [], mgrEvals = [] } = (result.data || {});
+
+    const selfMap = {};
+    selfEvals.forEach(r => { if (r['성명']) selfMap[r['성명']] = r; });
+    const mgrMap = {};
+    mgrEvals.forEach(r => { if (r['피평가자']) mgrMap[r['피평가자']] = r; });
+
+    let html = `<div class="alert alert-info" style="font-size:12px;">🏆 <b>종합 점수 = 자기평가 40% + 팀장평가 60%</b> (기본 100점 + 보너스 최대 5점). 2차 평가 완료 시 자동 집계됩니다.</div>`;
+
+    html += `<div class="card" style="padding:0;overflow-x:auto;"><table class="result-table">
+      <thead><tr>
+        <th>팀</th><th>성명</th><th>직급</th><th>구분</th>
+        <th>자기 기본</th><th>자기 보너스</th><th>자기 총점</th>
+        <th>팀장 기본</th><th>팀장 보너스</th><th>팀장 총점</th>
+        <th>종합 (40:60)</th><th>등급</th>
+      </tr></thead><tbody>`;
+
+    ALL_EMPLOYEES.forEach(emp => {
+      const s = selfMap[emp.name] || {};
+      const m = mgrMap[emp.name] || {};
+      const sBase = Number(s['기본합계']) || 0;
+      const sBonus = Number(s['보너스']) || 0;
+      const sTot = sBase + sBonus;
+      const mBase = Number(m['기본합계']) || 0;
+      const mBonus = Number(m['보너스']) || 0;
+      const mTot = mBase + mBonus;
+      const combined = (sTot && mTot) ? Math.round(sTot * 0.4 + mTot * 0.6) : '';
+      const grade = combined ? (combined >= 95 ? 'S' : combined >= 85 ? 'A' : combined >= 70 ? 'B' : combined >= 55 ? 'C' : 'D') : '-';
+      const gColor = {S:'#1a6634',A:'#2E75B6',B:'#5a6ea8',C:'#7F6000',D:'#C00000','-':'#a0aec0'}[grade];
+      html += `<tr>
+        <td>${emp.team}</td><td><b>${emp.name}</b></td><td>${emp.rank}</td><td>${emp.type==='annual'?'연봉직':'시급직'}</td>
+        <td style="text-align:center;">${sBase||'-'}</td><td style="text-align:center;">${sBonus||'-'}</td><td style="text-align:center;"><b>${sTot||'-'}</b></td>
+        <td style="text-align:center;">${mBase||'-'}</td><td style="text-align:center;">${mBonus||'-'}</td><td style="text-align:center;"><b>${mTot||'-'}</b></td>
+        <td style="text-align:center;font-size:15px;font-weight:700;color:#1F3864;">${combined||'-'}</td>
+        <td style="text-align:center;"><span style="background:${gColor};color:white;padding:2px 10px;border-radius:12px;font-weight:700;font-size:12px;">${grade}</span></td>
+      </tr>`;
+    });
+    html += '</tbody></table></div>';
+    container.innerHTML = html;
+  } catch(e) {
+    container.innerHTML = '<div class="alert alert-error">조회 실패: ' + e.message + '</div>';
+  }
 }
 
 // ── CSV 내보내기 (클라이언트사이드) ─────────────────
