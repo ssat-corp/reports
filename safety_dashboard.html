@@ -4558,15 +4558,17 @@ function ptPrint(id){
     .subtitle{font-size:14pt;color:rgba(255,255,255,0.96);font-weight:600;}
     /* 본문 — 윗 맞춤 정렬 (LOTO dense 기준으로 통일, 3×2 배치 시 가로 줄 정렬) */
     .body{flex:1;padding:14mm 14mm 12mm;display:flex;flex-direction:column;justify-content:flex-start;min-height:0;overflow:hidden;}
-    ul{list-style:none;padding:0;flex:1;display:flex;flex-direction:column;justify-content:flex-start;gap:0;}
-    li{display:flex;gap:8mm;align-items:center;padding:2mm 0;border-bottom:1.5px solid #e5e7eb;}
+    ul{list-style:none;padding:0;flex:1;display:flex;flex-direction:column;justify-content:flex-start;gap:2mm;}
+    li{display:flex;gap:8mm;align-items:center;padding:3mm 0;border-bottom:1.5px solid #e5e7eb;}
     li:last-child{border-bottom:none;}
-    .num{flex-shrink:0;width:15mm;height:15mm;border-radius:50%;background:${p.accent};color:#fff;display:flex;align-items:center;justify-content:center;font-size:15pt;font-weight:800;
+    .num{flex-shrink:0;width:16mm;height:16mm;border-radius:50%;background:${p.accent};color:#fff;display:flex;align-items:center;justify-content:center;font-size:16pt;font-weight:800;
       -webkit-print-color-adjustment:exact !important;print-color-adjust:exact !important;}
-    .rule-title{display:block;font-size:17pt;font-weight:900;color:#0d1f3c;line-height:1.28;}
-    .rule-desc{font-size:12.5pt;font-weight:400;color:#374151;margin-top:1mm;display:block;line-height:1.35;}
-    /* 항목 많은 포스터(LOTO 8단계) — 본문 안에 균등 분포 */
-    .body.dense ul{justify-content:space-between;}
+    .rule-title{display:block;font-size:20pt;font-weight:900;color:#0d1f3c;line-height:1.28;}
+    .rule-desc{font-size:12.5pt;font-weight:400;color:#374151;margin-top:1.5mm;display:block;line-height:1.35;}
+    /* 항목 많은 포스터(LOTO 8단계) — 본문 안에 균등 분포, 줄간격 축소 */
+    .body.dense ul{gap:0;justify-content:space-between;}
+    .body.dense li{padding:2mm 0;}
+    .body.dense .rule-title{font-size:18pt;}
     /* 푸터 — 통일된 높이 */
     .footer{height:22mm;flex-shrink:0;padding:0 14mm;display:flex;align-items:center;justify-content:center;text-align:center;font-size:17pt;font-weight:900;letter-spacing:0.02em;
       background:${p.fb};color:${p.fc};
