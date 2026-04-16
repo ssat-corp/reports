@@ -13,14 +13,15 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --red: #D32F2F;
-  --red-dark: #B71C1C;
-  --yellow: #FFC107;
-  --yellow-dark: #F57F17;
-  --blue: #1565C0;
-  --blue-dark: #0D47A1;
-  --green: #2E7D32;
-  --green-dark: #1B5E20;
+  /* ===== ISO 3864-4 / KS A ISO 7010:2014 안전색 표준 ===== */
+  --red: #C8102E;        /* Pantone 186C — 금지·방화 */
+  --red-dark: #9E0C24;
+  --yellow: #FFD100;     /* Pantone 109C — 경고 */
+  --yellow-dark: #D9AF00;
+  --blue: #005EB8;       /* Pantone 2728C — 지시 */
+  --blue-dark: #003D7A;
+  --green: #009639;      /* Pantone 356C — 안전·비상구 */
+  --green-dark: #006E29;
   --page-w: 210mm;
   --page-h: 297mm;
 }
@@ -333,6 +334,31 @@ body {
   font-weight: 900;
   color: #fff;
 }
+
+/* FIRE (ISO 7010 F-series): red square — 방화·소화기 */
+.sign-fire .sign-symbol {
+  width: 96px;
+  height: 96px;
+  background: var(--red);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sign-fire .sign-symbol .sym-inner {
+  font-size: 42px;
+  font-weight: 900;
+  color: #fff;
+}
+
+.sign-fire .sign-title { color: var(--red-dark); }
+.sign-fire .rule { border-left: 4px solid var(--red); }
+.sign-fire .rule-icon { background: var(--red); }
+.sign-fire .sign-location { border-left-color: var(--red); }
+.sign-fire .category-badge { background: var(--red); }
+.grid-card.type-fire { border-color: var(--red); }
+.type-fire .grid-card-header { background: var(--red); }
 
 /* GREEN: safety rectangle */
 .sign-green .sign-symbol {
@@ -843,40 +869,42 @@ body {
     color-adjust: exact !important;
   }
 
-  .sign-red .sign-header { border-top: 12mm solid #D32F2F !important; }
-  .sign-yellow .sign-header { border-top: 12mm solid #FFC107 !important; }
-  .sign-blue .sign-header { border-top: 12mm solid #1565C0 !important; }
-  .sign-green .sign-header { border-top: 12mm solid #2E7D32 !important; }
-  .sign-red .sign-title { color: #B71C1C !important; }
-  .sign-yellow .sign-title { color: #F57F17 !important; }
-  .sign-blue .sign-title { color: #0D47A1 !important; }
-  .sign-green .sign-title { color: #1B5E20 !important; }
-  .sign-red .rule { border-left: 4px solid #D32F2F !important; }
-  .sign-yellow .rule { border-left: 4px solid #F57F17 !important; }
-  .sign-blue .rule { border-left: 4px solid #1565C0 !important; }
-  .sign-green .rule { border-left: 4px solid #2E7D32 !important; }
-  .sign-red .rule-icon { background: #D32F2F !important; }
-  .sign-yellow .rule-icon { background: #F57F17 !important; }
-  .sign-blue .rule-icon { background: #1565C0 !important; }
-  .sign-green .rule-icon { background: #2E7D32 !important; }
-  .sign-red .sign-symbol { border-color: #D32F2F !important; }
-  .sign-red .sign-symbol::after { background: #D32F2F !important; }
-  .sign-blue .sign-symbol { background: #1565C0 !important; }
-  .sign-green .sign-symbol { background: #2E7D32 !important; }
+  /* ISO 3864-4 / KS 안전색 print override */
+  .sign-red .sign-header, .sign-fire .sign-header { border-top: 8mm solid #C8102E !important; }
+  .sign-yellow .sign-header { border-top: 8mm solid #FFD100 !important; }
+  .sign-blue .sign-header { border-top: 8mm solid #005EB8 !important; }
+  .sign-green .sign-header { border-top: 8mm solid #009639 !important; }
+  .sign-red .sign-title, .sign-fire .sign-title { color: #9E0C24 !important; }
+  .sign-yellow .sign-title { color: #D9AF00 !important; }
+  .sign-blue .sign-title { color: #003D7A !important; }
+  .sign-green .sign-title { color: #006E29 !important; }
+  .sign-red .rule, .sign-fire .rule { border-left: 4px solid #C8102E !important; }
+  .sign-yellow .rule { border-left: 4px solid #D9AF00 !important; }
+  .sign-blue .rule { border-left: 4px solid #005EB8 !important; }
+  .sign-green .rule { border-left: 4px solid #009639 !important; }
+  .sign-red .rule-icon, .sign-fire .rule-icon { background: #C8102E !important; }
+  .sign-yellow .rule-icon { background: #D9AF00 !important; }
+  .sign-blue .rule-icon { background: #005EB8 !important; }
+  .sign-green .rule-icon { background: #009639 !important; }
+  .sign-red .sign-symbol { border-color: #C8102E !important; }
+  .sign-red .sign-symbol::after { background: #C8102E !important; }
+  .sign-fire .sign-symbol { background: #C8102E !important; }
+  .sign-blue .sign-symbol { background: #005EB8 !important; }
+  .sign-green .sign-symbol { background: #009639 !important; }
   .category-badge { color: #fff !important; }
-  .sign-red .category-badge { background: #D32F2F !important; }
-  .sign-yellow .category-badge { background: #F57F17 !important; }
-  .sign-blue .category-badge { background: #1565C0 !important; }
-  .sign-green .category-badge { background: #2E7D32 !important; }
-  .sign-red .sign-location { border-left-color: #D32F2F !important; }
-  .sign-yellow .sign-location { border-left-color: #F57F17 !important; }
-  .sign-blue .sign-location { border-left-color: #1565C0 !important; }
-  .sign-green .sign-location { border-left-color: #2E7D32 !important; }
+  .sign-red .category-badge, .sign-fire .category-badge { background: #C8102E !important; }
+  .sign-yellow .category-badge { background: #D9AF00 !important; }
+  .sign-blue .category-badge { background: #005EB8 !important; }
+  .sign-green .category-badge { background: #009639 !important; }
+  .sign-red .sign-location, .sign-fire .sign-location { border-left-color: #C8102E !important; }
+  .sign-yellow .sign-location { border-left-color: #D9AF00 !important; }
+  .sign-blue .sign-location { border-left-color: #005EB8 !important; }
+  .sign-green .sign-location { border-left-color: #009639 !important; }
   .sign-footer { background: #1a1a2e !important; }
-  .danger-box { border-color: #D32F2F !important; background: #FFF3E0 !important; }
-  .danger-box-title { color: #B71C1C !important; }
-  .picto-icon.picto-prohibit { border-color: #D32F2F !important; color: #D32F2F !important; }
-  .picto-icon.picto-prohibit::after { background: #D32F2F !important; }
+  .danger-box { border-color: #C8102E !important; background: #FFF3E0 !important; }
+  .danger-box-title { color: #9E0C24 !important; }
+  .picto-icon.picto-prohibit { border-color: #C8102E !important; color: #C8102E !important; }
+  .picto-icon.picto-prohibit::after { background: #C8102E !important; }
   .picto-icon.picto-warn-triangle { border-bottom-color: #222 !important; }
   .picto-icon.picto-warn-triangle::before { border-bottom-color: #FFC107 !important; }
   .picto-icon.picto-highvolt { border-bottom-color: #222 !important; }
@@ -1351,10 +1379,10 @@ body {
 </div>
 
 <!-- s09 -->
-<div class="sign-page sign-red" data-id="s09" data-type="red">
+<div class="sign-page sign-fire" data-id="s09" data-type="fire">
   <div class="sign-header">
     <span class="sign-id">s09</span>
-    <div class="sign-symbol"><span class="sym-inner"></span></div>
+    <div class="sign-symbol"><span class="sym-inner">🧯</span></div>
     <div class="category-badge">방화 <span class="category-badge-cn">消防</span></div>
     <div class="sign-title">소화기 비치 위치</div>
     <div class="sign-title-cn">灭火器放置处</div>
@@ -1995,7 +2023,7 @@ const signMeta = {
   s06: { title: '지게차 이동 통로', type: 'red', label: '금지', loc: '지게차 이동 통로', summary: '보행자 출입 금지, 열쇠 분리 보관' },
   s07: { title: '화학물질 보관소', type: 'yellow', label: '경고', loc: '화학물질 보관소', summary: 'MSDS 비치, 개인보호구 착용 필수' },
   s08: { title: '비상구', type: 'green', label: '안전', loc: '비상구', summary: '비상구, 장애물 적재 절대 금지' },
-  s09: { title: '소화기 비치 위치', type: 'red', label: '방화', loc: '소화기 비치 위치', summary: '소화기 비치 및 사용법 안내' },
+  s09: { title: '소화기 비치 위치', type: 'fire', label: '방화', loc: '소화기 비치 위치', summary: '소화기 비치 및 사용법 안내' },
   s10: { title: '휴게 공간', type: 'red', label: '금지', loc: '휴게 공간', summary: '작업복 탈의 후 휴식, 흡연 금지' },
   s11: { title: '운반대차 구역', type: 'yellow', label: '경고', loc: '운반대차 구역', summary: '적재하중 준수, 2인 이상 운반' },
   s12: { title: '래핑기 작업 구역', type: 'red', label: '금지', loc: '래핑기 작업 구역', summary: '신체 접근 금지, 구역 접근 금지, 비상정지' },
