@@ -517,12 +517,12 @@ body {
 }
 .sign-extended .sign-header {
   height: auto;
-  padding: 2mm 6mm 1mm;
-  border-top-width: 4mm;
+  padding: 4mm 7mm 3mm;
+  border-top-width: 5mm;
   flex-shrink: 0;
   flex-direction: row;
   align-items: center;
-  gap: 5mm;
+  gap: 6mm;
 }
 .sign-extended .sign-header-left {
   display: flex;
@@ -538,8 +538,8 @@ body {
   justify-content: center;
 }
 .sign-extended .sign-symbol {
-  transform: scale(0.65);
-  margin: -2mm 0 -1mm;
+  transform: scale(0.7);
+  margin: 0;
 }
 .sign-extended .sign-title {
   font-size: 22pt;
@@ -580,8 +580,8 @@ body {
   background: #FFF0E8;
   border: 5px solid var(--red);
   border-radius: 8px;
-  padding: 7mm 9mm 8mm;
-  margin-bottom: 5mm;
+  padding: 6mm 9mm 6mm;
+  margin-bottom: 4mm;
   flex-shrink: 0;
   box-shadow: 0 2px 0 rgba(200,16,46,0.15);
   position: relative;
@@ -590,16 +590,16 @@ body {
   content: '';
   position: absolute;
   top: -5px; left: -5px; right: -5px;
-  height: 8mm;
+  height: 7mm;
   background: linear-gradient(90deg, var(--red) 0%, var(--red-dark) 100%);
   border-radius: 4px 4px 0 0;
 }
 .danger-box-title {
-  font-size: 22pt;
+  font-size: 20pt;
   font-weight: 900;
   color: var(--red-dark);
-  margin-bottom: 5mm;
-  margin-top: 4mm;
+  margin-bottom: 3.5mm;
+  margin-top: 3mm;
   display: flex;
   align-items: center;
   gap: 3mm;
@@ -614,16 +614,16 @@ body {
 .danger-list {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 5mm 10mm;
+  gap: 3mm 10mm;
   list-style: none;
 }
 .danger-list li {
-  font-size: 15pt;
+  font-size: 14pt;
   font-weight: 900;
   color: #111;
-  padding-left: 8mm;
+  padding-left: 7mm;
   position: relative;
-  line-height: 1.4;
+  line-height: 1.3;
   white-space: nowrap;
 }
 .danger-list li::before {
@@ -633,12 +633,13 @@ body {
   top: 0;
   color: var(--red);
   font-weight: 900;
-  font-size: 16pt;
+  font-size: 14pt;
 }
 .danger-list li .cn {
-  font-size: 12pt;
+  font-size: 11pt;
   color: #555;
   font-weight: 500;
+  line-height: 1.2;
   font-family: 'Noto Sans SC', sans-serif !important;
   white-space: nowrap;
 }
