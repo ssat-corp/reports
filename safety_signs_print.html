@@ -439,6 +439,10 @@ body {
 .sign-rules.dense { justify-content: space-between; gap: 0; }
 .sign-rules.dense .rule { padding: 2mm 4mm; }
 
+/* 복합 비표 내 개별 금지 룰 — 번호·좌측바만 빨강으로 시각 구분 */
+.rule.rule-prohibit { border-left-color: var(--red) !important; }
+.rule.rule-prohibit .rule-icon { background: var(--red) !important; }
+
 .sign-red .rule { border-left: 4px solid var(--red); }
 .sign-yellow .rule { border-left: 4px solid var(--yellow-dark); }
 .sign-blue .rule { border-left: 4px solid var(--blue); }
@@ -1951,7 +1955,7 @@ body {
           <div class="rule-cn">用餐后整理 — 避免气味浓烈食物，餐后清理干净</div>
         </div>
       </div>
-      <div class="rule">
+      <div class="rule rule-prohibit">
         <span class="rule-icon">4</span>
         <div class="rule-text">
           <div class="rule-kr">화기 조리 금지 — 사내 화기 이용 개인 조리 전면 금지</div>
