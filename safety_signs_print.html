@@ -1164,9 +1164,9 @@ body {
   <div class="sign-header">
     <span class="sign-id">s05</span>
     <div class="sign-symbol"><span class="sym-inner">i</span></div>
-    <div class="category-badge">지시 <span class="category-badge-cn">指令</span></div>
-    <div class="sign-title">공장 출입구</div>
-    <div class="sign-title-cn">工厂出入口</div>
+    <div class="category-badge">지시 <span class="category-badge-cn">指示</span></div>
+    <div class="sign-title">공장 출입·작업 안전수칙</div>
+    <div class="sign-title-cn">进入工厂及作业安全守则</div>
   </div>
   <div class="sign-body">
     <div class="sign-location">설치위치: 공장 출입구<br><span class="sign-location-cn">安装位置：工厂出入口</span></div>
@@ -1174,15 +1174,43 @@ body {
       <div class="rule">
         <span class="rule-icon">1</span>
         <div class="rule-text">
-          <div class="rule-kr">안전모 및 안전화 착용 후 입장</div>
-          <div class="rule-cn">佩戴安全帽和安全鞋后方可入场</div>
+          <div class="rule-kr">보호구 착용(필수) — 공정별 보호구 올바르게 착용</div>
+          <div class="rule-cn">佩戴防护用品（必须）— 按工序正确佩戴防护用品</div>
         </div>
       </div>
       <div class="rule">
         <span class="rule-icon">2</span>
         <div class="rule-text">
-          <div class="rule-kr">외부 방문자는 안전담당자에게 신고 후 출입</div>
-          <div class="rule-cn">访客须向安全负责人报到</div>
+          <div class="rule-kr">지정된 통로 이동 — 안전 통로 이용</div>
+          <div class="rule-cn">按指定通道移动 — 请使用安全通道</div>
+        </div>
+      </div>
+      <div class="rule">
+        <span class="rule-icon">3</span>
+        <div class="rule-text">
+          <div class="rule-kr">보행·작업 유의 — 스마트폰·이어폰 사용 금지</div>
+          <div class="rule-cn">注意行走与作业 — 禁止使用手机及耳机</div>
+        </div>
+      </div>
+      <div class="rule">
+        <span class="rule-icon">4</span>
+        <div class="rule-text">
+          <div class="rule-kr">관계자 외 출입 금지 — 제한 구역 출입 금지·안전표지 준수</div>
+          <div class="rule-cn">非相关人员禁止进入 — 禁入限制区域，遵守安全标识</div>
+        </div>
+      </div>
+      <div class="rule">
+        <span class="rule-icon">5</span>
+        <div class="rule-text">
+          <div class="rule-kr">작업 허가 준수 — 사전 허가 없는 작업 금지</div>
+          <div class="rule-cn">遵守作业许可 — 未经许可严禁作业</div>
+        </div>
+      </div>
+      <div class="rule">
+        <span class="rule-icon">6</span>
+        <div class="rule-text">
+          <div class="rule-kr">비상 대피 — 비상구·소화기 위치 확인, 대피 요령 숙지</div>
+          <div class="rule-cn">紧急疏散 — 确认紧急出口·灭火器位置，熟知疏散要领</div>
         </div>
       </div>
     </div>
@@ -1946,7 +1974,7 @@ const signMeta = {
   s02: { title: '금형 취급 구역', type: 'blue', label: '지시', loc: '금형 보관대 / 금형 취급 구역', summary: '2인 1조 필수, 안전화·안전모 착용' },
   s03: { title: '고소작업 구역', type: 'yellow', label: '경고', loc: '고소작업 구역 / 사다리 사용 구역', summary: '안전대 착용 필수, 추락 위험' },
   s04: { title: '분전반 / 전기 패널함', type: 'red', label: '금지', loc: '분전반 / 전기 패널함', summary: '허가자 외 접근 금지 (A4 1/4 ×4)' },
-  s05: { title: '공장 출입구', type: 'blue', label: '지시', loc: '공장 출입구', summary: '안전모·안전화 착용 후 입장' },
+  s05: { title: '공장 출입·작업 안전수칙', type: 'blue', label: '지시', loc: '공장 출입구', summary: '보호구 착용·지정 통로 이동·스마트폰 금지·작업 허가·비상 대피' },
   s06: { title: '지게차 이동 통로', type: 'red', label: '금지', loc: '지게차 이동 통로', summary: '보행자 출입 금지, 열쇠 분리 보관' },
   s07: { title: '화학물질 보관소', type: 'yellow', label: '경고', loc: '화학물질 보관소', summary: 'MSDS 비치, 개인보호구 착용 필수' },
   s08: { title: '비상구', type: 'green', label: '안전', loc: '비상구', summary: '비상구, 장애물 적재 절대 금지' },
