@@ -3215,10 +3215,8 @@ const docMasterList = [
 
   // === B. 안전보건 교육 (중처법 제5조 제2항 등) ===
   {id:'d10', wwsCode:'B-2-1', wwsNo:313, name:'연간 근로자 안전보건교육 계획서', basis:'산안법 §29', period:'연1회', status:'미보유', updated:'', expires:'', note:'WWS: 연간 일정표 포함', category:'wws', hasTemplate:false, localFile:''},
-  {id:'d05', wwsCode:'B-2-2', wwsNo:314, name:'근로자 정기 안전보건교육 실시 증빙', basis:'산안법 §29', period:'매월', status:'미보유', updated:'', expires:'', note:'참석자 명단, 사진, 교육 자료 필요. 월 2시간 법정', category:'wws', hasTemplate:false, localFile:''},
-  {id:'w03', wwsCode:'B-2-5', wwsNo:317, name:'교육 미이수자/누락자 관리 현황 및 추가 교육 기록', basis:'산안법 §29', period:'상시', status:'미보유', updated:'', expires:'', note:'연 24시간 이상 누적 관리', category:'wws', hasTemplate:false, localFile:''},
+  {id:'d05', wwsCode:'B-2-2', wwsNo:314, name:'근로자 정기 안전보건교육 실시 증빙', basis:'산안법 §29', period:'반기1회', status:'미보유', updated:'', expires:'', note:'참석자 명단, 사진, 교육 자료 필요. 월 2시간 법정', category:'wws', hasTemplate:false, localFile:''},
   {id:'d08', wwsCode:'B-3-3', wwsNo:320, name:'관리감독자 정기 안전보건교육 이수증', basis:'산안법 §29', period:'연16시간', status:'미보유', updated:'', expires:'', note:'연간 16시간 이상 이수 필요', category:'wws', hasTemplate:false, localFile:''},
-  {id:'w04', wwsCode:'B-3-4', wwsNo:321, name:'안전보건 업무 담당자 교육 이수 및 누락자 관리 대장', basis:'산안법 §32', period:'2년마다', status:'미보유', updated:'', expires:'', note:'신규 34시간, 보수 24시간', category:'wws', hasTemplate:false, localFile:''},
   {id:'d06', wwsCode:'', wwsNo:'', name:'신규채용자 교육 일지', basis:'산안법 §29', period:'채용시', status:'미보유', updated:'', expires:'', note:'교안 보유', category:'legal', hasTemplate:false, localFile:''},
   {id:'d07', wwsCode:'', wwsNo:'', name:'신규채용자 서약서', basis:'자율관리', period:'채용시', status:'미보유', updated:'', expires:'', note:'', category:'self', hasTemplate:false, localFile:''},
   {id:'d09', wwsCode:'', wwsNo:'', name:'특별 안전보건교육 일지', basis:'산안법 §29', period:'해당작업 전', status:'미보유', updated:'', expires:'', note:'', category:'legal', hasTemplate:false, localFile:''},
@@ -3236,8 +3234,7 @@ const docMasterList = [
   {id:'d15', wwsCode:'E-4-2', wwsNo:342, name:'도급업무(외주)에 대한 위험성 파악 및 평가서', basis:'산안법 §64', period:'계약시', status:'미보유', updated:'', expires:'', note:'수급인 안전보건계획서 양식 보유', category:'wws', hasTemplate:false, localFile:''},
   {id:'w07', wwsCode:'E-4-3~4', wwsNo:343, name:'위험성평가 결과 제공 및 수급인(협력사) 위험성평가 검토서', basis:'산안법 §36', period:'수시', status:'미보유', updated:'', expires:'', note:'위험성평가 미실시', category:'wws', hasTemplate:false, localFile:''},
   {id:'w31', wwsCode:'E-5-3', wwsNo:344, name:'도급작업 시 주의사항 및 안전보건 정보제공 기록', basis:'산안법 §64', period:'계약시', status:'미보유', updated:'', expires:'', note:'안전보건협의체 회의록 등 필요', category:'wws', hasTemplate:false, localFile:''},
-  {id:'d16', wwsCode:'E-5-5', wwsNo:345, name:'도급받은 자(협력사)의 안전보건활동 점검 기록', basis:'산안법 §64', period:'연1회', status:'미보유', updated:'', expires:'', note:'수급인 안전보건수준 평가기준 양식 보유', category:'wws', hasTemplate:false, localFile:''},
-  {id:'w32', wwsCode:'E-7-1', wwsNo:347, name:'위험성평가 실시 결과 및 경영책임자 보고서', basis:'산안법 §36', period:'연1회', status:'미보유', updated:'', expires:'', note:'결재 문서 필요 (경영책임자 서명)', category:'wws', hasTemplate:false, localFile:''},
+  {id:'d16', wwsCode:'E-5-5', wwsNo:345, name:'도급받은 자(협력사)의 안전보건활동 점검 기록', basis:'산안법 §64', period:'분기1회', status:'미보유', updated:'', expires:'', note:'수급인 안전보건수준 평가기준 양식 보유', category:'wws', hasTemplate:false, localFile:''},
   {id:'w08', wwsCode:'E-8-2', wwsNo:348, name:'위험성평가 결과 현장 교육 및 TBM 전파 기록', basis:'산안법 §36', period:'수시', status:'미보유', updated:'', expires:'', note:'TBM절차서 보유', category:'wws', hasTemplate:false, localFile:''},
 
   // === F. 평가 및 개선 (중처법 제4조 제9호, 제5조 제1호 등) ===
@@ -3249,29 +3246,23 @@ const docMasterList = [
   {id:'d11', wwsCode:'', wwsNo:'', name:'작업장 안전보건 점검표', basis:'산안법 §15', period:'월1회', status:'미보유', updated:'', expires:'', note:'일일점검표+작업유형별+일일체크시트 보유', category:'legal', hasTemplate:false, localFile:''},
   {id:'d13', wwsCode:'', wwsNo:'', name:'기계·기구 자체검사 기록', basis:'산안법 §98', period:'장비별', status:'미보유', updated:'', expires:'', note:'설비별 안전점검 체크리스트 보유', category:'legal', hasTemplate:false, localFile:''},
   {id:'d17', wwsCode:'', wwsNo:'', name:'중량물 운반기계 안전조치 지침서', basis:'산안법 §38', period:'상시', status:'미보유', updated:'', expires:'', note:'ISPF-EHS-G-02', category:'legal', hasTemplate:false, localFile:''},
-  {id:'d18', wwsCode:'', wwsNo:'', name:'근로자 참여·의견청취 절차서', basis:'산안법 §24', period:'상시', status:'미보유', updated:'', expires:'', note:'ISPF-EHS-P-02', category:'legal', hasTemplate:false, localFile:''},
+  {id:'d18', wwsCode:'', wwsNo:'', name:'근로자 참여·의견청취서', basis:'산안법 §24', period:'상시', status:'미보유', updated:'', expires:'', note:'ISPF-EHS-P-02', category:'legal', hasTemplate:false, localFile:''},
   {id:'d19', wwsCode:'', wwsNo:'', name:'협력업체 작업허가서', basis:'산안법 §63', period:'작업시', status:'미보유', updated:'', expires:'', note:'', category:'legal', hasTemplate:false, localFile:''},
   {id:'d20', wwsCode:'', wwsNo:'', name:'산업재해조사지침', basis:'산안법 §57', period:'발생시', status:'미보유', updated:'', expires:'', note:'산업재해조사지침 보유', category:'legal', hasTemplate:false, localFile:''},
   {id:'d21', wwsCode:'', wwsNo:'', name:'아차사고 보고서', basis:'자율관리', period:'발생시', status:'미보유', updated:'', expires:'', note:'', category:'self', hasTemplate:false, localFile:''},
   {id:'d22', wwsCode:'', wwsNo:'', name:'특수건강검진 결과 관리대장', basis:'산안법 §130', period:'연1회', status:'미보유', updated:'', expires:'', note:'', category:'legal', hasTemplate:false, localFile:''},
   {id:'d23', wwsCode:'', wwsNo:'', name:'작업환경측정 결과서', basis:'산안법 §125', period:'반기1회', status:'미보유', updated:'', expires:'', note:'', category:'legal', hasTemplate:false, localFile:''},
-  {id:'d24', wwsCode:'', wwsNo:'', name:'MSDS 관리대장 (화학물질통합리스트)', basis:'산안법 §114', period:'상시', status:'미보유', updated:'', expires:'', note:'최신 MSDS 자료 업데이트 필요', category:'legal', hasTemplate:false, localFile:''},
+  {id:'d24', wwsCode:'', wwsNo:'', name:'MSDS 관리대장 (화학물질통합리스트)', basis:'산안법 §114', period:'연1회', status:'미보유', updated:'', expires:'', note:'최신 MSDS 자료 업데이트 필요', category:'legal', hasTemplate:false, localFile:''},
   {id:'d25', wwsCode:'', wwsNo:'', name:'환경운영점검표', basis:'자율관리', period:'주기적', status:'미보유', updated:'', expires:'', note:'2024년도 양식', category:'self', hasTemplate:false, localFile:''},
-  {id:'d26', wwsCode:'', wwsNo:'', name:'신규입사자의 주의사항', basis:'자율관리', period:'채용시', status:'미보유', updated:'', expires:'', note:'', category:'self', hasTemplate:false, localFile:''},
   {id:'d27', wwsCode:'', wwsNo:'', name:'본사 비상대피도', basis:'소방법', period:'상시', status:'미보유', updated:'', expires:'', note:'', category:'legal', hasTemplate:false, localFile:''},
   {id:'d28', wwsCode:'', wwsNo:'', name:'산업안전보건위원회 규정', basis:'산안법 §24', period:'상시', status:'미보유', updated:'', expires:'', note:'', category:'legal', hasTemplate:false, localFile:''},
   {id:'d29', wwsCode:'', wwsNo:'', name:'보건관리지침', basis:'산안법 §18', period:'상시', status:'미보유', updated:'', expires:'', note:'', category:'legal', hasTemplate:false, localFile:''},
   {id:'d30', wwsCode:'', wwsNo:'', name:'위험물질 안전관리지침', basis:'산안법 §114', period:'상시', status:'미보유', updated:'', expires:'', note:'', category:'legal', hasTemplate:false, localFile:''},
   {id:'d31', wwsCode:'', wwsNo:'', name:'LOTO(잠금·태깅) 관련 지침', basis:'산안법 §38', period:'상시', status:'미보유', updated:'', expires:'', note:'', category:'legal', hasTemplate:false, localFile:''},
   {id:'d32', wwsCode:'', wwsNo:'', name:'위험성평가 실시규정', basis:'산안법 §36', period:'상시', status:'미보유', updated:'', expires:'', note:'신성오토텍 자체 규정', category:'legal', hasTemplate:false, localFile:''},
-  {id:'d33', wwsCode:'', wwsNo:'', name:'유해물질 취급작업 체크리스트', basis:'산안법 §114', period:'작업시', status:'미보유', updated:'', expires:'', note:'', category:'legal', hasTemplate:false, localFile:''},
   {id:'d34', wwsCode:'', wwsNo:'', name:'호흡보호구 밀착도(Fit Test) 자가검사 매뉴얼', basis:'산안법 §38', period:'상시', status:'미보유', updated:'', expires:'', note:'', category:'legal', hasTemplate:false, localFile:''},
   {id:'d35', wwsCode:'', wwsNo:'', name:'화재·폭발사고 예방 안전수칙', basis:'소방법', period:'상시', status:'미보유', updated:'', expires:'', note:'PDF 자료', category:'legal', hasTemplate:false, localFile:''},
-  {id:'d36', wwsCode:'', wwsNo:'', name:'작업자 안전보건관리 일일 체크시트', basis:'자율관리', period:'매일', status:'미보유', updated:'', expires:'', note:'LG 점검시트 양식', category:'self', hasTemplate:false, localFile:''},
-  {id:'d37', wwsCode:'', wwsNo:'', name:'비상대피 시설 설치 운영 가이드', basis:'소방법', period:'상시', status:'미보유', updated:'', expires:'', note:'PDF 가이드', category:'legal', hasTemplate:false, localFile:''},
   {id:'d38', wwsCode:'', wwsNo:'', name:'산업안전보건위원회 회의록', basis:'산안법 §24', period:'매월', status:'미보유', updated:'', expires:'', note:'근로자 50인 이상, 노사 위원 서명 필수', category:'legal', hasTemplate:false, localFile:''},
-  {id:'d39', wwsCode:'', wwsNo:'', name:'도급인·수급인 협의체 회의록', basis:'산안법 §64', period:'매월', status:'미보유', updated:'', expires:'', note:'도급/파견 업체 포함', category:'legal', hasTemplate:false, localFile:''},
-  {id:'d40', wwsCode:'', wwsNo:'', name:'합동 안전점검 기록부', basis:'산안법 §64', period:'분기1회', status:'미보유', updated:'', expires:'', note:'원·하청 합동, 노·사 및 도급사 참여', category:'legal', hasTemplate:false, localFile:''},
 ];
 
 // 사용자가 추가한 서류(인증서 등) 복원
