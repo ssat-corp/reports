@@ -1416,37 +1416,7 @@ body {
 </div>
 
 <!-- s10 -->
-<div class="sign-page sign-red" data-id="s10" data-type="red">
-  <div class="sign-header">
-    <span class="sign-id">s10</span>
-    <div class="sign-symbol"><span class="sym-inner"></span></div>
-    <div class="category-badge">금지 <span class="category-badge-cn">禁止</span></div>
-    <div class="sign-title">휴게 공간</div>
-    <div class="sign-title-cn">休息区</div>
-  </div>
-  <div class="sign-body">
-    <div class="sign-location">설치위치: 휴게 공간<br><span class="sign-location-cn">安装位置：休息区</span></div>
-    <div class="sign-rules">
-      <div class="rule">
-        <span class="rule-icon">1</span>
-        <div class="rule-text">
-          <div class="rule-kr">오염된 작업복 탈의 후 휴식</div>
-          <div class="rule-cn">脱下工作服后方可休息</div>
-        </div>
-      </div>
-      <div class="rule">
-        <span class="rule-icon">2</span>
-        <div class="rule-text">
-          <div class="rule-kr">휴게 공간 내 흡연 금지</div>
-          <div class="rule-cn">区域内禁止吸烟</div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="sign-footer">
-    <img src="logo_full_white.png" alt="신성오토텍">
-  </div>
-</div>
+<!-- s10 삭제됨 — s20 사내 휴게실 이용 수칙으로 대체 -->
 
 <!-- s11 -->
 <div class="sign-page sign-yellow" data-id="s11" data-type="yellow">
@@ -2028,7 +1998,6 @@ const signMeta = {
   s07: { title: '화학물질 보관소', type: 'yellow', label: '경고', loc: '화학물질 보관소', summary: 'MSDS 비치, 개인보호구 착용 필수' },
   s08: { title: '비상구', type: 'green', label: '안전', loc: '비상구', summary: '비상구, 장애물 적재 절대 금지' },
   s09: { title: '소화기 비치 위치', type: 'fire', label: '방화', loc: '소화기 비치 위치', summary: '소화기 비치 및 사용법 안내' },
-  s10: { title: '휴게 공간', type: 'red', label: '금지', loc: '휴게 공간', summary: '작업복 탈의 후 휴식, 흡연 금지' },
   s11: { title: '운반대차 구역', type: 'yellow', label: '경고', loc: '운반대차 구역', summary: '적재하중 준수, 2인 이상 운반' },
   s12: { title: '래핑기 작업 구역', type: 'red', label: '금지', loc: '래핑기 작업 구역', summary: '신체 접근 금지, 구역 접근 금지, 비상정지' },
   s13: { title: '사출기 작업 구역', type: 'blue', label: '지시', loc: '사출기 작업 구역', summary: '안전문 닫힘 확인, 금형 체결 확인' },
@@ -2041,7 +2010,7 @@ const signMeta = {
   s20: { title: '사내 휴게실 이용 수칙', type: 'blue', label: '지시', loc: '사내 휴게실', summary: '정숙·청결·화기 금지·냉장고 관리·안전 관리·휴식 보장' }
 };
 
-const signOrder = ['s01','s02','s03','s04','s05','s06','s07','s08','s09','s10','s11','s12','s13','s14','s15','s16','s17','s18','s19','s20'];
+const signOrder = ['s01','s02','s03','s04','s05','s06','s07','s08','s09','s11','s12','s13','s14','s15','s16','s17','s18','s19','s20'];
 
 // ===== Build Grid =====
 function buildGrid() {
