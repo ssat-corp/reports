@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>2026년 정기 위험성평가 실시 공고 및 종사자 의견 제출 요청 | 신성오토텍</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+      background: #dde3ea;
+      display: flex;
+      justify-content: center;
+      padding: 40px 16px;
+      min-height: 100vh;
+    }
+
+    .page {
+      width: 210mm;
+      height: 297mm;
+      background: #fff;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.18);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    @media print {
+      body { background: #fff; padding: 0; margin: 0; }
+      .page { width: 210mm; height: 297mm; box-shadow: none; margin: 0; overflow: hidden; }
+      @page { size: A4; margin: 0; }
+    }
+
+    /* ─── TOP BAR ─── */
+    .top-bar {
+      background: #fff;
+      border-bottom: 2px solid #1e5096;
+      padding: 9px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .top-bar-logo { height: 32px; object-fit: contain; }
+    .top-bar-logo-text {
+      font-size: 15px; font-weight: 900; color: #0d1f3c; letter-spacing: -0.02em;
+      display: none;
+    }
+    .top-bar-notice {
+      font-size: 10px; font-weight: 600; color: #0d1f3c;
+      letter-spacing: 2px; text-transform: uppercase; opacity: 0.65;
+    }
+
+    /* ─── HERO ─── */
+    .hero { display: flex; height: 262px; flex-shrink: 0; }
+
+    .hero-left {
+      width: 52%;
+      background: linear-gradient(160deg, #0d1f3c 0%, #1a3a6e 55%, #1e5096 100%);
+      padding: 36px 32px 30px;
+      display: flex; flex-direction: column; justify-content: space-between;
+      position: relative; overflow: hidden;
+    }
+    .hero-left::before {
+      content: ''; position: absolute;
+      width: 220px; height: 220px; border-radius: 50%;
+      border: 36px solid rgba(255,255,255,0.05);
+      top: -75px; right: -55px;
+    }
+    .hero-left::after {
+      content: ''; position: absolute;
+      width: 130px; height: 130px; border-radius: 50%;
+      border: 24px solid rgba(255,255,255,0.04);
+      bottom: -45px; left: 16px;
+    }
+    .company-label {
+      font-size: 9.5px; font-weight: 500; letter-spacing: 2.5px;
+      color: #7bacd4; text-transform: uppercase;
+    }
+    .hero-title {
+      font-size: 26px; font-weight: 900; color: #fff; line-height: 1.25; margin-top: 6px;
+    }
+    .hero-title span {
+      display: block; font-size: 13px; font-weight: 400;
+      color: #93bde0; margin-bottom: 5px; letter-spacing: 0.5px;
+    }
+    .hero-meta-row {
+      display: flex; gap: 10px; align-items: center; margin-top: 4px;
+    }
+    .hero-badge {
+      display: inline-block; background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.22);
+      color: #c8dff5; font-size: 10.5px; font-weight: 500;
+      padding: 4px 11px; border-radius: 20px; letter-spacing: 0.5px;
+    }
+    .hero-badge.urgent {
+      background: rgba(220,53,69,0.25); border-color: rgba(220,53,69,0.45);
+      color: #ffaab5;
+    }
+
+    .hero-right {
+      width: 48%;
+      background: #f0f4f9;
+      padding: 32px 26px;
+      display: flex; flex-direction: column; justify-content: center; gap: 14px;
+    }
+    .hero-right-label {
+      font-size: 9px; letter-spacing: 2.5px; color: #1e5096;
+      font-weight: 700; text-transform: uppercase;
+    }
+    .hero-right-heading {
+      font-size: 17px; font-weight: 900; color: #0d1f3c; line-height: 1.4;
+    }
+    .hero-right-desc { font-size: 12px; color: #4a5568; line-height: 1.8; }
+    .hero-callout {
+      background: #fff; border-left: 3px solid #1e5096;
+      border-radius: 0 6px 6px 0; padding: 9px 12px;
+      font-size: 11px; color: #374151; line-height: 1.6;
+    }
+    .hero-callout strong { color: #0d1f3c; }
+
+    /* ─── VALUES SECTION ─── */
+    .values-section {
+      background: #fff; padding: 16px 32px;
+      border-bottom: 1px solid #e8edf3; flex-shrink: 0;
+    }
+    .section-label {
+      font-size: 9px; letter-spacing: 2.5px; color: #1e5096;
+      font-weight: 700; text-transform: uppercase; margin-bottom: 12px;
+    }
+    .cards-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 11px;
+    }
+    .val-card {
+      border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px 12px;
+    }
+    .val-card-num {
+      font-size: 9.5px; font-weight: 700; color: #1e5096; margin-bottom: 6px; display: block;
+    }
+    .val-card-title {
+      font-size: 12.5px; font-weight: 700; color: #0d1f3c; margin-bottom: 4px; line-height: 1.3;
+    }
+    .val-card-desc { font-size: 11px; color: #6b7280; line-height: 1.6; }
+
+    /* ─── BOTTOM SPLIT ─── */
+    .bottom-split { display: flex; flex: 1; min-height: 0; }
+
+    /* 왼쪽: 위험성평가 실시 공고 */
+    .left-section {
+      width: 50%;
+      padding: 18px 20px 18px 28px;
+      border-right: 1px solid #e8edf3;
+      background: #fff;
+      display: flex; flex-direction: column;
+      justify-content: center;
+      gap: 14px;
+      overflow: hidden;
+    }
+
+    /* 오른쪽: 종사자 의견 제출 요건 */
+    .right-section {
+      width: 50%;
+      padding: 18px 24px 18px 20px;
+      background: #fff;
+      display: flex; flex-direction: column;
+      justify-content: center;
+      overflow: hidden;
+      gap: 14px;
+    }
+
+    .sub-label {
+      font-size: 9px; letter-spacing: 2px; color: #1e5096;
+      font-weight: 700; text-transform: uppercase; margin-bottom: 10px;
+    }
+
+    /* ─── TABLES ─── */
+    .info-table {
+      width: 100%; border-collapse: collapse; font-size: 11.5px;
+    }
+    .info-table thead tr { background: #0d1f3c; color: #fff; }
+    .info-table thead th {
+      padding: 7px 9px; text-align: left;
+      font-weight: 500; font-size: 10.5px; letter-spacing: 0.5px;
+    }
+    .info-table tbody tr { border-bottom: 1px solid #e8edf3; }
+    .info-table tbody tr:nth-child(even) { background: #f7f9fc; }
+    .info-table td {
+      padding: 8px 9px; vertical-align: middle;
+      color: #374151; line-height: 1.55; font-size: 11px;
+    }
+    .info-table td:first-child {
+      font-weight: 700; color: #0d1f3c; white-space: nowrap; font-size: 11px;
+    }
+    .highlight-row td { background: #fef2f2 !important; color: #b91c1c !important; }
+    .highlight-row td:first-child { color: #991b1b !important; }
+    .deadline-val { font-weight: 700 !important; color: #dc2626 !important; }
+
+    /* 공고문 박스 */
+    .notice-box {
+      background: #eef4ff; border: 1.5px solid #c7d9f5;
+      border-radius: 7px; padding: 11px 14px;
+    }
+    .notice-box-title {
+      font-size: 11.5px; font-weight: 900; color: #0d1f3c; margin-bottom: 7px;
+    }
+    .notice-box-body { font-size: 10.5px; color: #374151; line-height: 1.7; }
+    .notice-box-body li { margin-left: 14px; margin-bottom: 2px; }
+
+    /* 첨부 파일 */
+    .attach-list { list-style: none; }
+    .attach-item {
+      display: flex; align-items: center; gap: 9px;
+      padding: 7px 10px; border-radius: 6px;
+      border: 1px solid #e2e8f0; margin-bottom: 7px;
+      font-size: 11px; color: #374151;
+    }
+    .attach-item:last-child { margin-bottom: 0; }
+    .attach-icon { font-size: 17px; flex-shrink: 0; }
+    .attach-text { flex: 1; }
+    .attach-text strong { display: block; font-size: 11px; font-weight: 700; color: #0d1f3c; }
+    .attach-text span { font-size: 10px; color: #6b7280; }
+    .attach-badge {
+      font-size: 9.5px; font-weight: 700; padding: 2px 8px; border-radius: 10px;
+    }
+    .badge-required { background: #fef2f2; color: #dc2626; border: 1px solid #fca5a5; }
+    .badge-ref { background: #eef4ff; color: #1e5096; border: 1px solid #c7d9f5; }
+
+    /* 유의사항 */
+    .caution-box {
+      background: linear-gradient(135deg, #fef9ec 0%, #fef2f2 100%);
+      border: 1px solid #fbbf24; border-radius: 6px;
+      padding: 10px 12px; font-size: 10.5px; color: #374151; line-height: 1.65;
+    }
+    .caution-box strong { color: #92400e; }
+
+    /* ─── INFO STRIP ─── */
+    .info-strip {
+      background: #0d1f3c; display: flex; align-items: stretch; flex-shrink: 0;
+    }
+    .info-item {
+      flex: 1; padding: 11px 16px;
+      border-right: 1px solid rgba(255,255,255,0.08);
+    }
+    .info-item:last-child { border-right: none; }
+    .info-item-label {
+      font-size: 8.5px; letter-spacing: 1.8px; color: #7bacd4;
+      text-transform: uppercase; margin-bottom: 3px;
+    }
+    .info-item-value { font-size: 11px; color: #fff; font-weight: 500; line-height: 1.45; }
+    .info-item-value.urgent { color: #fca5a5; font-weight: 700; }
+
+    /* ─── FOOTER ─── */
+    .footer {
+      background: #f0f4f9; padding: 12px 28px;
+      display: flex; align-items: center; justify-content: space-between;
+      border-top: 2px solid #1e5096; flex-shrink: 0;
+    }
+    .footer-note { font-size: 9.5px; color: #6b7280; line-height: 1.6; max-width: 65%; }
+    .footer-note strong { color: #374151; }
+    .footer-date { font-size: 9.5px; color: #9ca3af; text-align: right; }
+    .footer-date strong { display: block; font-size: 11px; color: #0d1f3c; margin-bottom: 1px; }
+
+    /* ─── RESPONSIVE ─── */
+    @media screen and (max-width: 680px) {
+      body { padding: 0; background: #fff; }
+      .page { width: 100%; height: auto; min-height: unset; box-shadow: none; overflow: visible; }
+      .top-bar { padding: 10px 16px; }
+      .top-bar-logo { height: 26px; }
+      .hero { flex-direction: column; height: auto; }
+      .hero-left { width: 100%; padding: 26px 18px 22px; }
+      .hero-title { font-size: 22px; }
+      .hero-right { width: 100%; padding: 20px 18px; gap: 10px; }
+      .hero-right-heading { font-size: 15px; }
+      .values-section { padding: 14px 16px; }
+      .cards-grid { grid-template-columns: 1fr; gap: 8px; }
+      .bottom-split { flex-direction: column; flex: none; }
+      .left-section { width: 100%; padding: 16px; border-right: none; border-bottom: 1px solid #e8edf3; justify-content: flex-start; }
+      .right-section { width: 100%; padding: 16px; justify-content: flex-start; }
+      .info-strip { flex-wrap: wrap; }
+      .info-item { flex: 1 1 50%; border-bottom: 1px solid rgba(255,255,255,0.06); }
+      .footer { flex-direction: column; gap: 10px; padding: 14px 16px; }
+      .footer-note { max-width: 100%; }
+      .footer-date { text-align: left; }
+    }
+    @media screen and (min-width: 681px) and (max-width: 900px) {
+      .page { width: 100%; height: auto; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ① TOP BAR -->
+  <div class="top-bar">
+    <img class="top-bar-logo" src="../신성오토텍.jpg" alt="신성오토텍"
+         onerror="this.style.display='none'; document.querySelector('.top-bar-logo-text').style.display='block';" />
+    <span class="top-bar-logo-text">신성오토텍㈜</span>
+    <span class="top-bar-notice">사내 공지사항 · Internal Notice</span>
+  </div>
+
+  <!-- ② HERO -->
+  <div class="hero">
+
+    <!-- 좌: 다크 네이비 타이틀 -->
+    <div class="hero-left">
+      <div>
+        <div class="company-label">Shinsung Autotech Co., Ltd. · 전사공지</div>
+        <div class="hero-title">
+          <span>2026 Safety & Health Notice</span>
+          정기<br>위험성 평가<br>실시 공고
+        </div>
+      </div>
+      <div>
+        <div class="hero-meta-row">
+          <span class="hero-badge">📅 평가기간 : 2026.04.17 ~ 04.27</span>
+        </div>
+        <div class="hero-meta-row" style="margin-top:6px;">
+          <span class="hero-badge urgent">⏰ 의견 제출 : 04.24(금) 15:00</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 우: 라이트 그레이 설명 -->
+    <div class="hero-right">
+      <div class="hero-right-label">Urgent Action · 즉시 참여 요청</div>
+      <div class="hero-right-heading">종사자 의견 청취<br>조사표 제출 요청</div>
+      <div class="hero-right-desc">
+        산업안전보건법 제36조에 의거한 법적 의무 사항으로,<br>
+        <strong style="color:#0d1f3c;">전 임직원</strong>은 유해·위험요인 또는 개선 의견을<br>
+        기한 내 반드시 제출하여 주시기 바랍니다.
+      </div>
+      <div class="hero-callout">
+        💡 <strong>위험성 평가 교육 교안 19페이지</strong>의 유해·위험 분류 예시를 참고하여 작성해 주십시오.
+      </div>
+    </div>
+  </div>
+
+  <!-- ③ VALUES SECTION -->
+  <div class="values-section">
+    <div class="section-label">Program Guide · 위험성 평가 핵심 안내</div>
+    <div class="cards-grid">
+      <div class="val-card">
+        <span class="val-card-num">01</span>
+        <div class="val-card-title">법적 의무 시행</div>
+        <div class="val-card-desc">산업안전보건법 제36조에 의거, 2026년 정기 위험성 평가를 전사 공식 실시합니다.</div>
+      </div>
+      <div class="val-card">
+        <span class="val-card-num">02</span>
+        <div class="val-card-title">전원 의무 참여</div>
+        <div class="val-card-desc">최소 1가지 이상의 유해·위험요인 또는 개선 의견 제출이 <strong style="color:#0d1f3c;">전 직원 의무</strong>입니다.</div>
+      </div>
+      <div class="val-card">
+        <span class="val-card-num">03</span>
+        <div class="val-card-title">안전 환경 구축</div>
+        <div class="val-card-desc">현장 목소리가 실질적인 위험 감소 대책의 핵심 기초자료가 됩니다. 적극 참여 바랍니다.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ④ BOTTOM SPLIT -->
+  <div class="bottom-split">
+
+    <!-- 왼쪽: 위험성평가 실시 공고 (양식3 내용) -->
+    <div class="left-section">
+      <div>
+        <div class="sub-label">Official Notice · 위험성평가 실시 공고</div>
+        <div class="notice-box">
+          <div class="notice-box-title">⚙️ 위험성평가 실시 안내</div>
+          <div class="notice-box-body">
+            당사는 소속 근로자의 안전과 건강을 확보하고 무재해 사업장을 이룩하기 위하여 산업안전보건법에 따른 위험성평가를 다음과 같이 공고합니다.
+          </div>
+        </div>
+      </div>
+      <div>
+        <table class="info-table">
+          <thead>
+            <tr>
+              <th>구분</th>
+              <th>내용</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>평가기간</td>
+              <td>2026년 4월 17일 ~ 4월 27일</td>
+            </tr>
+            <tr>
+              <td>평가대상</td>
+              <td>모든 공정 및 작업</td>
+            </tr>
+            <tr>
+              <td>참여대상</td>
+              <td>위험성평가팀 및 평가 당일 근무자</td>
+            </tr>
+            <tr>
+              <td>평가팀 구성</td>
+              <td>관리감독자 · 안전보건담당자 · 공정책임자</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="caution-box">
+        ⚠️ 평가 담당자의 지도·조언에 따라 담당 공정의 위험성평가표를 <strong>작성하고 기록을 유지</strong>하여야 합니다.
+      </div>
+    </div>
+
+    <!-- 오른쪽: 종사자 의견 제출 요건 -->
+    <div class="right-section">
+      <div>
+        <div class="sub-label">Submission Requirements · 의견 제출 요건</div>
+        <table class="info-table">
+          <thead>
+            <tr>
+              <th>항목</th>
+              <th>내용</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>제출 내용</td>
+              <td>종사자 의견 청취 조사표 (첨부 서식)</td>
+            </tr>
+            <tr>
+              <td>제출 대상</td>
+              <td><strong style="color:#0d1f3c;">전 임직원</strong> (본사 및 화성공장)</td>
+            </tr>
+            <tr class="highlight-row">
+              <td>제출 기한</td>
+              <td class="deadline-val">2026.04.24(금) 15:00 기한 엄수</td>
+            </tr>
+            <tr>
+              <td>제출처</td>
+              <td>본사 2층 경영지원팀</td>
+            </tr>
+            <tr>
+              <td>제출 단위</td>
+              <td>부서별 취합 (최소 조장·파트장 단위)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <div class="sub-label" style="margin-top:4px;">Attachments · 첨부 서류</div>
+        <ul class="attach-list">
+          <li class="attach-item">
+            <span class="attach-icon">📊</span>
+            <div class="attach-text">
+              <a href="[참고양식7]종사자_의견청취_조사표.xlsx" download style="text-decoration:none;">
+                <strong style="color:#0d1f3c;">[참고양식7] 종사자 의견청취 조사표.xlsx</strong>
+              </a>
+              <span>반드시 본 서식 사용 — 클릭 시 다운로드</span>
+            </div>
+            <span class="attach-badge badge-required">필수</span>
+          </li>
+          <li class="attach-item">
+            <span class="attach-icon">📁</span>
+            <div class="attach-text">
+              <a href="[참고양식3]위험성평가_실시_공고.xlsx" download style="text-decoration:none;">
+                <strong style="color:#0d1f3c;">[참고양식3] 위험성평가 실시 공고.xlsx</strong>
+              </a>
+              <span>위험성평가 공식 실시 공고 양식</span>
+            </div>
+            <span class="attach-badge badge-required">필수</span>
+          </li>
+          <li class="attach-item">
+            <span class="attach-icon">📋</span>
+            <div class="attach-text">
+              <a href="위험성평가_교육_교안.pdf" download style="text-decoration:none;">
+                <strong style="color:#0d1f3c;">위험성평가 교육 교안.pdf</strong>
+              </a>
+              <span>유해·위험 분류 예시 19p 참조 — 작성 전 열람 권장</span>
+            </div>
+            <span class="attach-badge badge-ref">참고</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+  </div><!-- /bottom-split -->
+
+  <!-- ⑤ INFO STRIP -->
+  <div class="info-strip">
+    <div class="info-item">
+      <div class="info-item-label">공지 번호</div>
+      <div class="info-item-value">2026-신성-005</div>
+    </div>
+    <div class="info-item">
+      <div class="info-item-label">평가 기간</div>
+      <div class="info-item-value">2026.04.17 ~ 04.27</div>
+    </div>
+    <div class="info-item">
+      <div class="info-item-label">의견 제출 기한</div>
+      <div class="info-item-value urgent">04.24(금) 15:00 마감</div>
+    </div>
+    <div class="info-item">
+      <div class="info-item-label">제출처 / 담당</div>
+      <div class="info-item-value">본사 2층 경영지원팀</div>
+    </div>
+  </div>
+
+  <!-- ⑥ FOOTER -->
+  <div class="footer">
+    <div class="footer-note">
+      <strong>근거 법령 :</strong> 산업안전보건법 제36조 (위험성 평가) · 고용노동부 고시 「사업장 위험성 평가에 관한 지침」<br>
+      본 공고는 법적 의무 사항이며, 무재해 사업장 구현을 위한 전 임직원 참여가 필수입니다.
+    </div>
+    <div class="footer-date">
+      <strong>경영지원팀</strong>
+      신성오토텍㈜ | 2026년 4월 17일 발행
+    </div>
+  </div>
+
+</div><!-- /page -->
+</body>
+</html>
