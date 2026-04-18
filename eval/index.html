@@ -1547,8 +1547,58 @@ async function exportCSV() {
   }
 }
 
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  확정평가항목 시트 로더 (Phase 2)
+//  앱 시작 시 시트에서 KPI 읽어 ALL_EMPLOYEES 덮어씀.
+//  실패하면 employees.js 정적 데이터가 fallback으로 계속 유효.
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+let _kpiSourceIsSheet = false;
+
+async function bootstrapKpiFromSheet() {
+  try {
+    const result = await apiGet('kpi-list', {}, { loading: false });
+    if (result && result.success && Array.isArray(result.data) && result.data.length > 0) {
+      // 배열 내용만 교체 (const 참조는 유지)
+      ALL_EMPLOYEES.length = 0;
+      result.data.forEach(e => ALL_EMPLOYEES.push(e));
+      _kpiSourceIsSheet = true;
+      console.log('[KPI] 확정평가항목 시트에서 로드:', result.data.length, '명');
+    } else {
+      console.log('[KPI] 시트 비어있음 — employees.js 정적 데이터 사용 (seed 필요)');
+    }
+  } catch (e) {
+    console.warn('[KPI] 시트 로드 실패, employees.js fallback:', e.message);
+  }
+}
+
+/** 관리자 전용 1회성 seed 헬퍼 — 브라우저 콘솔에서 실행
+ *  1) 관리자로 로그인
+ *  2) F12 열어 콘솔에서 `_seedKpi()` 입력
+ *  → 현재 employees.js 내용을 확정평가항목 시트로 덮어씀
+ */
+window._seedKpi = async function() {
+  if (!adminToken) {
+    alert('먼저 관리자로 로그인해주세요.');
+    return;
+  }
+  if (!confirm('현재 employees.js의 ' + ALL_EMPLOYEES.length + '명 데이터를 확정평가항목 시트로 덮어씁니다. 계속?')) return;
+  try {
+    const result = await apiPost('kpi-reset', {
+      token: adminToken,
+      employees: ALL_EMPLOYEES,
+      memo: 'seed from employees.js (' + new Date().toISOString().slice(0,10) + ')'
+    });
+    console.log('[seed 결과]', result);
+    alert(result.message || result.error || '완료');
+    if (result.success) await bootstrapKpiFromSheet();
+  } catch (e) {
+    alert('seed 실패: ' + e.message);
+  }
+};
+
 // ── 초기화 ────────────────────────────────────────
-window.onload = () => {
+window.onload = async () => {
+  await bootstrapKpiFromSheet();
   showPage('home');
 };
 </script>
