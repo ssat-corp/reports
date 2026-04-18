@@ -8,6 +8,9 @@
 </head>
 <body>
 
+<!-- 로딩 오버레이 (우측 하단 토스트) -->
+<div id="global-loader" class="hidden">처리 중…</div>
+
 <!-- ── 헤더 ─────────────────────────────────────── -->
 <header>
   <div class="logo">
@@ -397,30 +400,100 @@
 <script src="employees.js"></script>
 <script>
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  Google Apps Script 연동 설정
+//  CONFIG — 환경 설정 (배포 시 이 블록만 확인)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// ⚠️ 아래 URL을 본인의 Google Apps Script 웹 앱 URL로 교체하세요
-const API_URL = 'https://script.google.com/macros/s/AKfycbziyY3j2JnB69YevEuw2llePTiGo58xx7OzZxs2qzhFDlRB-Mo8vjDxXcd22CAYxP6w/exec';
+//  API_URL  : Google Apps Script 웹 앱 배포 URL
+//             (공개 URL 이지만 민감한 동작은 서버에서 ADMIN_TOKEN으로 검증)
+//  ADMIN_SESSION_KEY : localStorage 키 (관리자 토큰 보존)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+const CONFIG = {
+  API_URL: 'https://script.google.com/macros/s/AKfycbziyY3j2JnB69YevEuw2llePTiGo58xx7OzZxs2qzhFDlRB-Mo8vjDxXcd22CAYxP6w/exec',
+  ADMIN_SESSION_KEY: 'pms_admin_token_v1',
+};
+const API_URL = CONFIG.API_URL;  // 하위 호환
 
-/** Apps Script GET 요청 (CORS 리다이렉트 대응) */
-async function apiGet(action, params = {}) {
-  const url = new URL(API_URL);
-  url.searchParams.set('action', action);
-  Object.entries(params).forEach(([k, v]) => url.searchParams.set(k, v));
-  const res = await fetch(url.toString(), { redirect: 'follow' });
-  return res.json();
+// ── 로딩 오버레이 ────────────────────────────────
+let _loadingCount = 0;
+function showLoading() {
+  _loadingCount++;
+  const el = document.getElementById('global-loader');
+  if (el) el.classList.remove('hidden');
+}
+function hideLoading() {
+  _loadingCount = Math.max(0, _loadingCount - 1);
+  if (_loadingCount === 0) {
+    const el = document.getElementById('global-loader');
+    if (el) el.classList.add('hidden');
+  }
 }
 
-/** Apps Script POST 요청 (CORS 리다이렉트 대응) */
-async function apiPost(action, body = {}) {
-  body.action = action;
-  const res = await fetch(API_URL, {
-    method: 'POST',
-    redirect: 'follow',
-    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-    body: JSON.stringify(body)
-  });
-  return res.json();
+/** Apps Script GET 요청 */
+async function apiGet(action, params = {}, opts = {}) {
+  if (opts.loading !== false) showLoading();
+  try {
+    const url = new URL(API_URL);
+    url.searchParams.set('action', action);
+    Object.entries(params).forEach(([k, v]) => {
+      if (v !== undefined && v !== null) url.searchParams.set(k, v);
+    });
+    const res = await fetch(url.toString(), { redirect: 'follow' });
+    if (!res.ok) throw new Error('서버 응답 ' + res.status);
+    return await res.json();
+  } catch (e) {
+    console.error('[apiGet]', action, e);
+    throw e;
+  } finally {
+    if (opts.loading !== false) hideLoading();
+  }
+}
+
+/** Apps Script POST 요청 */
+async function apiPost(action, body = {}, opts = {}) {
+  if (opts.loading !== false) showLoading();
+  try {
+    body.action = action;
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      redirect: 'follow',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(body)
+    });
+    if (!res.ok) throw new Error('서버 응답 ' + res.status);
+    return await res.json();
+  } catch (e) {
+    console.error('[apiPost]', action, e);
+    throw e;
+  } finally {
+    if (opts.loading !== false) hideLoading();
+  }
+}
+
+/** 관리자 GET/POST — 토큰 자동 첨부 + 만료 처리 */
+async function apiAdminGet(action, params = {}) {
+  if (!adminToken) throw new Error('로그인이 필요합니다.');
+  const result = await apiGet(action, { ...params, token: adminToken });
+  if (result && result.error && /인증|로그인/.test(result.error)) {
+    handleAdminSessionExpired();
+  }
+  return result;
+}
+async function apiAdminPost(action, body = {}) {
+  if (!adminToken) throw new Error('로그인이 필요합니다.');
+  const result = await apiPost(action, { ...body, token: adminToken });
+  if (result && result.error && /인증|로그인/.test(result.error)) {
+    handleAdminSessionExpired();
+  }
+  return result;
+}
+
+function handleAdminSessionExpired() {
+  adminToken = null;
+  try { localStorage.removeItem(CONFIG.ADMIN_SESSION_KEY); } catch(e) {}
+  alert('관리자 세션이 만료되었습니다. 다시 로그인해주세요.');
+  const loginEl = document.getElementById('admin-login');
+  const dashEl = document.getElementById('admin-dashboard');
+  if (loginEl) loginEl.classList.remove('hidden');
+  if (dashEl) dashEl.classList.add('hidden');
 }
 
 // 팀별 그룹핑 헬퍼
@@ -448,6 +521,21 @@ function showPage(page) {
   });
   if (page === 'self') initSelfAuthPage();
   if (page === 'manager') initMgrAuthPage();
+  if (page === 'admin') initAdminPage();
+}
+
+// 관리자 페이지 진입 시 토큰 상태에 따라 로그인/대시보드 표시
+function initAdminPage() {
+  const loginEl = document.getElementById('admin-login');
+  const dashEl = document.getElementById('admin-dashboard');
+  if (adminToken) {
+    loginEl.classList.add('hidden');
+    dashEl.classList.remove('hidden');
+    loadAdminDashboard();
+  } else {
+    loginEl.classList.remove('hidden');
+    dashEl.classList.add('hidden');
+  }
 }
 
 // ── 관리자 대시보드 현황바 ─────────────────────────
@@ -899,12 +987,21 @@ async function submitManagerConsensus() {
 // ── 관리자 로그인 ─────────────────────────────────
 let adminToken = null;
 
+// 페이지 로드 시 저장된 토큰 복원 (새로고침해도 로그인 유지)
+try {
+  const saved = localStorage.getItem(CONFIG.ADMIN_SESSION_KEY);
+  if (saved) adminToken = saved;
+} catch(e) {}
+
 async function adminLogin() {
   const pw = document.getElementById('admin-pw').value;
+  const btn = document.querySelector('#admin-login button.btn-primary');
+  if (btn) btn.disabled = true;
   try {
     const result = await apiPost('admin-login', { password: pw });
     if (result.success) {
       adminToken = result.token;
+      try { localStorage.setItem(CONFIG.ADMIN_SESSION_KEY, adminToken); } catch(e) {}
       document.getElementById('admin-login').classList.add('hidden');
       document.getElementById('admin-dashboard').classList.remove('hidden');
       loadAdminDashboard();
@@ -914,15 +1011,23 @@ async function adminLogin() {
       err.classList.remove('hidden');
     }
   } catch(e) {
-    alert('서버 연결 오류. Google Apps Script 웹 앱 URL을 확인하세요.\n\n' + e.message);
+    alert('서버 연결 오류. 네트워크 상태를 확인해주세요.\n\n' + e.message);
+  } finally {
+    if (btn) btn.disabled = false;
   }
 }
 
-function adminLogout() {
+async function adminLogout() {
+  const prevToken = adminToken;
   adminToken = null;
+  try { localStorage.removeItem(CONFIG.ADMIN_SESSION_KEY); } catch(e) {}
   document.getElementById('admin-login').classList.remove('hidden');
   document.getElementById('admin-dashboard').classList.add('hidden');
   document.getElementById('admin-pw').value = '';
+  // 서버 토큰 폐기 (실패해도 무시)
+  if (prevToken) {
+    try { await apiPost('admin-logout', { token: prevToken }, { loading: false }); } catch(e) {}
+  }
 }
 
 // ── Google Sheets 응답 → 렌더링 형식 변환 ──────────
@@ -987,7 +1092,7 @@ function transformAdminData(selfEvals, mgrEvals) {
 async function loadAdminDashboard() {
   try {
     loadAdminStatusBar();
-    const result = await apiGet('admin-results');
+    const result = await apiAdminGet('admin-results');
     const data = result.data || { selfEvals: [], mgrEvals: [] };
     const transformed = transformAdminData(data.selfEvals || [], data.mgrEvals || []);
     renderAdminStats(transformed);
@@ -1157,7 +1262,7 @@ function renderAdminIncomplete(data) {
 let adminData = null;
 async function showDetail(name) {
   if (!adminData) {
-    const result = await apiGet('admin-results');
+    const result = await apiAdminGet('admin-results');
     const data = result.data || { selfEvals: [], mgrEvals: [] };
     adminData = transformAdminData(data.selfEvals || [], data.mgrEvals || []);
   }
@@ -1356,7 +1461,7 @@ async function renderAdminFinal() {
   const container = document.getElementById('admin-final-content');
   container.innerHTML = '<div class="alert alert-info">불러오는 중…</div>';
   try {
-    const result = await apiGet('admin-all');
+    const result = await apiAdminGet('admin-all');
     const { selfEvals = [], mgrEvals = [] } = (result.data || {});
 
     const selfMap = {};
@@ -1404,7 +1509,7 @@ async function renderAdminFinal() {
 // ── CSV 내보내기 (클라이언트사이드) ─────────────────
 async function exportCSV() {
   try {
-    const result = await apiGet('admin-results');
+    const result = await apiAdminGet('admin-results');
     const data = result.data || { selfEvals: [], mgrEvals: [] };
     const transformed = transformAdminData(data.selfEvals || [], data.mgrEvals || []);
 
