@@ -14,41 +14,8 @@
 
   document.querySelectorAll('.chapter, .reveal').forEach(el => io.observe(el));
 
-  // Hero parallax on scroll (subtle)
-  const chars = document.querySelectorAll('.hero__char');
-  const speeds = [0.08, -0.12, 0.06, -0.10, 0.14];
-
-  let ticking = false;
-  function onScroll(){
-    if (ticking) return;
-    ticking = true;
-    requestAnimationFrame(() => {
-      const y = window.scrollY;
-      chars.forEach((c, i) => {
-        const s = speeds[i] || 0.08;
-        c.style.transform = `translate3d(0, ${y * s}px, 0)`;
-      });
-      ticking = false;
-    });
-  }
-  window.addEventListener('scroll', onScroll, { passive:true });
-
-  // Cursor-following parallax on hero (desktop only)
-  const hero = document.querySelector('.hero__stage');
-  if (hero && window.matchMedia('(hover: hover)').matches){
-    hero.addEventListener('mousemove', (ev) => {
-      const rect = hero.getBoundingClientRect();
-      const cx = (ev.clientX - rect.left) / rect.width - 0.5;
-      const cy = (ev.clientY - rect.top) / rect.height - 0.5;
-      chars.forEach((c, i) => {
-        const depth = (i % 2 === 0 ? 1 : -1) * (8 + i * 2);
-        c.style.transform = `translate3d(${cx * depth}px, ${cy * depth}px, 0)`;
-      });
-    });
-    hero.addEventListener('mouseleave', () => {
-      chars.forEach(c => { c.style.transform = ''; });
-    });
-  }
+  // (Hero characters use a pure CSS float animation — no JS transform
+  //  so the bobbing stays smooth and consistent.)
 
   // Nav background intensify on scroll
   const nav = document.querySelector('.nav');
