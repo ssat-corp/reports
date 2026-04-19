@@ -52,7 +52,8 @@ header {
 }
 header .logo { font-size: 18px; font-weight: bold; letter-spacing: 1px; display: flex; flex-direction: column; gap: 2px; }
 header .logo span { color: #BDD7EE; font-size: 13px; display: block; font-weight: normal; }
-header .logo .logo-img { height: 28px; width: auto; display: block; }
+/* 원본 비율 유지 (729:107 ≈ 6.8:1), 스트레치 금지 */
+header .logo .logo-img { height: 44px; width: auto; display: block; object-fit: contain; max-width: 100%; }
 header nav { display: flex; gap: 8px; }
 header nav button {
   background: rgba(255,255,255,0.15);
@@ -401,7 +402,7 @@ main { max-width: 1300px; margin: 0 auto; padding: 32px 24px; }
     position: static;
   }
   header .logo { align-items: center; text-align: center; }
-  header .logo .logo-img { height: 24px; margin: 0 auto; }
+  header .logo .logo-img { height: 36px; margin: 0 auto; }
   header .logo span { font-size: 11px; }
   header nav {
     justify-content: center;
