@@ -50,8 +50,9 @@ header {
   box-shadow: 0 2px 8px rgba(0,0,0,0.2);
   position: sticky; top: 0; z-index: 100;
 }
-header .logo { font-size: 18px; font-weight: bold; letter-spacing: 1px; }
+header .logo { font-size: 18px; font-weight: bold; letter-spacing: 1px; display: flex; flex-direction: column; gap: 2px; }
 header .logo span { color: #BDD7EE; font-size: 13px; display: block; font-weight: normal; }
+header .logo .logo-img { height: 28px; width: auto; display: block; }
 header nav { display: flex; gap: 8px; }
 header nav button {
   background: rgba(255,255,255,0.15);
@@ -71,6 +72,22 @@ header nav button.active { background: white; color: #1F3864; font-weight: bold;
 main { max-width: 1300px; margin: 0 auto; padding: 32px 24px; }
 
 /* ── 홈 화면 ────────────────────────────────────── */
+.home-section-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1F3864;
+  letter-spacing: 0.5px;
+  margin: 24px 4px 10px;
+  padding: 6px 12px;
+  background: linear-gradient(90deg, rgba(46,117,182,0.08), transparent);
+  border-left: 4px solid #2E75B6;
+  border-radius: 0 8px 8px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.home-section-title .dot { font-size: 16px; }
+
 .home-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -366,3 +383,71 @@ main { max-width: 1300px; margin: 0 auto; padding: 32px 24px; }
 
 /* 기존 score-row 숨김 (혹시 남아있을 경우) */
 .score-slider { display: none; }
+
+/* ═══════════════════════════════════════════════════ */
+/*   반응형 — 모바일 (≤ 960px) / 태블릿 (≤ 1200px)       */
+/* ═══════════════════════════════════════════════════ */
+@media (max-width: 1200px) {
+  .home-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  main { padding: 24px 16px; }
+}
+
+@media (max-width: 768px) {
+  header {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 12px 14px;
+    gap: 10px;
+    position: static;
+  }
+  header .logo { align-items: center; text-align: center; }
+  header .logo .logo-img { height: 24px; margin: 0 auto; }
+  header .logo span { font-size: 11px; }
+  header nav {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  header nav button { padding: 6px 10px; font-size: 12px; flex: 1 1 auto; min-width: 72px; }
+
+  main { padding: 16px 10px; }
+
+  .home-grid { grid-template-columns: 1fr; gap: 12px; }
+  .home-card { padding: 22px 18px; border-radius: 12px; }
+  .home-card .icon { font-size: 36px; margin-bottom: 10px; }
+  .home-card h2 { font-size: 15px; }
+  .home-card p { font-size: 12px; }
+  .home-card .badge { font-size: 11px; padding: 3px 10px; margin-top: 12px; }
+
+  .home-section-title { font-size: 13px; margin: 18px 0 8px; padding: 5px 10px; }
+
+  .section-title { font-size: 14px; }
+
+  /* 카드·섹션 기본 패딩 축소 */
+  .card { padding: 14px 14px; }
+
+  /* 테이블은 가로 스크롤로 */
+  .kpi-table,
+  table.kpi-table { font-size: 12px; }
+  .kpi-table th, .kpi-table td { padding: 8px 6px; }
+  /* 이슈 방지: 큰 테이블은 래핑 컨테이너에서 스크롤 */
+  .card > table,
+  .card { overflow-x: auto; }
+
+  /* 로그인·인증 박스 */
+  .login-wrap { padding: 24px 18px; margin: 16px 0; }
+
+  /* 공통 폼 입력 터치 친화 — 44px 이상 */
+  input, select, textarea, button { font-size: 14px; }
+  .btn, .btn-primary { padding: 12px 18px; min-height: 44px; }
+
+  /* 홈 상단 프로세스 타임라인 등 가로 스크롤 */
+  .home-card .timeline,
+  #page-home .timeline { overflow-x: auto; }
+}
+
+@media (max-width: 480px) {
+  header nav button { font-size: 11px; padding: 5px 8px; min-width: 0; }
+  .home-card { padding: 18px 14px; }
+  .home-card h2 { font-size: 14px; }
+}
