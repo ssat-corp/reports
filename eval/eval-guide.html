@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2026 하반기 인사평가 파일럿 안내 — 신성오토텍</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Malgun Gothic','맑은 고딕',sans-serif; background:#f0f4f8; color:#1a202c; }
+    header {
+      background: linear-gradient(135deg,#1F3864,#2E75B6);
+      color:white; padding:20px 40px;
+      display:flex; align-items:center; justify-content:space-between;
+    }
+    header .logo { font-size:20px; font-weight:bold; }
+    header .logo span { display:block; font-size:12px; color:#BDD7EE; font-weight:normal; margin-top:2px; }
+    header nav a {
+      color:rgba(255,255,255,0.85); text-decoration:none;
+      font-size:13px; margin-left:16px;
+      padding:6px 14px; border:1px solid rgba(255,255,255,0.3); border-radius:6px;
+    }
+    main { max-width:960px; margin:0 auto; padding:36px 24px; }
+    h1 { font-size:22px; color:#1F3864; margin-bottom:6px; }
+    .subtitle { font-size:14px; color:#718096; margin-bottom:32px; }
+    .section { background:white; border-radius:12px; padding:28px; margin-bottom:24px;
+      box-shadow:0 1px 4px rgba(0,0,0,0.08); }
+    .section-heading {
+      font-size:16px; font-weight:700; color:#1F3864;
+      border-left:4px solid #2E75B6; padding-left:12px; margin-bottom:20px;
+    }
+    table { width:100%; border-collapse:collapse; font-size:13px; }
+    th { background:#1F3864; color:white; padding:10px 14px; text-align:left; font-weight:600; }
+    td { padding:10px 14px; border-bottom:1px solid #e2e8f0; vertical-align:top; }
+    tr:last-child td { border-bottom:none; }
+    tr:nth-child(even) td { background:#f7f9fc; }
+    .badge {
+      display:inline-block; padding:2px 10px; border-radius:20px;
+      font-size:11px; font-weight:700;
+    }
+    .b-성실  { background:#FCE4D6; color:#843C0C; }
+    .b-책임  { background:#BDD7EE; color:#1F3864; }
+    .b-품질  { background:#E2EFDA; color:#375623; }
+    .b-팀웍  { background:#EAD1DC; color:#4A235A; }
+    .b-pilot { background:#FFF3CD; color:#856404; }
+    .b-ok    { background:#D4EDDA; color:#155724; }
+    .b-warn  { background:#F8D7DA; color:#721C24; }
+    .timeline {
+      display:flex; gap:0; position:relative; margin-top:16px;
+    }
+    .timeline::before {
+      content:''; position:absolute; top:24px; left:32px; right:32px;
+      height:3px; background:linear-gradient(90deg,#2E75B6,#70AD47,#ED7D31,#7F6000);
+    }
+    .tl-step { flex:1; text-align:center; position:relative; z-index:1; }
+    .tl-circle {
+      width:48px; height:48px; margin:0 auto;
+      border-radius:50%; display:flex; align-items:center; justify-content:center;
+      font-weight:900; font-size:16px; color:white;
+      box-shadow:0 2px 8px rgba(0,0,0,0.2);
+    }
+    .tl-box {
+      background:white; border-radius:10px; padding:12px 8px;
+      margin-top:12px; border:1px solid #e2e8f0; font-size:12px;
+    }
+    .tl-month { font-weight:700; color:#2E75B6; font-size:11px; margin-bottom:4px; }
+    .faq-item { padding:14px 0; border-bottom:1px solid #f0f4f8; }
+    .faq-item:last-child { border-bottom:none; }
+    .faq-q { font-weight:700; color:#1F3864; margin-bottom:6px; }
+    .faq-a { font-size:13px; color:#4a5568; line-height:1.7; }
+    .highlight { background:#FFF8E1; border-radius:8px; padding:14px 18px; font-size:13px; color:#7D4E00; margin-top:16px; }
+    @media print {
+      body { background:white; }
+      header nav { display:none; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    신성오토텍㈜
+    <span>2026 하반기 인사평가 파일럿 안내</span>
+  </div>
+  <nav>
+    <a href="index.html">홈으로</a>
+    <a href="hourly.html">시급직 평가표</a>
+    <a onclick="window.print()" style="cursor:pointer;">인쇄</a>
+  </nav>
+</header>
+
+<main>
+  <h1>2026년 하반기 인사평가 파일럿 운영 안내</h1>
+  <div class="subtitle">시행일: 2026년 6월 공지 | 1차 평가: 9월 | 2차 평가: 12월 | 임금 연계: 없음 (파일럿)</div>
+
+  <!-- 1. 왜 하는가 -->
+  <div class="section">
+    <div class="section-heading">1. 왜 인사평가를 시작하나요?</div>
+    <table>
+      <tr><th style="width:30%">목적</th><th>내용</th></tr>
+      <tr>
+        <td><strong>공정한 기준 만들기</strong></td>
+        <td>그동안 명확한 기준 없이 운영되던 인사 판단을 객관적·수치화된 기준으로 전환합니다.</td>
+      </tr>
+      <tr>
+        <td><strong>고성과자 제대로 인정</strong></td>
+        <td>열심히 일하는 구성원이 정당하게 평가받을 수 있는 근거를 마련합니다.</td>
+      </tr>
+      <tr>
+        <td><strong>피드백 문화 정착</strong></td>
+        <td>평가는 감점이 아닌 성장을 위한 대화입니다. 팀장–팀원 간 공식 피드백 채널을 만듭니다.</td>
+      </tr>
+      <tr>
+        <td><strong>회사 사훈 연계</strong></td>
+        <td>성실·책임·품질지향·팀웍 — 4가지 사훈을 평가 기준에 직접 반영합니다.</td>
+      </tr>
+      <tr>
+        <td><strong>디지털 전환</strong></td>
+        <td>종이 없이 웹 시스템으로 평가·집계·보관합니다.</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- 2. 무엇이 바뀌나 -->
+  <div class="section">
+    <div class="section-heading">2. 무엇이 바뀌나요?</div>
+    <table>
+      <tr><th style="width:25%">구분</th><th style="width:35%">기존</th><th>변경 (2026 하반기~)</th></tr>
+      <tr>
+        <td><strong>연봉직</strong></td>
+        <td>기존 인사평가 방식 유지</td>
+        <td>기존 평가 + <strong>정량 KPI 항목 추가</strong> + 웹 시스템 디지털화</td>
+      </tr>
+      <tr>
+        <td><strong>시급직</strong></td>
+        <td>평가 없음</td>
+        <td><strong>5개 영역 공통 평가 도입</strong> (근태·작업·품질·안전·협력) <span class="badge b-pilot">파일럿</span></td>
+      </tr>
+      <tr>
+        <td><strong>평가 방식</strong></td>
+        <td>종이 or 구두</td>
+        <td>웹 시스템 입력 + Google Sheets 집계</td>
+      </tr>
+      <tr>
+        <td><strong>임금 연계</strong></td>
+        <td>연봉협상 시 비공식 반영</td>
+        <td><span class="badge b-pilot">2026년: 연계 없음 (파일럿)</span> → 2027년 공식화 검토</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- 3. 시급직 평가 기준 -->
+  <div class="section">
+    <div class="section-heading">3. 시급직 평가 기준 (100점 만점)</div>
+    <table>
+      <tr>
+        <th style="width:8%">영역</th>
+        <th style="width:28%">평가 항목</th>
+        <th style="width:12%">사훈</th>
+        <th style="width:10%">배점</th>
+        <th>평가 근거 자료</th>
+      </tr>
+      <tr>
+        <td><strong>H1</strong></td>
+        <td>근태·출근 성실성</td>
+        <td><span class="badge b-성실">성실</span></td>
+        <td style="text-align:center;font-weight:700;">20점</td>
+        <td>전자출퇴근 기록, 결근신청서</td>
+      </tr>
+      <tr>
+        <td><strong>H2</strong></td>
+        <td>작업 지시 이행도</td>
+        <td><span class="badge b-책임">책임</span></td>
+        <td style="text-align:center;font-weight:700;">20점</td>
+        <td>일일 작업지시서, 생산실적일보</td>
+      </tr>
+      <tr>
+        <td><strong>H3</strong></td>
+        <td>품질·공정 관리</td>
+        <td><span class="badge b-품질">품질</span></td>
+        <td style="text-align:center;font-weight:700;">20점</td>
+        <td>자주검사 시트, 불량 발생 기록</td>
+      </tr>
+      <tr>
+        <td><strong>H4</strong></td>
+        <td>안전수칙 준수</td>
+        <td><span class="badge b-책임">책임</span></td>
+        <td style="text-align:center;font-weight:700;">20점</td>
+        <td>안전점검일지, 보호구 체크리스트</td>
+      </tr>
+      <tr>
+        <td><strong>H5</strong></td>
+        <td>협력·개선 참여</td>
+        <td><span class="badge b-팀웍">팀웍</span></td>
+        <td style="text-align:center;font-weight:700;">20점</td>
+        <td>반장 관찰 기록, 개선제안서</td>
+      </tr>
+      <tr style="background:#f0f4f8;">
+        <td colspan="3" style="text-align:right;font-weight:700;">합계</td>
+        <td style="text-align:center;font-weight:900;font-size:16px;color:#2E75B6;">100점</td>
+        <td></td>
+      </tr>
+    </table>
+    <div class="highlight">
+      📌 각 항목은 <strong>1~5점</strong>으로 평가합니다. 점수 기준은 관찰 가능한 행동 사실(날짜·상황)을 근거로 합니다.
+      "태도가 나쁘다" 같은 주관적 표현은 기재하지 않습니다.
+    </div>
+  </div>
+
+  <!-- 4. 평가자 구성 -->
+  <div class="section">
+    <div class="section-heading">4. 평가자 구성 및 가중치</div>
+    <table>
+      <tr><th>평가자</th><th>가중치</th><th>특징</th></tr>
+      <tr><td><strong>본인 (자기평가)</strong></td><td style="text-align:center;font-weight:700;">30%</td><td>자신의 업무를 스스로 돌아보는 기회</td></tr>
+      <tr><td><strong>반장</strong></td><td style="text-align:center;font-weight:700;">40%</td><td>현장 관찰 기반 — 가장 높은 가중치</td></tr>
+      <tr><td><strong>팀장</strong></td><td style="text-align:center;font-weight:700;">20%</td><td>팀 전체 관점에서의 기여도 평가</td></tr>
+      <tr><td><strong>공장장</strong></td><td style="text-align:center;font-weight:700;">10%</td><td>조직 전반 관찰 평가</td></tr>
+    </table>
+  </div>
+
+  <!-- 5. 일정 -->
+  <div class="section">
+    <div class="section-heading">5. 2026 하반기 평가 일정</div>
+    <div class="timeline">
+      <div class="tl-step">
+        <div class="tl-circle" style="background:#2E75B6;">1</div>
+        <div class="tl-box">
+          <div class="tl-month">6월</div>
+          <div>인사평가규정 공포<br>구성원 안내</div>
+        </div>
+      </div>
+      <div class="tl-step">
+        <div class="tl-circle" style="background:#4472C4;">2</div>
+        <div class="tl-box">
+          <div class="tl-month">7~8월</div>
+          <div>KPI 합의 확정<br>평가 기준 숙지</div>
+        </div>
+      </div>
+      <div class="tl-step">
+        <div class="tl-circle" style="background:#70AD47;">3</div>
+        <div class="tl-box">
+          <div class="tl-month">9월</div>
+          <div><strong>1차 반기 평가</strong><br>결과 피드백 면담</div>
+        </div>
+      </div>
+      <div class="tl-step">
+        <div class="tl-circle" style="background:#ED7D31;">4</div>
+        <div class="tl-box">
+          <div class="tl-month">12월</div>
+          <div><strong>2차 연말 평가</strong><br>파일럿 결과 검토</div>
+        </div>
+      </div>
+      <div class="tl-step">
+        <div class="tl-circle" style="background:#7F6000;">5</div>
+        <div class="tl-box">
+          <div class="tl-month">2027년</div>
+          <div>공식 시행<br>제도 정착</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. 자주 묻는 질문 -->
+  <div class="section">
+    <div class="section-heading">6. 자주 묻는 질문 (Q&A)</div>
+    <div class="faq-item">
+      <div class="faq-q">Q. 평가 결과로 바로 월급이 깎이나요?</div>
+      <div class="faq-a">아닙니다. 2026년 평가는 파일럿으로, 임금에 전혀 영향을 주지 않습니다.
+        결과는 피드백과 성장 기회 제공을 위해서만 활용됩니다.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Q. 평가 점수에 불만이 있으면 어떻게 하나요?</div>
+      <div class="faq-a">평가 결과를 받은 후 7일 이내에 이의신청이 가능합니다.
+        인사평가규정 제7장 절차에 따라 검토합니다.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Q. 반장이 나를 싫어해서 점수를 낮게 주면요?</div>
+      <div class="faq-a">모든 점수는 <strong>관찰 가능한 행동 사실</strong>에 근거해야 합니다.
+        "태도" 같은 주관적 판단은 기재할 수 없습니다.
+        반장 외에도 본인·팀장·공장장이 함께 평가하므로 특정인 편향을 방지합니다.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Q. 시급직도 자기평가를 해야 하나요?</div>
+      <div class="faq-a">네, 본인 평가(30%)가 포함됩니다. 자신의 업무를 돌아보는 기회이며,
+        반장 평가와 큰 차이가 있을 경우 면담을 통해 조율합니다.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Q. 연봉직 평가는 뭐가 달라지나요?</div>
+      <div class="faq-a">기존 평가 방식에 정량 KPI 항목이 추가되고, 종이 대신 웹 시스템으로 진행합니다.
+        평가 항목은 팀장과 사전 합의 과정을 거칩니다.</div>
+    </div>
+  </div>
+
+  <div style="text-align:center;color:#a0aec0;font-size:12px;padding:20px 0;">
+    신성오토텍㈜ 경영기획실 | 문의: 내선 또는 경영기획실 담당자
+  </div>
+</main>
+</body>
+</html>

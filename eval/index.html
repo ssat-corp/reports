@@ -50,14 +50,14 @@
     </div>
 
     <!-- 성과관리 가이드 (차별점 — 푸른 계열) -->
-    <a href="guide.html" target="_blank" class="home-card"
+    <a href="eval-guide.html" target="_blank" class="home-card"
        style="background:linear-gradient(135deg,#1F3864,#2E75B6);color:white;text-decoration:none;display:block;padding:20px 24px;">
       <div style="font-size:28px;margin-bottom:8px;">📋</div>
-      <h2 style="color:white;font-size:16px;margin-bottom:6px;">성과관리 안내 →</h2>
+      <h2 style="color:white;font-size:16px;margin-bottom:6px;">평가 안내 · 파일럿 설명 →</h2>
       <p style="color:rgba(255,255,255,0.9);font-size:12px;">
-        PMS 평가 방식, 일정, 채점 기준 등<br>전체 안내를 확인하세요.
+        2026 파일럿 목적, 일정, 평가 기준<br>구성원 공지 자료
       </p>
-      <div class="badge" style="background:rgba(255,255,255,0.2);color:white;margin-top:10px;">PERFORMANCE GUIDE</div>
+      <div class="badge" style="background:rgba(255,255,255,0.2);color:white;margin-top:10px;">EVAL GUIDE</div>
     </a>
 
   </div>
@@ -84,6 +84,23 @@
       <p>전체 평가 결과를 취합하고<br>팀별 현황을 조회합니다.</p>
       <div class="badge">경영진 전용</div>
     </div>
+  </div>
+
+  <hr style="border:none;border-top:1px solid #e2e8f0;margin:24px 0;">
+
+  <div class="home-grid" style="grid-template-columns:repeat(2,1fr);max-width:700px;">
+    <a href="hourly.html" class="home-card" style="text-decoration:none;background:linear-gradient(135deg,#375623,#70AD47);color:white;">
+      <div class="icon" style="color:white;">🏭</div>
+      <h2 style="color:white;">시급직 반기 평가표</h2>
+      <p style="color:rgba(255,255,255,0.9);">H1~H5 체크리스트<br>반장 · 팀장 · 공장장 평가</p>
+      <div class="badge" style="background:rgba(255,255,255,0.2);color:white;margin-top:10px;">2026 파일럿</div>
+    </a>
+    <a href="eval-guide.html" class="home-card" style="text-decoration:none;">
+      <div class="icon">📢</div>
+      <h2>파일럿 안내 자료</h2>
+      <p>구성원 공지용 설명 자료<br>인쇄 / PDF 저장 가능</p>
+      <div class="badge" style="margin-top:10px;">내부 공지</div>
+    </a>
   </div>
 
   <!-- 성과관리 프로세스 (타임라인) -->
@@ -134,7 +151,7 @@
       </div>
     </div>
     <div class="alert alert-info mt-16" style="font-size:12px;">
-      📌 평가 기간: 2026년 하반기 (6월~12월) | 종합 점수 = 자기평가 40% + 팀장평가 60% | 기본 100점 + 보너스 최대 5점
+      📌 평가 기간: 2026년 하반기 (5월 합의 · 9월 1차 · 12월 2차) | 평가 구조 = 정량 KPI 45% + 정성(사훈 연계) 45% + 자동화·추가 10% | 평가자 가중치 = 본인 40% + 팀장 40% + 최상위자 20% (최상위자 ±10점 수동 가감 가능)
     </div>
   </div>
 </main>
@@ -397,7 +414,7 @@
 <!-- ══════════════════════════════════════════════ -->
 <!-- JavaScript                                      -->
 <!-- ══════════════════════════════════════════════ -->
-<script src="employees.js"></script>
+<script src="employees_v2.js"></script>
 <script>
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 //  CONFIG — 환경 설정 (배포 시 이 블록만 확인)
@@ -625,7 +642,7 @@ function renderConsensusTable(tbodyId, criteria, prefix, emp) {
   tbody.innerHTML = '';
   const rows = criteria.slice();
   if (emp.type === 'annual' && emp.bonus) {
-    rows.push({ id:'bonus', label:'🚀 자율 혁신 보너스', desc: emp.bonus.label + ' — ' + emp.bonus.desc, max:5 });
+    rows.push({ id:'bonus', label:'🚀 자율 혁신 보너스', desc: emp.bonus.label + ' — ' + emp.bonus.desc, max:10 });
   }
   rows.forEach(item => {
     const catClass = item.id === 'bonus' ? 'bonus'
@@ -724,7 +741,7 @@ function renderBonusSection(prefix, emp) {
 
   section.innerHTML = `
     <div style="background:#EBF8FF;border:1px solid #BEE3F8;border-radius:8px;padding:14px 16px;margin-bottom:16px;">
-      <div style="font-weight:600;color:#2B6CB0;margin-bottom:6px;">🚀 자율 혁신 보너스 (+최대 5점)</div>
+      <div style="font-weight:600;color:#2B6CB0;margin-bottom:6px;">🚀 자율 혁신 보너스 (+최대 10점)</div>
       <div style="font-size:12px;color:#4a5568;margin-bottom:10px;"><strong>${emp.bonus.label}</strong> — ${emp.bonus.desc}</div>
       <div class="grade-row">${btns}
         <button class="grade-btn" style="--gc:#999" onclick="selectBonus('${prefix}',0,this)">
@@ -1155,7 +1172,7 @@ function renderAdminAll(data) {
     const selfScore = calcScores(d.selfEval);
     const mgrScore  = calcScores(d.managerEval);
     const combined  = (selfScore !== null && mgrScore !== null)
-      ? Math.round(selfScore * 0.4 + mgrScore * 0.6) : null;
+      ? Math.round(selfScore * 0.4 + mgrScore * 0.4) : null; /* 본인40%+팀장40%; 최상위자20%는 ±10점 수동조정 */
     const grade = getGrade(combined);
 
     tbody.insertAdjacentHTML('beforeend', `
@@ -1191,7 +1208,7 @@ function renderAdminTeam(data) {
       const d = data.evaluations[emp.name] || {};
       const s = calcScores(d.selfEval);
       const m = calcScores(d.managerEval);
-      const c = (s !== null && m !== null) ? Math.round(s*0.4+m*0.6) : null;
+      const c = (s !== null && m !== null) ? Math.round(s*0.4+m*0.4) : null; /* 본인40%+팀장40% */
       if (c !== null) scores.push(c);
     });
     const avg = scores.length ? Math.round(scores.reduce((a,b)=>a+b,0)/scores.length) : '-';
@@ -1208,7 +1225,7 @@ function renderAdminTeam(data) {
             const d = data.evaluations[emp.name] || {};
             const s = calcScores(d.selfEval);
             const m = calcScores(d.managerEval);
-            const c = (s!==null&&m!==null) ? Math.round(s*0.4+m*0.6) : null;
+            const c = (s!==null&&m!==null) ? Math.round(s*0.4+m*0.4) : null; /* 본인40%+팀장40% */
             const g = getGrade(c);
             return `<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px 14px;min-width:140px;">
               <div style="font-weight:bold;font-size:13px;">${emp.name}</div>
@@ -1272,7 +1289,7 @@ async function showDetail(name) {
 
   const selfTotal = calcScores(d.selfEval);
   const mgrTotal  = calcScores(d.managerEval);
-  const combined  = (selfTotal!==null&&mgrTotal!==null) ? Math.round(selfTotal*0.4+mgrTotal*0.6) : null;
+  const combined  = (selfTotal!==null&&mgrTotal!==null) ? Math.round(selfTotal*0.4+mgrTotal*0.4) : null; /* 본인40%+팀장40% */
 
   let kpiRows = '';
   criteria.forEach(item => {
@@ -1294,7 +1311,7 @@ async function showDetail(name) {
       </div>
       <div style="text-align:center;padding:16px;background:#f0f4f8;border-radius:10px;">
         <div style="font-size:24px;font-weight:bold;color:#70AD47;">${mgrTotal ?? '-'}점</div>
-        <div style="font-size:12px;color:#718096;">팀장평가 (60%)</div>
+        <div style="font-size:12px;color:#718096;">팀장평가 (40%)</div>
       </div>
       <div style="text-align:center;padding:16px;background:#1F3864;border-radius:10px;">
         <div style="font-size:28px;font-weight:bold;color:white;">${combined ?? '-'}점</div>
@@ -1367,7 +1384,7 @@ function renderAdminKpi() {
         html += `<tr><td style="padding:4px 6px;"><b>${it.label}</b></td><td style="padding:4px 6px;color:#4a5568;">${it.desc}</td><td style="padding:4px 6px;text-align:center;">${it.max}</td></tr>`;
       });
       if (emp.bonus) {
-        html += `<tr style="background:#EBF8FF;"><td style="padding:4px 6px;"><b>🚀 보너스</b></td><td style="padding:4px 6px;color:#4a5568;">${emp.bonus.label} — ${emp.bonus.desc}</td><td style="padding:4px 6px;text-align:center;">+5</td></tr>`;
+        html += `<tr style="background:#EBF8FF;"><td style="padding:4px 6px;"><b>🚀 보너스</b></td><td style="padding:4px 6px;color:#4a5568;">${emp.bonus.label} — ${emp.bonus.desc}</td><td style="padding:4px 6px;text-align:center;">+10</td></tr>`;
       }
       html += '</tbody></table></div>';
     });
@@ -1456,7 +1473,7 @@ function showConsensusDetail(name) {
   document.getElementById('detail-modal').classList.remove('hidden');
 }
 
-/** 최종 합산 결과 (자기 40% + 팀장 60% + 보너스) */
+/** 최종 합산 결과 (자기 40% + 팀장 40% + 최상위자 20% 수동조정 + 보너스) */
 async function renderAdminFinal() {
   const container = document.getElementById('admin-final-content');
   container.innerHTML = '<div class="alert alert-info">불러오는 중…</div>';
@@ -1469,14 +1486,14 @@ async function renderAdminFinal() {
     const mgrMap = {};
     mgrEvals.forEach(r => { if (r['피평가자']) mgrMap[r['피평가자']] = r; });
 
-    let html = `<div class="alert alert-info" style="font-size:12px;">🏆 <b>종합 점수 = 자기평가 40% + 팀장평가 60%</b> (기본 100점 + 보너스 최대 5점). 2차 평가 완료 시 자동 집계됩니다.</div>`;
+    let html = `<div class="alert alert-info" style="font-size:12px;">🏆 <b>종합 점수 = 본인 40% + 팀장 40% + 최상위자 20%</b> · 점수 구조 = 정량 KPI 45% + 정성(사훈 연계) 45% + 자동화·추가 10%. 1차(9월) · 2차(12월) 완료 시 자동 집계되며, 최상위자(공장장/부사장/사장)는 ±10점 범위 내에서 수동 조정 가능합니다.</div>`;
 
     html += `<div class="card" style="padding:0;overflow-x:auto;"><table class="result-table">
       <thead><tr>
         <th>팀</th><th>성명</th><th>직급</th><th>구분</th>
         <th>자기 기본</th><th>자기 보너스</th><th>자기 총점</th>
         <th>팀장 기본</th><th>팀장 보너스</th><th>팀장 총점</th>
-        <th>종합 (40:60)</th><th>등급</th>
+        <th>종합 (40:40+20)</th><th>등급</th>
       </tr></thead><tbody>`;
 
     ALL_EMPLOYEES.forEach(emp => {
@@ -1488,7 +1505,7 @@ async function renderAdminFinal() {
       const mBase = Number(m['기본합계']) || 0;
       const mBonus = Number(m['보너스']) || 0;
       const mTot = mBase + mBonus;
-      const combined = (sTot && mTot) ? Math.round(sTot * 0.4 + mTot * 0.6) : '';
+      const combined = (sTot && mTot) ? Math.round(sTot * 0.4 + mTot * 0.4) : ''; /* 본인40%+팀장40%; 최상위자20%=수동±10 */
       const grade = combined ? (combined >= 95 ? 'S' : combined >= 85 ? 'A' : combined >= 70 ? 'B' : combined >= 55 ? 'C' : 'D') : '-';
       const gColor = {S:'#1a6634',A:'#2E75B6',B:'#5a6ea8',C:'#7F6000',D:'#C00000','-':'#a0aec0'}[grade];
       html += `<tr>
@@ -1523,7 +1540,7 @@ async function exportCSV() {
       const d = transformed.evaluations[emp.name] || {};
       const st = calcScores(d.selfEval) || 0;
       const mt = calcScores(d.managerEval) || 0;
-      const combined = st && mt ? Math.round(st * 0.4 + mt * 0.6) : '';
+      const combined = st && mt ? Math.round(st * 0.4 + mt * 0.4) : ''; /* 본인40%+팀장40% */
       const m = d.managerEval || {};
       const row = [
         emp.team, emp.name, emp.rank, emp.type === 'annual' ? '연봉직' : '시급직',
@@ -1548,49 +1565,95 @@ async function exportCSV() {
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  확정평가항목 시트 로더 (Phase 2)
-//  앱 시작 시 시트에서 KPI 읽어 ALL_EMPLOYEES 덮어씀.
-//  실패하면 employees.js 정적 데이터가 fallback으로 계속 유효.
+//  스프레드시트 부트스트랩 — 모든 평가 데이터 시트에서 로드
+//  시트: 확정평가항목(연봉) + 시급직명부 + 자동화옵션 + 시급평가항목 + 3대목표
+//  실패 시 employees_v2.js 정적 데이터가 fallback.
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 let _kpiSourceIsSheet = false;
+window._AUTO_OPTIONS = (typeof AUTO_OPTIONS !== 'undefined') ? AUTO_OPTIONS : {};
+window._HOURLY_TEMPLATE = (typeof HOURLY_EVAL_TEMPLATE !== 'undefined') ? HOURLY_EVAL_TEMPLATE : [];
+window._HOURLY_WEIGHTS = (typeof HOURLY_EVAL_WEIGHTS !== 'undefined') ? HOURLY_EVAL_WEIGHTS : { self:30, foreman:40, teamLeader:20, factoryMgr:10 };
+window._GOALS = [];
 
-async function bootstrapKpiFromSheet() {
+async function bootstrapFromSheets() {
   try {
-    const result = await apiGet('kpi-list', {}, { loading: false });
-    if (result && result.success && Array.isArray(result.data) && result.data.length > 0) {
-      // 배열 내용만 교체 (const 참조는 유지)
+    const [kpi, hourlyEmp, autoOpts, hourlyTmpl, goals] = await Promise.all([
+      apiGet('kpi-list',         {}, { loading: false }),
+      apiGet('hourly-employees', {}, { loading: false }),
+      apiGet('auto-options',     {}, { loading: false }),
+      apiGet('hourly-template',  {}, { loading: false }),
+      apiGet('goals',            {}, { loading: false }),
+    ]);
+
+    const annual = (kpi       && kpi.success       && Array.isArray(kpi.data))       ? kpi.data       : [];
+    const hourly = (hourlyEmp && hourlyEmp.success && Array.isArray(hourlyEmp.data)) ? hourlyEmp.data : [];
+    if (annual.length + hourly.length > 0) {
       ALL_EMPLOYEES.length = 0;
-      result.data.forEach(e => ALL_EMPLOYEES.push(e));
+      annual.forEach(e => ALL_EMPLOYEES.push(e));
+      hourly.forEach(e => ALL_EMPLOYEES.push(e));
       _kpiSourceIsSheet = true;
-      console.log('[KPI] 확정평가항목 시트에서 로드:', result.data.length, '명');
+      console.log('[BOOT] 시트 로드: 연봉', annual.length, '명 + 시급', hourly.length, '명');
     } else {
-      console.log('[KPI] 시트 비어있음 — employees.js 정적 데이터 사용 (seed 필요)');
+      console.log('[BOOT] 시트 비어있음 — employees_v2.js 정적 데이터 사용 (seed 필요)');
     }
+
+    if (autoOpts   && autoOpts.success   && autoOpts.data   && Object.keys(autoOpts.data).length) window._AUTO_OPTIONS = autoOpts.data;
+    if (hourlyTmpl && hourlyTmpl.success && Array.isArray(hourlyTmpl.data) && hourlyTmpl.data.length) window._HOURLY_TEMPLATE = hourlyTmpl.data;
+    if (goals      && goals.success      && Array.isArray(goals.data))      window._GOALS = goals.data;
   } catch (e) {
-    console.warn('[KPI] 시트 로드 실패, employees.js fallback:', e.message);
+    console.warn('[BOOT] 시트 로드 실패, fallback:', e.message);
   }
 }
 
-/** 관리자 전용 1회성 seed 헬퍼 — 브라우저 콘솔에서 실행
- *  1) 관리자로 로그인
- *  2) F12 열어 콘솔에서 `_seedKpi()` 입력
- *  → 현재 employees.js 내용을 확정평가항목 시트로 덮어씀
+/** 하위 호환 alias */
+const bootstrapKpiFromSheet = bootstrapFromSheets;
+
+/** 관리자 전용 1회성 seed 헬퍼 — 모든 시트를 employees_v2.js 기준으로 초기화
+ *  브라우저 콘솔에서 `_seedAll()` 실행 (관리자 로그인 후)
  */
-window._seedKpi = async function() {
-  if (!adminToken) {
-    alert('먼저 관리자로 로그인해주세요.');
-    return;
+window._seedAll = async function() {
+  if (!adminToken) { alert('먼저 관리자로 로그인해주세요.'); return; }
+  const annualCount = (typeof ANNUAL_EMPLOYEES !== 'undefined') ? ANNUAL_EMPLOYEES.length : 0;
+  const hourlyCount = (typeof HOURLY_EMPLOYEES !== 'undefined') ? HOURLY_EMPLOYEES.length : 0;
+  if (!confirm('employees_v2.js 기준으로 모든 시트를 초기화합니다.\n\n연봉직 ' + annualCount + '명 + 시급직 ' + hourlyCount + '명 + 자동화옵션 + 시급템플릿 + 3대목표\n\n계속?')) return;
+  const memo = 'seed-all ' + new Date().toISOString().slice(0,10);
+  const calls = [
+    ['확정평가항목', 'kpi-reset',               { employees: (typeof ANNUAL_EMPLOYEES !== 'undefined') ? ANNUAL_EMPLOYEES : [] }],
+    ['시급직명부',   'hourly-employees-reset',  { employees: (typeof HOURLY_EMPLOYEES !== 'undefined') ? HOURLY_EMPLOYEES : [] }],
+    ['자동화옵션',   'auto-options-reset',      { options:   (typeof AUTO_OPTIONS !== 'undefined') ? AUTO_OPTIONS : {} }],
+    ['시급평가항목', 'hourly-template-reset',   { template:  (typeof HOURLY_EVAL_TEMPLATE !== 'undefined') ? HOURLY_EVAL_TEMPLATE : [] }],
+    ['3대목표',      'goals-reset',             { goals: [
+      { code:'원가', name:'원가절감',       desc:'제조원가·로스·재료비 절감으로 수익성 확보' },
+      { code:'조직', name:'조직기능 향상',  desc:'협업·납기·교차기능 강화로 조직 실행력 제고' },
+      { code:'지속', name:'지속가능 운영',  desc:'품질·안전·ESG·컴플라이언스 기반 지속 성장' },
+    ] }],
+  ];
+  const report = [];
+  for (const [label, action, extra] of calls) {
+    try {
+      const res = await apiPost(action, Object.assign({ token: adminToken, memo }, extra));
+      report.push(label + ': ' + (res.message || res.error || JSON.stringify(res)));
+    } catch (e) {
+      report.push(label + ': 실패 — ' + e.message);
+    }
   }
-  if (!confirm('현재 employees.js의 ' + ALL_EMPLOYEES.length + '명 데이터를 확정평가항목 시트로 덮어씁니다. 계속?')) return;
+  console.log('[seed 결과]\n' + report.join('\n'));
+  alert('Seed 완료:\n\n' + report.join('\n'));
+  await bootstrapFromSheets();
+};
+
+/** 하위 호환: 확정평가항목만 seed */
+window._seedKpi = async function() {
+  if (!adminToken) { alert('먼저 관리자로 로그인해주세요.'); return; }
+  if (!confirm('확정평가항목 시트만 seed 합니다 (연봉직 ' + (typeof ANNUAL_EMPLOYEES !== 'undefined' ? ANNUAL_EMPLOYEES.length : '?') + '명). 계속?')) return;
   try {
     const result = await apiPost('kpi-reset', {
       token: adminToken,
-      employees: ALL_EMPLOYEES,
-      memo: 'seed from employees.js (' + new Date().toISOString().slice(0,10) + ')'
+      employees: (typeof ANNUAL_EMPLOYEES !== 'undefined') ? ANNUAL_EMPLOYEES : ALL_EMPLOYEES,
+      memo: 'seed-kpi ' + new Date().toISOString().slice(0,10)
     });
-    console.log('[seed 결과]', result);
     alert(result.message || result.error || '완료');
-    if (result.success) await bootstrapKpiFromSheet();
+    if (result.success) await bootstrapFromSheets();
   } catch (e) {
     alert('seed 실패: ' + e.message);
   }
@@ -1598,7 +1661,7 @@ window._seedKpi = async function() {
 
 // ── 초기화 ────────────────────────────────────────
 window.onload = async () => {
-  await bootstrapKpiFromSheet();
+  await bootstrapFromSheets();
   showPage('home');
 };
 </script>

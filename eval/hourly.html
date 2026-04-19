@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>시급직 반기 평가표 — 신성오토텍</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .sahun-badge {
+      display: inline-block; padding: 2px 10px; border-radius: 20px;
+      font-size: 11px; font-weight: 700; letter-spacing: 1px;
+      margin-left: 8px; vertical-align: middle;
+    }
+    .eval-section {
+      background: white; border-radius: 12px; padding: 20px 24px;
+      margin-bottom: 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+    .eval-section-title {
+      font-size: 15px; font-weight: 700; color: #1F3864;
+      margin-bottom: 14px; padding-bottom: 10px;
+      border-bottom: 2px solid #f0f4f8;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .section-score { font-size: 20px; font-weight: 900; color: #2E75B6; }
+    .eval-item {
+      display: grid; grid-template-columns: 1fr auto;
+      align-items: center; gap: 16px;
+      padding: 10px 0; border-bottom: 1px solid #f7f8fa;
+    }
+    .eval-item:last-child { border-bottom: none; }
+    .eval-item-q { font-size: 13px; color: #2d3748; line-height: 1.5; }
+    .score-btns { display: flex; gap: 4px; }
+    .score-btns input[type=radio] { display: none; }
+    .score-btns label {
+      width: 34px; height: 34px; border: 2px solid #e2e8f0;
+      border-radius: 6px; display: flex; align-items: center;
+      justify-content: center; font-size: 13px; font-weight: 700;
+      cursor: pointer; transition: all 0.15s; color: #718096;
+    }
+    .score-btns input[type=radio]:checked + label {
+      background: #2E75B6; border-color: #2E75B6; color: white;
+    }
+    .score-btns label:hover { border-color: #2E75B6; color: #2E75B6; }
+    .summary-box {
+      background: linear-gradient(135deg, #1F3864, #2E75B6);
+      color: white; border-radius: 12px; padding: 28px;
+      text-align: center; margin: 24px 0;
+    }
+    .total-score { font-size: 72px; font-weight: 900; line-height: 1; }
+    .grade-badge {
+      display: inline-block; padding: 5px 24px; border-radius: 20px;
+      font-size: 16px; font-weight: 700; margin-top: 10px;
+      background: rgba(255,255,255,0.22);
+    }
+    .info-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 12px; margin-top: 16px;
+    }
+    .info-field label {
+      display: block; font-size: 11px; color: #718096;
+      font-weight: 600; margin-bottom: 4px; letter-spacing: 0.5px;
+    }
+    .info-field select, .info-field input {
+      width: 100%; padding: 8px 12px; border: 2px solid #e2e8f0;
+      border-radius: 8px; font-size: 13px; font-family: inherit; color: #2d3748;
+    }
+    .info-field select:focus, .info-field input:focus {
+      outline: none; border-color: #2E75B6;
+    }
+    .action-bar {
+      display: flex; gap: 12px; margin-top: 24px; justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn-primary {
+      background: #2E75B6; color: white; border: none;
+      padding: 12px 28px; border-radius: 8px; font-size: 14px;
+      font-weight: 700; cursor: pointer; font-family: inherit;
+    }
+    .btn-secondary {
+      background: white; color: #2E75B6; border: 2px solid #2E75B6;
+      padding: 12px 28px; border-radius: 8px; font-size: 14px;
+      font-weight: 700; cursor: pointer; font-family: inherit;
+    }
+    .btn-green {
+      background: #70AD47; color: white; border: none;
+      padding: 12px 28px; border-radius: 8px; font-size: 14px;
+      font-weight: 700; cursor: pointer; font-family: inherit;
+    }
+    .comment-area {
+      width: 100%; height: 80px; padding: 10px;
+      border: 2px solid #e2e8f0; border-radius: 8px;
+      font-family: inherit; font-size: 13px; resize: vertical; margin-top: 10px;
+    }
+    .pilot-banner {
+      background: #FFF8E1; border: 1px solid #FFD54F; border-radius: 10px;
+      padding: 12px 18px; margin-bottom: 24px; font-size: 13px; color: #795548;
+    }
+    @media (max-width: 700px) {
+      .info-grid { grid-template-columns: repeat(2,1fr); }
+      .eval-item { grid-template-columns: 1fr; gap:6px; }
+    }
+    @media print {
+      header nav, .action-bar, .pilot-banner { display: none !important; }
+      .eval-section { break-inside: avoid; }
+      body { background: white; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    신성오토텍
+    <span>2026년 하반기 · 시급직 반기 평가표</span>
+  </div>
+  <nav>
+    <button onclick="location.href='index.html'">🏠 홈으로</button>
+    <button class="active">📋 시급직 평가</button>
+  </nav>
+</header>
+
+<main style="max-width:860px;margin:0 auto;padding:32px 24px;">
+
+  <div class="pilot-banner">
+    ⚠️ <strong>2026 하반기 파일럿 운영</strong> — 이번 평가 결과는 임금에 반영되지 않습니다.
+    공정한 평가 기준 수립과 구성원 피드백 제공이 목적입니다.
+  </div>
+
+  <!-- 기본 정보 -->
+  <div class="card" style="margin-bottom:24px;">
+    <div class="section-title">📋 평가 기본 정보</div>
+    <div class="info-grid">
+      <div class="info-field">
+        <label>평가 시기</label>
+        <select id="eval-period">
+          <option value="2026-1차">2026년 1차 (9월)</option>
+          <option value="2026-2차">2026년 2차 (12월)</option>
+        </select>
+      </div>
+      <div class="info-field">
+        <label>피평가자</label>
+        <select id="eval-target">
+          <option value="">-- 선택 --</option>
+        </select>
+      </div>
+      <div class="info-field">
+        <label>평가자 역할</label>
+        <select id="eval-role">
+          <option value="self">본인 (30%)</option>
+          <option value="foreman" selected>반장 (40%)</option>
+          <option value="teamLeader">팀장 (20%)</option>
+          <option value="factoryMgr">공장장 (10%)</option>
+        </select>
+      </div>
+      <div class="info-field">
+        <label>평가자명</label>
+        <input type="text" id="eval-rater" placeholder="이름 입력">
+      </div>
+    </div>
+  </div>
+
+  <!-- 평가 항목 영역 (JS 렌더링) -->
+  <div id="eval-body"></div>
+
+  <!-- 종합 점수 -->
+  <div class="summary-box">
+    <div style="font-size:13px;opacity:0.75;margin-bottom:4px;">종합 점수</div>
+    <div class="total-score" id="total-score">0</div>
+    <div style="font-size:13px;opacity:0.75;margin-top:4px;">/ 100점</div>
+    <div class="grade-badge" id="grade-label">미입력</div>
+  </div>
+
+  <!-- 종합 의견 -->
+  <div class="card" style="margin-bottom:24px;">
+    <div class="section-title">💬 평가자 종합 의견</div>
+    <textarea class="comment-area" id="eval-comment"
+      placeholder="관찰한 행동 사실 위주로 기술해 주세요 (예: 4월 2일 작업지시 미완수로 재작업 발생, 반장 지도 후 5월부터 개선됨)"></textarea>
+  </div>
+
+  <!-- 버튼 -->
+  <div class="action-bar">
+    <button class="btn-primary" onclick="saveEval()">💾 저장</button>
+    <button class="btn-secondary" onclick="exportCSV()">📊 Google Sheets용 CSV</button>
+    <button class="btn-green" onclick="window.print()">🖨️ 인쇄 / PDF</button>
+  </div>
+
+  <!-- 저장된 목록 -->
+  <div class="card" style="margin-top:32px;">
+    <div class="section-title">📂 저장된 평가 목록</div>
+    <div id="saved-list" style="margin-top:12px;font-size:13px;color:#718096;">저장된 평가가 없습니다.</div>
+  </div>
+
+</main>
+
+<script src="js/employees_v2.js"></script>
+<script>
+// 사훈별 색상
+var SAHUN_STYLE = {
+  '성실':   { bg:'#FCE4D6', color:'#843C0C' },
+  '책임감': { bg:'#BDD7EE', color:'#1F3864' },
+  '품질지향':{ bg:'#E2EFDA', color:'#375623' },
+  '팀웍':   { bg:'#EAD1DC', color:'#4A235A' },
+};
+
+// 피평가자 드롭다운
+function loadTargets() {
+  var sel = document.getElementById('eval-target');
+  if (typeof HOURLY_EMPLOYEES === 'undefined') {
+    sel.innerHTML = '<option value="">데이터 로드 오류</option>'; return;
+  }
+  HOURLY_EMPLOYEES.forEach(function(e) {
+    var opt = document.createElement('option');
+    opt.value = e.name;
+    opt.textContent = e.name + ' (' + e.team + ')';
+    sel.appendChild(opt);
+  });
+}
+
+// 평가 항목 렌더링
+function renderEval() {
+  var body = document.getElementById('eval-body');
+  body.innerHTML = '';
+  if (typeof HOURLY_EVAL_TEMPLATE === 'undefined') {
+    body.innerHTML = '<div style="color:red;padding:20px;">employees_v2.js 로드 오류</div>';
+    return;
+  }
+  HOURLY_EVAL_TEMPLATE.forEach(function(section, si) {
+    var sc = SAHUN_STYLE[section.sahunRef] || { bg:'#f0f4f8', color:'#333' };
+    var badge = '<span class="sahun-badge" style="background:' + sc.bg + ';color:' + sc.color + '">사훈 · ' + section.sahunRef + '</span>';
+
+    var itemsHtml = '';
+    section.questions.forEach(function(item, qi) {
+      var btns = '';
+      for (var v = 1; v <= 5; v++) {
+        var rid = 'q_' + si + '_' + qi + '_' + v;
+        btns += '<input type="radio" name="q_' + si + '_' + qi + '" id="' + rid + '" value="' + v + '" onchange="calcScores()">';
+        btns += '<label for="' + rid + '">' + v + '</label>';
+      }
+      itemsHtml += '<div class="eval-item">'
+        + '<div class="eval-item-q">' + item.q + '</div>'
+        + '<div class="score-btns">' + btns + '</div>'
+        + '</div>';
+    });
+
+    body.innerHTML +=
+      '<div class="eval-section">'
+      + '<div class="eval-section-title">'
+      + '<span>H' + (si+1) + '. ' + section.label + ' ' + badge + '</span>'
+      + '<span class="section-score" id="sec_' + si + '">0 / 20</span>'
+      + '</div>'
+      + itemsHtml
+      + '</div>';
+  });
+}
+
+// 점수 계산
+function calcScores() {
+  var total = 0;
+  HOURLY_EVAL_TEMPLATE.forEach(function(section, si) {
+    var sec = 0;
+    section.questions.forEach(function(item, qi) {
+      var chk = document.querySelector('input[name="q_' + si + '_' + qi + '"]:checked');
+      if (chk) sec += parseInt(chk.value);
+    });
+    document.getElementById('sec_' + si).textContent = sec + ' / 20';
+    total += sec;
+  });
+  document.getElementById('total-score').textContent = total;
+  var grade = total >= 90 ? 'S  탁월 (90점 이상)'
+            : total >= 80 ? 'A  우수 (80~89점)'
+            : total >= 70 ? 'B  양호 (70~79점)'
+            : total >= 60 ? 'C  보통 (60~69점)'
+            : total > 0   ? 'D  미흡 (59점 이하)'
+            :               '미입력';
+  document.getElementById('grade-label').textContent = grade;
+}
+
+// 데이터 수집
+function collectData() {
+  var scores = {};
+  HOURLY_EVAL_TEMPLATE.forEach(function(section, si) {
+    section.questions.forEach(function(item, qi) {
+      var chk = document.querySelector('input[name="q_' + si + '_' + qi + '"]:checked');
+      scores['H' + (si+1) + '_Q' + (qi+1)] = chk ? parseInt(chk.value) : 0;
+    });
+  });
+  return {
+    period:  document.getElementById('eval-period').value,
+    target:  document.getElementById('eval-target').value,
+    role:    document.getElementById('eval-role').value,
+    rater:   document.getElementById('eval-rater').value,
+    scores:  scores,
+    total:   parseInt(document.getElementById('total-score').textContent) || 0,
+    grade:   document.getElementById('grade-label').textContent,
+    comment: document.getElementById('eval-comment').value,
+    savedAt: new Date().toLocaleString('ko-KR')
+  };
+}
+
+// 저장
+function saveEval() {
+  var data = collectData();
+  if (!data.target) { alert('피평가자를 선택해주세요.'); return; }
+  if (!data.rater)  { alert('평가자명을 입력해주세요.'); return; }
+  var key = 'hourly_' + data.period + '_' + data.target + '_' + data.role;
+  localStorage.setItem(key, JSON.stringify(data));
+  alert('저장 완료!\n' + data.target + ' | ' + data.period + ' | ' + data.role);
+  renderSavedList();
+}
+
+// CSV 내보내기
+function exportCSV() {
+  var data = collectData();
+  if (!data.target) { alert('피평가자를 선택해주세요.'); return; }
+  var headers = ['평가시기','피평가자','평가자역할','평가자명',
+    'H1_근태Q1','H1_근태Q2','H1_근태Q3','H1_근태Q4',
+    'H2_작업Q1','H2_작업Q2','H2_작업Q3','H2_작업Q4',
+    'H3_품질Q1','H3_품질Q2','H3_품질Q3','H3_품질Q4',
+    'H4_안전Q1','H4_안전Q2','H4_안전Q3','H4_안전Q4',
+    'H5_협력Q1','H5_협력Q2','H5_협력Q3','H5_협력Q4',
+    '총점','등급','종합의견'];
+  var vals = Object.values(data.scores);
+  var row = [data.period, data.target, data.role, data.rater]
+    .concat(vals)
+    .concat([data.total, data.grade, '"' + data.comment.replace(/"/g,'""') + '"']);
+  var csv = '\uFEFF' + headers.join(',') + '\n' + row.join(',');
+  var blob = new Blob([csv], { type:'text/csv;charset=utf-8;' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url; a.download = '시급직평가_' + data.target + '_' + data.period + '.csv';
+  a.click();
+}
+
+// 저장 목록 렌더링
+function renderSavedList() {
+  var div = document.getElementById('saved-list');
+  var keys = Object.keys(localStorage).filter(function(k){ return k.startsWith('hourly_'); });
+  if (keys.length === 0) { div.textContent = '저장된 평가가 없습니다.'; return; }
+  var html = '<table style="width:100%;border-collapse:collapse;font-size:13px;">'
+    + '<tr style="background:#f0f4f8;"><th style="padding:8px;text-align:left;">피평가자</th>'
+    + '<th style="padding:8px;text-align:left;">시기</th><th style="padding:8px;text-align:left;">역할</th>'
+    + '<th style="padding:8px;text-align:center;">총점</th><th style="padding:8px;text-align:center;">등급</th>'
+    + '<th style="padding:8px;"></th></tr>';
+  keys.sort().forEach(function(k) {
+    var d = JSON.parse(localStorage.getItem(k));
+    html += '<tr style="border-bottom:1px solid #e2e8f0;">'
+      + '<td style="padding:8px;font-weight:600;">' + d.target + '</td>'
+      + '<td style="padding:8px;">' + d.period + '</td>'
+      + '<td style="padding:8px;">' + d.role + '</td>'
+      + '<td style="padding:8px;text-align:center;font-weight:700;color:#2E75B6;">' + d.total + '</td>'
+      + '<td style="padding:8px;text-align:center;">' + (d.grade||'-').split(' ')[0] + '</td>'
+      + '<td style="padding:8px;"><button onclick="deleteRecord(\'' + k + '\')" '
+      + 'style="font-size:11px;padding:2px 8px;border:1px solid #e53e3e;color:#e53e3e;background:white;border-radius:4px;cursor:pointer;">삭제</button></td>'
+      + '</tr>';
+  });
+  html += '</table>';
+  div.innerHTML = html;
+}
+
+function deleteRecord(key) {
+  if (confirm('삭제하시겠습니까?')) { localStorage.removeItem(key); renderSavedList(); }
+}
+
+// 초기화
+loadTargets();
+renderEval();
+renderSavedList();
+</script>
+</body>
+</html>
