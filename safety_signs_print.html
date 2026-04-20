@@ -857,9 +857,9 @@ body {
 /* 확장형 인쇄 시 정확히 1페이지 */
 @media print {
   .sign-extended {
-    height: 297mm !important;
-    max-height: 297mm !important;
-    min-height: 297mm !important;
+    height: 285mm !important;
+    max-height: 285mm !important;
+    min-height: 285mm !important;
     overflow: hidden !important;
   }
   .sign-extended .sign-header {
@@ -963,7 +963,7 @@ body {
 
   @page {
     size: A4 portrait;
-    margin: 0;
+    margin: 6mm 0;
   }
 
   /* 분전반 A4 1/4 ×4 인쇄 모드 — 기존 디자인 축소 */
@@ -972,7 +972,7 @@ body {
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr 1fr;
     width: 210mm;
-    height: 297mm;
+    height: 285mm;
     margin: 0;
     padding: 1mm;
     gap: 1mm;
@@ -1382,10 +1382,10 @@ body {
     <div class="sign-symbol"><span class="sym-inner">EXIT</span></div>
     <div class="category-badge">안전 <span class="category-badge-cn">安全</span></div>
     <div class="sign-title">비상구</div>
-    <div class="sign-title-cn">紧急出口</div>
+    <div class="sign-title-cn">安全出口</div>
   </div>
   <div class="sign-body">
-    <div class="sign-location">설치위치: 비상구<br><span class="sign-location-cn">安装位置：紧急出口</span></div>
+    <div class="sign-location">설치위치: 비상구<br><span class="sign-location-cn">安装位置：安全出口</span></div>
     <div class="sign-rules">
       <div class="rule">
         <span class="rule-icon">1</span>
@@ -1667,7 +1667,7 @@ body {
         <span class="rule-icon">1</span>
         <div class="rule-text">
           <div class="rule-kr">리프트 정격하중 반드시 준수</div>
-          <div class="rule-cn">严禁超过最大载荷</div>
+          <div class="rule-cn">严禁超过额定载荷</div>
         </div>
       </div>
       <div class="rule">
