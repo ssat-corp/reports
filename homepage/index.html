@@ -172,22 +172,22 @@ h1, h2, h3, h4, h5, h6, p, li, span, a, button { word-break: keep-all; overflow-
 @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
 
 .hero h1 {
-  font-size: clamp(28px, 5.5vw, 68px);
-  font-weight: 800; line-height: 1.2;
-  letter-spacing: -0.03em; margin-bottom: 24px;
+  font-size: clamp(24px, 4.2vw, 52px);
+  font-weight: 800; line-height: 1.35;
+  letter-spacing: -0.03em; margin-bottom: 40px;
+  max-width: 1020px;
 }
 .hero h1 .accent-line {
   background: linear-gradient(90deg, #fff 0%, #a7c7e7 100%);
   -webkit-background-clip: text; background-clip: text;
   -webkit-text-fill-color: transparent;
 }
-.hero p.sub {
-  font-size: clamp(22px, 4.2vw, 48px);
-  font-weight: 700; letter-spacing: -0.025em;
-  max-width: 900px; color: rgba(255,255,255,0.96);
-  margin-bottom: 40px; line-height: 1.35;
+.hero h1 .accent-strong {
+  color: #a7c7e7; font-weight: 800;
 }
-.hero p.sub strong { font-weight: 800; color: #a7c7e7; }
+.hero h1 .hero-lead {
+  font-weight: 500; color: rgba(255,255,255,0.82);
+}
 .hero-ctas { display: flex; gap: 14px; flex-wrap: wrap; }
 .btn {
   display: inline-flex; align-items: center; gap: 10px;
@@ -899,11 +899,10 @@ h1, h2, h3, h4, h5, h6, p, li, span, a, button { word-break: keep-all; overflow-
       <span class="eng">EST. 1982 · 40+ YEARS OF MANUFACTURING TRUST</span>
     </div>
     <h1 class="reveal reveal-delay-1">
-      40여년 이상, 한 번도 멈추지 않은<br/> <span class="accent-line">제조 신뢰.</span>
+      <span class="hero-lead">40여년 멈추지 않은</span> <span class="accent-line">제조 신뢰</span><span class="hero-lead">로,</span><br/>
+      <span class="hero-lead">사출·후가공·조립</span> <span class="accent-strong">원스톱 통합 제조</span><span class="hero-lead">를 통해</span><br/>
+      <span class="hero-lead">자동차·가전을 넘어</span> <span class="accent-line">플라스틱이 필요한 모든 영역</span><span class="hero-lead">에서 함께합니다.</span>
     </h1>
-    <p class="sub reveal reveal-delay-2">
-      사출부터 후가공, 조립까지 <strong>원스톱 통합 제조</strong>로<br/> 자동차와 가전 부품을 넘어 플라스틱이 필요한 모든 영역에서 함께합니다.
-    </p>
     <div class="hero-ctas reveal reveal-delay-3">
       <a href="#contact" class="btn btn-primary">
         견적 문의하기 <span>→</span>
