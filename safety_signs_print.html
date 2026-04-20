@@ -1872,22 +1872,22 @@ body {
       <div class="rule">
         <span class="rule-icon">2</span>
         <div class="rule-text">
-          <div class="rule-kr">개인 보호구 착용 — 안전모·안전화 등 반드시 착용</div>
-          <div class="rule-cn">佩戴个人防护用品 — 必须佩戴安全帽、安全鞋等</div>
-        </div>
-      </div>
-      <div class="rule">
-        <span class="rule-icon">3</span>
-        <div class="rule-text">
           <div class="rule-kr">적재하중 준수 — 정격 용량을 초과한 적재 금지</div>
           <div class="rule-cn">遵守额定载荷 — 严禁超过额定载荷装载</div>
         </div>
       </div>
       <div class="rule">
+        <span class="rule-icon">3</span>
+        <div class="rule-text">
+          <div class="rule-kr">운반구 작동 확인 — 상승·하강 시 걸림 및 이상 소음 여부 확인</div>
+          <div class="rule-cn">确认运行状态 — 升降过程中检查有无卡阻或异常声响</div>
+        </div>
+      </div>
+      <div class="rule">
         <span class="rule-icon">4</span>
         <div class="rule-text">
-          <div class="rule-kr">운반구 작동 확인 — 상승·하강 시 걸림이나 이상 소음 여부 확인</div>
-          <div class="rule-cn">确认运行状态 — 升降过程中检查有无卡阻或异常声响</div>
+          <div class="rule-kr">운반구 정차 위치 — 작업 종료 시 운반구는 최하층(바닥)에 정지</div>
+          <div class="rule-cn">停放位置 — 作业结束后须将升降平台停于最底层（地面）</div>
         </div>
       </div>
     </div>
@@ -1912,26 +1912,19 @@ body {
       <div class="rule">
         <span class="rule-icon">1</span>
         <div class="rule-text">
-          <div class="rule-kr">주전원 차단 — 일일 작업 종료 후 반드시 메인 전원 차단</div>
-          <div class="rule-cn">切断主电源 — 每日作业结束后必须切断总电源</div>
+          <div class="rule-kr">개인 보호구 착용 — 안전모 등 반드시 착용</div>
+          <div class="rule-cn">佩戴个人防护用品 — 必须佩戴安全帽等</div>
         </div>
       </div>
       <div class="rule">
         <span class="rule-icon">2</span>
-        <div class="rule-text">
-          <div class="rule-kr">운반구 위치 — 작업 종료 시 운반구는 최하층(바닥)에 정지</div>
-          <div class="rule-cn">停放位置 — 作业结束后须将升降平台停于最底层</div>
-        </div>
-      </div>
-      <div class="rule">
-        <span class="rule-icon">3</span>
         <div class="rule-text">
           <div class="rule-kr">이물질 제거 — 운반구와 승강로 사이 이물질 여부 수시 확인</div>
           <div class="rule-cn">清除异物 — 定期检查升降平台与井道间是否有异物</div>
         </div>
       </div>
       <div class="rule">
-        <span class="rule-icon">4</span>
+        <span class="rule-icon">3</span>
         <div class="rule-text">
           <div class="rule-kr">정비 시 안전 — 정비 시 안전블록 등으로 운반구 낙하 방지</div>
           <div class="rule-cn">维护安全 — 维护作业时须使用安全块等防止升降平台坠落</div>
@@ -2031,8 +2024,8 @@ const signMeta = {
   s15: { title: '컨베이어 구역', type: 'red', label: '금지', loc: '컨베이어 구역', summary: '가동 중 접촉 금지, 끼임 위험 주의' },
   s16: { title: '리프트 구역', type: 'red', label: '금지', loc: '리프트 구역', summary: '정격하중 준수, 탑승 절대 금지' },
   s17: { title: '사출성형기 취급 작업', type: 'yellow', label: '경고', loc: '사출성형기 작업 구역', summary: '고온·감전·협착 위험, 안전장치 확인 필수' },
-  s18: { title: '산업용 리프트 안전수칙 (작업 전·중)', type: 'blue', label: '지시', loc: '산업용 리프트 구역', summary: '작업자 탑승 금지, 보호구 착용, 적재하중 준수, 작동 확인' },
-  s19: { title: '산업용 리프트 안전수칙 (작업 후·유지보수)', type: 'blue', label: '지시', loc: '산업용 리프트 구역', summary: '주전원 차단, 최하층 정지, 이물질 제거, 정비 시 낙하 방지' },
+  s18: { title: '산업용 리프트 안전수칙 (작업 전·중)', type: 'blue', label: '지시', loc: '산업용 리프트 구역', summary: '작업자 탑승 금지, 적재하중 준수, 작동 확인, 최하층 정차' },
+  s19: { title: '산업용 리프트 안전수칙 (작업 후·유지보수)', type: 'blue', label: '지시', loc: '산업용 리프트 구역', summary: '보호구 착용, 이물질 제거, 정비 시 낙하 방지' },
   s20: { title: '사내 휴게실 이용 수칙', type: 'blue', label: '지시', loc: '사내 휴게실', summary: '정숙·청결·화기 금지·냉장고 관리·안전 관리·휴식 보장' }
 };
 
