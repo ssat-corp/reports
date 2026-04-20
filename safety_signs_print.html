@@ -1467,44 +1467,65 @@ body {
 <!-- s10 -->
 <!-- s10 삭제됨 — s20 사내 휴게실 이용 수칙으로 대체 -->
 
-<!-- s11 -->
+<!-- s11 - 운반대차 안전수칙 -->
 <div class="sign-page sign-yellow" data-id="s11" data-type="yellow">
   <div class="sign-header">
     <span class="sign-id">s11</span>
     <div class="sign-symbol"></div>
     <div class="category-badge">경고 <span class="category-badge-cn">警告</span></div>
-    <div class="sign-title">운반대차 구역</div>
-    <div class="sign-title-cn">搬运车区域</div>
+    <div class="sign-title">운반대차 안전수칙</div>
+    <div class="sign-title-cn">搬运车安全守则</div>
   </div>
   <div class="sign-body">
-    <div class="sign-location">설치위치: 운반대차 구역<br><span class="sign-location-cn">安装位置：搬运车区域</span></div>
-    <div class="sign-rules">
+    <div class="sign-location">설치위치: 운반대차 사용 구역<br><span class="sign-location-cn">安装位置：搬运车使用区域</span></div>
+    <div class="sign-rules dense">
       <div class="rule">
         <span class="rule-icon">1</span>
         <div class="rule-text">
-          <div class="rule-kr">운반대차 허용 적재하중 반드시 준수</div>
-          <div class="rule-cn">严禁超过额定载荷</div>
+          <div class="rule-kr">작업 전 점검 — 바퀴 회전 상태 등 이상 유무 확인</div>
+          <div class="rule-cn">作业前检查 — 确认车轮转动状态等有无异常</div>
         </div>
       </div>
       <div class="rule">
         <span class="rule-icon">2</span>
         <div class="rule-text">
-          <div class="rule-kr">대차 이동 시 전방 주시 필수</div>
-          <div class="rule-cn">移动时注意前方</div>
+          <div class="rule-kr">안전한 적재 — 무게중심은 중앙, 무거운 것은 하단, 시야를 가리지 않는 높이 유지</div>
+          <div class="rule-cn">安全装载 — 重心居中，重物置于下方，保持不遮挡视线的高度</div>
         </div>
       </div>
       <div class="rule">
         <span class="rule-icon">3</span>
         <div class="rule-text">
-          <div class="rule-kr">경사로에서 대차 이동 금지</div>
-          <div class="rule-cn">禁止在坡道上移动</div>
+          <div class="rule-kr">운반 방식 — 끌지 말고 밀어서 이동, 진행 방향의 시야 확보</div>
+          <div class="rule-cn">搬运方式 — 推行前进而非拉行，确保前方视野</div>
         </div>
       </div>
       <div class="rule">
         <span class="rule-icon">4</span>
         <div class="rule-text">
-          <div class="rule-kr">중량물은 반드시 2인 이상 운반</div>
-          <div class="rule-cn">重物须两人以上搬运</div>
+          <div class="rule-kr">속도 및 이동 — 보행 속도로 천천히 이동, 뒷걸음 운반 금지</div>
+          <div class="rule-cn">速度与移动 — 以步行速度缓慢移动，严禁倒退搬运</div>
+        </div>
+      </div>
+      <div class="rule">
+        <span class="rule-icon">5</span>
+        <div class="rule-text">
+          <div class="rule-kr">통로 확보 — 이동 경로의 장애물 제거, 굴러 떨어질 위험이 있는 물건은 고정</div>
+          <div class="rule-cn">确保通道 — 清除移动路径上的障碍物，易滚落物品须加以固定</div>
+        </div>
+      </div>
+      <div class="rule rule-prohibit">
+        <span class="rule-icon">6</span>
+        <div class="rule-text">
+          <div class="rule-kr">금지사항 — 대차 탑승 금지, 적재물 과적 금지</div>
+          <div class="rule-cn">禁止事项 — 严禁搭乘搬运车，严禁超载</div>
+        </div>
+      </div>
+      <div class="rule">
+        <span class="rule-icon">7</span>
+        <div class="rule-text">
+          <div class="rule-kr">경사로 — 화물이 떨어지지 않도록 주의, 필요시 2인 1조 운반</div>
+          <div class="rule-cn">坡道作业 — 防止货物坠落，必要时两人一组搬运</div>
         </div>
       </div>
     </div>
@@ -2040,7 +2061,7 @@ const signMeta = {
   s07: { title: '화학물질 보관소', type: 'yellow', label: '경고', loc: '화학물질 보관소', summary: 'MSDS 비치, 개인보호구 착용 필수' },
   s08: { title: '비상구', type: 'green', label: '안전', loc: '비상구', summary: '비상구, 장애물 적재 절대 금지' },
   s09: { title: '소화기 비치 위치', type: 'fire', label: '방화', loc: '소화기 비치 위치', summary: '소화기 비치 및 사용법 안내' },
-  s11: { title: '운반대차 구역', type: 'yellow', label: '경고', loc: '운반대차 구역', summary: '적재하중 준수, 2인 이상 운반' },
+  s11: { title: '운반대차 안전수칙', type: 'yellow', label: '경고', loc: '운반대차 사용 구역', summary: '작업 전 점검, 안전 적재, 밀어서 이동, 탑승·과적 금지' },
   s12: { title: '래핑기 작업 구역', type: 'red', label: '금지', loc: '래핑기 작업 구역', summary: '신체 접근 금지, 구역 접근 금지, 비상정지' },
   s13: { title: '사출기 작업 구역', type: 'blue', label: '지시', loc: '사출기 작업 구역', summary: '안전문 닫힘 확인, 금형 체결 확인' },
   s14: { title: '건조기 구역', type: 'yellow', label: '경고', loc: '건조기 구역', summary: '가동 중 개방 금지, 고온 주의' },
