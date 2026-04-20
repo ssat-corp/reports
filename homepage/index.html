@@ -419,6 +419,7 @@ h1, h2, h3, h4, h5, h6, p, li, span, a, button { word-break: keep-all; overflow-
   border-radius: 50px;
   background: rgba(255,255,255,0.6);
 }
+.showcase-media:has(img)::before { display: none; }
 .showcase-media img {
   position: absolute; inset: 0;
   width: 100%; height: 100%; object-fit: cover;
@@ -1101,21 +1102,27 @@ h1, h2, h3, h4, h5, h6, p, li, span, a, button { word-break: keep-all; overflow-
 
     <div class="showcase-grid">
       <figure class="showcase-card reveal">
-        <div class="showcase-media" data-placeholder="자동차 부품"></div>
+        <div class="showcase-media" data-placeholder="자동차 부품">
+          <img src="product_automotive.png" alt="자동차 부품" loading="lazy">
+        </div>
         <figcaption>
           <strong>자동차 부품</strong>
           <span>Automotive Parts</span>
         </figcaption>
       </figure>
       <figure class="showcase-card reveal reveal-delay-1">
-        <div class="showcase-media" data-placeholder="냉장고 부품"></div>
+        <div class="showcase-media" data-placeholder="냉장고 부품">
+          <img src="product_refrigerator.png" alt="냉장고 부품" loading="lazy">
+        </div>
         <figcaption>
           <strong>냉장고 부품</strong>
           <span>Refrigerator Parts</span>
         </figcaption>
       </figure>
       <figure class="showcase-card reveal reveal-delay-2">
-        <div class="showcase-media" data-placeholder="세탁기 부품"></div>
+        <div class="showcase-media" data-placeholder="세탁기 부품">
+          <img src="product_washing.png" alt="세탁기 부품" loading="lazy">
+        </div>
         <figcaption>
           <strong>세탁기 부품</strong>
           <span>Washing Machine Parts</span>
