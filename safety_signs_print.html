@@ -1190,38 +1190,45 @@ body {
     <span class="sign-id">s02</span>
     <div class="sign-symbol"><span class="sym-inner">!</span></div>
     <div class="category-badge">지시 <span class="category-badge-cn">指示</span></div>
-    <div class="sign-title">금형 취급 구역</div>
-    <div class="sign-title-cn">模具操作区域</div>
+    <div class="sign-title">금형 취급 안전수칙</div>
+    <div class="sign-title-cn">模具操作安全守则</div>
   </div>
   <div class="sign-body">
     <div class="sign-location">설치위치: 금형 보관대 / 금형 취급 구역<br><span class="sign-location-cn">安装位置：模具存放架/模具操作区域</span></div>
-    <div class="sign-rules">
+    <div class="sign-rules dense">
       <div class="rule">
         <span class="rule-icon">1</span>
         <div class="rule-text">
-          <div class="rule-kr">금형 취급 시 반드시 2인 1조 작업</div>
-          <div class="rule-cn">模具操作必须两人一组</div>
+          <div class="rule-kr">기계 가동 전 점검 — 볼트 조임 및 윤활 상태 재확인 후 가동</div>
+          <div class="rule-cn">设备启动前检查 — 确认螺栓紧固及润滑状态后启动</div>
         </div>
       </div>
       <div class="rule">
         <span class="rule-icon">2</span>
         <div class="rule-text">
-          <div class="rule-kr">신호수(유도자) 배치 후 작업</div>
-          <div class="rule-cn">作业前须配置信号指挥员</div>
+          <div class="rule-kr">금형 교환 — 사출기 전원 차단 후 표지판·LOTO 설치 후 교환(타인 오작동 방지), 기계 수리 중 교환 금지</div>
+          <div class="rule-cn">更换模具 — 切断注塑机电源并设置警示牌·LOTO后更换（防止他人误操作），机械维修中禁止更换</div>
         </div>
       </div>
-      <div class="rule">
+      <div class="rule rule-prohibit">
         <span class="rule-icon">3</span>
         <div class="rule-text">
-          <div class="rule-kr">안전화 및 안전모 반드시 착용</div>
-          <div class="rule-cn">必须佩戴安全鞋和安全帽</div>
+          <div class="rule-kr">손 끼임 방지 — 금형 사이에 손 넣기 금지, 전용 공구 사용</div>
+          <div class="rule-cn">防止夹手 — 严禁将手伸入模具之间，须使用专用工具</div>
         </div>
       </div>
       <div class="rule">
         <span class="rule-icon">4</span>
         <div class="rule-text">
-          <div class="rule-kr">안전블록 삽입 확인 후 작업</div>
-          <div class="rule-cn">作业前须放置安全垫块</div>
+          <div class="rule-kr">안전 운반 — 전용 크레인·아이볼트 사용, 아이볼트 손상·체결 상태 확인</div>
+          <div class="rule-cn">安全搬运 — 使用专用起重机·吊环螺栓，确认吊环螺栓损坏及紧固状态</div>
+        </div>
+      </div>
+      <div class="rule rule-prohibit">
+        <span class="rule-icon">5</span>
+        <div class="rule-text">
+          <div class="rule-kr">낙하 위험 — 매달린 상태에서 수리·점검 금지</div>
+          <div class="rule-cn">坠落危险 — 严禁在悬挂状态下进行维修·检查</div>
         </div>
       </div>
     </div>
@@ -2053,7 +2060,7 @@ body {
 // ===== Sign metadata for grid cards =====
 const signMeta = {
   s01: { title: '천장주행크레인 작업구역', type: 'red', label: '금지', loc: '천장주행크레인 작업구역', summary: '무단 출입·인양물 하부 통행 금지, 중량물 이동 시 안전 위치 대기' },
-  s02: { title: '금형 취급 구역', type: 'blue', label: '지시', loc: '금형 보관대 / 금형 취급 구역', summary: '2인 1조 필수, 안전화·안전모 착용' },
+  s02: { title: '금형 취급 안전수칙', type: 'blue', label: '지시', loc: '금형 보관대 / 금형 취급 구역', summary: '가동 전 점검, LOTO 설치 후 교환, 손 끼임·낙하 방지, 전용 공구·크레인 사용' },
   s03: { title: '고소작업 구역', type: 'yellow', label: '경고', loc: '고소작업 구역 / 사다리 사용 구역', summary: '안전대 착용 필수, 추락 위험' },
   s04: { title: '분전반 / 전기 패널함', type: 'red', label: '금지', loc: '분전반 / 전기 패널함', summary: '허가자 외 접근 금지 (A4 1/4 ×4)' },
   s05: { title: '공장 출입·작업 안전수칙', type: 'blue', label: '지시', loc: '공장 출입구', summary: '보호구 착용·지정 통로 이동·스마트폰 금지·작업 허가·비상 대피' },
