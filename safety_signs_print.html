@@ -256,12 +256,14 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 /* RED: prohibition circle */
 .sign-red .sign-symbol {
   width: 78px;
   height: 78px;
+  aspect-ratio: 1 / 1;
   border: 7px solid var(--red);
   border-radius: 50%;
   background: #fff;
@@ -322,6 +324,7 @@ body {
 .sign-blue .sign-symbol {
   width: 78px;
   height: 78px;
+  aspect-ratio: 1 / 1;
   border-radius: 50%;
   background: var(--blue);
   display: flex;
@@ -339,6 +342,7 @@ body {
 .sign-fire .sign-symbol {
   width: 96px;
   height: 96px;
+  aspect-ratio: 1 / 1;
   background: var(--red);
   border-radius: 4px;
   display: flex;
