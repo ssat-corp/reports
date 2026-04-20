@@ -1,0 +1,1536 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>신성오토텍㈜ | 40여년 이상, 한 번도 멈추지 않은 제조 신뢰</title>
+<meta name="description" content="40여년 이상의 업력을 가진 플라스틱 사출 전문 기업. 사출-후가공-조립 원스톱 통합 제조. SQ·ISO14001·IATF16949 인증." />
+
+<!-- Pretendard -->
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" />
+<!-- Inter -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+/* ===================== Reset & Base ===================== */
+*,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --navy: #1a3560;
+  --navy-dark: #122648;
+  --navy-light: #2a4a80;
+  --blue: #2471a3;
+  --blue-light: #3e8ec2;
+  --bg: #ffffff;
+  --bg-gray: #f0f2f5;
+  --bg-soft: #f7f9fc;
+  --text: #333333;
+  --text-mute: #6b7280;
+  --border: #e5e7eb;
+  --accent: #d4af37;
+  --radius: 14px;
+  --shadow-sm: 0 2px 8px rgba(26,53,96,0.06);
+  --shadow-md: 0 8px 24px rgba(26,53,96,0.08);
+  --shadow-lg: 0 20px 48px rgba(26,53,96,0.12);
+  --transition: 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Pretendard Variable', Pretendard, 'Malgun Gothic', -apple-system, BlinkMacSystemFont, sans-serif;
+  color: var(--text);
+  background: var(--bg);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+img { max-width: 100%; display: block; }
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; }
+.eng { font-family: 'Inter', sans-serif; letter-spacing: -0.01em; word-break: normal; }
+
+/* 한국어 자연 줄바꿈: 제목·본문에서 단어가 어색하게 끊기지 않도록 */
+h1, h2, h3, h4, h5, h6, p, li, span, a, button { word-break: keep-all; overflow-wrap: break-word; }
+
+/* 큰 제목 내부의 줄바꿈(br)은 좁은 화면에서 자동 해제해 한 줄 흐름으로 */
+@media (max-width: 560px) {
+  .hero h1 br,
+  .section-title br,
+  .beyond-head h3 br,
+  .hero p.sub br { display: none; }
+}
+
+.container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+.section { padding: 120px 0; position: relative; }
+.section-eyebrow {
+  display: inline-block;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  color: var(--blue);
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.section-title {
+  font-size: clamp(24px, 4vw, 44px);
+  font-weight: 800;
+  color: var(--navy);
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+  margin-bottom: 18px;
+}
+.section-desc {
+  font-size: clamp(15px, 1.4vw, 17px);
+  color: var(--text-mute);
+  max-width: 720px;
+  margin-bottom: 56px;
+  line-height: 1.75;
+}
+.section-head { margin-bottom: 56px; }
+
+/* ===================== Navigation ===================== */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  padding: 18px 0;
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid transparent;
+  transition: all var(--transition);
+}
+.nav.scrolled {
+  padding: 12px 0;
+  background: rgba(255,255,255,0.96);
+  border-bottom-color: var(--border);
+  box-shadow: var(--shadow-sm);
+}
+.nav-inner {
+  display: flex; align-items: center; justify-content: space-between;
+  max-width: 1200px; margin: 0 auto; padding: 0 24px;
+}
+.logo { display: inline-flex; align-items: center; }
+.logo img { height: 44px; width: auto; object-fit: contain; display: block; }
+
+.nav-menu { display: flex; gap: 34px; align-items: center; }
+.nav-menu a {
+  font-size: 15px; font-weight: 500; color: var(--text);
+  transition: color var(--transition); position: relative;
+}
+.nav-menu a::after {
+  content: ''; position: absolute; left: 0; bottom: -6px;
+  width: 0; height: 2px; background: var(--blue);
+  transition: width var(--transition);
+}
+.nav-menu a:hover { color: var(--blue); }
+.nav-menu a:hover::after { width: 100%; }
+.nav-menu a.nav-cta {
+  padding: 10px 22px; background: var(--navy); color: #fff;
+  border-radius: 50px; font-size: 14px; font-weight: 600;
+  transition: all var(--transition);
+}
+.nav-menu a.nav-cta:hover { background: var(--blue); color: #fff; transform: translateY(-1px); }
+
+.nav-toggle { display: none; font-size: 26px; color: var(--navy); }
+
+/* ===================== Hero ===================== */
+.hero {
+  position: relative; min-height: 100vh;
+  display: flex; align-items: center;
+  background:
+    linear-gradient(135deg, rgba(18,38,72,0.82) 0%, rgba(36,113,163,0.65) 100%),
+    url('hero_building.jpg') center/cover no-repeat;
+  color: #fff; overflow: hidden;
+  padding-top: 80px;
+}
+.hero::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse at top right, rgba(62,142,194,0.25), transparent 60%);
+  pointer-events: none;
+}
+.hero-inner { position: relative; z-index: 2; width: 100%; padding-left: clamp(56px, 12vw, 200px); }
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 8px 18px; background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 50px;
+  font-size: clamp(11px, 1.2vw, 13px); font-weight: 500;
+  backdrop-filter: blur(8px);
+  margin-bottom: 28px;
+  max-width: 100%;
+}
+.hero-badge .eng { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.hero-badge .dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: #4ade80; box-shadow: 0 0 10px #4ade80;
+  animation: pulse 2s infinite;
+}
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+.hero h1 {
+  font-size: clamp(28px, 5.5vw, 68px);
+  font-weight: 800; line-height: 1.2;
+  letter-spacing: -0.03em; margin-bottom: 24px;
+}
+.hero h1 .accent-line {
+  background: linear-gradient(90deg, #fff 0%, #a7c7e7 100%);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.hero p.sub {
+  font-size: clamp(15px, 1.4vw, 19px);
+  max-width: 640px; color: rgba(255,255,255,0.88);
+  margin-bottom: 40px; line-height: 1.75;
+}
+.hero-ctas { display: flex; gap: 14px; flex-wrap: wrap; }
+.btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 15px 28px; border-radius: 50px;
+  font-size: 15px; font-weight: 600;
+  transition: all var(--transition);
+  cursor: pointer; border: 1px solid transparent;
+}
+.btn-primary { background: #fff; color: var(--navy); }
+.btn-primary:hover { background: var(--accent); color: var(--navy); transform: translateY(-2px); box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+.btn-outline { background: transparent; color: #fff; border-color: rgba(255,255,255,0.4); }
+.btn-outline:hover { background: rgba(255,255,255,0.1); border-color: #fff; }
+.btn-dark { background: var(--navy); color: #fff; }
+.btn-dark:hover { background: var(--blue); transform: translateY(-2px); }
+
+.scroll-hint {
+  position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%);
+  color: rgba(255,255,255,0.7); font-size: 12px; letter-spacing: 0.2em;
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  animation: floatY 2.4s ease-in-out infinite;
+}
+.scroll-hint::after {
+  content: ''; width: 1px; height: 40px;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.8), transparent);
+}
+@keyframes floatY { 0%,100% { transform: translate(-50%,0);} 50% { transform: translate(-50%, 8px);} }
+
+/* ===================== Numbers ===================== */
+.numbers {
+  background: var(--bg-soft);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 80px 0;
+}
+.num-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px;
+}
+.num-item { text-align: center; }
+.num-value {
+  font-family: 'Inter', sans-serif; font-weight: 800;
+  font-size: clamp(40px, 5.5vw, 72px);
+  color: var(--navy); line-height: 1;
+  letter-spacing: -0.03em; margin-bottom: 8px;
+  display: inline-flex; align-items: baseline;
+  white-space: nowrap;
+}
+.num-value .suffix { font-size: 0.5em; color: var(--blue); margin-left: 4px; }
+.num-label { white-space: normal; }
+.num-label {
+  font-size: 14px; font-weight: 600;
+  color: var(--text-mute); letter-spacing: 0.05em;
+}
+.num-item + .num-item { border-left: 1px solid var(--border); }
+
+/* ===================== About ===================== */
+.about-grid {
+  display: grid; grid-template-columns: 1fr 1.2fr; gap: 80px; align-items: start;
+}
+.ceo-card {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 100%);
+  color: #fff; padding: 48px 40px; border-radius: var(--radius);
+  box-shadow: var(--shadow-lg); position: relative; overflow: hidden;
+}
+.ceo-card::before {
+  content: '"'; position: absolute; top: 20px; right: 30px;
+  font-size: 140px; font-family: Georgia, serif; line-height: 1;
+  color: rgba(255,255,255,0.1);
+}
+.ceo-card h3 { font-size: 13px; letter-spacing: 0.2em; opacity: 0.8; margin-bottom: 18px; font-weight: 500; }
+.ceo-card p { font-size: 17px; line-height: 1.8; margin-bottom: 14px; }
+.ceo-sign {
+  margin-top: 28px; padding-top: 24px;
+  border-top: 1px solid rgba(255,255,255,0.2);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.ceo-sign strong { font-size: 16px; }
+.ceo-sign span { font-size: 13px; opacity: 0.75; }
+
+.pillars { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+.pillar {
+  background: #fff; padding: 32px 26px; border-radius: var(--radius);
+  border: 1px solid var(--border);
+  transition: all var(--transition);
+  position: relative; overflow: hidden;
+}
+.pillar::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--navy), var(--blue));
+  transform: scaleX(0); transform-origin: left; transition: transform var(--transition);
+}
+.pillar:hover { transform: translateY(-6px); box-shadow: var(--shadow-md); border-color: var(--blue-light); }
+.pillar:hover::before { transform: scaleX(1); }
+.pillar-icon {
+  width: 44px; height: 44px; border-radius: 10px;
+  background: linear-gradient(135deg, var(--navy), var(--blue));
+  color: #fff; display: flex; align-items: center; justify-content: center;
+  font-size: 20px; font-weight: 700; margin-bottom: 16px;
+}
+.pillar h4 { font-size: 18px; color: var(--navy); margin-bottom: 6px; font-weight: 700; }
+.pillar p { font-size: 14px; color: var(--text-mute); line-height: 1.6; }
+
+/* ===================== Capabilities ===================== */
+.capabilities { background: var(--bg-soft); }
+.process-flow {
+  display: grid; grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr;
+  gap: 0; align-items: stretch; margin-bottom: 28px;
+}
+.process-step {
+  background: #fff; border-radius: var(--radius);
+  padding: 36px 28px; text-align: center;
+  border: 1px solid var(--border);
+  transition: all var(--transition);
+}
+.process-step:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+.process-num {
+  font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 700;
+  color: var(--blue); letter-spacing: 0.15em; margin-bottom: 10px;
+}
+.process-step h4 { font-size: 22px; color: var(--navy); margin-bottom: 10px; font-weight: 800; margin-top: 6px; }
+.process-step h4 .eng-sub { display: block; font-size: 14px; font-weight: 600; color: var(--blue); letter-spacing: 0.01em; margin-top: 4px; }
+.process-step p { font-size: 14px; color: var(--text-mute); margin-bottom: 16px; line-height: 1.6; }
+.process-spec {
+  display: inline-block;
+  background: var(--bg-soft); padding: 6px 14px;
+  border-radius: 50px; font-size: 12px; font-weight: 600; color: var(--navy);
+}
+.process-arrow {
+  display: flex; align-items: center; justify-content: center;
+  color: var(--blue); font-size: 26px; font-weight: 300;
+}
+
+.capability-highlights {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+}
+.cap-highlight {
+  background: #fff; padding: 28px; border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+.cap-highlight h5 {
+  font-size: 13px; letter-spacing: 0.1em; color: var(--blue);
+  font-weight: 600; margin-bottom: 10px; text-transform: uppercase;
+}
+.cap-highlight p { font-size: 15px; color: var(--text); line-height: 1.65; }
+
+/* ===================== Smart Factory ===================== */
+.smart-factory {
+  margin-top: 36px;
+  background: linear-gradient(135deg, rgba(26,53,96,0.04) 0%, rgba(36,113,163,0.04) 100%);
+  border: 1px solid rgba(26,53,96,0.12);
+  border-radius: 20px;
+  padding: 48px 44px;
+}
+.smart-factory-inner {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center;
+}
+.smart-factory-intro .section-eyebrow { margin-bottom: 12px; }
+.smart-factory-intro h3 {
+  font-size: clamp(20px, 2.4vw, 28px);
+  line-height: 1.35;
+  margin: 0 0 16px;
+  letter-spacing: -0.01em;
+  color: var(--navy);
+  font-weight: 800;
+}
+.smart-factory-intro h3 .accent-navy { color: var(--navy); }
+.smart-factory-intro h3 .accent-blue { color: var(--blue); }
+.smart-factory-intro p {
+  font-size: 14.5px; line-height: 1.8;
+  color: var(--text-mute); margin: 0;
+}
+.smart-factory-intro p strong { color: var(--navy); font-weight: 700; }
+.smart-factory-grid {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px;
+}
+.sf-card {
+  padding: 20px 18px; background: #fff;
+  border-radius: 10px; border: 1px solid var(--border);
+  transition: all var(--transition);
+}
+.sf-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-sm); border-color: var(--blue-light); }
+.sf-title {
+  font-size: 22px; font-weight: 800;
+  color: var(--navy); letter-spacing: -0.02em;
+}
+.sf-desc { font-size: 12.5px; color: var(--text-mute); margin-top: 4px; }
+
+.sf-strengths {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px;
+  margin-top: 36px; padding-top: 32px;
+  border-top: 1px solid rgba(26,53,96,0.14);
+}
+.sf-strength h5 {
+  font-size: 12.5px; letter-spacing: 0.14em; font-weight: 700;
+  color: var(--blue); text-transform: uppercase; margin-bottom: 10px;
+}
+.sf-strength p { font-size: 14.5px; color: var(--text); line-height: 1.65; }
+@media (max-width: 720px) {
+  .sf-strengths { grid-template-columns: 1fr; gap: 14px; padding-top: 24px; margin-top: 24px; }
+}
+
+/* ===================== Showcase ===================== */
+.showcase-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+}
+.showcase-card {
+  margin: 0;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: all var(--transition);
+}
+.showcase-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-md); border-color: var(--blue-light); }
+.showcase-media {
+  aspect-ratio: 4/3;
+  background: linear-gradient(135deg, var(--bg-gray) 0%, var(--bg-soft) 100%);
+  position: relative;
+  display: flex; align-items: center; justify-content: center;
+}
+.showcase-media::before {
+  content: attr(data-placeholder);
+  color: var(--text-mute);
+  font-size: 13px; font-weight: 500;
+  letter-spacing: 0.02em;
+  padding: 6px 14px;
+  border: 1px dashed var(--border);
+  border-radius: 50px;
+  background: rgba(255,255,255,0.6);
+}
+.showcase-media img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%; object-fit: cover;
+}
+.showcase-card figcaption {
+  padding: 18px 20px;
+  display: flex; flex-direction: column; gap: 2px;
+}
+.showcase-card figcaption strong {
+  font-size: 16px; font-weight: 700;
+  color: var(--navy); letter-spacing: -0.01em;
+}
+.showcase-card figcaption span {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px; color: var(--text-mute);
+  letter-spacing: 0.08em;
+}
+
+/* ===================== Certifications ===================== */
+.certs-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 20px; margin-bottom: 60px;
+}
+.cert-card {
+  background: #fff; padding: 40px 30px; border-radius: var(--radius);
+  border: 1px solid var(--border); text-align: center;
+  transition: all var(--transition); position: relative;
+}
+.cert-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); border-color: var(--navy); }
+.cert-badge {
+  width: 90px; height: 90px; margin: 0 auto 20px;
+  border-radius: 50%; background: linear-gradient(135deg, var(--navy), var(--blue));
+  color: #fff; display: flex; align-items: center; justify-content: center;
+  font-family: 'Inter', sans-serif; font-weight: 800; font-size: 13px;
+  position: relative; box-shadow: 0 10px 24px rgba(26,53,96,0.25);
+  line-height: 1.2; text-align: center;
+}
+.cert-badge::after {
+  content: ''; position: absolute; inset: -6px;
+  border: 1px dashed var(--blue-light); border-radius: 50%; opacity: 0.4;
+}
+.cert-card h4 { font-size: 19px; color: var(--navy); font-weight: 800; margin-bottom: 8px; }
+.cert-card .cert-full { font-size: 12px; color: var(--blue); letter-spacing: 0.05em; margin-bottom: 14px; font-family: 'Inter', sans-serif; }
+.cert-card p { font-size: 14px; color: var(--text-mute); line-height: 1.6; }
+
+.patents-box {
+  background: linear-gradient(135deg, var(--navy-dark), var(--navy));
+  color: #fff; border-radius: var(--radius); padding: 48px;
+  position: relative; overflow: hidden;
+}
+.patents-box::before {
+  content: ''; position: absolute; top: -50px; right: -50px;
+  width: 220px; height: 220px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(62,142,194,0.3), transparent 70%);
+}
+.patents-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px; flex-wrap: wrap; gap: 14px; position: relative; }
+.patents-head h3 { font-size: 24px; font-weight: 800; }
+.patents-head span { font-size: 13px; opacity: 0.7; letter-spacing: 0.1em; }
+.patent-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; position: relative; }
+.patent-item {
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+  padding: 18px 20px; border-radius: 10px;
+  display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  flex-wrap: wrap;
+  transition: all var(--transition);
+}
+.patent-item:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.25); }
+.patent-item .title { font-size: 14px; font-weight: 500; flex: 1 1 auto; }
+.patent-item .no { font-family: 'Inter', sans-serif; font-size: 12px; opacity: 0.7; white-space: nowrap; }
+
+.credential-grid {
+  display: grid; grid-template-columns: repeat(2, 1fr);
+  gap: 18px; position: relative;
+}
+.credential-card {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 16px; padding: 28px 26px;
+  display: flex; flex-direction: column;
+  transition: all var(--transition);
+}
+.credential-card:hover {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.22);
+  transform: translateY(-2px);
+}
+.credential-icon {
+  width: 44px; height: 44px; border-radius: 12px;
+  background: rgba(120,180,255,0.15); color: #a8c9ff;
+  display: inline-flex; align-items: center; justify-content: center;
+  margin-bottom: 16px;
+}
+.credential-icon svg { width: 22px; height: 22px; }
+.credential-card h5 {
+  font-size: 17px; font-weight: 800; color: #fff;
+  letter-spacing: -0.01em; margin-bottom: 8px;
+}
+.credential-desc {
+  font-size: 13px; line-height: 1.6;
+  color: rgba(255,255,255,0.65);
+  margin-bottom: 18px;
+}
+.credential-list {
+  list-style: none; padding: 0; margin: auto 0 0;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.credential-list li {
+  font-size: 13.5px; color: rgba(255,255,255,0.88);
+  line-height: 1.5; padding-left: 16px; position: relative;
+}
+.credential-list li::before {
+  content: ''; position: absolute; left: 0; top: 9px;
+  width: 5px; height: 5px; border-radius: 50%;
+  background: #6aa4ff;
+}
+.credential-meta {
+  font-size: 12px; color: rgba(255,255,255,0.55); margin-left: 4px;
+}
+.credential-list--stats {
+  display: grid; grid-template-columns: repeat(2, 1fr);
+  gap: 12px 18px;
+}
+.credential-list--stats li {
+  padding-left: 0; display: flex; align-items: baseline; gap: 8px;
+  font-size: 13px; color: rgba(255,255,255,0.75);
+}
+.credential-list--stats li::before { display: none; }
+.credential-num {
+  font-family: 'Inter', sans-serif; font-size: 26px; font-weight: 800;
+  color: #fff; letter-spacing: -0.02em; line-height: 1;
+  min-width: 28px;
+}
+
+/* ===================== ESG ===================== */
+.esg { background: var(--bg-soft); }
+.esg-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-bottom: 40px; }
+.esg-card {
+  background: #fff; padding: 40px 32px; border-radius: var(--radius);
+  border: 1px solid var(--border); position: relative;
+  transition: all var(--transition);
+}
+.esg-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-md); }
+.esg-letter {
+  font-family: 'Inter', sans-serif; font-size: 80px; font-weight: 800;
+  line-height: 0.9; margin-bottom: 6px;
+  background: linear-gradient(135deg, var(--navy), var(--blue));
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.esg-card h4 { font-size: 18px; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+.esg-card .sub { font-size: 12px; color: var(--text-mute); letter-spacing: 0.1em; margin-bottom: 20px; text-transform: uppercase; font-family: 'Inter', sans-serif; }
+.esg-points { list-style: none; }
+.esg-points li {
+  padding: 10px 0 10px 22px; position: relative;
+  font-size: 14px; color: var(--text); line-height: 1.6;
+  border-bottom: 1px dashed var(--border);
+}
+.esg-points li:last-child { border-bottom: none; }
+.esg-points li::before {
+  content: ''; position: absolute; left: 0; top: 18px;
+  width: 10px; height: 2px; background: var(--blue);
+}
+.esg-points li strong { display: block; color: var(--navy); font-weight: 700; margin-bottom: 2px; }
+.esg-quote {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 100%);
+  color: #fff; padding: 56px 40px; border-radius: var(--radius);
+  text-align: center; font-size: 23px; font-weight: 600; letter-spacing: -0.01em;
+}
+.esg-quote::before {
+  content: '—'; display: block; font-size: 20px; margin-bottom: 10px; opacity: 0.5;
+}
+
+/* ===================== Products ===================== */
+.products-gallery {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 18px; margin-bottom: 60px;
+}
+.product-tile {
+  aspect-ratio: 16/10; border-radius: var(--radius);
+  background: linear-gradient(135deg, var(--bg-gray), #fff);
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px; text-align: center;
+  transition: all var(--transition); overflow: hidden; position: relative;
+}
+.product-tile::before {
+  content: ''; position: absolute; top: 0; left: 50%;
+  width: 40px; height: 3px; background: var(--blue);
+  transform: translateX(-50%); border-radius: 0 0 3px 3px;
+  opacity: 0.5; transition: all var(--transition);
+}
+.product-tile:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); border-color: var(--blue-light); }
+.product-tile:hover::before { opacity: 1; width: 60px; }
+.product-tile h5 { font-size: 19px; font-weight: 700; color: var(--navy); letter-spacing: -0.01em; }
+
+.client-wall {
+  background: #fff; padding: 40px; border-radius: var(--radius);
+  border: 1px solid var(--border); margin-bottom: 80px;
+}
+.client-wall h4 {
+  text-align: center; font-size: 13px; letter-spacing: 0.2em;
+  color: var(--text-mute); font-weight: 600;
+  text-transform: uppercase; margin-bottom: 28px;
+}
+.client-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 16px; align-items: stretch; }
+.client-logo {
+  aspect-ratio: 1.8/1; border-radius: 10px;
+  background: var(--bg-soft);
+  display: flex; align-items: center; justify-content: center;
+  padding: 10px 14px;
+  transition: all var(--transition);
+  border: 1px solid var(--border);
+}
+.client-logo img {
+  max-width: 100%; max-height: 44px;
+  width: auto; height: auto;
+  object-fit: contain;
+  filter: grayscale(100%); opacity: 0.75;
+  transition: all var(--transition);
+}
+.client-logo:hover { background: #fff; border-color: var(--blue-light); box-shadow: var(--shadow-sm); }
+.client-logo:hover img { filter: grayscale(0); opacity: 1; }
+.client-logo.shift-left img { transform: translateX(-10px); }
+
+.beyond-section {
+  background: linear-gradient(135deg, #0f1f3d 0%, var(--navy) 100%);
+  color: #fff; padding: 72px 56px; border-radius: var(--radius);
+  position: relative; overflow: hidden;
+}
+.beyond-section::before {
+  content: ''; position: absolute; top: -100px; right: -100px;
+  width: 400px; height: 400px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(62,142,194,0.25), transparent 70%);
+}
+.beyond-head { text-align: center; margin-bottom: 44px; position: relative; }
+.beyond-head .eyebrow { color: var(--blue-light); font-family: 'Inter', sans-serif; font-size: 13px; letter-spacing: 0.25em; margin-bottom: 12px; font-weight: 600; }
+.beyond-head h3 {
+  font-size: clamp(26px, 3vw, 36px); font-weight: 800;
+  margin-bottom: 14px; letter-spacing: -0.02em;
+}
+.beyond-head p { font-size: 16px; opacity: 0.82; max-width: 640px; margin: 0 auto; line-height: 1.7; }
+
+.beyond-grid {
+  display: grid; grid-template-columns: repeat(5, 1fr);
+  gap: 14px; position: relative;
+}
+.beyond-tile {
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.14);
+  padding: 24px 16px; border-radius: 10px; text-align: center;
+  transition: all var(--transition); backdrop-filter: blur(10px);
+  position: relative;
+}
+.beyond-tile::before {
+  content: ''; display: block; width: 24px; height: 2px;
+  background: var(--blue-light); margin: 0 auto 14px;
+  opacity: 0.75; transition: all var(--transition);
+}
+.beyond-tile:hover {
+  transform: translateY(-4px); background: rgba(255,255,255,0.12);
+  border-color: rgba(255,255,255,0.3);
+}
+.beyond-tile:hover::before { width: 36px; opacity: 1; }
+.beyond-tile h5 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+.beyond-tile span { font-size: 11px; opacity: 0.65; font-family: 'Inter', sans-serif; letter-spacing: 0.08em; }
+
+/* ===================== Why Us ===================== */
+.why-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; }
+.why-card {
+  background: #fff; padding: 40px 28px; border-radius: var(--radius);
+  border: 1px solid var(--border); transition: all var(--transition);
+  position: relative;
+}
+.why-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-lg); border-color: var(--navy); }
+.why-num {
+  font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 700;
+  color: var(--blue); letter-spacing: 0.15em; margin-bottom: 18px; display: block;
+}
+.why-icon {
+  width: 52px; height: 52px; border-radius: 12px;
+  background: linear-gradient(135deg, var(--navy), var(--blue));
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; margin-bottom: 20px;
+}
+.why-icon svg { width: 24px; height: 24px; }
+.why-card h4 { font-size: 20px; color: var(--navy); font-weight: 800; margin-bottom: 10px; letter-spacing: -0.01em; }
+.why-card p { font-size: 14px; color: var(--text-mute); line-height: 1.7; }
+
+/* ===================== Contact ===================== */
+.contact {
+  background: linear-gradient(180deg, var(--bg-soft) 0%, #fff 100%);
+}
+.contact-grid { max-width: 760px; margin: 0 auto; }
+.contact-info { display: flex; flex-direction: column; gap: 24px; }
+.info-card {
+  background: #fff; padding: 28px; border-radius: var(--radius);
+  border: 1px solid var(--border); box-shadow: var(--shadow-sm);
+  display: flex; gap: 20px; align-items: flex-start;
+}
+.info-icon {
+  flex-shrink: 0; width: 48px; height: 48px; border-radius: 12px;
+  background: linear-gradient(135deg, var(--navy), var(--blue));
+  color: #fff; display: flex; align-items: center; justify-content: center;
+}
+.info-icon svg { width: 22px; height: 22px; }
+.info-card h5 { font-size: 13px; color: var(--text-mute); letter-spacing: 0.1em; margin-bottom: 6px; font-weight: 600; text-transform: uppercase; }
+.info-card p { font-size: 15px; color: var(--navy); font-weight: 600; line-height: 1.6; }
+.info-card small { display: block; font-size: 13px; color: var(--text-mute); font-weight: 400; margin-top: 4px; line-height: 1.55; }
+
+.contact-form {
+  background: #fff; padding: 40px; border-radius: var(--radius);
+  border: 1px solid var(--border); box-shadow: var(--shadow-md);
+}
+.contact-form h3 { font-size: 22px; color: var(--navy); font-weight: 800; margin-bottom: 8px; }
+.contact-form > p { font-size: 14px; color: var(--text-mute); margin-bottom: 28px; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 18px; }
+.form-group { display: flex; flex-direction: column; }
+.form-group.full { grid-column: 1 / -1; }
+.form-group label {
+  font-size: 13px; font-weight: 600; color: var(--navy);
+  margin-bottom: 8px; letter-spacing: 0.02em;
+}
+.form-group input, .form-group textarea {
+  font-family: inherit; font-size: 15px;
+  padding: 13px 16px; border: 1px solid var(--border);
+  border-radius: 8px; background: var(--bg-soft); color: var(--text);
+  transition: all var(--transition);
+}
+.form-group input:focus, .form-group textarea:focus {
+  outline: none; border-color: var(--blue);
+  background: #fff; box-shadow: 0 0 0 3px rgba(36,113,163,0.1);
+}
+.form-group textarea { resize: vertical; min-height: 120px; }
+.contact-form button[type="submit"] {
+  width: 100%; padding: 16px; font-size: 15px; font-weight: 700;
+  background: var(--navy); color: #fff;
+  border-radius: 8px; transition: all var(--transition);
+  letter-spacing: 0.02em;
+}
+.contact-form button[type="submit"]:hover { background: var(--blue); transform: translateY(-2px); box-shadow: var(--shadow-md); }
+
+/* ===================== Footer ===================== */
+.footer {
+  background: var(--navy-dark); color: rgba(255,255,255,0.8);
+  padding: 64px 0 28px; font-size: 14px;
+}
+.footer-top {
+  display: grid; grid-template-columns: 1.4fr 1fr 1fr;
+  gap: 48px; padding-bottom: 44px;
+  border-bottom: 1px solid rgba(255,255,255,0.12); margin-bottom: 28px;
+}
+.footer-brand img { height: 38px; margin-bottom: 16px; filter: brightness(0) invert(1); }
+.footer-brand h4 { font-size: 16px; color: #fff; margin-bottom: 10px; font-weight: 700; }
+.footer-brand p { font-size: 13px; line-height: 1.7; opacity: 0.7; }
+.footer h5 { font-size: 14px; color: #fff; font-weight: 700; margin-bottom: 16px; letter-spacing: 0.02em; }
+.footer ul { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+.footer ul li { font-size: 13px; opacity: 0.7; line-height: 1.6; }
+.footer ul li a:hover { color: var(--blue-light); opacity: 1; }
+.footer-bottom {
+  display: flex; justify-content: space-between; flex-wrap: wrap; gap: 14px;
+  font-size: 12px; opacity: 0.6; padding-top: 8px;
+}
+
+/* ===================== Reveal Animation ===================== */
+.reveal {
+  opacity: 0; transform: translateY(28px);
+  transition: opacity 0.9s ease, transform 0.9s ease;
+}
+.reveal.active { opacity: 1; transform: translateY(0); }
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+
+/* ===================== Responsive ===================== */
+@media (max-width: 1024px) {
+  .section { padding: 88px 0; }
+  .about-grid, .contact-grid, .smart-factory-inner { grid-template-columns: 1fr; gap: 40px; }
+  .num-grid, .esg-grid, .capability-highlights, .certs-grid, .showcase-grid { grid-template-columns: repeat(2, 1fr); }
+  .num-item + .num-item { border-left: none; }
+  .process-flow { grid-template-columns: 1fr; }
+  .process-arrow { transform: rotate(90deg); padding: 8px 0; }
+  .why-grid { grid-template-columns: repeat(2, 1fr); }
+  .products-gallery { grid-template-columns: repeat(3, 1fr); }
+  .client-grid { grid-template-columns: repeat(4, 1fr); }
+  .beyond-grid { grid-template-columns: repeat(3, 1fr); }
+  .patent-list { grid-template-columns: 1fr; }
+  .credential-grid { grid-template-columns: 1fr; gap: 14px; }
+}
+
+@media (max-width: 720px) {
+  .section { padding: 72px 0; }
+  .section-head { margin-bottom: 40px; }
+  .section-desc { margin-bottom: 40px; }
+  .container { padding: 0 18px; }
+  .nav-inner { padding: 0 18px; }
+  .nav-menu { display: none; position: absolute; top: 100%; left: 0; right: 0; background: #fff; flex-direction: column; padding: 24px; border-bottom: 1px solid var(--border); gap: 18px; }
+  .nav-menu.open { display: flex; }
+  .nav-menu a { padding: 8px 0; }
+  .nav-toggle { display: block; }
+  .nav-cta { display: none; }
+  .logo img { height: 38px; }
+  .hero {
+    background:
+      linear-gradient(135deg, rgba(18,38,72,0.82) 0%, rgba(36,113,163,0.65) 100%),
+      url('hero_building_mobile.jpg') center/cover no-repeat;
+  }
+
+  .num-grid { grid-template-columns: repeat(2, 1fr); gap: 28px; }
+  .esg-grid, .certs-grid, .why-grid, .capability-highlights, .form-grid, .showcase-grid { grid-template-columns: 1fr; }
+  .pillars { grid-template-columns: 1fr; }
+  .products-gallery { grid-template-columns: repeat(2, 1fr); }
+  .client-grid { grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .beyond-grid { grid-template-columns: repeat(2, 1fr); }
+  .beyond-section { padding: 52px 24px; }
+  .patents-box { padding: 32px 22px; }
+  .contact-form { padding: 28px 20px; }
+  .footer-top { grid-template-columns: 1fr; gap: 32px; }
+  .ceo-card { padding: 36px 24px; }
+  .smart-factory { padding: 36px 22px; margin-top: 40px; }
+  .smart-factory-inner { gap: 28px; }
+  .ceo-card::before { font-size: 90px; top: 10px; right: 20px; }
+  .ceo-card p { font-size: 15.5px; line-height: 1.75; }
+  .hero { min-height: 88vh; padding-top: 90px; }
+  .hero-ctas .btn { flex: 1 1 auto; justify-content: center; }
+  .process-step { padding: 28px 22px; }
+  .process-step h4 { font-size: 19px; }
+  .patent-list { grid-template-columns: 1fr; }
+  .footer { padding: 48px 0 24px; }
+}
+
+@media (max-width: 480px) {
+  .section { padding: 60px 0; }
+  .numbers { padding: 56px 0; }
+  .num-grid { gap: 20px 16px; }
+  .num-value { font-size: clamp(32px, 12vw, 44px); }
+  .num-label { font-size: 12px; }
+  .hero { min-height: 80vh; }
+  .hero-badge { font-size: 10.5px; padding: 6px 14px; }
+  .btn { padding: 13px 22px; font-size: 14px; }
+  .section-eyebrow { font-size: 12px; }
+  .beyond-section { padding: 44px 20px; }
+  .beyond-head { margin-bottom: 32px; }
+  .ceo-card h3 { font-size: 12px; }
+  .pillar { padding: 26px 20px; }
+  .cert-card { padding: 32px 22px; }
+  .esg-card { padding: 32px 24px; }
+  .esg-letter { font-size: 64px; }
+  .esg-quote { padding: 40px 24px; font-size: 18px; }
+  .info-card { padding: 22px; gap: 14px; }
+  .contact-form h3 { font-size: 20px; }
+}
+</style>
+</head>
+<body>
+
+<!-- =========== Navigation =========== -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="#hero" class="logo" aria-label="신성오토텍 홈으로">
+      <img src="logo_transparent.png" alt="신성오토텍㈜ SHINSUNG AUTOTECH" />
+    </a>
+    <div class="nav-menu" id="navMenu">
+      <a href="#about">회사소개</a>
+      <a href="#capabilities">제조 역량</a>
+      <a href="#certs">인증·특허</a>
+      <a href="#esg">ESG 경영</a>
+      <a href="#products">실적</a>
+      <a href="#contact" class="nav-cta">견적 문의</a>
+    </div>
+    <button class="nav-toggle" id="navToggle" aria-label="메뉴">☰</button>
+  </div>
+</nav>
+
+<!-- =========== ① Hero =========== -->
+<section class="hero" id="hero">
+  <div class="container hero-inner">
+    <div class="hero-badge reveal">
+      <span class="dot"></span>
+      <span class="eng">EST. 1982 · 40+ YEARS OF MANUFACTURING TRUST</span>
+    </div>
+    <h1 class="reveal reveal-delay-1">
+      40여년 이상, 한 번도 멈추지 않은<br/> <span class="accent-line">제조 신뢰.</span>
+    </h1>
+    <p class="sub reveal reveal-delay-2">
+      사출부터 후가공, 조립까지 <strong>원스톱 통합 제조</strong>로<br/> 자동차를 넘어 플라스틱이 필요한 모든 영역에서 함께합니다.
+    </p>
+    <div class="hero-ctas reveal reveal-delay-3">
+      <a href="#contact" class="btn btn-primary">
+        견적 문의하기 <span>→</span>
+      </a>
+      <a href="#about" class="btn btn-outline">
+        회사소개서 다운로드
+      </a>
+    </div>
+  </div>
+  <div class="scroll-hint eng">SCROLL</div>
+</section>
+
+<!-- =========== ② Numbers =========== -->
+<section class="numbers" id="numbers">
+  <div class="container">
+    <div class="num-grid">
+      <div class="num-item reveal">
+        <div class="num-value"><span class="count" data-target="40">0</span><span class="suffix">+</span></div>
+        <div class="num-label">Years of Experience · 업력</div>
+      </div>
+      <div class="num-item reveal reveal-delay-1">
+        <div class="num-value"><span class="count" data-target="3">0</span></div>
+        <div class="num-label">Core Certifications · 핵심 인증</div>
+      </div>
+      <div class="num-item reveal reveal-delay-2">
+        <div class="num-value"><span class="count" data-target="12">0</span><span class="suffix">+</span></div>
+        <div class="num-label">Registered Patents · 보유 특허</div>
+      </div>
+      <div class="num-item reveal reveal-delay-3">
+        <div class="num-value"><span class="count" data-target="30">0</span><span class="suffix">+</span></div>
+        <div class="num-label">Major Clients · 주요 고객사</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========== ③ About =========== -->
+<section class="section" id="about">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="section-eyebrow">About Us</span>
+      <h2 class="section-title">있는 그대로, 꾸밈없이.<br/> 40여년이 증명한 제조의 정도(正道).</h2>
+      <p class="section-desc">
+        신성오토텍㈜은 1982년 설립 이래 플라스틱 사출 한 길을 걸어온 전문 제조기업입니다.
+        과장하지 않고 실적과 품질로 말하며, 고객의 믿음에 확실한 결과로 보답합니다.
+      </p>
+    </div>
+
+    <div class="about-grid">
+      <div class="ceo-card reveal">
+        <h3 class="eng">CEO MESSAGE</h3>
+        <p>
+          "우리의 경쟁력은 화려한 말이 아니라 40여년간 단 한 번도 흔들리지 않은
+          <strong>품질과 납기, 그리고 사람</strong>입니다.
+        </p>
+        <p style="margin-top:14px;">
+          자동차 부품에서 쌓은 엄격한 기준을 로봇·전자·가전·인테리어 등
+          새로운 영역에 그대로 적용하며, 고객과 함께 오래 가는 파트너가 되겠습니다."
+        </p>
+        <div class="ceo-sign">
+          <strong>대표이사 김승규</strong>
+          <span class="eng">SHINSUNG AUTOTECH</span>
+        </div>
+      </div>
+
+      <div class="pillars">
+        <div class="pillar reveal">
+          <div class="pillar-icon">眞</div>
+          <h4>진실성 Integrity</h4>
+          <p>있는 그대로, 꾸밈없이 — 데이터와 실적으로 말합니다.</p>
+        </div>
+        <div class="pillar reveal reveal-delay-1">
+          <div class="pillar-icon">信</div>
+          <h4>신뢰성 Trust</h4>
+          <p>40여년간 쌓아온 약속 — 납기·품질·소통을 지킵니다.</p>
+        </div>
+        <div class="pillar reveal reveal-delay-2">
+          <div class="pillar-icon">質</div>
+          <h4>품질 Quality</h4>
+          <p>검증된 공정과 3대 국제 인증으로 증명된 제조 수준.</p>
+        </div>
+        <div class="pillar reveal reveal-delay-3">
+          <div class="pillar-icon">續</div>
+          <h4>지속가능 Sustainability</h4>
+          <p>ESG 경영을 실천하며 장기 파트너십을 추구합니다.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========== ④ Capabilities =========== -->
+<section class="section capabilities" id="capabilities">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="section-eyebrow">Capabilities</span>
+      <h2 class="section-title">사출부터 조립까지,<br/> 한 공장에서 완성하는 원스톱 제조.</h2>
+      <p class="section-desc">
+        별도 외주 없이 단일 공장에서 전 공정을 컨트롤합니다.
+        리드타임은 줄고, 품질은 일관되며, 책임은 명확합니다.
+      </p>
+    </div>
+
+    <div class="process-flow">
+      <div class="process-step reveal">
+        <div class="process-num eng">STEP 01</div>
+        <h4>사출 <span class="eng-sub">Injection</span></h4>
+        <p>정밀 사출기 다수 보유, 다양한 원료·컬러 대응</p>
+        <span class="process-spec">사출기 20대 이상 운영</span>
+      </div>
+      <div class="process-arrow">→</div>
+      <div class="process-step reveal reveal-delay-1">
+        <div class="process-num eng">STEP 02</div>
+        <h4>후가공 <span class="eng-sub">Post-processing</span></h4>
+        <p>도장·인쇄 등 자동화 설비로 마감</p>
+        <span class="process-spec">자동화 라인 다수</span>
+      </div>
+      <div class="process-arrow">→</div>
+      <div class="process-step reveal reveal-delay-2">
+        <div class="process-num eng">STEP 03</div>
+        <h4>조립 <span class="eng-sub">Assembly</span></h4>
+        <p>모듈 단위 조립·포장까지 완결</p>
+        <span class="process-spec">조립 라인 운영</span>
+      </div>
+      <div class="process-arrow">→</div>
+      <div class="process-step reveal reveal-delay-3">
+        <div class="process-num eng">STEP 04</div>
+        <h4>품질검수 <span class="eng-sub">Quality Inspection</span></h4>
+        <p>치수·외관·기능 검사로 출하 품질 확보</p>
+        <span class="process-spec">완제품 출하 검증</span>
+      </div>
+    </div>
+
+    <div class="smart-factory reveal">
+      <div class="smart-factory-inner">
+        <div class="smart-factory-intro">
+          <span class="section-eyebrow">Smart Manufacturing</span>
+          <h3>전 공정 <span class="accent-navy">Full-proof</span>,<br/> <span class="accent-blue">MES · 바코드</span>로 이어지는 통합 제조.</h3>
+          <p>
+            사출 → 후가공 → 조립의 모든 단계가 MES(생산관리시스템)로 실시간 연동되고,
+            제품·자재·작업자 정보가 바코드로 추적됩니다.
+            <strong>Full-proof 공정 설계</strong>로 작업자 실수가 원천 차단되며,
+            모든 제조 이력이 Lot 단위로 트레이스됩니다.
+          </p>
+        </div>
+        <div class="smart-factory-grid">
+          <div class="sf-card">
+            <div class="sf-title eng">MES · 사무자동화</div>
+            <div class="sf-desc">실시간 생산 모니터링</div>
+          </div>
+          <div class="sf-card">
+            <div class="sf-title eng">BARCODE</div>
+            <div class="sf-desc">Lot · 자재 전수 추적</div>
+          </div>
+          <div class="sf-card">
+            <div class="sf-title eng">FULL-PROOF</div>
+            <div class="sf-desc">오조립 · 오투입 원천 차단</div>
+          </div>
+          <div class="sf-card">
+            <div class="sf-title">IATF 16949 · SQ (사출·조립·도장) 인증<br/>ISO 14001 인증</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sf-strengths">
+        <div class="sf-strength">
+          <h5 class="eng">ONE-STOP</h5>
+          <p>단일 공장 내 전 공정 내재화로 외주 리스크 제거, 품질·일정의 일관성 확보</p>
+        </div>
+        <div class="sf-strength">
+          <h5 class="eng">FLEXIBILITY</h5>
+          <p>다품종 소량부터 대량 양산까지 유연한 생산 스케줄링</p>
+        </div>
+        <div class="sf-strength">
+          <h5 class="eng">QUALITY CONTROL</h5>
+          <p>IATF 16949 기준 공정 관리, 초도 양산부터 양산 이후까지 모니터링</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========== ④-2 Showcase =========== -->
+<section class="section showcase" id="showcase">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="section-eyebrow">Product Showcase</span>
+      <h2 class="section-title">신성오토텍 제작 물품</h2>
+      <p class="section-desc">
+        자동차 부품에서 시작해 가전 부품까지, 실제 양산·납품한 제품의 일부를 소개합니다.
+      </p>
+    </div>
+
+    <div class="showcase-grid">
+      <figure class="showcase-card reveal">
+        <div class="showcase-media" data-placeholder="자동차 부품"></div>
+        <figcaption>
+          <strong>자동차 부품</strong>
+          <span>Automotive Parts</span>
+        </figcaption>
+      </figure>
+      <figure class="showcase-card reveal reveal-delay-1">
+        <div class="showcase-media" data-placeholder="냉장고 부품"></div>
+        <figcaption>
+          <strong>냉장고 부품</strong>
+          <span>Refrigerator Parts</span>
+        </figcaption>
+      </figure>
+      <figure class="showcase-card reveal reveal-delay-2">
+        <div class="showcase-media" data-placeholder="세탁기 부품"></div>
+        <figcaption>
+          <strong>세탁기 부품</strong>
+          <span>Washing Machine Parts</span>
+        </figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- =========== ⑤ Certifications =========== -->
+<section class="section" id="certs">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="section-eyebrow">Certifications & Patents</span>
+      <h2 class="section-title">증명된 품질,<br/> 검증된 기술.</h2>
+      <p class="section-desc">
+        국내외 주요 완성차 기업이 요구하는 3대 핵심 인증을 모두 보유하고 있으며,
+        자체 개발 특허로 고유 기술력을 입증합니다.
+      </p>
+    </div>
+
+    <div class="certs-grid">
+      <div class="cert-card reveal">
+        <div class="cert-badge">SQ</div>
+        <h4>SQ 인증 3종 <span style="display:block;font-size:13px;font-weight:600;color:var(--blue);margin-top:4px;">(사출 · 조립 · 도장)</span></h4>
+        <div class="cert-full eng">Supplier Quality Certification</div>
+        <p>완성차 업체 협력사 품질인증. 사출·조립·도장 3개 공정 모두에서 OEM 납품 기준을 충족함을 증명.</p>
+      </div>
+      <div class="cert-card reveal reveal-delay-1">
+        <div class="cert-badge">IATF<br/>16949</div>
+        <h4>IATF 16949</h4>
+        <div class="cert-full eng">Automotive Quality Management</div>
+        <p>자동차 산업 전용 국제 품질경영 시스템. 글로벌 OEM이 요구하는 필수 인증.</p>
+      </div>
+      <div class="cert-card reveal reveal-delay-2">
+        <div class="cert-badge">ISO<br/>14001</div>
+        <h4>ISO 14001</h4>
+        <div class="cert-full eng">Environmental Management</div>
+        <p>환경경영시스템 국제 표준. 지속가능한 제조 공정과 환경 책임의 증명.</p>
+      </div>
+    </div>
+
+    <div class="patents-box reveal">
+      <div class="patents-head">
+        <h3>인증·수상·지식재산 Credentials</h3>
+        <span class="eng">AWARDS · CERTIFICATES · IP</span>
+      </div>
+      <div class="credential-grid">
+        <div class="credential-card">
+          <div class="credential-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z"/></svg>
+          </div>
+          <h5>정부지원 사업</h5>
+          <p class="credential-desc">스마트공장·탄소관리·R&amp;D 등 정부 주도 혁신 과제를 꾸준히 수행해 왔습니다.</p>
+          <ul class="credential-list">
+            <li>스마트공장 구축 및 고도화 사업</li>
+            <li>제조 기반 기업 공정 자동화</li>
+            <li>LCA 기반 탄소배출 관리</li>
+            <li>제조 데이터 활용 컨설팅</li>
+            <li>산학연 협력 기술개발 (R&amp;D)</li>
+            <li>일터혁신 · NCS 활용 컨설팅</li>
+          </ul>
+        </div>
+
+        <div class="credential-card">
+          <div class="credential-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="6"/><path d="M15.5 13 17 22l-5-3-5 3 1.5-9"/></svg>
+          </div>
+          <h5>수상 경력</h5>
+          <p class="credential-desc">완성차·공공기관으로부터 품질과 친환경 경영을 공식적으로 인정받았습니다.</p>
+          <ul class="credential-list">
+            <li>LG전자 Best Supplier Award <span class="credential-meta">(부문별 · 수년 연속)</span></li>
+            <li>대한민국 환경·에너지 대상 <span class="credential-meta">(환경부)</span></li>
+            <li>친환경·경제운전 우수 유공자 표창 <span class="credential-meta">(서울시)</span></li>
+          </ul>
+        </div>
+
+        <div class="credential-card">
+          <div class="credential-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 12l2 2 4-4"/><path d="M21 12c0 5-4 9-9 9s-9-4-9-9 4-9 9-9c2.5 0 4.8 1 6.4 2.6"/></svg>
+          </div>
+          <h5>확인서</h5>
+          <p class="credential-desc">기술력과 산업 기반 역할을 공식 기관으로부터 인증받은 기업입니다.</p>
+          <ul class="credential-list">
+            <li>기술혁신형 중소기업 (Inno-Biz) <span class="credential-meta">(중소벤처기업부)</span></li>
+            <li>뿌리기업 확인서 <span class="credential-meta">(한국생산기술연구원)</span></li>
+            <li>IATF 16949 · ISO 14001 · SQ 인증 보유</li>
+          </ul>
+        </div>
+
+        <div class="credential-card">
+          <div class="credential-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="14 3 14 9 20 9"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg>
+          </div>
+          <h5>특허 · 상표 · 저작권</h5>
+          <p class="credential-desc">사출 공정과 자동화 영역에서 자체 지식재산을 지속적으로 확보하고 있습니다.</p>
+          <ul class="credential-list credential-list--stats">
+            <li><span class="credential-num">5</span><span>국내 등록 특허</span></li>
+            <li><span class="credential-num">1</span><span>국제 특허 (PCT)</span></li>
+            <li><span class="credential-num">20</span><span>상표 등록</span></li>
+            <li><span class="credential-num">1</span><span>저작권 등록</span></li>
+          </ul>
+        </div>
+      </div>
+      <p style="margin-top:26px; font-size:12px; opacity:0.6; position:relative;">
+        ※ 개별 등록번호·증빙 자료는 회사소개서·견적 문의 시 상세 안내드립니다.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- =========== ⑥ ESG =========== -->
+<section class="section esg" id="esg">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="section-eyebrow">ESG Management</span>
+      <h2 class="section-title">단기 거래가 아닌,<br/> 장기 파트너를 위한 경영.</h2>
+      <p class="section-desc">
+        환경·사회·지배구조, 세 가지 축 모두에서 구체적인 성과를 만들어갑니다.
+        지속가능한 공급망은 고객의 장기 경쟁력이기도 합니다.
+      </p>
+    </div>
+
+    <div class="esg-grid">
+      <div class="esg-card reveal">
+        <div class="esg-letter eng">E</div>
+        <h4>환경 Environment</h4>
+        <span class="sub">ISO 14001 기반 환경경영</span>
+        <ul class="esg-points">
+          <li><strong>환경방침 선언 (2026.1.1)</strong>ESG 기반 환경경영 원칙 공식화</li>
+          <li><strong>K-RE100 동참</strong>재생에너지 100% 캠페인 참여, 태양광 자가발전 설비 등</li>
+          <li><strong>탄소배출 저감 활동 (2017~2025)</strong>태양광 설치·증설, 탄소배출량 인증, LCA 기반 관리 등</li>
+        </ul>
+      </div>
+      <div class="esg-card reveal reveal-delay-1">
+        <div class="esg-letter eng">S</div>
+        <h4>사회 Social</h4>
+        <span class="sub">중대재해·안전보건 선제 대응</span>
+        <ul class="esg-points">
+          <li><strong>안전보건경영방침 선언 (2026.1.1)</strong>노사공동 선포식으로 전사 안전문화 공식화</li>
+          <li><strong>안전 보건 활동 (2023~2026)</strong>중대재해처벌법 관리체계, 스마트 생태 공장 안전 설비, 통합패키지 사업 등</li>
+          <li><strong>정기 안전 보건 활동</strong>MSDS 관리, 위험성 평가·비상훈련, 전 직원 교육, 실시간 소통 채널 등</li>
+        </ul>
+      </div>
+      <div class="esg-card reveal reveal-delay-2">
+        <div class="esg-letter eng">G</div>
+        <h4>지배구조 Governance</h4>
+        <span class="sub">투명 경영과 컴플라이언스</span>
+        <ul class="esg-points">
+          <li>내부 회계관리·감사 체계 운영</li>
+          <li>IATF 16949 기반 문서화·이력 추적성 확보</li>
+          <li>윤리경영 방침 수립 및 임직원 교육</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="esg-quote reveal">
+      단기 거래가 아닌, 함께 오래 가는 장기 파트너를 지향합니다.
+    </div>
+  </div>
+</section>
+
+<!-- =========== ⑦ Products & Clients =========== -->
+<section class="section" id="products">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="section-eyebrow">Products & Clients</span>
+      <h2 class="section-title">자동차에서 시작해,<br/> 플라스틱이 필요한 모든 영역으로.</h2>
+      <p class="section-desc">
+        국내 유수의 1차 협력사를 통해 국내외 완성차 제조사에 검증된 품질로 부품을 납품해 왔으며,
+        이제 그 역량을 자동차를 넘어 다양한 산업으로 확장하고 있습니다.
+      </p>
+    </div>
+
+    <div class="products-gallery">
+      <div class="product-tile reveal">
+        <div>
+          <h5>자동차 외장 부품</h5>
+        </div>
+      </div>
+      <div class="product-tile reveal reveal-delay-1">
+        <div>
+          <h5>자동차 내장 부품</h5>
+        </div>
+      </div>
+      <div class="product-tile reveal reveal-delay-2">
+        <div>
+          <h5>기능성 모듈 부품</h5>
+        </div>
+      </div>
+      <div class="product-tile reveal reveal-delay-3">
+        <div>
+          <h5>맞춤형 사출</h5>
+        </div>
+      </div>
+    </div>
+
+    <div class="client-wall reveal">
+      <h4 class="eng">TRUSTED BY LEADING COMPANIES</h4>
+      <div class="client-grid">
+        <div class="client-logo shift-left"><img src="client_07.png" alt="LG전자" /></div>
+        <div class="client-logo"><img src="client_01.png" alt="모트렉스" /></div>
+        <div class="client-logo"><img src="client_05.png" alt="인팩" /></div>
+        <div class="client-logo"><img src="client_03.png" alt="KBI동국실업" /></div>
+        <div class="client-logo"><img src="client_04.png" alt="모베이스전자" /></div>
+        <div class="client-logo"><img src="client_02.png" alt="하이게인안테나" /></div>
+        <div class="client-logo"><img src="client_06.png" alt="동아" /></div>
+      </div>
+    </div>
+
+    <div class="beyond-section reveal">
+      <div class="beyond-head">
+        <div class="eyebrow">BEYOND AUTOMOTIVE</div>
+        <h3>플라스틱을 다루는 모든 영역에서,<br/> 같은 품질로 함께합니다.</h3>
+        <p>
+          자동차 OEM 기준의 엄격한 품질 관리를 그대로 적용하여
+          로봇·전자·가전·인테리어·기타 플라스틱 제조 영역까지 파트너십을 확장합니다.
+        </p>
+      </div>
+      <div class="beyond-grid">
+        <div class="beyond-tile">
+          <h5>로봇 부품</h5>
+          <span>Robotics</span>
+        </div>
+        <div class="beyond-tile">
+          <h5>전자기기</h5>
+          <span>Electronics</span>
+        </div>
+        <div class="beyond-tile">
+          <h5>인테리어</h5>
+          <span>Interior</span>
+        </div>
+        <div class="beyond-tile">
+          <h5>가전</h5>
+          <span>Appliances</span>
+        </div>
+        <div class="beyond-tile">
+          <h5>기타 플라스틱</h5>
+          <span>Custom Parts</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========== ⑧ Why Us =========== -->
+<section class="section capabilities" id="why">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="section-eyebrow">Why Shinsung</span>
+      <h2 class="section-title">신성오토텍의 4가지 약속</h2>
+      <p class="section-desc">고객이 저희를 선택해야 하는 이유는 단순합니다. 40여년간 지켜온 기본에 있습니다.</p>
+    </div>
+
+    <div class="why-grid">
+      <div class="why-card reveal">
+        <span class="why-num eng">PROMISE 01</span>
+        <div class="why-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12.5 10 18.5 20 6.5"/></svg>
+        </div>
+        <h4>품질 Quality</h4>
+        <p>3대 국제 인증(SQ · IATF 16949 · ISO 14001)과 40여년의 공정 노하우.</p>
+      </div>
+      <div class="why-card reveal reveal-delay-1">
+        <span class="why-num eng">PROMISE 02</span>
+        <div class="why-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="8"/><polyline points="12 9 12 13 15 15"/><line x1="9" y1="2" x2="15" y2="2"/></svg>
+        </div>
+        <h4>납기 Delivery</h4>
+        <p>원스톱 공정으로 리드타임 단축, 약속한 날짜에 반드시 입고.</p>
+      </div>
+      <div class="why-card reveal reveal-delay-2">
+        <span class="why-num eng">PROMISE 03</span>
+        <div class="why-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <h4>소통 Communication</h4>
+        <p>담당자 직통 커뮤니케이션, 이슈가 생기면 즉시 공유·해결.</p>
+      </div>
+      <div class="why-card reveal reveal-delay-3">
+        <span class="why-num eng">PROMISE 04</span>
+        <div class="why-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><polyline points="21 3 21 8 16 8"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><polyline points="3 21 3 16 8 16"/></svg>
+        </div>
+        <h4>지속성 Sustainability</h4>
+        <p>ESG 기반 경영으로 고객이 안심하고 맡길 수 있는 장기 파트너.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========== ⑨ Contact =========== -->
+<section class="section contact" id="contact">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="section-eyebrow">Contact</span>
+      <h2 class="section-title">프로젝트를 맡기실 곳을<br/> 찾고 계신가요?</h2>
+      <p class="section-desc">
+        간단한 문의부터 본격적인 견적 요청까지, 담당자가 영업일 기준 1일 내 회신드립니다.
+      </p>
+    </div>
+
+    <div class="contact-grid">
+      <form class="contact-form reveal" onsubmit="handleSubmit(event)">
+        <h3>견적·협업 문의</h3>
+        <p>아래 내용을 작성해 주시면 담당자가 직접 연락드립니다.</p>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="company">회사명 *</label>
+            <input id="company" type="text" required placeholder="(주)회사명" />
+          </div>
+          <div class="form-group">
+            <label for="name">담당자 *</label>
+            <input id="name" type="text" required placeholder="홍길동" />
+          </div>
+          <div class="form-group">
+            <label for="contact-phone">연락처 *</label>
+            <input id="contact-phone" type="tel" required placeholder="010-0000-0000" />
+          </div>
+          <div class="form-group">
+            <label for="email">이메일</label>
+            <input id="email" type="email" placeholder="name@company.com" />
+          </div>
+          <div class="form-group full">
+            <label for="message">문의 내용 *</label>
+            <textarea id="message" required placeholder="제품군, 예상 수량, 희망 일정 등을 편하게 작성해 주세요."></textarea>
+          </div>
+        </div>
+        <button type="submit">문의 보내기 →</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- =========== ⑩ Footer =========== -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <h4>신성오토텍㈜ SHINSUNG AUTOTECH CO.,LTD</h4>
+        <p>40여년 이상, 한 번도 멈추지 않은 제조 신뢰.<br/>사출·후가공·조립 원스톱 통합 제조.</p>
+      </div>
+      <div>
+        <h5>사업장</h5>
+        <ul>
+          <li>본사 · 수원시 권선구 오목천로 132번길 42-1</li>
+          <li>공장 · 화성시 봉담읍 창작마을길 46</li>
+          <li class="eng">TEL 031-227-7611 / FAX 031-227-7614</li>
+        </ul>
+      </div>
+      <div>
+        <h5>바로가기</h5>
+        <ul>
+          <li><a href="#about">회사소개</a></li>
+          <li><a href="#capabilities">제조 역량</a></li>
+          <li><a href="#certs">인증·특허</a></li>
+          <li><a href="#esg">ESG 경영</a></li>
+          <li><a href="#contact">견적 문의</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 SHINSUNG AUTOTECH CO.,LTD. All rights reserved.</span>
+      <span class="eng">Business Reg. No. 143-81-17239 · CEO Kim Seung-gyu</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ===== Nav scroll state ===== */
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 40);
+});
+
+/* ===== Mobile menu toggle ===== */
+const navToggle = document.getElementById('navToggle');
+const navMenu = document.getElementById('navMenu');
+navToggle.addEventListener('click', () => navMenu.classList.toggle('open'));
+navMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navMenu.classList.remove('open')));
+
+/* ===== Reveal on scroll ===== */
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('active');
+      revealObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+/* ===== Count up ===== */
+const countObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const el = entry.target;
+      const target = parseInt(el.dataset.target, 10);
+      const duration = 1600;
+      const start = performance.now();
+      const step = (now) => {
+        const p = Math.min((now - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - p, 3);
+        el.textContent = Math.floor(eased * target);
+        if (p < 1) requestAnimationFrame(step);
+        else el.textContent = target;
+      };
+      requestAnimationFrame(step);
+      countObserver.unobserve(el);
+    }
+  });
+}, { threshold: 0.4 });
+document.querySelectorAll('.count').forEach(el => countObserver.observe(el));
+
+/* ===== Form stub ===== */
+function handleSubmit(e) {
+  e.preventDefault();
+  alert('문의가 접수되었습니다. 영업일 기준 1일 내 회신드리겠습니다.\n(실제 전송은 백엔드 연동 후 작동합니다.)');
+  e.target.reset();
+}
+</script>
+</body>
+</html>
