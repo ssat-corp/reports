@@ -646,7 +646,6 @@ h1, h2, h3, h4, h5, h6, p, li, span, a, button { word-break: keep-all; overflow-
 }
 .client-logo:hover { background: #fff; border-color: var(--blue-light); box-shadow: var(--shadow-sm); }
 .client-logo:hover img { filter: grayscale(0); opacity: 1; }
-.client-logo.shift-left img { transform: translateX(-10px); }
 
 .beyond-section {
   background: linear-gradient(135deg, #0f1f3d 0%, var(--navy) 100%);
@@ -1327,7 +1326,7 @@ h1, h2, h3, h4, h5, h6, p, li, span, a, button { word-break: keep-all; overflow-
     <div class="client-wall reveal">
       <h4 class="eng">TRUSTED BY LEADING COMPANIES</h4>
       <div class="client-grid">
-        <div class="client-logo shift-left"><img src="client_07.png" alt="LG전자" /></div>
+        <div class="client-logo"><img src="client_07.png" alt="LG전자" /></div>
         <div class="client-logo"><img src="client_01.png" alt="모트렉스" /></div>
         <div class="client-logo"><img src="client_05.png" alt="인팩" /></div>
         <div class="client-logo"><img src="client_03.png" alt="KBI동국실업" /></div>
@@ -1425,7 +1424,7 @@ h1, h2, h3, h4, h5, h6, p, li, span, a, button { word-break: keep-all; overflow-
       <span class="section-eyebrow">Contact</span>
       <h2 class="section-title">프로젝트를 맡기실 곳을<br/> 찾고 계신가요?</h2>
       <p class="section-desc">
-        간단한 문의부터 본격적인 견적 요청까지, 담당자가 영업일 기준 1일 내 회신드립니다.
+        간단한 문의부터 본격적인 견적 요청까지, 담당자가 신속하게 연락드리겠습니다.
       </p>
     </div>
 
@@ -1544,7 +1543,7 @@ document.querySelectorAll('.count').forEach(el => countObserver.observe(el));
 /* ===== Form stub ===== */
 function handleSubmit(e) {
   e.preventDefault();
-  alert('문의가 접수되었습니다. 영업일 기준 1일 내 회신드리겠습니다.\n(실제 전송은 백엔드 연동 후 작동합니다.)');
+  alert('문의가 접수되었습니다. 담당자가 신속하게 연락드리겠습니다.\n(실제 전송은 백엔드 연동 후 작동합니다.)');
   e.target.reset();
 }
 </script>
