@@ -50,6 +50,14 @@ td{padding:8px 10px;border-bottom:1px solid #f1f5f9;}
 .filter-bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px;background:#f8fafc;padding:10px 14px;border-radius:10px;}
 .pf-site{transition:all 0.15s;}
 
+/* 사진 확대 Lightbox */
+.photo-lightbox{position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px;cursor:zoom-out;}
+.photo-lightbox.show{display:flex;}
+.photo-lightbox img{max-width:95%;max-height:92vh;object-fit:contain;border-radius:6px;box-shadow:0 4px 24px rgba(0,0,0,0.5);}
+.photo-lightbox .close-btn{position:absolute;top:16px;right:20px;background:rgba(255,255,255,0.15);color:#fff;border:none;width:44px;height:44px;border-radius:50%;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.photo-lightbox .close-btn:hover{background:rgba(255,255,255,0.3);}
+.photo-lightbox .caption{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);color:#fff;background:rgba(0,0,0,0.6);padding:8px 16px;border-radius:8px;font-size:13px;max-width:80%;text-align:center;}
+
 /* PRINT */
 @media print{
   .no-print{display:none!important;}
@@ -69,6 +77,13 @@ td{padding:8px 10px;border-bottom:1px solid #f1f5f9;}
   <div class="icon">🔍</div>
   <h1>현장 패트롤 점검</h1>
   <div class="sub">담당자 · 주간 순회점검 · 사업장별 체크리스트</div>
+</div>
+
+<!-- 사진 확대 Lightbox -->
+<div class="photo-lightbox" id="photo-lightbox" onclick="closePhotoLightbox()">
+  <button class="close-btn" onclick="event.stopPropagation();closePhotoLightbox()">✕</button>
+  <img id="lightbox-img" src="" alt="">
+  <div class="caption" id="lightbox-caption"></div>
 </div>
 
 <div class="container">
@@ -621,10 +636,28 @@ function renderPatrolPhotosPreview(key){
   if(photos.length === 0){ previewEl.innerHTML = ''; return; }
   previewEl.innerHTML = photos.map((p, i)=>`
     <div style="position:relative;">
-      <img src="${p.data}" style="width:100px;height:100px;object-fit:cover;border-radius:8px;border:2px solid #16a34a;cursor:pointer;" onclick="window.open('${p.driveUrl||p.data}','_blank')" title="${p.name}">
+      <img src="${p.data}" style="width:100px;height:100px;object-fit:cover;border-radius:8px;border:2px solid #16a34a;cursor:pointer;" onclick="openPhotoLightbox('${p.data.replace(/'/g,'&apos;')}','${p.name.replace(/'/g,'&apos;')}')" title="클릭 = 크게 보기">
       <button onclick="removePatrolPhoto('${key}',${i})" style="position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;background:#dc2626;color:#fff;border:none;cursor:pointer;font-size:11px;line-height:1;">✕</button>
     </div>`).join('');
 }
+
+// ============================================================
+// 사진 Lightbox
+// ============================================================
+function openPhotoLightbox(src, caption){
+  const lb = document.getElementById('photo-lightbox');
+  document.getElementById('lightbox-img').src = src;
+  document.getElementById('lightbox-caption').textContent = caption || '';
+  lb.classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+function closePhotoLightbox(){
+  document.getElementById('photo-lightbox').classList.remove('show');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', (e) => {
+  if(e.key === 'Escape') closePhotoLightbox();
+});
 
 function removePatrolPhoto(key, idx){
   if(!confirm('이 사진을 삭제하시겠습니까?')) return;

@@ -36,6 +36,14 @@ body{font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif
 .table-wrap{overflow-x:auto;}
 .badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;}
 
+/* 사진 확대 Lightbox */
+.photo-lightbox{position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px;cursor:zoom-out;}
+.photo-lightbox.show{display:flex;}
+.photo-lightbox img{max-width:95%;max-height:92vh;object-fit:contain;border-radius:6px;box-shadow:0 4px 24px rgba(0,0,0,0.5);}
+.photo-lightbox .close-btn{position:absolute;top:16px;right:20px;background:rgba(255,255,255,0.15);color:#fff;border:none;width:44px;height:44px;border-radius:50%;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.photo-lightbox .close-btn:hover{background:rgba(255,255,255,0.3);}
+.photo-lightbox .caption{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);color:#fff;background:rgba(0,0,0,0.6);padding:8px 16px;border-radius:8px;font-size:13px;max-width:80%;text-align:center;}
+
 @media print{
   .no-print{display:none!important;}
   body{background:#fff;}
@@ -56,6 +64,13 @@ body{font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif
     <span class="badge" id="issue-stat-open-badge">미완료 0건</span>
     <span class="badge" id="issue-stat-done-badge">완료 0건</span>
   </div>
+</div>
+
+<!-- 사진 확대 Lightbox -->
+<div class="photo-lightbox" id="photo-lightbox" onclick="closePhotoLightbox()">
+  <button class="close-btn" onclick="event.stopPropagation();closePhotoLightbox()">✕</button>
+  <img id="lightbox-img" src="" alt="">
+  <div class="caption" id="lightbox-caption"></div>
 </div>
 
 <div class="container">
@@ -311,8 +326,26 @@ function saveIssuePhoto(id, dataUrl){
   issue.photo = dataUrl;
   saveSiteIssues(issues);
   const preview = document.getElementById('iss-photo-preview-'+id);
-  if(preview) preview.innerHTML = `<img src="${dataUrl}" style="width:32px;height:32px;object-fit:cover;border-radius:4px;cursor:pointer;" onclick="window.open('${dataUrl}')">`;
+  if(preview) preview.innerHTML = `<img src="${dataUrl}" style="width:32px;height:32px;object-fit:cover;border-radius:4px;cursor:pointer;" onclick="openPhotoLightbox(this.src, '지적사항 사진')">`;
 }
+
+// ============================================================
+// 사진 Lightbox
+// ============================================================
+function openPhotoLightbox(src, caption){
+  const lb = document.getElementById('photo-lightbox');
+  document.getElementById('lightbox-img').src = src;
+  document.getElementById('lightbox-caption').textContent = caption || '';
+  lb.classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+function closePhotoLightbox(){
+  document.getElementById('photo-lightbox').classList.remove('show');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', (e) => {
+  if(e.key === 'Escape') closePhotoLightbox();
+});
 
 function renderSiteIssues(){
   const issues = getSiteIssues();
@@ -342,7 +375,7 @@ function renderSiteIssues(){
       const rowBg = isDone ? '#f0fdf4' : (idx%2===0?'#fff':'#fafbfc');
       const textStyle = isDone ? 'color:#9ca3af;text-decoration:line-through;' : '';
       const photoPreview = issue.photo
-        ? `<img src="${issue.photo}" style="width:32px;height:32px;object-fit:cover;border-radius:4px;cursor:pointer;" onclick="window.open(this.src)">`
+        ? `<img src="${issue.photo}" style="width:32px;height:32px;object-fit:cover;border-radius:4px;cursor:pointer;" onclick="openPhotoLightbox(this.src, '지적사항 사진')">`
         : '';
       return `<tr style="background:${rowBg};">
         <td style="text-align:center;padding:6px;border-bottom:1px solid #e5e7eb;font-size:11px;color:#9ca3af;">${issues.length - issues.indexOf(issue)}</td>

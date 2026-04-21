@@ -44,6 +44,14 @@ td{padding:8px 10px;border-bottom:1px solid #f1f5f9;}
 
 .theme-box{background:#eef4ff;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:13px;border-left:4px solid #1e5096;}
 
+/* 사진 확대 Lightbox */
+.photo-lightbox{position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px;cursor:zoom-out;}
+.photo-lightbox.show{display:flex;}
+.photo-lightbox img{max-width:95%;max-height:92vh;object-fit:contain;border-radius:6px;box-shadow:0 4px 24px rgba(0,0,0,0.5);}
+.photo-lightbox .close-btn{position:absolute;top:16px;right:20px;background:rgba(255,255,255,0.15);color:#fff;border:none;width:44px;height:44px;border-radius:50%;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.photo-lightbox .close-btn:hover{background:rgba(255,255,255,0.3);}
+.photo-lightbox .caption{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);color:#fff;background:rgba(0,0,0,0.6);padding:8px 16px;border-radius:8px;font-size:13px;max-width:80%;text-align:center;}
+
 @media print{
   .no-print{display:none!important;}
   body{background:#fff;}
@@ -60,6 +68,13 @@ td{padding:8px 10px;border-bottom:1px solid #f1f5f9;}
   <div class="icon">🌅</div>
   <h1>TBM 일지</h1>
   <div class="sub">Tool Box Meeting · 매일 작업 전 5~10분 · 전원 참석</div>
+</div>
+
+<!-- 사진 확대 Lightbox -->
+<div class="photo-lightbox" id="photo-lightbox" onclick="closePhotoLightbox()">
+  <button class="close-btn" onclick="event.stopPropagation();closePhotoLightbox()">✕</button>
+  <img id="lightbox-img" src="" alt="">
+  <div class="caption" id="lightbox-caption"></div>
 </div>
 
 <div class="container">
@@ -320,7 +335,7 @@ function openTbmDay(day){
   const previewEl = document.getElementById('tbm-day-photo-preview');
   if(dayData.photoData){
     const link = dayData.photoDriveUrl ? `<a href="${dayData.photoDriveUrl}" target="_blank" style="font-size:10px;color:#1e5096;text-decoration:underline;display:block;margin-top:2px;">드라이브에서 보기 →</a>` : '';
-    previewEl.innerHTML = `<img src="${dayData.photoData}" style="width:140px;height:100px;object-fit:cover;border-radius:8px;border:2px solid #16a34a;"><div style="font-size:11px;color:#16a34a;margin-top:2px;">📎 ${dayData.photoName||''}</div>${link}`;
+    previewEl.innerHTML = `<img src="${dayData.photoData}" style="width:140px;height:100px;object-fit:cover;border-radius:8px;border:2px solid #16a34a;cursor:pointer;" onclick="openPhotoLightbox('${dayData.photoData}','${(dayData.photoName||'TBM 사진').replace(/'/g,'&apos;')}')" title="클릭하면 크게 보기"><div style="font-size:11px;color:#16a34a;margin-top:2px;">📎 ${dayData.photoName||''} <span style="color:#6b7280;">(클릭 = 크게 보기)</span></div>${link}`;
   } else if(dayData.photoName){
     const link = dayData.photoDriveUrl ? `<a href="${dayData.photoDriveUrl}" target="_blank" style="font-size:11px;color:#1e5096;text-decoration:underline;">드라이브에서 보기 →</a>` : '';
     previewEl.innerHTML = `<div style="font-size:12px;color:#16a34a;">📎 ${dayData.photoName}</div>${link}`;
@@ -395,8 +410,8 @@ function previewTbmDayPhoto(input){
       cur.uploadedAt = new Date().toISOString();
       tbmData[key] = cur;
       DB.set('tbmCalendar', tbmData);
-      preview.innerHTML = `<img src="${dataUrl}" style="width:140px;height:100px;object-fit:cover;border-radius:8px;border:2px solid #16a34a;">
-        <div style="font-size:11px;color:#16a34a;margin-top:2px;">✅ ${newFileName} (${sizeKB}KB) — 드라이브 저장 완료</div>
+      preview.innerHTML = `<img src="${dataUrl}" style="width:140px;height:100px;object-fit:cover;border-radius:8px;border:2px solid #16a34a;cursor:pointer;" onclick="openPhotoLightbox('${dataUrl.replace(/'/g,'&apos;')}','${newFileName.replace(/'/g,'&apos;')}')" title="클릭하면 크게 보기">
+        <div style="font-size:11px;color:#16a34a;margin-top:2px;">✅ ${newFileName} (${sizeKB}KB) — 드라이브 저장 완료 <span style="color:#6b7280;">(클릭 = 크게 보기)</span></div>
         <a href="${cur.photoDriveUrl}" target="_blank" style="font-size:10px;color:#1e5096;text-decoration:underline;">드라이브에서 보기 →</a>`;
       renderTbmCalendar();
     }).catch(err=>{
@@ -475,6 +490,24 @@ function deleteTbmRecord(id){
   DB.set('tbm', arr);
   renderHistories();
 }
+
+// ============================================================
+// 사진 Lightbox
+// ============================================================
+function openPhotoLightbox(src, caption){
+  const lb = document.getElementById('photo-lightbox');
+  document.getElementById('lightbox-img').src = src;
+  document.getElementById('lightbox-caption').textContent = caption || '';
+  lb.classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+function closePhotoLightbox(){
+  document.getElementById('photo-lightbox').classList.remove('show');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', (e) => {
+  if(e.key === 'Escape') closePhotoLightbox();
+});
 
 // ============================================================
 // INIT
