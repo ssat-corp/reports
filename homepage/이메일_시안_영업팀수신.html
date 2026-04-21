@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>[홈페이지 견적문의] 영업팀 수신 이메일 시안</title>
+<style>
+  body {
+    margin: 0; padding: 36px 20px;
+    background: #eef1f6;
+    font-family: 'Malgun Gothic', '맑은 고딕', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #1f2a44;
+  }
+  .page-note {
+    max-width: 640px; margin: 0 auto 18px;
+    padding: 14px 18px;
+    background: #fff8e1; border: 1px solid #f2d888; border-radius: 10px;
+    color: #7a5c00; font-size: 13px; line-height: 1.65;
+  }
+  .page-note b { color: #5a4300; }
+
+  /* ===== Gmail / Outlook 스타일 이메일 뷰 ===== */
+  .mail-wrap {
+    max-width: 640px; margin: 0 auto;
+    background: #fff; border-radius: 14px;
+    box-shadow: 0 10px 30px rgba(20,35,65,0.10);
+    overflow: hidden;
+  }
+  .mail-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 20px; background: #f6f8fb;
+    border-bottom: 1px solid #e3e8f0;
+    font-size: 13px; color: #6b7893;
+  }
+  .mail-bar .chip {
+    display: inline-block; padding: 3px 10px; border-radius: 999px;
+    background: #e6efff; color: #1e3a6f; font-weight: 600;
+    font-size: 11.5px; letter-spacing: 0.02em;
+  }
+
+  .mail-header {
+    padding: 24px 28px 18px;
+    border-bottom: 1px solid #eef1f6;
+  }
+  .mail-subject {
+    font-size: 18px; font-weight: 800;
+    color: #17264a; margin: 0 0 14px;
+    letter-spacing: -0.01em;
+  }
+  .mail-meta {
+    font-size: 13px; color: #4c5872; line-height: 1.75;
+  }
+  .mail-meta .row { display: flex; gap: 10px; }
+  .mail-meta .k {
+    color: #8591aa; min-width: 54px; font-weight: 600;
+  }
+  .mail-meta .v { flex: 1; }
+  .mail-meta .v b { color: #17264a; }
+
+  .mail-body { padding: 24px 28px 28px; }
+  .lead {
+    background: #f3f7ff; border-left: 4px solid #2471a3;
+    padding: 14px 16px; border-radius: 6px;
+    font-size: 14px; line-height: 1.7; color: #2a3656;
+    margin: 0 0 22px;
+  }
+  .lead b { color: #17264a; }
+
+  h2.sec {
+    font-size: 14px; font-weight: 800; color: #17264a;
+    margin: 26px 0 10px;
+    padding-bottom: 8px; border-bottom: 2px solid #17264a;
+    letter-spacing: 0.01em;
+  }
+  h2.sec:first-child { margin-top: 0; }
+
+  table.info {
+    width: 100%; border-collapse: collapse;
+    font-size: 13.5px;
+  }
+  table.info th, table.info td {
+    text-align: left; padding: 11px 14px;
+    border-bottom: 1px solid #eef1f6;
+    vertical-align: top;
+  }
+  table.info th {
+    width: 110px; background: #f9fafc;
+    color: #4c5872; font-weight: 600; font-size: 12.5px;
+  }
+  table.info td { color: #17264a; }
+  table.info td.muted { color: #8591aa; }
+  table.info a { color: #2471a3; text-decoration: none; font-weight: 600; }
+
+  .message-box {
+    background: #fafbfd; border: 1px solid #eef1f6;
+    border-radius: 8px; padding: 16px 18px;
+    font-size: 14px; line-height: 1.8; color: #1f2a44;
+    white-space: pre-wrap;
+  }
+
+  .attach-list {
+    list-style: none; margin: 0; padding: 0;
+  }
+  .attach-list li {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 14px;
+    border: 1px solid #e3e8f0; border-radius: 8px;
+    margin-bottom: 8px;
+    background: #fafbfd;
+    font-size: 13.5px;
+  }
+  .attach-list .ico {
+    width: 36px; height: 36px; flex: 0 0 36px;
+    display: flex; align-items: center; justify-content: center;
+    background: #17264a; color: #fff;
+    border-radius: 6px; font-size: 10.5px; font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+  .attach-list .ico.pdf { background: #c0392b; }
+  .attach-list .ico.img { background: #16a085; }
+  .attach-list .ico.dwg { background: #2471a3; }
+  .attach-list .name { flex: 1; color: #17264a; font-weight: 600; }
+  .attach-list .size { color: #8591aa; font-size: 12px; }
+
+  .cta-row {
+    display: flex; gap: 10px; flex-wrap: wrap;
+    margin-top: 20px;
+  }
+  .cta {
+    display: inline-block; padding: 12px 20px;
+    background: #17264a; color: #fff !important;
+    border-radius: 8px; text-decoration: none;
+    font-size: 13.5px; font-weight: 700;
+  }
+  .cta.secondary { background: #fff; color: #17264a !important; border: 1.5px solid #17264a; }
+
+  .mail-footer {
+    padding: 18px 28px 22px;
+    background: #f6f8fb; border-top: 1px solid #eef1f6;
+    color: #6b7893; font-size: 12px; line-height: 1.7;
+  }
+  .mail-footer b { color: #17264a; }
+
+  @media (max-width: 560px) {
+    .mail-header, .mail-body { padding-left: 18px; padding-right: 18px; }
+    table.info th { width: 90px; font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-note">
+  <b>📧 시안 안내</b> — 이것은 홈페이지 &quot;견적·협업 문의&quot; 폼 제출 시<br>
+  영업팀 두 분(<b>ahnsh110381@ssautotech.co.kr</b>, <b>lhd@ssautotech.co.kr</b>)이 받게 될 이메일의 시안입니다.
+  실제 발송은 FormSubmit 서비스를 통해 이루어집니다.
+</div>
+
+<div class="mail-wrap">
+  <!-- 이메일 상단 바 (Gmail/Outlook 느낌) -->
+  <div class="mail-bar">
+    <span>📬 받은편지함</span>
+    <span class="chip">홈페이지 문의</span>
+  </div>
+
+  <!-- 제목 + 발신/수신 정보 -->
+  <div class="mail-header">
+    <h1 class="mail-subject">[홈페이지 견적문의] 신규 문의가 접수되었습니다</h1>
+    <div class="mail-meta">
+      <div class="row"><span class="k">보낸이</span><span class="v"><b>신성오토텍 홈페이지</b> &lt;noreply@formsubmit.co&gt;</span></div>
+      <div class="row"><span class="k">받는이</span><span class="v">ahnsh110381@ssautotech.co.kr</span></div>
+      <div class="row"><span class="k">참조</span><span class="v">lhd@ssautotech.co.kr</span></div>
+      <div class="row"><span class="k">받은 날짜</span><span class="v">2026-04-21 (화) 오후 3:47</span></div>
+    </div>
+  </div>
+
+  <!-- 본문 -->
+  <div class="mail-body">
+
+    <div class="lead">
+      신성오토텍 홈페이지 <b>견적·협업 문의</b> 폼을 통해 신규 문의가 접수되었습니다.<br>
+      아래 내용을 확인하신 뒤 담당자께서 회신 부탁드립니다.
+    </div>
+
+    <!-- 문의자 정보 -->
+    <h2 class="sec">문의자 정보</h2>
+    <table class="info">
+      <tr>
+        <th>회사명</th>
+        <td><b>(주)한영정밀</b></td>
+      </tr>
+      <tr>
+        <th>담당자</th>
+        <td>김영수 과장</td>
+      </tr>
+      <tr>
+        <th>연락처</th>
+        <td><a href="tel:01012345678">010-1234-5678</a></td>
+      </tr>
+      <tr>
+        <th>이메일</th>
+        <td><a href="mailto:ys.kim@example.com">ys.kim@example.com</a></td>
+      </tr>
+    </table>
+
+    <!-- 문의 내용 -->
+    <h2 class="sec">문의 내용</h2>
+    <div class="message-box">안녕하세요, (주)한영정밀 김영수입니다.
+
+신규 개발 중인 냉장고 도어 손잡이 부품 관련 협업 가능 여부를 문의드립니다.
+
+- 제품군: 가전용 플라스틱 사출 부품 (ABS, PC/ABS 검토 중)
+- 예상 수량: 초도 2,000개 / 연간 약 30,000개
+- 희망 일정: 2026년 7월 양산 착수
+
+첨부한 도면과 참고 이미지 확인 후 견적 가능 여부 회신 부탁드립니다.
+감사합니다.</div>
+
+    <!-- 첨부파일 -->
+    <h2 class="sec">첨부파일 (3)</h2>
+    <ul class="attach-list">
+      <li>
+        <span class="ico pdf">PDF</span>
+        <span class="name">도어손잡이_도면_Rev02.pdf</span>
+        <span class="size">1.8 MB</span>
+      </li>
+      <li>
+        <span class="ico dwg">DWG</span>
+        <span class="name">handle_assembly.dwg</span>
+        <span class="size">640 KB</span>
+      </li>
+      <li>
+        <span class="ico img">JPG</span>
+        <span class="name">참고이미지_조립완성샷.jpg</span>
+        <span class="size">2.3 MB</span>
+      </li>
+    </ul>
+
+    <!-- 빠른 액션 -->
+    <div class="cta-row">
+      <a href="mailto:ys.kim@example.com?subject=Re: 신성오토텍 견적 문의 회신" class="cta">회신하기</a>
+      <a href="tel:01012345678" class="cta secondary">전화 걸기</a>
+    </div>
+
+  </div>
+
+  <!-- 푸터 -->
+  <div class="mail-footer">
+    본 메일은 <b>ssautotech.co.kr</b> 홈페이지의 견적·협업 문의 폼을 통해 자동 발송되었습니다.<br>
+    회신은 위 &quot;회신하기&quot; 버튼을 누르시면 문의자에게 직접 전송됩니다.<br>
+    <br>
+    신성오토텍㈜ SHINSUNG AUTOTECH CO.,LTD · 031-227-7611
+  </div>
+</div>
+
+</body>
+</html>
