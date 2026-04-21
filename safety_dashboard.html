@@ -3753,7 +3753,7 @@ function renderESGPlan(containerId){
   let tableHtml = `<div class="esg-table-wrap"><table class="esg-table${isFiltered?' filtered':''}">
     <thead><tr>
       <th style="width:34px;">No</th>
-      ${isFiltered?'':`<th style="width:48px;">영역</th>`}
+      ${isFiltered?'':`<th style="width:60px;">영역</th>`}
       <th style="min-width:140px;">세부항목</th>
       <th style="min-width:140px;">대상</th>
       <th style="min-width:150px;">평가내용</th>
@@ -3780,7 +3780,7 @@ function renderESGPlan(containerId){
     const fileCount = itemFiles.length;
     tableHtml += `<tr>
       <td style="text-align:center;">${num}</td>
-      ${isFiltered?'':`<td><span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:12px;font-weight:600;background:${esgCatColors[item.cat]}22;color:${esgCatColors[item.cat]};">${item.cat}</span></td>`}
+      ${isFiltered?'':`<td style="text-align:center;"><span style="display:inline-block;padding:2px 6px;border-radius:8px;font-size:10px;font-weight:700;white-space:nowrap;background:${esgCatColors[item.cat]}22;color:${esgCatColors[item.cat]};">${item.cat}</span></td>`}
       <td style="font-weight:600;">${item.name}${item.custom?` <button onclick="removeCustomESGItem(${globalIdx})" style="background:none;border:none;color:#dc2626;cursor:pointer;font-size:11px;padding:0 2px;" title="사용자 추가 항목 삭제">🗑</button>`:''}${item.agency?`<div style="font-size:10px;color:#6b7280;font-weight:400;margin-top:2px;">${item.agency}</div>`:''}</td>
       <td>${item.target}</td>
       <td>${item.eval}${item.basis?`<div style="font-size:10px;color:#9ca3af;margin-top:2px;">${item.basis}</div>`:''}</td>
