@@ -1472,20 +1472,12 @@ h1, h2, h3, h4, h5, h6, p, li, span, a, button { word-break: keep-all; overflow-
     <div class="contact-grid">
       <div id="form-success" class="form-success reveal">
         <strong>✓ 문의가 정상 접수되었습니다.</strong>
-        영업팀에서 내용을 확인한 뒤, 영업일 기준 1일 내로 연락드리겠습니다.
+        영업팀에서 내용을 확인한 뒤, 신속하게 회신 드리겠습니다.
       </div>
       <form class="contact-form reveal"
-            action="https://formsubmit.co/ahnsh110381@ssautotech.co.kr"
-            method="POST"
-            enctype="multipart/form-data"
+            id="contact-form"
             onsubmit="return handleSubmit(event)">
-        <!-- FormSubmit 설정 (서비스 측에서 읽는 예약 필드) -->
-        <input type="hidden" name="_cc" value="lhd@ssautotech.co.kr">
-        <input type="hidden" name="_subject" value="[홈페이지 견적문의] 신규 문의가 접수되었습니다">
-        <input type="hidden" name="_template" value="table">
-        <input type="hidden" name="_captcha" value="false">
-        <input type="hidden" name="_next" value="https://ssat-corp.github.io/reports/homepage/?sent=1#contact">
-        <input type="hidden" name="_autoresponse" value="안녕하세요, 신성오토텍㈜입니다.&#10;문의가 정상적으로 접수되었습니다. 영업팀에서 내용을 확인한 뒤 영업일 기준 1일 내로 연락드리겠습니다.&#10;감사합니다.">
+        <!-- 스팸 방지용 honeypot -->
         <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
 
         <h3>견적·협업 문의</h3>
@@ -1654,24 +1646,88 @@ document.querySelectorAll('.count').forEach(el => countObserver.observe(el));
     }
   });
 
-  // FormSubmit 리다이렉트 후 성공 메시지 표시
-  const params = new URLSearchParams(window.location.search);
-  if (params.get('sent') === '1') {
+})();
+
+// ===== Apps Script 엔드포인트 (배포 후 발급된 웹앱 URL 로 교체) =====
+const FORM_ENDPOINT = 'https://script.google.com/macros/s/AKfycbwDOdVASusrcB6uqO_ga8sZrrlSxrH2LjnELAprIyYgnrPqH-xgcDnJJ0jB35tGaKtFkw/exec';
+
+const MAX_TOTAL_BYTES = 35 * 1024 * 1024; // 약 35MB (base64 인코딩 후 50MB Apps Script 한도 고려)
+
+function readFileAsBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result || '';
+      const comma = result.indexOf(',');
+      resolve(comma >= 0 ? result.slice(comma + 1) : result);
+    };
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(file);
+  });
+}
+
+async function handleSubmit(e) {
+  e.preventDefault();
+  const form = e.target;
+  const btn = form.querySelector('button[type="submit"]');
+  const fileInput = document.getElementById('attachment');
+
+  // honeypot - 봇이 채우면 조용히 종료
+  if (form._honey && form._honey.value) return false;
+
+  // 파일 용량 사전 검증
+  let totalBytes = 0;
+  const files = fileInput && fileInput.files ? Array.from(fileInput.files) : [];
+  files.forEach(f => totalBytes += f.size);
+  if (totalBytes > MAX_TOTAL_BYTES) {
+    alert(`첨부파일 총 용량이 너무 큽니다 (${(totalBytes/1024/1024).toFixed(1)}MB).\n총 35MB 이하로 줄여주세요.`);
+    return false;
+  }
+
+  if (btn) { btn.disabled = true; btn.textContent = '전송 중...'; }
+
+  try {
+    // 파일을 base64 로 변환
+    const filePayload = await Promise.all(files.map(async f => ({
+      name: f.name,
+      mimeType: f.type || 'application/octet-stream',
+      dataBase64: await readFileAsBase64(f)
+    })));
+
+    const payload = {
+      회사명:   form['회사명'].value,
+      담당자:   form['담당자'].value,
+      연락처:   form['연락처'].value,
+      이메일:   form['이메일'].value,
+      문의내용: form['문의내용'].value,
+      files:    filePayload
+    };
+
+    // Content-Type: text/plain 으로 보내야 CORS preflight 가 발생하지 않음 (Apps Script 제약)
+    const res = await fetch(FORM_ENDPOINT, {
+      method: 'POST',
+      mode: 'cors',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload)
+    });
+
+    const result = await res.json().catch(() => ({}));
+    if (result.status !== 'ok') {
+      throw new Error(result.message || '전송 실패');
+    }
+
+    // 성공 - 폼 숨기고 성공 메시지 표시
+    form.style.display = 'none';
     const success = document.getElementById('form-success');
     if (success) success.classList.add('is-visible');
     const contact = document.getElementById('contact');
     if (contact) contact.scrollIntoView({ behavior: 'smooth' });
+  } catch (err) {
+    console.error(err);
+    alert('전송 중 오류가 발생했습니다. 잠시 후 다시 시도해주시거나 031-227-7611 로 연락주세요.');
+    if (btn) { btn.disabled = false; btn.textContent = '문의 보내기 →'; }
   }
-})();
-
-function handleSubmit(e) {
-  // FormSubmit 으로 실제 전송 — 이 핸들러는 버튼 잠금만 담당
-  const btn = e.target.querySelector('button[type="submit"]');
-  if (btn) {
-    btn.disabled = true;
-    btn.textContent = '전송 중...';
-  }
-  return true;
+  return false;
 }
 </script>
 </body>
