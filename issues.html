@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>지적사항 관리 | 산업안전보건</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;background:#fff7ed;color:#374151;min-height:100vh;}
+
+.page-header{background:linear-gradient(135deg,#7c2d12,#ea580c);color:#fff;padding:28px 28px 22px;box-shadow:0 2px 12px rgba(0,0,0,0.08);position:relative;}
+.page-header .icon{font-size:38px;margin-bottom:4px;}
+.page-header h1{font-size:22px;font-weight:900;letter-spacing:-0.02em;}
+.page-header .sub{font-size:13px;opacity:0.85;margin-top:2px;}
+.page-header .conn{position:absolute;top:16px;right:20px;font-size:11px;background:rgba(255,255,255,0.15);padding:4px 10px;border-radius:12px;display:flex;align-items:center;gap:6px;}
+.page-header .stats-row{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;}
+.page-header .stats-row .badge{background:rgba(255,255,255,0.15);color:#fff;font-size:12px;padding:4px 12px;border-radius:12px;font-weight:700;}
+.conn-dot{width:7px;height:7px;border-radius:50%;background:#94a3b8;}
+.conn-dot.connected{background:#fbbf24;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
+
+.container{max-width:1200px;margin:0 auto;padding:20px 20px 60px;}
+
+.card{background:#fff;border:1px solid #fed7aa;border-radius:12px;padding:14px 16px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,0.04);}
+.btn{display:inline-block;padding:7px 14px;background:#ea580c;color:#fff;border:none;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;text-decoration:none;transition:all 0.15s;}
+.btn:hover{background:#7c2d12;}
+.btn-outline{background:#fff;color:#ea580c;border:1.5px solid #ea580c;}
+.btn-outline:hover{background:#fff7ed;}
+.btn-success{background:#16a34a;}
+.btn-success:hover{background:#15803d;}
+.btn-sm{padding:5px 10px;font-size:11px;}
+
+.table-wrap{overflow-x:auto;}
+.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;}
+
+@media print{
+  .no-print{display:none!important;}
+  body{background:#fff;}
+  .page-header{background:#7c2d12!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
+  .card{box-shadow:none!important;break-inside:avoid;}
+  @page{size:A4 landscape;margin:10mm;}
+}
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div class="conn no-print"><span id="conn-dot" class="conn-dot"></span><span id="conn-text">로컬 저장소 사용 중</span></div>
+  <div class="icon">📋</div>
+  <h1>지적사항 관리</h1>
+  <div class="sub">현장 점검 · 개선 여부 기록 · 누적 추적</div>
+  <div class="stats-row">
+    <span class="badge" id="issue-stat-open-badge">미완료 0건</span>
+    <span class="badge" id="issue-stat-done-badge">완료 0건</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="no-print" style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;">
+    <a href="safety_dashboard.html" class="btn btn-outline btn-sm">📊 메인 대시보드</a>
+    <button class="btn btn-outline btn-sm" onclick="window.print()">🖨️ 인쇄</button>
+  </div>
+
+  <!-- 빠른 입력 -->
+  <div class="card" style="margin-bottom:2px;border-radius:10px 10px 0 0;">
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+      <select id="iss-site" style="padding:7px 8px;border:1.5px solid #d1d5db;border-radius:6px;font-size:12px;width:80px;flex-shrink:0;">
+        <option value="suwon">수원</option><option value="hwaseong">화성</option>
+      </select>
+      <input type="text" id="iss-desc" placeholder="지적사항 내용 입력 후 Enter (예: 사출기 3번 안전문 고정핀 파손)"
+        style="flex:1;min-width:200px;padding:7px 12px;border:1.5px solid #d1d5db;border-radius:6px;font-size:13px;"
+        onkeydown="if(event.key==='Enter')addSiteIssue()">
+      <input type="text" id="iss-location" placeholder="위치" style="width:120px;padding:7px 8px;border:1.5px solid #d1d5db;border-radius:6px;font-size:12px;flex-shrink:0;">
+      <button class="btn btn-success btn-sm" onclick="addSiteIssue()" style="white-space:nowrap;flex-shrink:0;">+ 등록</button>
+    </div>
+  </div>
+
+  <!-- 스프레드시트 테이블 -->
+  <div class="card" style="padding:0;border-radius:0 0 10px 10px;overflow:hidden;">
+    <div class="table-wrap" style="border:none;">
+      <table id="issue-sheet" style="font-size:12px;border-collapse:collapse;width:100%;">
+        <thead>
+          <tr style="background:#7c2d12;color:#fff;">
+            <th style="width:32px;padding:8px 6px;text-align:center;font-size:11px;color:#fff;">No</th>
+            <th style="width:82px;padding:8px 6px;font-size:11px;color:#fff;">등록일</th>
+            <th style="width:46px;padding:8px 6px;font-size:11px;color:#fff;">사업장</th>
+            <th style="padding:8px 6px;font-size:11px;color:#fff;text-align:left;">지적사항 내용</th>
+            <th style="width:75px;padding:8px 6px;font-size:11px;color:#fff;">위치</th>
+            <th style="width:45px;padding:8px 6px;text-align:center;font-size:11px;color:#fff;">개선</th>
+            <th style="width:82px;padding:8px 6px;font-size:11px;color:#fff;">개선일</th>
+            <th style="width:130px;padding:8px 6px;font-size:11px;color:#fff;">개선내역/비고</th>
+            <th style="width:46px;padding:8px 6px;text-align:center;font-size:11px;color:#fff;" class="no-print">사진</th>
+            <th style="width:32px;padding:8px 6px;text-align:center;font-size:11px;color:#fff;" class="no-print">×</th>
+          </tr>
+        </thead>
+        <tbody id="issue-sheet-body"></tbody>
+      </table>
+    </div>
+    <div style="padding:8px 16px;background:#fff7ed;border-top:1px solid #fed7aa;display:flex;justify-content:space-between;align-items:center;font-size:11px;color:#9a3412;">
+      <span id="issue-sheet-summary">전체 0건</span>
+      <label class="no-print" style="display:flex;align-items:center;gap:4px;cursor:pointer;">
+        <input type="checkbox" id="issue-show-done" onchange="renderSiteIssues()" checked style="accent-color:#ea580c;"> 완료 항목 표시
+      </label>
+    </div>
+  </div>
+
+  <div style="text-align:center;color:#fdba74;font-size:11px;margin-top:30px;">
+    © 신성오토텍 안전환경팀 · 지적사항 관리
+  </div>
+
+</div>
+
+<script>
+// ============================================================
+// SHARED INFRASTRUCTURE
+// ============================================================
+const DRIVE_UPLOAD_URL = 'https://script.google.com/macros/s/AKfycbyiZ5j5XH7G3gOMXzlSxbX9hJ5WxCf2J3PMUGGZfaQI3jQC7s0NOn-T8grEmi7LRpIZuA/exec';
+
+let supaClient = null;
+function initSupabase(url, key){
+  if(!url || !key) return;
+  try{
+    supaClient = supabase.createClient(url, key);
+    document.getElementById('conn-dot').className = 'conn-dot connected';
+    document.getElementById('conn-text').textContent = '실시간 공유 연결됨';
+    supaClient.channel('issues_sync')
+      .on('postgres_changes', {event:'*', schema:'public', table:'safety_store'}, () => {
+        supaLoadAll().then(() => renderSiteIssues());
+      })
+      .subscribe();
+    supaLoadAll();
+  }catch(e){ console.error('Supabase 연결 실패:', e); }
+}
+async function supaLoadAll(){
+  if(!supaClient) return;
+  try{
+    const {data} = await supaClient.from('safety_store').select('*');
+    if(!data) return;
+    data.forEach(row => localStorage.setItem('safety_'+row.key, JSON.stringify(row.value)));
+  }catch(e){ console.error('supaLoad 오류:', e); }
+}
+async function supaSync(key){
+  if(!supaClient) return;
+  try{
+    const value = JSON.parse(localStorage.getItem('safety_'+key) || '[]');
+    await supaClient.from('safety_store').upsert({key, value}, {onConflict:'key'});
+  }catch(e){ console.error('supaSync 오류:', e); }
+}
+
+const DB = {
+  get(key){ try{return JSON.parse(localStorage.getItem('safety_'+key))||[];}catch{return [];} },
+  getObj(key){ try{return JSON.parse(localStorage.getItem('safety_'+key))||{};}catch{return {};} },
+  set(key,val){ localStorage.setItem('safety_'+key, JSON.stringify(val)); supaSync(key); try{scheduleKVSync(key);}catch(e){} }
+};
+
+const TRACKED_KEYS = ['patrol','tbm','patrolCalendar','tbmCalendar','siteIssues'];
+const CloudDB = (() => {
+  function url(){ return DRIVE_UPLOAD_URL || ''; }
+  function getJSONP(params){
+    return new Promise((resolve,reject)=>{
+      const U = url();
+      if(!U){ reject(new Error('CloudDB URL not set')); return; }
+      const cb = '_cb_' + Date.now() + '_' + Math.floor(Math.random()*1e6);
+      const s = document.createElement('script');
+      const to = setTimeout(()=>{ cleanup(); reject(new Error('JSONP timeout')); }, 30000);
+      const cleanup = ()=>{ try{delete window[cb];}catch(e){} s.remove(); clearTimeout(to); };
+      window[cb] = (data)=>{ cleanup(); resolve(data); };
+      const q = Object.entries({...params, callback: cb})
+        .map(([k,v])=>encodeURIComponent(k)+'='+encodeURIComponent(v)).join('&');
+      s.src = U + '?' + q;
+      s.onerror = ()=>{ cleanup(); reject(new Error('JSONP network error')); };
+      document.body.appendChild(s);
+    });
+  }
+  async function postJSON(body){
+    const U = url();
+    if(!U) throw new Error('CloudDB URL not set');
+    const res = await fetch(U, {method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'}, body: JSON.stringify(body), redirect:'follow'});
+    return res.json();
+  }
+  async function kvSet(key, value){ return postJSON({action:'kvSet', key, value}); }
+  async function kvAll(){ const r = await getJSONP({action:'kvAll'}); return r.values || {}; }
+  let hydrated = false;
+  async function hydrate(){
+    if(!url() || hydrated) return;
+    try{
+      const remote = await kvAll();
+      ['siteIssues','patrol','tbm'].forEach(k => {
+        const remoteVal = remote[k];
+        const hasRemote = Array.isArray(remoteVal) ? remoteVal.length > 0
+                       : (remoteVal && typeof remoteVal === 'object') ? Object.keys(remoteVal).length > 0
+                       : !!remoteVal;
+        if(hasRemote) localStorage.setItem('safety_'+k, JSON.stringify(remoteVal));
+      });
+      hydrated = true;
+      renderSiteIssues();
+      console.log('✅ CloudDB hydrated');
+    }catch(e){ console.warn('CloudDB hydrate 실패:', e.message); }
+  }
+  return {url, kvSet, kvAll, hydrate};
+})();
+
+const _kvPending = {};
+function scheduleKVSync(key){
+  if(!TRACKED_KEYS.includes(key)) return;
+  if(!CloudDB.url()) return;
+  clearTimeout(_kvPending[key]);
+  _kvPending[key] = setTimeout(async () => {
+    try{
+      const raw = localStorage.getItem('safety_'+key);
+      let val = null;
+      if(raw){ try{ val = JSON.parse(raw); }catch(e){} }
+      await CloudDB.kvSet(key, val);
+    }catch(e){ console.warn('시트 동기화 실패:', key, e.message); }
+  }, 500);
+}
+
+// ============================================================
+// 지적사항 CRUD
+// ============================================================
+function getSiteIssues(){ return DB.get('siteIssues'); }
+function saveSiteIssues(list){ DB.set('siteIssues', list); }
+
+function addSiteIssue(){
+  const desc = document.getElementById('iss-desc').value.trim();
+  if(!desc){ alert('지적사항 내용을 입력하세요.'); return; }
+  const issues = getSiteIssues();
+  const today = new Date().toISOString().split('T')[0];
+  issues.push({
+    id: Date.now(),
+    date: today,
+    site: document.getElementById('iss-site').value,
+    desc: desc,
+    location: document.getElementById('iss-location').value.trim(),
+    status: 'open',
+    resolvedDate: '',
+    memo: '',
+    photo: ''
+  });
+  saveSiteIssues(issues);
+  document.getElementById('iss-desc').value = '';
+  document.getElementById('iss-location').value = '';
+  document.getElementById('iss-desc').focus();
+  renderSiteIssues();
+}
+
+function toggleIssueStatus(id){
+  const issues = getSiteIssues();
+  const issue = issues.find(i=>i.id===id);
+  if(!issue) return;
+  if(issue.status==='open'){
+    issue.status='done';
+    issue.resolvedDate = new Date().toISOString().split('T')[0];
+  } else {
+    issue.status='open';
+    issue.resolvedDate='';
+  }
+  saveSiteIssues(issues);
+  renderSiteIssues();
+}
+
+function deleteSiteIssue(id){
+  if(!confirm('삭제하시겠습니까?')) return;
+  saveSiteIssues(getSiteIssues().filter(i=>i.id!==id));
+  renderSiteIssues();
+}
+
+function updateIssueMemo(id){
+  const issues = getSiteIssues();
+  const issue = issues.find(i=>i.id===id);
+  if(!issue) return;
+  const el = document.getElementById('iss-memo-'+id);
+  if(el) issue.memo = el.value;
+  saveSiteIssues(issues);
+}
+
+function handleIssuePhoto(id, input){
+  if(!input.files||!input.files[0]) return;
+  const file = input.files[0];
+  if(file.size > 500000){
+    const reader = new FileReader();
+    reader.onload = function(e){
+      const img = new Image();
+      img.onload = function(){
+        const canvas = document.createElement('canvas');
+        const max = 400;
+        let w=img.width, h=img.height;
+        if(w>h){h=h*(max/w);w=max;} else {w=w*(max/h);h=max;}
+        canvas.width=w; canvas.height=h;
+        canvas.getContext('2d').drawImage(img,0,0,w,h);
+        saveIssuePhoto(id, canvas.toDataURL('image/jpeg',0.6));
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  } else {
+    const reader = new FileReader();
+    reader.onload = function(e){ saveIssuePhoto(id, e.target.result); };
+    reader.readAsDataURL(file);
+  }
+}
+
+function saveIssuePhoto(id, dataUrl){
+  const issues = getSiteIssues();
+  const issue = issues.find(i=>i.id===id);
+  if(!issue) return;
+  issue.photo = dataUrl;
+  saveSiteIssues(issues);
+  const preview = document.getElementById('iss-photo-preview-'+id);
+  if(preview) preview.innerHTML = `<img src="${dataUrl}" style="width:32px;height:32px;object-fit:cover;border-radius:4px;cursor:pointer;" onclick="window.open('${dataUrl}')">`;
+}
+
+function renderSiteIssues(){
+  const issues = getSiteIssues();
+  const siteNames = {suwon:'수원', hwaseong:'화성'};
+  const showDone = document.getElementById('issue-show-done')?.checked !== false;
+
+  const sorted = [...issues].sort((a,b)=>{
+    if(a.status!==b.status) return a.status==='open'?-1:1;
+    return new Date(b.date)-new Date(a.date);
+  });
+  const filtered = showDone ? sorted : sorted.filter(i=>i.status==='open');
+
+  const openCount = issues.filter(i=>i.status==='open').length;
+  const doneCount = issues.filter(i=>i.status==='done').length;
+
+  const ob = document.getElementById('issue-stat-open-badge');
+  if(ob){ ob.textContent = `미완료 ${openCount}건`; ob.style.background = openCount>0?'rgba(220,38,38,0.85)':'rgba(255,255,255,0.15)'; }
+  const db = document.getElementById('issue-stat-done-badge');
+  if(db){ db.textContent = `완료 ${doneCount}건`; db.style.background = doneCount>0?'rgba(22,163,74,0.85)':'rgba(255,255,255,0.15)'; }
+
+  const tbody = document.getElementById('issue-sheet-body');
+  if(!filtered.length){
+    tbody.innerHTML = `<tr><td colspan="10" style="text-align:center;color:#9ca3af;padding:24px;">지적사항을 등록하세요. 위 입력란에 내용을 쓰고 Enter!</td></tr>`;
+  } else {
+    tbody.innerHTML = filtered.map((issue, idx) => {
+      const isDone = issue.status==='done';
+      const rowBg = isDone ? '#f0fdf4' : (idx%2===0?'#fff':'#fafbfc');
+      const textStyle = isDone ? 'color:#9ca3af;text-decoration:line-through;' : '';
+      const photoPreview = issue.photo
+        ? `<img src="${issue.photo}" style="width:32px;height:32px;object-fit:cover;border-radius:4px;cursor:pointer;" onclick="window.open(this.src)">`
+        : '';
+      return `<tr style="background:${rowBg};">
+        <td style="text-align:center;padding:6px;border-bottom:1px solid #e5e7eb;font-size:11px;color:#9ca3af;">${issues.length - issues.indexOf(issue)}</td>
+        <td style="padding:6px;border-bottom:1px solid #e5e7eb;font-size:11px;white-space:nowrap;">${issue.date}</td>
+        <td style="padding:6px;border-bottom:1px solid #e5e7eb;font-size:11px;">${siteNames[issue.site]||issue.site}</td>
+        <td style="padding:6px;border-bottom:1px solid #e5e7eb;font-size:12px;font-weight:500;${textStyle}">${issue.desc}</td>
+        <td style="padding:6px;border-bottom:1px solid #e5e7eb;font-size:11px;">${issue.location||''}</td>
+        <td style="text-align:center;padding:6px;border-bottom:1px solid #e5e7eb;">
+          <input type="checkbox" ${isDone?'checked':''} onchange="toggleIssueStatus(${issue.id})" style="width:18px;height:18px;accent-color:#16a34a;cursor:pointer;">
+        </td>
+        <td style="padding:6px;border-bottom:1px solid #e5e7eb;font-size:11px;">${isDone?issue.resolvedDate:''}</td>
+        <td style="padding:4px 6px;border-bottom:1px solid #e5e7eb;">
+          <input type="text" id="iss-memo-${issue.id}" value="${(issue.memo||'').replace(/"/g,'&quot;')}" placeholder="개선내역 기재"
+            style="width:100%;border:none;border-bottom:1px dotted #d1d5db;font-size:11px;padding:2px 4px;background:transparent;"
+            onchange="updateIssueMemo(${issue.id})">
+        </td>
+        <td style="text-align:center;padding:4px;border-bottom:1px solid #e5e7eb;" class="no-print">
+          <div id="iss-photo-preview-${issue.id}" style="display:inline-block;">${photoPreview}</div>
+          ${!issue.photo?`<label style="cursor:pointer;font-size:10px;color:#6b7280;" title="사진 첨부"><input type="file" accept="image/*" style="display:none;" onchange="handleIssuePhoto(${issue.id},this)">📷</label>`:''}
+        </td>
+        <td style="text-align:center;padding:4px;border-bottom:1px solid #e5e7eb;" class="no-print">
+          <button onclick="deleteSiteIssue(${issue.id})" style="background:none;border:none;color:#d1d5db;cursor:pointer;font-size:14px;" title="삭제">&times;</button>
+        </td>
+      </tr>`;
+    }).join('');
+  }
+
+  const summary = document.getElementById('issue-sheet-summary');
+  if(summary) summary.textContent = `전체 ${issues.length}건 (미완료 ${openCount} / 완료 ${doneCount})`;
+}
+
+// ============================================================
+// INIT
+// ============================================================
+window.addEventListener('DOMContentLoaded', () => {
+  const sup = DB.getObj('supabase');
+  if(sup.url && sup.key) initSupabase(sup.url, sup.key);
+  renderSiteIssues();
+  setTimeout(() => CloudDB.hydrate(), 600);
+  if(!supaClient){
+    const txt = document.getElementById('conn-text');
+    if(CloudDB.url() && txt) txt.textContent = '구글 시트 연동 중';
+  }
+  window.addEventListener('storage', (e) => {
+    if(e.key === 'safety_siteIssues') renderSiteIssues();
+  });
+});
+</script>
+</body>
+</html>

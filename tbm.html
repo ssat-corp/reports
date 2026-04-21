@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>TBM 일지 | 산업안전보건</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;background:#f0fdf4;color:#374151;min-height:100vh;}
+
+.page-header{background:linear-gradient(135deg,#065f46,#10b981);color:#fff;padding:28px 28px 22px;box-shadow:0 2px 12px rgba(0,0,0,0.08);position:relative;}
+.page-header .icon{font-size:38px;margin-bottom:4px;}
+.page-header h1{font-size:22px;font-weight:900;letter-spacing:-0.02em;}
+.page-header .sub{font-size:13px;opacity:0.85;margin-top:2px;}
+.page-header .conn{position:absolute;top:16px;right:20px;font-size:11px;background:rgba(255,255,255,0.15);padding:4px 10px;border-radius:12px;display:flex;align-items:center;gap:6px;}
+.conn-dot{width:7px;height:7px;border-radius:50%;background:#94a3b8;}
+.conn-dot.connected{background:#86efac;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
+
+.container{max-width:1100px;margin:0 auto;padding:20px 20px 60px;}
+
+.card{background:#fff;border:1px solid #d1fae5;border-radius:12px;padding:18px 20px;margin-bottom:14px;box-shadow:0 1px 3px rgba(0,0,0,0.04);}
+.card-title{font-size:14px;font-weight:800;color:#065f46;margin-bottom:12px;padding-bottom:10px;border-bottom:2px solid #10b981;}
+.btn{display:inline-block;padding:8px 16px;background:#10b981;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;text-decoration:none;transition:all 0.15s;}
+.btn:hover{background:#065f46;}
+.btn-outline{background:#fff;color:#10b981;border:1.5px solid #10b981;}
+.btn-outline:hover{background:#ecfdf5;}
+.btn-success{background:#16a34a;}
+.btn-success:hover{background:#15803d;}
+.btn-sm{padding:6px 12px;font-size:12px;}
+
+.table-wrap{border:1px solid #d1fae5;border-radius:8px;overflow:hidden;overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+th{padding:8px 10px;text-align:left;font-weight:700;font-size:12px;}
+td{padding:8px 10px;border-bottom:1px solid #f1f5f9;}
+
+.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;}
+.badge.green{background:#dcfce7;color:#15803d;}
+.badge.yellow{background:#fef3c7;color:#a16207;}
+.badge.red{background:#fef2f2;color:#b91c1c;}
+
+.theme-box{background:#eef4ff;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:13px;border-left:4px solid #1e5096;}
+
+@media print{
+  .no-print{display:none!important;}
+  body{background:#fff;}
+  .page-header{background:#065f46!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
+  .card{box-shadow:none!important;border:1px solid #000!important;break-inside:avoid;}
+  @page{size:A4 portrait;margin:10mm;}
+}
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div class="conn no-print"><span id="conn-dot" class="conn-dot"></span><span id="conn-text">로컬 저장소 사용 중</span></div>
+  <div class="icon">🌅</div>
+  <h1>TBM 일지</h1>
+  <div class="sub">Tool Box Meeting · 매일 작업 전 5~10분 · 전원 참석</div>
+</div>
+
+<div class="container">
+
+  <div class="no-print" style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;">
+    <a href="safety_dashboard.html" class="btn btn-outline btn-sm">📊 메인 대시보드</a>
+  </div>
+
+  <!-- 오늘의 TBM 테마 -->
+  <div id="tbm-today-theme" class="theme-box"></div>
+
+  <!-- TBM 달력 -->
+  <div class="card">
+    <div id="tbm-calendar"></div>
+  </div>
+
+  <!-- TBM 입력 폼 (날짜 클릭 시 표시) -->
+  <div id="tbm-day-form" style="display:none;">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:12px;border-bottom:2px solid #065f46;margin-bottom:12px;">
+        <div>
+          <div style="font-size:18px;font-weight:900;color:#0d1f3c;" id="tbm-day-title">TBM 기록</div>
+        </div>
+        <button class="btn btn-outline btn-sm no-print" onclick="window.print()">🖨️ 인쇄</button>
+      </div>
+
+      <div class="table-wrap">
+        <table style="font-size:13px;">
+          <thead><tr style="background:#065f46;color:#fff;">
+            <th style="width:35%;padding:10px 12px;color:#fff;">점검사항</th>
+            <th style="width:35%;padding:10px 12px;color:#fff;">내용</th>
+            <th style="width:50px;padding:10px;text-align:center;color:#fff;">점검</th>
+            <th style="width:25%;padding:10px 12px;color:#fff;">비고</th>
+          </tr></thead>
+          <tbody>
+            <tr><td style="font-weight:600;">TBM 실시</td><td>작업 전 안전회의 실시 여부</td><td style="text-align:center;"><input type="checkbox" id="tbm-day-done" style="width:20px;height:20px;accent-color:#16a34a;"></td><td></td></tr>
+            <tr><td style="font-weight:600;">건강상태 확인</td><td>음주·체온·약물 이상 없음</td><td style="text-align:center;"><input type="checkbox" id="tbm-health" style="width:20px;height:20px;accent-color:#16a34a;"></td><td></td></tr>
+            <tr><td style="font-weight:600;">보호구 착용</td><td>안전모·안전화·보안경 등</td><td style="text-align:center;"><input type="checkbox" id="tbm-ppe" style="width:20px;height:20px;accent-color:#16a34a;"></td><td></td></tr>
+            <tr><td style="font-weight:600;">위험요인 공유</td><td>금일 작업 위험요인·대책 공유</td><td style="text-align:center;"><input type="checkbox" id="tbm-risk" style="width:20px;height:20px;accent-color:#16a34a;"></td><td></td></tr>
+            <tr class="no-print"><td style="font-weight:600;">TBM 사진</td><td colspan="2"><input type="file" id="tbm-day-photo" accept="image/*" style="width:100%;padding:4px;border:1px solid #d1d5db;border-radius:6px;font-size:11px;" onchange="previewTbmDayPhoto(this)"></td><td id="tbm-day-photo-preview"></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div style="margin-top:12px;">
+        <div style="font-size:13px;font-weight:700;color:#0d1f3c;margin-bottom:6px;">논의 주제 / 특이사항</div>
+        <textarea id="tbm-day-agenda" placeholder="오늘 TBM에서 논의한 내용 (필요시에만 기재)" style="width:100%;min-height:50px;padding:10px;border:1px solid #d1d5db;border-radius:8px;font-size:13px;font-family:inherit;resize:vertical;"></textarea>
+      </div>
+
+      <div class="no-print" style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px;">
+        <button class="btn btn-success" onclick="saveTbmDay()">💾 TBM 저장</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TBM 이력 -->
+  <div class="card">
+    <div class="card-title">📜 TBM 이력</div>
+    <div class="table-wrap"><table>
+      <thead><tr style="background:#065f46;color:#fff;"><th style="color:#fff;">날짜</th><th style="color:#fff;">리더</th><th style="color:#fff;">참석</th><th style="color:#fff;">점검</th><th style="color:#fff;" class="no-print">작업</th></tr></thead>
+      <tbody id="tbm-history-body"></tbody>
+    </table></div>
+  </div>
+
+  <div style="text-align:center;color:#6ee7b7;font-size:11px;margin-top:30px;">
+    © 신성오토텍 안전환경팀 · TBM 일지
+  </div>
+
+</div>
+
+<script>
+// ============================================================
+// SHARED INFRASTRUCTURE
+// ============================================================
+const DRIVE_UPLOAD_URL = 'https://script.google.com/macros/s/AKfycbyiZ5j5XH7G3gOMXzlSxbX9hJ5WxCf2J3PMUGGZfaQI3jQC7s0NOn-T8grEmi7LRpIZuA/exec';
+
+let supaClient = null;
+function initSupabase(url, key){
+  if(!url || !key) return;
+  try{
+    supaClient = supabase.createClient(url, key);
+    document.getElementById('conn-dot').className = 'conn-dot connected';
+    document.getElementById('conn-text').textContent = '실시간 공유 연결됨';
+    supaClient.channel('tbm_sync')
+      .on('postgres_changes', {event:'*', schema:'public', table:'safety_store'}, () => {
+        supaLoadAll().then(() => { renderTbmCalendar(); renderHistories(); });
+      })
+      .subscribe();
+    supaLoadAll();
+  }catch(e){ console.error('Supabase 연결 실패:', e); }
+}
+async function supaLoadAll(){
+  if(!supaClient) return;
+  try{
+    const {data} = await supaClient.from('safety_store').select('*');
+    if(!data) return;
+    data.forEach(row => localStorage.setItem('safety_'+row.key, JSON.stringify(row.value)));
+  }catch(e){ console.error('supaLoad 오류:', e); }
+}
+async function supaSync(key){
+  if(!supaClient) return;
+  try{
+    const value = JSON.parse(localStorage.getItem('safety_'+key) || '[]');
+    await supaClient.from('safety_store').upsert({key, value}, {onConflict:'key'});
+  }catch(e){ console.error('supaSync 오류:', e); }
+}
+
+const DB = {
+  get(key){ try{return JSON.parse(localStorage.getItem('safety_'+key))||[];}catch{return [];} },
+  getObj(key){ try{return JSON.parse(localStorage.getItem('safety_'+key))||{};}catch{return {};} },
+  set(key,val){ localStorage.setItem('safety_'+key, JSON.stringify(val)); supaSync(key); try{scheduleKVSync(key);}catch(e){} },
+  push(key,item){ const arr=DB.get(key); arr.unshift(item); DB.set(key,arr); return arr; }
+};
+
+const TRACKED_KEYS = ['patrol','tbm','patrolCalendar','tbmCalendar','siteIssues'];
+const CloudDB = (() => {
+  function url(){ return DRIVE_UPLOAD_URL || ''; }
+  function getJSONP(params){
+    return new Promise((resolve,reject)=>{
+      const U = url();
+      if(!U){ reject(new Error('CloudDB URL not set')); return; }
+      const cb = '_cb_' + Date.now() + '_' + Math.floor(Math.random()*1e6);
+      const s = document.createElement('script');
+      const to = setTimeout(()=>{ cleanup(); reject(new Error('JSONP timeout')); }, 30000);
+      const cleanup = ()=>{ try{delete window[cb];}catch(e){} s.remove(); clearTimeout(to); };
+      window[cb] = (data)=>{ cleanup(); resolve(data); };
+      const q = Object.entries({...params, callback: cb})
+        .map(([k,v])=>encodeURIComponent(k)+'='+encodeURIComponent(v)).join('&');
+      s.src = U + '?' + q;
+      s.onerror = ()=>{ cleanup(); reject(new Error('JSONP network error')); };
+      document.body.appendChild(s);
+    });
+  }
+  async function postJSON(body){
+    const U = url();
+    if(!U) throw new Error('CloudDB URL not set');
+    const res = await fetch(U, {method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'}, body: JSON.stringify(body), redirect:'follow'});
+    return res.json();
+  }
+  async function kvSet(key, value){ return postJSON({action:'kvSet', key, value}); }
+  async function kvAll(){ const r = await getJSONP({action:'kvAll'}); return r.values || {}; }
+  let hydrated = false;
+  async function hydrate(){
+    if(!url() || hydrated) return;
+    try{
+      const remote = await kvAll();
+      ['tbm','tbmCalendar','patrol','patrolCalendar','siteIssues'].forEach(k => {
+        const remoteVal = remote[k];
+        const hasRemote = Array.isArray(remoteVal) ? remoteVal.length > 0
+                       : (remoteVal && typeof remoteVal === 'object') ? Object.keys(remoteVal).length > 0
+                       : !!remoteVal;
+        if(hasRemote) localStorage.setItem('safety_'+k, JSON.stringify(remoteVal));
+      });
+      hydrated = true;
+      renderTbmCalendar(); renderHistories();
+      console.log('✅ CloudDB hydrated');
+    }catch(e){ console.warn('CloudDB hydrate 실패:', e.message); }
+  }
+  return {url, kvSet, kvAll, hydrate};
+})();
+
+const _kvPending = {};
+function scheduleKVSync(key){
+  if(!TRACKED_KEYS.includes(key)) return;
+  if(!CloudDB.url()) return;
+  clearTimeout(_kvPending[key]);
+  _kvPending[key] = setTimeout(async () => {
+    try{
+      const raw = localStorage.getItem('safety_'+key);
+      let val = null;
+      if(raw){ try{ val = JSON.parse(raw); }catch(e){} }
+      await CloudDB.kvSet(key, val);
+    }catch(e){ console.warn('시트 동기화 실패:', key, e.message); }
+  }, 500);
+}
+
+// ============================================================
+// TBM 테마
+// ============================================================
+const tbmThemes = {
+  0:'🌅 일요일 — 주간 안전 점검 사항 공유',
+  1:'⚙️ 월요일 테마: 설비·기계 점검 주간 — 각 기계 안전장치, 사출기, 프레스 이상 유무 집중 점검',
+  2:'⛑️ 화요일 테마: 개인보호구(PPE) 점검 — 안전모·안전화·장갑·보안경 착용 상태 전원 확인',
+  3:'💪 수요일 테마: 건강·피로 관리 — 수면 부족, 음주, 약물 복용 여부 확인 및 주의',
+  4:'✨ 목요일 테마: 환경·정리정돈(5S) — 통로 확보, 폐기물 처리, 작업장 청결 집중 점검',
+  5:'🚨 금요일 테마: 이번 주 아차사고·위험발견 사례 공유 — 무엇을 배웠나?',
+  6:'📋 토요일 — 주간 마무리 안전 점검'
+};
+function renderTBMTheme(){
+  const el = document.getElementById('tbm-today-theme');
+  if(!el) return;
+  const day = new Date().getDay();
+  el.innerHTML = `<strong>📅 오늘의 TBM 테마</strong><br>${tbmThemes[day]}`;
+}
+
+// ============================================================
+// TBM 달력
+// ============================================================
+function renderTbmCalendar(){
+  const el = document.getElementById('tbm-calendar');
+  if(!el) return;
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth();
+  const todayDate = now.getDate();
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month+1, 0).getDate();
+  const dayNames = ['일','월','화','수','목','금','토'];
+  const tbmData = DB.getObj('tbmCalendar');
+  const monthKey = `${year}-${String(month+1).padStart(2,'0')}`;
+
+  let doneCount = 0;
+  for(let d=1; d<=daysInMonth; d++){
+    const key = `${monthKey}-${String(d).padStart(2,'0')}`;
+    if(tbmData[key] && tbmData[key].done) doneCount++;
+  }
+
+  let html = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+    <span style="font-size:14px;font-weight:700;color:#0d1f3c;">${year}년 ${month+1}월</span>
+    <span style="font-size:12px;color:#6b7280;">실시: <strong style="color:#16a34a;">${doneCount}</strong> / ${daysInMonth}일</span>
+  </div>`;
+  html += '<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;text-align:center;font-size:12px;">';
+  dayNames.forEach((d,i)=> html += `<div style="font-weight:700;color:${i===0?'#dc2626':'#6b7280'};padding:4px 0;">${d}</div>`);
+  for(let i=0; i<firstDay; i++) html += '<div></div>';
+  for(let d=1; d<=daysInMonth; d++){
+    const dow = (firstDay + d - 1) % 7;
+    const key = `${monthKey}-${String(d).padStart(2,'0')}`;
+    const dayData = tbmData[key];
+    const isDone = dayData && dayData.done;
+    const hasPhoto = dayData && dayData.photoName;
+    const isToday = d === todayDate;
+    const bg = isDone ? '#dcfce7' : isToday ? '#eef4ff' : '#fff';
+    const border = isToday ? '2px solid #1e5096' : '1px solid #e8edf3';
+    const icon = isDone ? (hasPhoto ? '📸' : '✅') : (d <= todayDate && dow!==0 && dow!==6 ? '⬜' : '');
+    html += `<div onclick="openTbmDay(${d})" style="padding:6px 2px;border-radius:8px;background:${bg};border:${border};cursor:pointer;min-height:44px;position:relative;transition:all 0.15s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform=''">
+      <div style="font-size:12px;font-weight:${isToday?'800':'500'};color:${dow===0?'#dc2626':'#374151'};">${d}</div>
+      <div style="font-size:14px;margin-top:1px;">${icon}</div>
+    </div>`;
+  }
+  html += '</div>';
+  el.innerHTML = html;
+}
+
+function openTbmDay(day){
+  const now = new Date();
+  const monthKey = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+  const key = `${monthKey}-${String(day).padStart(2,'0')}`;
+  const tbmData = DB.getObj('tbmCalendar');
+  const dayData = tbmData[key] || {};
+
+  document.getElementById('tbm-day-form').style.display = 'block';
+  document.getElementById('tbm-day-title').textContent = `${now.getMonth()+1}월 ${day}일 TBM 기록`;
+  document.getElementById('tbm-day-done').checked = !!dayData.done;
+  document.getElementById('tbm-health').checked = !!dayData.health;
+  document.getElementById('tbm-ppe').checked = !!dayData.ppe;
+  document.getElementById('tbm-risk').checked = !!dayData.risk;
+  document.getElementById('tbm-day-agenda').value = dayData.agenda || '';
+  const previewEl = document.getElementById('tbm-day-photo-preview');
+  if(dayData.photoData){
+    const link = dayData.photoDriveUrl ? `<a href="${dayData.photoDriveUrl}" target="_blank" style="font-size:10px;color:#1e5096;text-decoration:underline;display:block;margin-top:2px;">드라이브에서 보기 →</a>` : '';
+    previewEl.innerHTML = `<img src="${dayData.photoData}" style="width:140px;height:100px;object-fit:cover;border-radius:8px;border:2px solid #16a34a;"><div style="font-size:11px;color:#16a34a;margin-top:2px;">📎 ${dayData.photoName||''}</div>${link}`;
+  } else if(dayData.photoName){
+    const link = dayData.photoDriveUrl ? `<a href="${dayData.photoDriveUrl}" target="_blank" style="font-size:11px;color:#1e5096;text-decoration:underline;">드라이브에서 보기 →</a>` : '';
+    previewEl.innerHTML = `<div style="font-size:12px;color:#16a34a;">📎 ${dayData.photoName}</div>${link}`;
+  } else {
+    previewEl.innerHTML = '';
+  }
+  document.getElementById('tbm-day-form').dataset.key = key;
+  document.getElementById('tbm-day-form').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+// ============================================================
+// 사진 압축 + 드라이브 업로드
+// ============================================================
+const MAX_PHOTO_BYTES = 200 * 1024;
+function compressImage(file){
+  return new Promise(resolve => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = new Image();
+      img.onload = () => {
+        const sizes = [1280, 1024, 900, 800, 700, 600, 500];
+        const qualities = [0.75, 0.65, 0.55, 0.5, 0.45, 0.4];
+        let result = null;
+        outer: for(const maxDim of sizes){
+          for(const q of qualities){
+            const ratio = Math.min(1, maxDim / Math.max(img.width, img.height));
+            const w = Math.round(img.width * ratio);
+            const h = Math.round(img.height * ratio);
+            const canvas = document.createElement('canvas');
+            canvas.width = w; canvas.height = h;
+            canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+            const dataUrl = canvas.toDataURL('image/jpeg', q);
+            const approxBytes = Math.ceil((dataUrl.length - 'data:image/jpeg;base64,'.length) * 3 / 4);
+            if(approxBytes <= MAX_PHOTO_BYTES){ result = dataUrl; break outer; }
+            result = dataUrl;
+          }
+        }
+        resolve(result);
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function previewTbmDayPhoto(input){
+  const preview = document.getElementById('tbm-day-photo-preview');
+  if(!preview || !input.files.length) return;
+  const file = input.files[0];
+  const form = document.getElementById('tbm-day-form');
+  const key = form?.dataset.key;
+  if(!key){ alert('먼저 달력에서 날짜를 선택하세요.'); return; }
+
+  preview.innerHTML = '<div style="font-size:11px;color:#1e5096;">압축 + 드라이브 업로드 중...</div>';
+  compressImage(file).then(dataUrl => {
+    const sizeKB = Math.ceil((dataUrl.length * 3 / 4) / 1024);
+    const ext = (file.name.split('.').pop()||'jpg').toLowerCase();
+    const newFileName = `TBM_${key}.${ext}`;
+    preview.innerHTML = `<img src="${dataUrl}" style="width:140px;height:100px;object-fit:cover;border-radius:8px;border:2px solid #e5e7eb;">
+      <div style="font-size:11px;color:#1e5096;margin-top:2px;">📤 ${newFileName} (${sizeKB}KB) — 업로드 중...</div>`;
+    const base64 = dataUrl.split(',')[1];
+    fetch(DRIVE_UPLOAD_URL, {
+      method:'POST', mode:'no-cors',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({fileName:newFileName, fileData:base64, mimeType:'image/jpeg', subfolder:'TBM_사진'})
+    }).then(()=>{
+      const tbmData = DB.getObj('tbmCalendar');
+      const cur = tbmData[key] || {};
+      cur.photoName = newFileName;
+      cur.photoData = dataUrl;
+      cur.photoDriveUrl = 'https://drive.google.com/drive/folders/10a7V0ao6Qf-_9XeiK4Bd2NRmfAX7rgB5';
+      cur.uploadedAt = new Date().toISOString();
+      tbmData[key] = cur;
+      DB.set('tbmCalendar', tbmData);
+      preview.innerHTML = `<img src="${dataUrl}" style="width:140px;height:100px;object-fit:cover;border-radius:8px;border:2px solid #16a34a;">
+        <div style="font-size:11px;color:#16a34a;margin-top:2px;">✅ ${newFileName} (${sizeKB}KB) — 드라이브 저장 완료</div>
+        <a href="${cur.photoDriveUrl}" target="_blank" style="font-size:10px;color:#1e5096;text-decoration:underline;">드라이브에서 보기 →</a>`;
+      renderTbmCalendar();
+    }).catch(err=>{
+      preview.innerHTML = `<div style="font-size:12px;color:#dc2626;">❌ 업로드 실패: ${err.message||err}</div>`;
+    });
+  });
+}
+
+// ============================================================
+// 저장
+// ============================================================
+function saveTbmDay(){
+  const form = document.getElementById('tbm-day-form');
+  const key = form.dataset.key;
+  if(!key){ alert('날짜가 선택되지 않았습니다.'); return; }
+  const tbmData = DB.getObj('tbmCalendar');
+  const cur = tbmData[key] || {};
+  const photoInput = document.getElementById('tbm-day-photo');
+  const photoName = photoInput.files.length > 0 ? photoInput.files[0].name : (cur.photoName || '');
+  tbmData[key] = {
+    ...cur,
+    done: document.getElementById('tbm-day-done').checked,
+    health: document.getElementById('tbm-health').checked,
+    ppe: document.getElementById('tbm-ppe').checked,
+    risk: document.getElementById('tbm-risk').checked,
+    agenda: document.getElementById('tbm-day-agenda').value,
+    photoName: photoName,
+    savedAt: new Date().toISOString()
+  };
+  DB.set('tbmCalendar', tbmData);
+
+  // tbm 이력에도 (대시보드 recent-tbm · stat-tbm 가 읽음)
+  if(tbmData[key].done){
+    const existing = DB.get('tbm');
+    const checks = [
+      tbmData[key].done, tbmData[key].health, tbmData[key].ppe, tbmData[key].risk,
+      false, false, false, false
+    ];
+    const checkedCount = checks.filter(Boolean).length;
+    const filtered = existing.filter(r=>r.date!==key);
+    filtered.unshift({
+      id:Date.now(), date:key, time:'08:00', leader:'', count:0,
+      place:'현장', notes:tbmData[key].agenda,
+      checks, checkedCount, createdAt:new Date().toISOString()
+    });
+    DB.set('tbm', filtered);
+  }
+
+  alert('✅ TBM 기록 저장!\n\n메인 대시보드에도 자동 반영됩니다.');
+  form.style.display = 'none';
+  photoInput.value = '';
+  renderTbmCalendar();
+  renderHistories();
+}
+
+// ============================================================
+// 이력
+// ============================================================
+function renderHistories(){
+  const tbody = document.getElementById('tbm-history-body');
+  if(!tbody) return;
+  const data = DB.get('tbm');
+  tbody.innerHTML = data.length===0
+    ? '<tr><td colspan="5" style="text-align:center;color:#9ca3af;padding:20px;">기록 없음</td></tr>'
+    : data.map(r=>`<tr>
+        <td>${r.date}</td>
+        <td>${r.leader||'-'}</td>
+        <td>${r.count||'-'}${r.count?'명':''}</td>
+        <td>${r.checkedCount||0}/8 <span class="badge ${r.checkedCount>=6?'green':r.checkedCount>=3?'yellow':'red'}">${r.checkedCount>=8?'완료':r.checkedCount>=3?'부분':'미흡'}</span></td>
+        <td class="no-print"><button class="btn btn-outline btn-sm" onclick="deleteTbmRecord(${r.id})">삭제</button></td>
+      </tr>`).join('');
+}
+function deleteTbmRecord(id){
+  if(!confirm('이 이력을 삭제하시겠습니까?')) return;
+  const arr = DB.get('tbm').filter(r=>r.id!==id);
+  DB.set('tbm', arr);
+  renderHistories();
+}
+
+// ============================================================
+// INIT
+// ============================================================
+window.addEventListener('DOMContentLoaded', () => {
+  const sup = DB.getObj('supabase');
+  if(sup.url && sup.key) initSupabase(sup.url, sup.key);
+  renderTBMTheme();
+  renderTbmCalendar();
+  renderHistories();
+  setTimeout(() => CloudDB.hydrate(), 600);
+  if(!supaClient){
+    const txt = document.getElementById('conn-text');
+    if(CloudDB.url() && txt) txt.textContent = '구글 시트 연동 중';
+  }
+  window.addEventListener('storage', (e) => {
+    if(e.key === 'safety_tbm' || e.key === 'safety_tbmCalendar'){
+      renderTbmCalendar(); renderHistories();
+    }
+  });
+});
+</script>
+</body>
+</html>

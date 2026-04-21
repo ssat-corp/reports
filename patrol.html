@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>현장 패트롤 점검 | 산업안전보건</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;background:#f0f4f9;color:#374151;min-height:100vh;}
+
+/* HEADER */
+.page-header{background:linear-gradient(135deg,#0d1f3c,#1e5096);color:#fff;padding:28px 28px 22px;box-shadow:0 2px 12px rgba(0,0,0,0.08);}
+.page-header .icon{font-size:38px;margin-bottom:4px;}
+.page-header h1{font-size:22px;font-weight:900;letter-spacing:-0.02em;}
+.page-header .sub{font-size:13px;opacity:0.85;margin-top:2px;}
+.page-header .conn{position:absolute;top:16px;right:20px;font-size:11px;background:rgba(255,255,255,0.15);padding:4px 10px;border-radius:12px;display:flex;align-items:center;gap:6px;}
+.conn-dot{width:7px;height:7px;border-radius:50%;background:#94a3b8;}
+.conn-dot.connected{background:#22c55e;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
+
+.container{max-width:1200px;margin:0 auto;padding:20px 20px 60px;}
+
+/* BASIC COMPONENTS */
+.card{background:#fff;border:1px solid #e8edf3;border-radius:12px;padding:18px 20px;margin-bottom:14px;box-shadow:0 1px 3px rgba(0,0,0,0.04);}
+.card-title{font-size:14px;font-weight:800;color:#0d1f3c;margin-bottom:12px;padding-bottom:10px;border-bottom:2px solid #1e5096;}
+.btn{display:inline-block;padding:8px 16px;background:#1e5096;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;text-decoration:none;transition:all 0.15s;}
+.btn:hover{background:#0d1f3c;}
+.btn-outline{background:#fff;color:#1e5096;border:1.5px solid #1e5096;}
+.btn-outline:hover{background:#eff6ff;}
+.btn-success{background:#16a34a;}
+.btn-success:hover{background:#15803d;}
+.btn-sm{padding:6px 12px;font-size:12px;}
+
+.table-wrap{border:1px solid #e8edf3;border-radius:8px;overflow:hidden;overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+th{background:#f8fafc;padding:8px 10px;text-align:left;font-weight:700;color:#0d1f3c;border-bottom:1px solid #e8edf3;font-size:12px;}
+td{padding:8px 10px;border-bottom:1px solid #f1f5f9;}
+
+.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;}
+.badge.green{background:#dcfce7;color:#15803d;}
+.badge.yellow{background:#fef3c7;color:#a16207;}
+.badge.red{background:#fef2f2;color:#b91c1c;}
+.badge.blue{background:#dbeafe;color:#1e5096;}
+.badge.gray{background:#f1f5f9;color:#64748b;}
+
+/* FILTER BAR */
+.filter-bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px;background:#f8fafc;padding:10px 14px;border-radius:10px;}
+.pf-site{transition:all 0.15s;}
+
+/* PRINT */
+@media print{
+  .no-print{display:none!important;}
+  body{background:#fff;}
+  .page-header{background:#0d1f3c!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
+  .card{box-shadow:none!important;border:1px solid #000!important;break-inside:avoid;}
+  #patrol-check-table thead tr{background:#0d1f3c!important;color:#fff!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
+  #patrol-check-table tr[style*="f1f5f9"] td{background:#e8edf3!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
+  @page{size:A4 portrait;margin:10mm;}
+}
+</style>
+</head>
+<body>
+
+<div class="page-header" style="position:relative;">
+  <div class="conn no-print"><span id="conn-dot" class="conn-dot"></span><span id="conn-text">로컬 저장소 사용 중</span></div>
+  <div class="icon">🔍</div>
+  <h1>현장 패트롤 점검</h1>
+  <div class="sub">담당자 · 주간 순회점검 · 사업장별 체크리스트</div>
+</div>
+
+<div class="container">
+
+  <!-- 상단 액션 -->
+  <div class="no-print" style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;">
+    <a href="patrol_print.html" target="_blank" class="btn btn-sm">🖨️ 통합 인쇄용 체크리스트</a>
+    <a href="safety_dashboard.html" class="btn btn-outline btn-sm">📊 메인 대시보드</a>
+  </div>
+
+  <!-- 필터 -->
+  <div class="filter-bar no-print">
+    <span style="font-size:13px;font-weight:700;color:#0d1f3c;">🏭 사업장 선택:</span>
+    <button class="pf-site btn btn-sm" onclick="setPatrolFilter('suwon',this)" style="background:#1e5096;color:#fff;">📍 수원 (사출·조립)</button>
+    <button class="pf-site btn btn-outline btn-sm" onclick="setPatrolFilter('hwaseong',this)">📍 화성 (도색·화학)</button>
+  </div>
+
+  <!-- 패트롤 달력 -->
+  <div class="card">
+    <div id="patrol-calendar"></div>
+  </div>
+
+  <!-- 패트롤 체크리스트 표 (날짜 클릭 시 표시) -->
+  <div id="patrol-checklist-form" style="display:none;">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:12px;border-bottom:2px solid #0d1f3c;margin-bottom:12px;flex-wrap:wrap;gap:10px;">
+        <div>
+          <div style="font-size:18px;font-weight:900;color:#0d1f3c;" id="patrol-form-title">현장 패트롤 점검표</div>
+          <div style="font-size:12px;color:#6b7280;margin-top:2px;" id="patrol-form-date"></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+          <button class="btn btn-outline btn-sm no-print" onclick="window.print()" style="white-space:nowrap;">🖨️ 이 점검표 인쇄</button>
+          <div style="text-align:right;font-size:11px;color:#6b7280;">
+            <div>점검자: <input type="text" id="p-inspector" placeholder="이름" style="border:none;border-bottom:1px solid #d1d5db;width:80px;font-size:11px;padding:2px 4px;"></div>
+            <div style="margin-top:4px;">날씨:
+              <select id="p-weather" style="border:none;border-bottom:1px solid #d1d5db;font-size:11px;padding:2px;">
+                <option>맑음</option><option>흐림</option><option>비</option><option>눈</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table id="patrol-check-table" style="font-size:13px;">
+          <thead><tr style="background:#0d1f3c;color:#fff;">
+            <th style="width:30%;padding:10px 12px;color:#fff;">점검사항</th>
+            <th style="width:40%;padding:10px 12px;color:#fff;">점검내용</th>
+            <th style="width:50px;padding:10px;text-align:center;color:#fff;">점검</th>
+            <th style="width:25%;padding:10px 12px;color:#fff;">비고</th>
+          </tr></thead>
+          <tbody id="patrol-check-tbody"></tbody>
+        </table>
+      </div>
+
+      <div style="margin-top:16px;padding-top:12px;border-top:2px solid #e8edf3;">
+        <div style="font-size:13px;font-weight:700;color:#0d1f3c;margin-bottom:8px;">조치 사항</div>
+        <textarea id="p-issues" placeholder="특이사항, 불량/개선 필요 사항, 조치 완료 사항 기재" style="width:100%;min-height:60px;padding:10px;border:1px solid #d1d5db;border-radius:8px;font-size:13px;font-family:inherit;resize:vertical;"></textarea>
+      </div>
+
+      <div style="margin-top:12px;padding-top:12px;border-top:2px solid #e8edf3;" class="no-print">
+        <div style="font-size:13px;font-weight:700;color:#0d1f3c;margin-bottom:8px;">📸 현장 사진 <span style="font-size:11px;font-weight:400;color:#6b7280;">(여러 장 · 자동 압축 · 드라이브 저장)</span></div>
+        <input type="file" id="p-photos" accept="image/*" multiple onchange="addPatrolPhotos(this)" style="width:100%;padding:4px;border:1px solid #d1d5db;border-radius:6px;font-size:12px;">
+        <div id="p-photos-preview" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;"></div>
+      </div>
+
+      <div class="no-print" style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px;">
+        <button class="btn btn-success" onclick="savePatrolDay()">💾 점검 저장</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 패트롤 이력 -->
+  <div class="card">
+    <div class="card-title">📜 패트롤 이력</div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>날짜</th><th>사업장</th><th>점검자</th><th>점검</th><th>불량</th><th class="no-print">작업</th></tr></thead>
+      <tbody id="patrol-history-body"></tbody>
+    </table></div>
+  </div>
+
+  <div style="text-align:center;color:#94a3b8;font-size:11px;margin-top:30px;">
+    © 신성오토텍 안전환경팀 · 현장 패트롤 점검
+  </div>
+
+</div>
+
+<script>
+// ============================================================
+// SHARED INFRASTRUCTURE (safety_dashboard.html와 동일 데이터 계층)
+// ============================================================
+const DRIVE_UPLOAD_URL = 'https://script.google.com/macros/s/AKfycbyiZ5j5XH7G3gOMXzlSxbX9hJ5WxCf2J3PMUGGZfaQI3jQC7s0NOn-T8grEmi7LRpIZuA/exec';
+
+// Supabase
+let supaClient = null;
+function initSupabase(url, key){
+  if(!url || !key) return;
+  try{
+    supaClient = supabase.createClient(url, key);
+    document.getElementById('conn-dot').className = 'conn-dot connected';
+    document.getElementById('conn-text').textContent = '실시간 공유 연결됨';
+    supaClient.channel('patrol_sync')
+      .on('postgres_changes', {event:'*', schema:'public', table:'safety_store'}, () => {
+        supaLoadAll().then(() => { renderPatrolCalendar(); renderHistories(); });
+      })
+      .subscribe();
+    supaLoadAll();
+  }catch(e){ console.error('Supabase 연결 실패:', e); }
+}
+async function supaLoadAll(){
+  if(!supaClient) return;
+  try{
+    const {data} = await supaClient.from('safety_store').select('*');
+    if(!data) return;
+    data.forEach(row => localStorage.setItem('safety_'+row.key, JSON.stringify(row.value)));
+  }catch(e){ console.error('supaLoad 오류:', e); }
+}
+async function supaSync(key){
+  if(!supaClient) return;
+  try{
+    const value = JSON.parse(localStorage.getItem('safety_'+key) || '[]');
+    await supaClient.from('safety_store').upsert({key, value}, {onConflict:'key'});
+  }catch(e){ console.error('supaSync 오류:', e); }
+}
+
+// DB
+const DB = {
+  get(key){ try{return JSON.parse(localStorage.getItem('safety_'+key))||[];}catch{return [];} },
+  getObj(key){ try{return JSON.parse(localStorage.getItem('safety_'+key))||{};}catch{return {};} },
+  set(key,val){ localStorage.setItem('safety_'+key, JSON.stringify(val)); supaSync(key); try{scheduleKVSync(key);}catch(e){} }
+};
+
+// CloudDB — Google Sheets/Drive 연동 (대시보드와 동일 레이어)
+const TRACKED_KEYS = ['patrol','tbm','patrolCalendar','tbmCalendar','education','meetlog',
+  'esg_done','esg_files','esg_memos','esg_custom','doclist','dm_files','doc_custom',
+  'risk','riskFiles','accident','equipment','siteIssues','signs','daily5','posters_printed'];
+
+const CloudDB = (() => {
+  function url(){ return DRIVE_UPLOAD_URL || ''; }
+  function getJSONP(params){
+    return new Promise((resolve,reject)=>{
+      const U = url();
+      if(!U){ reject(new Error('CloudDB URL not set')); return; }
+      const cb = '_cb_' + Date.now() + '_' + Math.floor(Math.random()*1e6);
+      const s = document.createElement('script');
+      const to = setTimeout(()=>{ cleanup(); reject(new Error('JSONP timeout')); }, 30000);
+      const cleanup = ()=>{ try{delete window[cb];}catch(e){} s.remove(); clearTimeout(to); };
+      window[cb] = (data)=>{ cleanup(); resolve(data); };
+      const q = Object.entries({...params, callback: cb})
+        .map(([k,v])=>encodeURIComponent(k)+'='+encodeURIComponent(v)).join('&');
+      s.src = U + '?' + q;
+      s.onerror = ()=>{ cleanup(); reject(new Error('JSONP network error')); };
+      document.body.appendChild(s);
+    });
+  }
+  async function postJSON(body){
+    const U = url();
+    if(!U) throw new Error('CloudDB URL not set');
+    const res = await fetch(U, {
+      method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body: JSON.stringify(body), redirect:'follow'
+    });
+    return res.json();
+  }
+  async function kvSet(key, value){ return postJSON({action:'kvSet', key, value}); }
+  async function kvAll(){ const r = await getJSONP({action:'kvAll'}); return r.values || {}; }
+
+  let hydrated = false;
+  async function hydrate(){
+    if(!url() || hydrated) return;
+    try{
+      const remote = await kvAll();
+      ['patrol','patrolCalendar','siteIssues','tbm','tbmCalendar'].forEach(k => {
+        const remoteVal = remote[k];
+        const hasRemote = Array.isArray(remoteVal) ? remoteVal.length > 0
+                       : (remoteVal && typeof remoteVal === 'object') ? Object.keys(remoteVal).length > 0
+                       : !!remoteVal;
+        if(hasRemote) localStorage.setItem('safety_'+k, JSON.stringify(remoteVal));
+      });
+      hydrated = true;
+      renderPatrolCalendar(); renderHistories();
+      console.log('✅ CloudDB hydrated (구글 시트 동기화)');
+    }catch(e){ console.warn('CloudDB hydrate 실패 (로컬 유지):', e.message); }
+  }
+  return {url, kvSet, kvAll, hydrate};
+})();
+
+const _kvPending = {};
+function scheduleKVSync(key){
+  if(!TRACKED_KEYS.includes(key)) return;
+  if(!CloudDB.url()) return;
+  clearTimeout(_kvPending[key]);
+  _kvPending[key] = setTimeout(async () => {
+    try{
+      const raw = localStorage.getItem('safety_'+key);
+      let val = null;
+      if(raw){ try{ val = JSON.parse(raw); }catch(e){} }
+      await CloudDB.kvSet(key, val);
+    }catch(e){ console.warn('시트 동기화 실패:', key, e.message); }
+  }, 500);
+}
+
+// ============================================================
+// PATROL ZONES DATA (safety_dashboard.html 원본 그대로)
+// ============================================================
+let patrolSiteFilter = 'suwon';
+const patrolZones = [
+  {id:'pc1', site:'all', level:'manager', name:'🛡️ 현장관리 기본', items:[
+    'TBM 활동 실시 확인',
+    '보호구(안전모·안전화·보안경) 착용 확인 및 미착용자 시정',
+    '통로 확보 (60cm↑) 및 바닥 미끄럼 요인 없음',
+    '안전표지·수칙 게시 상태 양호',
+    '비상연락망·응급처치함 비치 확인',
+    '작업 중 휴대폰 사용 금지 준수'
+  ]},
+  {id:'pc6', site:'all', level:'manager', name:'🧯 소방·비상', items:[
+    '소화기 배치·압력(녹색)·안전핀·몸체 상태 양호',
+    '소화전 표시등 점등 / 호스·노즐 결합 상태',
+    '비상구 표시등 점등 / 장애물 없음 (항시 개방)',
+    '대피로 확보 / 구급함 비치 확인',
+    '비상 연락처 게시판 부착 상태'
+  ]},
+  {id:'pc5', site:'all', level:'manager', name:'⚡ 전기·분전반', items:[
+    '각 층 분전반 문 잠금 / 내부 이물질·피복 양호',
+    '분전반 접지 상태 양호',
+    '조명 손상·탈락 / 콘센트 파손 없음',
+    '임시 연장선 방치 없음 / 가연성 물질 없음'
+  ]},
+  {id:'pc9', site:'all', level:'manager', name:'🏢 공용구역·외부', items:[
+    '사무동 통로 정리정돈 / 대피 동선 장애물 없음',
+    '비상구 표시 명확 / 출입구 물건 방치 없음',
+    '외부 통로 바닥(균열·미끄럼) / 주차장 정리',
+    '외부 조명·배수로 상태 양호'
+  ]},
+  {id:'pc10', site:'all', level:'team', name:'✨ 3정5S 점검', items:[
+    '[정품] 지정 자재·부품만 있는가 (불필요 물품 제거)',
+    '[정량] 적정 수량만 보관 (과다 적재 없음)',
+    '[정위치] 자재·공구 지정 위치 보관 (위치 표시 확인)',
+    '[정리] 필요/불필요 구분 완료',
+    '[정돈] 누구나 꺼내고 되돌릴 수 있게 정돈',
+    '[청소] 작업장·설비·바닥 청소 상태',
+    '공구 사용 후 제자리 반납 / 퇴근 전 5분 정리'
+  ]},
+  {id:'pc8', site:'all', level:'team', name:'🌊 환경·폐기물', items:[
+    '환풍기 작동 / 작업장 환기 상태 양호',
+    '외부 배수관(맨홀) 막힘 없음',
+    '폐기물 지정 장소 외 방치·넘침 없음',
+    '분리수거 적정 / 유해 폐기물 별도 보관'
+  ]},
+  {id:'pc2s', site:'suwon', level:'manager', name:'🏭 사출·조립 설비', items:[
+    '사출기 안전문 닫힘 / 비상정지 작동',
+    '사출기 주변 오일·수지 누출 없음',
+    '금형 체결 상태 (볼트 완료)',
+    '컨베이어 안전덮개 정상 (목장갑 금지 구역)',
+    '래핑기 안전덮개·비상정지 정상',
+    '건조기 온도·잠금 / 리프트 안전바·하중',
+    '각 설비 비상정지·스위치 작동 확인',
+    '방호장치·안전가드 설치 상태',
+    '설비 정비 시 LOTO 실시 확인'
+  ]},
+  {id:'pc3s', site:'suwon', level:'manager', name:'🏗️ 천장주행크레인·금형', items:[
+    '체인·와이어 마모 없음 / 훅 해지장치 정상',
+    '최대하중 표시 확인 (초과 없음)',
+    '인양 중 하부 작업자 없음 / 키 이상 운반 없음',
+    '금형 2인1조+신호수 / 안전모 착용',
+    '금형 보관대 안전 고정 상태'
+  ]},
+  {id:'pc4s', site:'suwon', level:'team', name:'🚜 지게차·운반 (수원)', items:[
+    '지게차 통로 구분 / 보행자 혼용 없음',
+    '후방경보·제동 정상 / 면허 소지 확인',
+    '포크 20~30cm 유지 / 키 분리보관',
+    '운반대차 하중 준수 / 전방 주시',
+    '중량물 2인↑ 운반 (25kg 이상)'
+  ]},
+  {id:'pcsw', site:'suwon', level:'team', name:'🌊 수원 환경설비', items:[
+    '쿨링타워 가동 상태 (동절기 12~2월 확인)',
+    '쿨링타워 누수 없음 / 냉각수 보충',
+    '콤프레샤 작동 및 이상음 없음'
+  ]},
+  {id:'pc2h', site:'hwaseong', level:'manager', name:'🏭 도색·레이저 설비', items:[
+    '도색 부스 환기·배기장치 정상 작동',
+    '도색실 방폭 설비·접지 상태 양호',
+    '레이저 장비 안전커버·인터록 정상',
+    '레이저 보안경 착용 확인 (작업자 전원)',
+    '각 설비 비상정지·스위치 작동 확인',
+    '방호장치·안전가드 설치 상태',
+    '설비 정비 시 LOTO 실시 확인'
+  ]},
+  {id:'pc7h', site:'hwaseong', level:'manager', name:'🧪 유해물질·화학물질', items:[
+    '유해물질 지정 장소 보관 / 경고표지 부착',
+    'MSDS 비치 및 작업자 숙지 확인',
+    '취급 시 보호구(방독마스크·내화학장갑) 착용',
+    '화학물질 보관소 소화기·환기 상태',
+    '유해물질 취급자 교육 실시 확인',
+    '유기용제 전용 용기 사용 / 밀폐 보관'
+  ]},
+  {id:'pc4h', site:'hwaseong', level:'team', name:'🚜 지게차·운반 (화성)', items:[
+    '지게차 통로 구분 / 보행자 혼용 없음',
+    '후방경보·제동 정상 / 면허 소지 확인',
+    '포크 20~30cm 유지 / 키 분리보관',
+    '운반대차 하중 준수 / 전방 주시',
+    '중량물 2인↑ 운반 (25kg 이상)'
+  ]},
+  {id:'pchw', site:'hwaseong', level:'team', name:'🌬️ 화성 환경설비', items:[
+    '도색실 배기·집진 장치 작동 확인',
+    '유기용제 작업장 환기 상태 양호',
+    '소음·분진 수준 이상 없음',
+    '폐도료·폐용제 별도 수거 보관'
+  ]}
+];
+
+function setPatrolFilter(val, btn){
+  patrolSiteFilter = val;
+  document.querySelectorAll('.pf-site').forEach(b=>{
+    b.classList.remove('btn-success'); b.classList.add('btn-outline');
+    b.style.background='#fff'; b.style.color='#1e5096';
+  });
+  if(btn){ btn.style.background='#1e5096'; btn.style.color='#fff'; btn.classList.remove('btn-outline'); }
+  // 현재 열린 체크리스트가 있다면 다시 렌더링
+  const form = document.getElementById('patrol-checklist-form');
+  if(form.style.display === 'block' && form.dataset.key){
+    const day = parseInt(form.dataset.key.split('-').pop(), 10);
+    openPatrolDay(day);
+  }
+}
+function getFilteredZones(){
+  return patrolZones.filter(z => z.site==='all' || z.site===patrolSiteFilter);
+}
+
+// ============================================================
+// 패트롤 달력 · 체크리스트 · 저장
+// ============================================================
+function renderPatrolCalendar(){
+  const el = document.getElementById('patrol-calendar');
+  if(!el) return;
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth();
+  const todayDate = now.getDate();
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month+1, 0).getDate();
+  const dayNames = ['일','월','화','수','목','금','토'];
+  const patrolData = DB.getObj('patrolCalendar');
+  const monthKey = `${year}-${String(month+1).padStart(2,'0')}`;
+
+  let doneCount = 0;
+  for(let d=1; d<=daysInMonth; d++){
+    const key = `${monthKey}-${String(d).padStart(2,'0')}`;
+    if(patrolData[key] && patrolData[key].done) doneCount++;
+  }
+
+  let html = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+    <span style="font-size:14px;font-weight:700;color:#0d1f3c;">${year}년 ${month+1}월 패트롤</span>
+    <span style="font-size:12px;color:#6b7280;">실시: <strong style="color:#1e5096;">${doneCount}</strong>회</span>
+  </div>`;
+  html += '<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;text-align:center;font-size:12px;">';
+  dayNames.forEach((d,i)=> html += `<div style="font-weight:700;color:${i===0?'#dc2626':'#6b7280'};padding:4px 0;">${d}</div>`);
+  for(let i=0; i<firstDay; i++) html += '<div></div>';
+  for(let d=1; d<=daysInMonth; d++){
+    const dow = (firstDay + d - 1) % 7;
+    const key = `${monthKey}-${String(d).padStart(2,'0')}`;
+    const dayData = patrolData[key];
+    const isDone = dayData && dayData.done;
+    const isToday = d === todayDate;
+    const bg = isDone ? '#dcfce7' : isToday ? '#eef4ff' : '#fff';
+    const border = isToday ? '2px solid #1e5096' : '1px solid #e8edf3';
+    const icon = isDone ? '✅' : '';
+    html += `<div onclick="openPatrolDay(${d})" style="padding:6px 2px;border-radius:8px;background:${bg};border:${border};cursor:pointer;min-height:44px;transition:all 0.15s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform=''">
+      <div style="font-size:12px;font-weight:${isToday?'800':'500'};color:${dow===0?'#dc2626':'#374151'};">${d}</div>
+      <div style="font-size:13px;margin-top:1px;">${icon}</div>
+    </div>`;
+  }
+  html += '</div>';
+  el.innerHTML = html;
+}
+
+function openPatrolDay(day){
+  const now = new Date();
+  const monthKey = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+  const key = `${monthKey}-${String(day).padStart(2,'0')}`;
+  const dayNames = ['일','월','화','수','목','금','토'];
+  const dateObj = new Date(now.getFullYear(), now.getMonth(), day);
+  const dayName = dayNames[dateObj.getDay()];
+
+  document.getElementById('patrol-form-title').textContent = '현장 패트롤 점검표';
+  document.getElementById('patrol-form-date').textContent = `${key} (${dayName})`;
+  document.getElementById('patrol-checklist-form').style.display = 'block';
+  document.getElementById('patrol-checklist-form').dataset.key = key;
+
+  const filtered = getFilteredZones();
+  const patrolData = DB.getObj('patrolCalendar');
+  const saved = patrolData[key] || {};
+  const tbody = document.getElementById('patrol-check-tbody');
+  let rows = '';
+  filtered.forEach(zone=>{
+    const icon = zone.name.match(/^(\S+)/)?.[1]||'';
+    const label = zone.name.replace(/^(\S+)\s*/,'');
+    rows += `<tr style="background:#f1f5f9;"><td colspan="4" style="padding:8px 12px;font-weight:800;font-size:13px;color:#0d1f3c;">${icon} ${label}</td></tr>`;
+    zone.items.forEach((item,i)=>{
+      const itemKey = `${zone.id}_${i}`;
+      const checked = saved[itemKey] ? 'checked' : '';
+      const memo = saved[`${itemKey}_memo`] || '';
+      rows += `<tr>
+        <td style="padding:6px 12px;font-size:12px;color:#374151;border-bottom:1px solid #f5f7fa;" colspan="2">${item}</td>
+        <td style="text-align:center;border-bottom:1px solid #f5f7fa;"><input type="checkbox" ${checked} data-key="${itemKey}" style="width:18px;height:18px;accent-color:#1e5096;"></td>
+        <td style="border-bottom:1px solid #f5f7fa;"><input type="text" value="${memo.replace(/"/g,'&quot;')}" data-memo="${itemKey}" placeholder="" style="width:100%;border:none;font-size:11px;padding:4px;color:#6b7280;"></td>
+      </tr>`;
+    });
+  });
+  tbody.innerHTML = rows;
+
+  if(saved.issues) document.getElementById('p-issues').value = saved.issues;
+  else document.getElementById('p-issues').value = '';
+  if(saved.inspector) document.getElementById('p-inspector').value = saved.inspector;
+  if(saved.weather) document.getElementById('p-weather').value = saved.weather;
+
+  renderPatrolPhotosPreview(key);
+  document.getElementById('patrol-checklist-form').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function savePatrolDay(){
+  const form = document.getElementById('patrol-checklist-form');
+  const key = form.dataset.key;
+  if(!key){ alert('날짜가 선택되지 않았습니다.'); return; }
+  const patrolData = DB.getObj('patrolCalendar');
+  const dayData = patrolData[key] || {};
+  let totalChecked = 0, totalItems = 0;
+  document.querySelectorAll('#patrol-check-tbody input[type=checkbox]').forEach(cb=>{
+    dayData[cb.dataset.key] = cb.checked;
+    totalItems++;
+    if(cb.checked) totalChecked++;
+  });
+  document.querySelectorAll('#patrol-check-tbody input[data-memo]').forEach(inp=>{
+    if(inp.value) dayData[inp.dataset.memo+'_memo'] = inp.value;
+    else delete dayData[inp.dataset.memo+'_memo'];
+  });
+  dayData.done = totalChecked > 0;
+  dayData.totalChecked = totalChecked;
+  dayData.totalItems = totalItems;
+  dayData.issues = document.getElementById('p-issues').value || '';
+  dayData.inspector = document.getElementById('p-inspector').value || '';
+  dayData.weather = document.getElementById('p-weather').value || '';
+  dayData.siteFilter = patrolSiteFilter;
+  dayData.savedAt = new Date().toISOString();
+  patrolData[key] = dayData;
+  DB.set('patrolCalendar', patrolData);
+
+  // 이력 (대시보드 recent-patrol · stat-patrol 가 읽음)
+  const existing = DB.get('patrol');
+  const filtered = existing.filter(r=>r.date!==key);
+  filtered.unshift({
+    id:Date.now(), date:key, inspector:dayData.inspector, type:'패트롤 점검',
+    weather:dayData.weather, siteFilter:patrolSiteFilter,
+    totalChecked, totalItems, badCount:totalItems-totalChecked,
+    issues:dayData.issues, createdAt:new Date().toISOString()
+  });
+  DB.set('patrol', filtered);
+
+  alert(`✅ ${key} 패트롤 저장! (${totalChecked}/${totalItems} 점검)\n\n메인 대시보드에도 자동 반영됩니다.`);
+  renderPatrolCalendar();
+  renderHistories();
+}
+
+// ============================================================
+// 사진 (드라이브 업로드 + 자동 압축)
+// ============================================================
+const MAX_PHOTO_BYTES = 200 * 1024;
+function compressImage(file){
+  return new Promise(resolve => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = new Image();
+      img.onload = () => {
+        const sizes = [1280, 1024, 900, 800, 700, 600, 500];
+        const qualities = [0.75, 0.65, 0.55, 0.5, 0.45, 0.4];
+        let result = null;
+        outer: for(const maxDim of sizes){
+          for(const q of qualities){
+            const ratio = Math.min(1, maxDim / Math.max(img.width, img.height));
+            const w = Math.round(img.width * ratio);
+            const h = Math.round(img.height * ratio);
+            const canvas = document.createElement('canvas');
+            canvas.width = w; canvas.height = h;
+            canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+            const dataUrl = canvas.toDataURL('image/jpeg', q);
+            const approxBytes = Math.ceil((dataUrl.length - 'data:image/jpeg;base64,'.length) * 3 / 4);
+            if(approxBytes <= MAX_PHOTO_BYTES){ result = dataUrl; break outer; }
+            result = dataUrl;
+          }
+        }
+        resolve(result);
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+async function addPatrolPhotos(input){
+  const form = document.getElementById('patrol-checklist-form');
+  const key = form?.dataset.key;
+  if(!key || !input.files.length){ if(!key) alert('먼저 달력에서 날짜를 선택하세요.'); return; }
+  const patrolData = DB.getObj('patrolCalendar');
+  if(!patrolData[key]) patrolData[key] = {};
+  if(!Array.isArray(patrolData[key].photos)) patrolData[key].photos = [];
+  const previewEl = document.getElementById('p-photos-preview');
+  const files = Array.from(input.files);
+
+  for(let i = 0; i < files.length; i++){
+    const file = files[i];
+    const idx = patrolData[key].photos.length + 1;
+    const placeholder = document.createElement('div');
+    placeholder.style.cssText = 'width:100px;height:100px;border:2px dashed #d1d5db;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:10px;color:#1e5096;text-align:center;padding:4px;';
+    placeholder.textContent = `업로드 중... ${i+1}/${files.length}`;
+    previewEl.appendChild(placeholder);
+
+    try{
+      const dataUrl = await compressImage(file);
+      const ext = (file.name.split('.').pop()||'jpg').toLowerCase();
+      const newFileName = `패트롤_${key}_${String(idx).padStart(2,'0')}.${ext}`;
+      const base64 = dataUrl.split(',')[1];
+      await fetch(DRIVE_UPLOAD_URL, {
+        method:'POST', mode:'no-cors',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({fileName:newFileName, fileData:base64, mimeType:'image/jpeg', subfolder:'패트롤_사진'})
+      });
+      patrolData[key].photos.push({
+        name: newFileName, data: dataUrl,
+        driveUrl: 'https://drive.google.com/drive/folders/10a7V0ao6Qf-_9XeiK4Bd2NRmfAX7rgB5',
+        uploadedAt: new Date().toISOString()
+      });
+      DB.set('patrolCalendar', patrolData);
+      placeholder.remove();
+      renderPatrolPhotosPreview(key);
+    }catch(err){
+      placeholder.style.border = '2px solid #dc2626';
+      placeholder.style.color = '#dc2626';
+      placeholder.textContent = '실패';
+      console.error(err);
+    }
+  }
+  input.value = '';
+}
+
+function renderPatrolPhotosPreview(key){
+  const previewEl = document.getElementById('p-photos-preview');
+  if(!previewEl) return;
+  const patrolData = DB.getObj('patrolCalendar');
+  const photos = (patrolData[key] && Array.isArray(patrolData[key].photos)) ? patrolData[key].photos : [];
+  if(photos.length === 0){ previewEl.innerHTML = ''; return; }
+  previewEl.innerHTML = photos.map((p, i)=>`
+    <div style="position:relative;">
+      <img src="${p.data}" style="width:100px;height:100px;object-fit:cover;border-radius:8px;border:2px solid #16a34a;cursor:pointer;" onclick="window.open('${p.driveUrl||p.data}','_blank')" title="${p.name}">
+      <button onclick="removePatrolPhoto('${key}',${i})" style="position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;background:#dc2626;color:#fff;border:none;cursor:pointer;font-size:11px;line-height:1;">✕</button>
+    </div>`).join('');
+}
+
+function removePatrolPhoto(key, idx){
+  if(!confirm('이 사진을 삭제하시겠습니까?')) return;
+  const patrolData = DB.getObj('patrolCalendar');
+  if(!patrolData[key] || !Array.isArray(patrolData[key].photos)) return;
+  patrolData[key].photos.splice(idx, 1);
+  DB.set('patrolCalendar', patrolData);
+  renderPatrolPhotosPreview(key);
+}
+
+// ============================================================
+// 이력 렌더링
+// ============================================================
+function renderHistories(){
+  const tbody = document.getElementById('patrol-history-body');
+  if(!tbody) return;
+  const data = DB.get('patrol');
+  tbody.innerHTML = data.length===0
+    ? '<tr><td colspan="6" style="text-align:center;color:#9ca3af;padding:20px;">기록 없음</td></tr>'
+    : data.map(r=>{
+        const siteLabel = r.siteFilter==='suwon'?'수원':r.siteFilter==='hwaseong'?'화성':'전체';
+        return `<tr>
+          <td>${r.date}</td>
+          <td><span class="badge ${r.siteFilter==='suwon'?'blue':r.siteFilter==='hwaseong'?'yellow':'gray'}">${siteLabel}</span></td>
+          <td>${r.inspector||'-'}</td>
+          <td>${r.totalChecked||0}/${r.totalItems||0}</td>
+          <td><span class="badge ${r.badCount===0?'green':r.badCount<=3?'yellow':'red'}">${r.badCount||0}건</span></td>
+          <td class="no-print"><button class="btn btn-outline btn-sm" onclick="deletePatrolRecord(${r.id})">삭제</button></td>
+        </tr>`;
+      }).join('');
+}
+
+function deletePatrolRecord(id){
+  if(!confirm('이 이력을 삭제하시겠습니까?')) return;
+  const arr = DB.get('patrol').filter(r=>r.id!==id);
+  DB.set('patrol', arr);
+  renderHistories();
+}
+
+// ============================================================
+// INIT
+// ============================================================
+window.addEventListener('DOMContentLoaded', () => {
+  // Supabase (선택) — 설정되어 있으면 실시간 구독
+  const sup = DB.getObj('supabase');
+  if(sup.url && sup.key) initSupabase(sup.url, sup.key);
+
+  renderPatrolCalendar();
+  renderHistories();
+
+  // 구글시트(CloudDB)에서 최신 데이터 가져와 하이드레이트
+  setTimeout(() => CloudDB.hydrate(), 600);
+
+  // Supabase 미연결 시 연결 표시
+  if(!supaClient){
+    const txt = document.getElementById('conn-text');
+    if(CloudDB.url() && txt) txt.textContent = '구글 시트 연동 중 (로컬 + 시트)';
+  }
+
+  // 다른 창(대시보드/다른 팝업)에서 저장 시 자동 갱신
+  window.addEventListener('storage', (e) => {
+    if(e.key === 'safety_patrol' || e.key === 'safety_patrolCalendar'){
+      renderPatrolCalendar();
+      renderHistories();
+    }
+  });
+});
+</script>
+</body>
+</html>

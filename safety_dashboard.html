@@ -578,33 +578,41 @@ table tr:hover td{background:#f8fafc;}
   <!-- ===== 패트롤+TBM (배너 → 달력 → 체크리스트 표) ===== -->
   <div id="section-patrol" class="section">
 
-    <!-- 세 개의 배너 -->
+    <!-- 세 개의 배너 (클릭 시 담당자별 별도 페이지 팝업) -->
     <div class="patrol-banners" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:16px;">
-      <!-- 패트롤 배너 -->
-      <div onclick="showPatrolView('patrol')" style="background:linear-gradient(135deg,#0d1f3c,#1e5096);border-radius:16px;padding:28px 24px;color:#fff;cursor:pointer;transition:transform 0.15s;position:relative;overflow:hidden;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform=''">
+      <!-- 패트롤 배너 → patrol.html 팝업 -->
+      <div onclick="openBannerPopup('patrol.html','patrol_popup')" style="background:linear-gradient(135deg,#0d1f3c,#1e5096);border-radius:16px;padding:28px 24px;color:#fff;cursor:pointer;transition:transform 0.15s;position:relative;overflow:hidden;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform=''">
         <div style="font-size:48px;margin-bottom:8px;">🔍</div>
         <div style="font-size:20px;font-weight:900;">현장 패트롤 점검</div>
         <div style="font-size:13px;opacity:0.8;margin-top:4px;">담당자 · 주간 순회점검</div>
-        <div style="position:absolute;bottom:12px;right:16px;font-size:12px;opacity:0.6;">달력에서 날짜 선택 →</div>
+        <div style="position:absolute;bottom:12px;right:16px;font-size:12px;opacity:0.6;">클릭 → 팝업 창 열림 ↗</div>
         <div id="patrol-banner-stat" style="margin-top:12px;font-size:12px;opacity:0.9;"></div>
         <a href="patrol_print.html" target="_blank" onclick="event.stopPropagation();" style="position:absolute;top:12px;right:16px;background:rgba(255,255,255,0.2);color:#fff;padding:4px 10px;border-radius:6px;font-size:11px;text-decoration:none;font-weight:600;">🖨️ 통합 인쇄용</a>
       </div>
-      <!-- 지적사항 추적 배너 -->
-      <div onclick="showPatrolView('issues')" style="background:linear-gradient(135deg,#7c2d12,#ea580c);border-radius:16px;padding:28px 24px;color:#fff;cursor:pointer;transition:transform 0.15s;position:relative;overflow:hidden;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform=''">
+      <!-- 지적사항 관리 배너 → issues.html 팝업 -->
+      <div onclick="openBannerPopup('issues.html','issues_popup')" style="background:linear-gradient(135deg,#7c2d12,#ea580c);border-radius:16px;padding:28px 24px;color:#fff;cursor:pointer;transition:transform 0.15s;position:relative;overflow:hidden;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform=''">
         <div style="font-size:48px;margin-bottom:8px;">📋</div>
-        <div style="font-size:20px;font-weight:900;">지적사항 추적</div>
+        <div style="font-size:20px;font-weight:900;">지적사항 관리</div>
         <div style="font-size:13px;opacity:0.8;margin-top:4px;">현장 점검 · 개선 여부 기록</div>
-        <div style="position:absolute;bottom:12px;right:16px;font-size:12px;opacity:0.6;">지적 등록 / 완료 체크 →</div>
+        <div style="position:absolute;bottom:12px;right:16px;font-size:12px;opacity:0.6;">클릭 → 팝업 창 열림 ↗</div>
         <div id="issue-banner-stat" style="margin-top:12px;font-size:12px;opacity:0.9;"></div>
       </div>
-      <!-- TBM 배너 -->
-      <div onclick="showPatrolView('tbm')" style="background:linear-gradient(135deg,#065f46,#10b981);border-radius:16px;padding:28px 24px;color:#fff;cursor:pointer;transition:transform 0.15s;position:relative;overflow:hidden;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform=''">
+      <!-- TBM 배너 → tbm.html 팝업 -->
+      <div onclick="openBannerPopup('tbm.html','tbm_popup')" style="background:linear-gradient(135deg,#065f46,#10b981);border-radius:16px;padding:28px 24px;color:#fff;cursor:pointer;transition:transform 0.15s;position:relative;overflow:hidden;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform=''">
         <div style="font-size:48px;margin-bottom:8px;">🌅</div>
         <div style="font-size:20px;font-weight:900;">TBM 일지</div>
         <div style="font-size:13px;opacity:0.8;margin-top:4px;">매일 작업 전 5~10분 · 전원 참석</div>
-        <div style="position:absolute;bottom:12px;right:16px;font-size:12px;opacity:0.6;">달력에서 날짜 선택 →</div>
+        <div style="position:absolute;bottom:12px;right:16px;font-size:12px;opacity:0.6;">클릭 → 팝업 창 열림 ↗</div>
         <div id="tbm-banner-stat" style="margin-top:12px;font-size:12px;opacity:0.9;"></div>
       </div>
+    </div>
+
+    <!-- 담당자별 링크 안내 -->
+    <div style="background:#eff6ff;border-left:4px solid #1e5096;border-radius:8px;padding:10px 14px;margin-bottom:16px;font-size:12px;color:#0d1f3c;">
+      💡 <strong>각 배너는 별도 페이지로 열립니다.</strong> 담당자에게 해당 링크만 전달하여 업무 분담이 가능해요 ·
+      <a href="patrol.html" target="_blank" style="color:#1e5096;font-weight:700;text-decoration:underline;">패트롤</a> ·
+      <a href="issues.html" target="_blank" style="color:#ea580c;font-weight:700;text-decoration:underline;">지적사항</a> ·
+      <a href="tbm.html" target="_blank" style="color:#059669;font-weight:700;text-decoration:underline;">TBM</a>
     </div>
 
     <!-- 패트롤 뷰 (달력 + 체크리스트 표) -->
@@ -1682,6 +1690,18 @@ function showPatrolView(view){
   if(view==='patrol'){ renderPatrolCalendar(); renderHistories('patrol'); }
   if(view==='tbm'){ renderTbmCalendar(); renderTBMTheme(); }
   if(view==='issues'){ renderSiteIssues(); }
+}
+
+// 배너 클릭 → 담당자별 별도 페이지 팝업 창으로 열기
+function openBannerPopup(url, name){
+  const w = Math.min(1280, Math.floor(screen.availWidth*0.9));
+  const h = Math.min(900, Math.floor(screen.availHeight*0.9));
+  const left = Math.max(0, Math.floor((screen.availWidth-w)/2));
+  const top = Math.max(0, Math.floor((screen.availHeight-h)/2));
+  const feat = `width=${w},height=${h},left=${left},top=${top},scrollbars=yes,resizable=yes,menubar=no,toolbar=no,location=no,status=no`;
+  const popup = window.open(url, name, feat);
+  if(popup) popup.focus();
+  else alert('팝업이 차단되었습니다. 브라우저 팝업 허용을 설정해주세요.');
 }
 
 // 패트롤 달력 렌더링
