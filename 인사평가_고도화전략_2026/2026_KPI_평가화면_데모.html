@@ -1,0 +1,2649 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>2026 KPI 평가 화면 데모 · 사례 모음</title>
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system,"Segoe UI","Malgun Gothic",sans-serif; margin:0; padding:0; line-height:1.55; }
+
+  /* ─── 테마 공통 변수 (기본: 팀원 = 회색톤) ─── */
+  :root {
+    --bg: #f5f5f4;
+    --surface: #ffffff;
+    --border: #e5e5e4;
+    --border-strong: #d4d4d3;
+    --text: #1c1c1c;
+    --text-dim: #6b6b6b;
+    --text-faint: #9a9a9a;
+    --accent: #4b5563;
+    --accent-soft: #eeeeed;
+    --accent-bg: #4b4b4a;
+    --chip: #6b6b6a;
+  }
+  /* 팀장 테마 — 파란톤 */
+  body[data-theme="leader"] {
+    --bg: #f1f5f9;
+    --border: #e2e8f0;
+    --border-strong: #cbd5e1;
+    --text: #0f172a;
+    --text-dim: #475569;
+    --text-faint: #94a3b8;
+    --accent: #1e3a5f;
+    --accent-soft: #dbe4f0;
+    --accent-bg: #334155;
+    --chip: #475569;
+  }
+
+  body { background:var(--bg); color:var(--text); }
+
+  /* ─── 시나리오 바 ─── */
+  .scenario-bar {
+    position:sticky; top:0; z-index:50;
+    background:#0f172a; color:#f1f5f9;
+    padding:14px 24px;
+    box-shadow:0 1px 4px rgba(0,0,0,0.15);
+  }
+  .scenario-bar .title { font-size:13px; font-weight:600; opacity:.85; margin-bottom:10px; letter-spacing:-0.1px; }
+  .scenario-tabs { display:flex; gap:6px; flex-wrap:wrap; }
+  .scenario-tabs button {
+    background:#1e293b; color:#cbd5e1; border:1px solid #334155;
+    padding:7px 14px; border-radius:5px; font-size:12.5px; font-weight:500;
+    cursor:pointer; font-family:inherit;
+  }
+  .scenario-tabs button:hover { background:#334155; color:#fff; }
+  .scenario-tabs button.active { background:#f1f5f9; color:#0f172a; border-color:#f1f5f9; font-weight:600; }
+  .scenario-note { margin-top:8px; font-size:10.5px; color:#64748b; }
+
+  .wrap { max-width:1040px; margin:0 auto; padding:24px; }
+  .hero { background:var(--accent-bg); color:#f8fafc; padding:22px 26px; border-radius:8px; }
+  .hero h1 { margin:0 0 4px; font-size:20px; font-weight:600; letter-spacing:-0.2px; }
+  .hero .sub { opacity:.78; font-size:12.5px; }
+  .role-chip { display:inline-block; background:var(--chip); color:#f8fafc; padding:3px 9px; border-radius:4px; font-size:11px; font-weight:500; margin-left:8px; }
+
+  .section { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:22px 26px; margin:18px 0; }
+  .section h2 { margin:0 0 4px; font-size:15px; color:var(--text); font-weight:600; }
+  .section .lead { color:var(--text-dim); font-size:12.5px; margin-bottom:18px; }
+
+  table { width:100%; border-collapse:collapse; font-size:13px; }
+  th { text-align:left; background:#fafafa; color:var(--text-dim); padding:9px 12px; font-size:11.5px; font-weight:600; border-bottom:1px solid var(--border-strong); }
+  td { padding:14px 12px; border-bottom:1px solid var(--border); vertical-align:top; }
+  tr:last-child td { border-bottom:none; }
+
+  .kpi-tag { display:inline-block; background:var(--accent-soft); color:var(--accent); padding:2px 8px; border-radius:4px; font-size:11px; font-weight:600; }
+  .kpi-title { margin-top:6px; font-weight:600; color:var(--text); font-size:13px; }
+  .max-hint { font-size:10.5px; color:var(--text-faint); margin-top:5px; }
+
+  .metric-box { background:#fafafa; border:1px solid var(--border); border-radius:6px; padding:10px 12px; margin-top:10px; font-size:12px; }
+  .metric-target { color:var(--text); font-weight:600; }
+  .metric-dir { color:var(--text-faint); font-size:11px; margin-left:6px; }
+  .metric-input-row { display:flex; gap:8px; align-items:center; margin-top:8px; }
+  .metric-input-row label { color:var(--text-dim); font-size:11px; }
+  .metric-input-row input[type=number] { width:86px; padding:4px 7px; border:1px solid var(--border-strong); border-radius:4px; font-size:12.5px; background:#fff; }
+  .autoscore { font-weight:700; font-size:14px; color:var(--accent); margin-left:auto; }
+  .autoscore-suffix { color:var(--text-faint); font-size:11px; }
+
+  .radio-group label { display:block; margin-bottom:5px; cursor:pointer; font-size:12.5px; color:var(--text); }
+  .radio-group input { margin-right:5px; }
+  textarea { width:100%; padding:7px 9px; border:1px solid var(--border-strong); border-radius:5px; font-size:12px; font-family:inherit; resize:vertical; min-height:48px; background:#fff; }
+
+  .sahun-badge { display:inline-block; padding:3px 8px; border-radius:4px; font-size:11px; font-weight:600; background:var(--accent-soft); color:var(--accent); border:1px solid var(--border-strong); white-space:nowrap; }
+  .competency-label { display:inline-block; font-weight:600; color:var(--text); font-size:13px; margin-top:6px; }
+  .q-list { margin:6px 0 0 16px; padding:0; font-size:12px; color:var(--text-dim); }
+  .q-list li { margin-bottom:2px; }
+
+  .team-member-card { border:1px solid var(--border); border-radius:6px; padding:16px 18px; margin-bottom:12px; background:#fafbfc; }
+  .team-member-card .name-row { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+  .team-member-card .name { font-weight:700; font-size:14px; color:var(--text); }
+  .team-member-card .tag { font-size:11px; background:#eef2f6; color:var(--text-dim); padding:3px 8px; border-radius:4px; }
+
+  .leader-only-note { background:var(--accent-soft); border-left:3px solid var(--accent); padding:10px 14px; border-radius:4px; color:var(--accent); font-size:12px; margin-bottom:16px; }
+
+  .submit-row { text-align:right; margin-top:18px; }
+  button.primary { background:var(--accent); color:#fff; border:0; border-radius:5px; padding:8px 18px; font-size:13px; font-weight:500; cursor:pointer; font-family:inherit; }
+  button.primary:hover { filter:brightness(0.92); }
+  button.confirm.done { background:#22543d; }
+  .confirm-status { display:inline-block; margin-right:12px; font-size:12px; color:var(--text-dim); }
+
+  .review-hint { background:#fafafa; color:var(--text-dim); padding:6px 10px; border-radius:4px; font-size:11px; margin-top:6px; border:1px dashed var(--border-strong); }
+  .demo-note { text-align:center; font-size:11px; color:var(--text-faint); padding:16px 0 30px; }
+
+  /* 시급직 축 카드 */
+  .axis-info-table { width:100%; margin-bottom:14px; font-size:12px; border-collapse:collapse; }
+  .axis-info-table th { background:#f8fafc; padding:7px 10px; text-align:left; font-size:11px; font-weight:600; color:var(--text-dim); border-bottom:1px solid var(--border); }
+  .axis-info-table td { padding:7px 10px; border-bottom:1px solid var(--border); color:var(--text-dim); }
+  .hourly-member { border:1px solid var(--border); border-radius:6px; padding:16px 18px; margin-bottom:12px; background:#fcfcfd; }
+  .hourly-name-row { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+  .hourly-name { font-weight:700; font-size:14px; color:var(--text); }
+  .hourly-tag { font-size:11px; background:#eef2f6; color:var(--text-dim); padding:3px 8px; border-radius:4px; }
+  .axis-grid { display:grid; grid-template-columns:repeat(5, 1fr); gap:10px; }
+  .axis-cell { background:#f8fafc; border:1px solid var(--border); border-radius:5px; padding:10px; text-align:center; }
+  .axis-label { font-size:11px; color:var(--text-dim); margin-bottom:4px; font-weight:600; }
+  .axis-sahun { font-size:10px; color:var(--accent); margin-bottom:6px; }
+  .axis-input { width:60px; padding:6px; border:1px solid var(--border-strong); border-radius:4px; font-size:14px; text-align:center; }
+  .axis-max { font-size:10px; color:var(--text-faint); margin-top:3px; }
+  .hourly-total { display:flex; justify-content:space-between; align-items:center; padding:10px 12px; background:var(--accent-soft); border-radius:5px; margin-top:10px; }
+  .hourly-total .label { font-size:12px; color:var(--accent); font-weight:600; }
+  .hourly-total .score { font-size:18px; font-weight:700; color:var(--accent); }
+  .hourly-memo { margin-top:10px; }
+</style>
+</head>
+<body data-theme="member">
+
+<div class="scenario-bar">
+  <div class="title">2026 KPI 평가 화면 데모 · 사례 모음</div>
+  <div class="scenario-tabs">
+    <button data-case="이성호" class="active">팀원 · 이성호 (구매팀 대리)</button>
+    <button data-case="박제성">팀장 · 박제성 (경영지원팀 부장)</button>
+    <button data-case="양춘향">팀장+시급직 · 양춘향 (조립팀)</button>
+  </div>
+  <div class="scenario-note">데모 전용 · 로컬 미리보기 · 실제 저장되지 않음 · 컨펌 후 시스템에 반영 예정</div>
+</div>
+
+<div id="main"></div>
+
+<script>
+// ── inlined: employees_v2.js ──────────
+/**
+ * 신성오토텍 2026 인사평가 — 직원 데이터 (연봉직)
+ * ─────────────────────────────────────────────────────
+ * [P0-1 리밸런싱] 수정일: 2026-04-19
+ * 점수 구조 (신규):
+ *   정량 45점 = KPI 3개 × 15점
+ *   정성 45점 = 사훈 3개 × 15점 (각 0~5점 리커트 × 3문항)
+ *   자동화·추가 10점 (직무별 추천 + 개인 선택)
+ *   합계 = 100점
+ * ─────────────────────────────────────────────────────
+ * 평가자 가중치 (연봉직):
+ *   본인 40% + 팀장 40% + 최상위자 20% (±10점 수동 조정 가능)
+ * ─────────────────────────────────────────────────────
+ * 조직개편 반영 (2026-04-19):
+ *   이환돈: 조립팀장 → 영업팀장 (KPI·사훈 영업 맥락 재작성)
+ *   양춘향: 조립팀 사원(hourly) 삭제 → 조립팀장대행(annual) 전환
+ *   안성현: 영업구매실장 — 영업팀장+구매팀장 업무 총괄 (KPI 2개 영역)
+ *   류항복: 퇴사 처리 (데이터 삭제)
+ *   허향미: 퇴사 처리 (데이터 삭제)
+ *   조경환: 개발팀 이사, evaluatorOnly:true 신규 등록
+ * ─────────────────────────────────────────────────────
+ * 공식 프레임:
+ *   ① 더 높은 평가를 받은 직원에게 더 나은 처우를 제공하기 위한 절차
+ *   ② 업무를 더 합리적으로 분배·재조정하기 위한 절차
+ */
+
+// ── 자동화·추가 항목 옵션 풀 ──────────────────────────────
+const AUTO_OPTIONS = {
+  A1: {name:'MES/RPA/AI 활용 신규 도입',    score:5, evidence:'스크린샷·코드·자동화 결과'},
+  A2: {name:'안전/ESG 제안',                score:3, evidence:'제안서·적용 결과'},
+  A3: {name:'원가절감 제안',                score:3, evidence:'절감액 추산표'},
+  A4: {name:'교차학습(타 직무 OJT)',         score:2, evidence:'수료증·피드백'},
+  A5: {name:'대외자격·직무교육',            score:2, evidence:'증빙 사본'},
+  A6: {name:'커스텀 기여(상부 승인)',        score:3, evidence:'사전 승인서'}
+};
+
+// ── 3대 경영목표 상수 ────────────────────────────────────
+const GOAL_COST = '원가';   // 원가절감
+const GOAL_ORG  = '조직';   // 조직기능 향상
+const GOAL_SUST = '지속';   // 지속가능 운영
+
+// ── KPI 자동 점수 계산 ───────────────────────────────────
+// 직원이 실적(actual) 하나만 입력하면 배점(weight) 기준으로 자동 환산.
+// direction:
+//   'higher' — 높을수록 좋음 (매출·건수·달성률)     → actual/target
+//   'lower'  — 낮을수록 좋음 (지연·오류건·일수)     → target/actual
+//   'zero'   — 0이 목표 (사고·오류 0건)              → 0=만점, 1=70%, 2=40%, 3+=0
+//   'rate'   — 목표가 이미 % (달성률 자체)          → actual/100
+// 100% 상한(초과달성 가산 없음). 5월 합의에서 target 값만 팀장이 시트에서 수정.
+function calcKpiScore(metric, actual, weight) {
+  if (metric == null || actual == null || actual === '') return null;
+  const a = Number(actual);
+  if (!isFinite(a)) return null;
+  const t = Number(metric.value);
+  let rate;
+  switch (metric.direction) {
+    case 'higher': rate = t > 0 ? a / t : (a >= 0 ? 1 : 0); break;
+    case 'lower':  rate = a <= 0 ? 1 : (t > 0 ? t / a : 0); break;
+    case 'zero':   rate = a <= 0 ? 1 : Math.max(0, 1 - a * 0.3); break;
+    case 'rate':   rate = a / 100; break;
+    default:       rate = t > 0 ? a / t : 0;
+  }
+  rate = Math.max(0, Math.min(1.0, rate));
+  return Math.round(rate * Number(weight) * 10) / 10;
+}
+
+
+const ANNUAL_EMPLOYEES = [
+
+  /* ════════════════════════════════════════════
+     경영지원팀
+  ════════════════════════════════════════════ */
+  {
+    id:'박제성', name:'박제성', team:'경영지원팀',
+    position:'부장', rank:'팀장',
+    evaluatorOnly:false,
+    kpi:[
+      { title:'RPA·AI 기반 사무자동화 프로젝트 완료 건수',
+        target:'연 6건(분기 1.5건)',
+        metric:{ value:6, unit:'건', period:'연', direction:'higher' },
+      weight:15, linkedGoal:GOAL_COST },
+      { title:'경영지원 프로세스 SLA 준수율',
+        target:'결재·보고 24h 내 95%',
+        metric:{ value:95, unit:'%', period:'연', direction:'higher' },
+      weight:15, linkedGoal:GOAL_ORG },
+      { title:'ESG·컴플라이언스 이슈 대응 완결률',
+        target:'중대재해·환경·개인정보 100% 기한 내 종결',
+        metric:{ value:100, unit:'%', period:'연', direction:'higher' },
+      weight:15, linkedGoal:GOAL_SUST },
+    ],
+    sahun:{
+      h1:{
+        label:'문제해결능력',
+        desc:'경영지원 이슈를 선제 정의하고 실행안 제시',
+        questions:[
+          {q:'이슈 원인 분석·데이터 기반 정의', max:5},
+          {q:'해결안 도출 및 실행 완결도', max:5},
+          {q:'재발 방지·표준화 이행', max:5},
+        ],
+        weight:15
+      },
+      h2:{
+        label:'코칭피드백',
+        desc:'팀원 성장 피드백과 업무 위임',
+        questions:[
+          {q:'1:1 면담 주기·구체적 피드백 이행', max:5},
+          {q:'업무 위임·권한부여 적절성', max:5},
+          {q:'팀원 성장 가시적 변화', max:5},
+        ],
+        weight:15
+      },
+      h3:{
+        label:'혁신지향',
+        desc:'지속가능 운영을 위한 제도·프로세스 개선',
+        questions:[
+          {q:'신규 아이디어 제시 건수', max:5},
+          {q:'파일럿·실행 여부', max:5},
+          {q:'표준화·재사용 가능 산출물', max:5},
+        ],
+        weight:15
+      },
+    },
+    auto:{ recommended:['A1','A2','A3'], selected:[], maxScore:10 },
+  },
+
+  /* ════════════════════════════════════════════
+     경영지원팀
+  ════════════════════════════════════════════ */
+  {
+    id:'임정인', name:'임정인', team:'경영지원팀',
+    position:'차장', rank:'팀원',
+    evaluatorOnly:false,
+    kpi:[
+      { title:'근태·급여 관리',
+        target:'급여 오류 0건·근태 마감 적기율 100%·4대보험 신고 기한 준수',
+        metric:{ value:0, unit:'건', period:'연', direction:'zero' },
+      weight:15, linkedGoal:GOAL_ORG },
+      { title:'ISO·ESG 인증 관리',
+        target:'ISO14001 심사 적합률·인증 갱신 적기 완료율·협력사 ESG 대응 완료율',
+        metric:{ value:0, unit:'-', period:'-', direction:'review' },
+      weight:15, linkedGoal:GOAL_SUST },
+      { title:'인건비·보험비용 최적화',
+        target:'4대보험 정산 오류 0건·환급 적기 처리율·ESG 내부화율',
+        metric:{ value:0, unit:'건', period:'연', direction:'zero' },
+      weight:15, linkedGoal:GOAL_COST },
+    ],
+    sahun:{
+      h1:{
+        label:'책임감',
+        desc:'급여·신고 업무의 기한 준수와 정확성',
+        questions:[
+          {q:'업무 마감·체크리스트 이행률', max:5},
+          {q:'이상 발생 시 즉시 보고 이행', max:5},
+          {q:'결과물 완성도·정확성', max:5},
+        ],
+        weight:15
+      },
+      h2:{
+        label:'직무지식',
+        desc:'인사·노무·ESG 법규 지식 및 실무 적용',
+        questions:[
+          {q:'직무 기준·이론 이해도', max:5},
+          {q:'실무 적용 정확성·오류율', max:5},
+          {q:'지식 공유·전파 활동', max:5},
+        ],
+        weight:15
+      },
+      h3:{
+        label:'성실성',
+        desc:'정기 보고·체크리스트·마감 일관 이행',
+        questions:[
+          {q:'일일 체크리스트·보고 이행률', max:5},
+          {q:'근태 준수·출결 관리', max:5},
+          {q:'맡은 업무 기한 내 완료율', max:5},
+        ],
+        weight:15
+      },
+    },
+    auto:{ recommended:['A2','A5'], selected:[], maxScore:10 },
+  },
+
+  /* ════════════════════════════════════════════
+     회계팀
+  ════════════════════════════════════════════ */
+  {
+    id:'황보령', name:'황보령', team:'회계팀',
+    position:'부장', rank:'팀장',
+    evaluatorOnly:false,
+    kpi:[
+      { title:'해외법인 서류·신고 이행률',
+        target:'해외 법인 관련 서류 관리 및 신고 기한 준수·오류 0건',
+        metric:{ value:0, unit:'건', period:'연', direction:'zero' },
+      weight:15, linkedGoal:GOAL_SUST },
+      { title:'수불장·원가 분석 보고',
+        target:'내부 수불장 기록 표준화 완성도·월별 제조원가 분석 보고서 적기 제출',
+        metric:{ value:0, unit:'-', period:'-', direction:'review' },
+      weight:15, linkedGoal:GOAL_COST },
+      { title:'금융비용 관리',
+        target:'이자비용 전년 대비 감소율·금리 협상 실적·불용 유동성 수익 달성',
+        metric:{ value:0, unit:'-', period:'-', direction:'review' },
+      weight:15, linkedGoal:GOAL_ORG },
+    ],
+    sahun:{
+      h1:{
+        label:'원가의식',
+        desc:'재무·원가 구조 전반의 비용 의식 주도',
+        questions:[
+          {q:'원가 구성 항목 파악·모니터링', max:5},
+          {q:'낭비·로스 저감 활동 건수', max:5},
+          {q:'원가절감 제안 및 실행 성과', max:5},
+        ],
+        weight:15
+      },
+      h2:{
+        label:'의사결정능력',
+        desc:'재무 이슈 발생 시 신속·근거 기반 판단',
+        questions:[
+          {q:'의사결정 적시성·기준 명확성', max:5},
+          {q:'원가·리스크 데이터 기반 판단', max:5},
+          {q:'결정 후 추적·결과 확인', max:5},
+        ],
+        weight:15
+      },
+      h3:{
+        label:'책임감',
+        desc:'회계 마감·신고 정확성과 이슈 즉시 보고',
+        questions:[
+          {q:'업무 마감·보고 체크리스트 이행', max:5},
+          {q:'이슈 발생 시 즉시 보고 이행', max:5},
+          {q:'결과물 완성도·정확성', max:5},
+        ],
+        weight:15
+      },
+    },
+    auto:{ recommended:['A3','A5','A6'], selected:[], maxScore:10 },
+  },
+
+  /* ════════════════════════════════════════════
+     영업구매실
+  ════════════════════════════════════════════ */
+  {
+    id:'안성현', name:'안성현', team:'영업구매실',
+    position:'실장', rank:'팀장',
+    evaluatorOnly:false,
+    kpi:[
+      { title:'영업팀 매출목표 총괄',
+        target:'영업팀 매출목표 달성률·VI 방어(고객요구 3%)·납입율(D-2) 달성',
+        metric:{ value:3, unit:'%', period:'연', direction:'higher' },
+      weight:15, linkedGoal:GOAL_ORG },
+      { title:'구매원가·공급망 관리',
+        target:'구매 단가 절감(CI) 목표 달성·협력사 정시납품률·재고비용 절감률 연 10%',
+        metric:{ value:10, unit:'%', period:'연', direction:'higher' },
+      weight:15, linkedGoal:GOAL_COST },
+      { title:'신규매출 확보 노력',
+        target:'미개발 고객사 접촉 건수·RFQ 발굴 건수·Y+1 수주 파이프라인 달성률',
+        metric:{ value:0, unit:'-', period:'-', direction:'review' },
+      weight:15, linkedGoal:GOAL_SUST },
+    ],
+    sahun:{
+      h1:{
+        label:'문제해결능력',
+        desc:'영업·구매 전반의 이슈 선제 정의 및 조정',
+        questions:[
+          {q:'이슈 원인 분석·데이터 기반 정의', max:5},
+          {q:'해결안 도출 및 실행 완결도', max:5},
+          {q:'재발 방지·표준화 이행', max:5},
+        ],
+        weight:15
+      },
+      h2:{
+        label:'의사결정능력',
+        desc:'매출·원가·납기 이슈 종합 판단',
+        questions:[
+          {q:'의사결정 적시성·기준 명확성', max:5},
+          {q:'원가·리스크 데이터 기반 판단', max:5},
+          {q:'결정 후 추적·결과 확인', max:5},
+        ],
+        weight:15
+      },
+      h3:{
+        label:'혁신지향',
+        desc:'영업·구매 프로세스 개선과 신사업 제안',
+        questions:[
+          {q:'신규 아이디어 제시 건수', max:5},
+          {q:'파일럿·실행 여부', max:5},
+          {q:'표준화·재사용 가능 산출물', max:5},
+        ],
+        weight:15
+      },
+    },
+    auto:{ recommended:['A1','A3','A4'], selected:[], maxScore:10 },
+  },
+
+  /* ════════════════════════════════════════════
+     영업팀
+  ════════════════════════════════════════════ */
+  {
+    id:'이환돈', name:'이환돈', team:'영업팀',
+    position:'부장', rank:'팀장',
+    evaluatorOnly:false,
+    kpi:[
+      { title:'신규·재수주 금액',
+        target:'연 전년 대비 +8%',
+        metric:{ value:8, unit:'%', period:'전년대비', direction:'higher' },
+      weight:15, linkedGoal:GOAL_SUST },
+      { title:'매출채권 회수율',
+        target:'평균 회수기일 ≤ 60일',
+        metric:{ value:60, unit:'일', period:'평균', direction:'lower' },
+      weight:15, linkedGoal:GOAL_COST },
+      { title:'주요 고객 납기 준수율',
+        target:'≥ 98%',
+        metric:{ value:98, unit:'%', period:'연', direction:'higher' },
+      weight:15, linkedGoal:GOAL_ORG },
+    ],
+    sahun:{
+      h1:{
+        label:'문제해결능력',
+        desc:'고객 클레임·납기 이슈 선제 대응',
+        questions:[
+          {q:'이슈 원인 분석·데이터 기반 정의', max:5},
+          {q:'해결안 도출 및 실행 완결도', max:5},
+          {q:'재발 방지·표준화 이행', max:5},
+        ],
+        weight:15
+      },
+      h2:{
+        label:'의사결정능력',
+        desc:'견적·할인·우선순위 의사결정',
+        questions:[
+          {q:'의사결정 적시성·기준 명확성', max:5},
+          {q:'원가·리스크 데이터 기반 판단', max:5},
+          {q:'결정 후 추적·결과 확인', max:5},
+        ],
+        weight:15
+      },
+      h3:{
+        label:'품질지향',
+        desc:'고객 품질 요구 대응·내부 전달',
+        questions:[
+          {q:'품질 기준 준수 주도 및 현장 교육', max:5},
+          {q:'불량·클레임 재발 방지 체계화', max:5},
+          {q:'고객 품질 요구 사내 전달 정확성', max:5},
+        ],
+        weight:15
+      },
+    },
+    auto:{ recommended:['A1','A3','A4'], selected:[], maxScore:10 },
+  },
+
+  /* ════════════════════════════════════════════
+     영업팀
+  ════════════════════════════════════════════ */
+  {
+    id:'김성진', name:'김성진', team:'영업팀',
+    position:'부장', rank:'팀원',
+    evaluatorOnly:false,
+    kpi:[
+      { title:'LG납입률·납품 품질',
+        target:'LG전자 조달 계획 대비 납입률·납품 불량 반품 0건',
+        metric:{ value:0, unit:'건', period:'연', direction:'zero' },
+      weight:15, linkedGoal:GOAL_SUST },
+      { title:'매출마감·물류비 절감',
+        target:'MES 매출 마감 적기 완료율·납품 오류 재운송 비용 0건',
+        metric:{ value:0, unit:'건', period:'연', direction:'zero' },
+      weight:15, linkedGoal:GOAL_COST },
+      { title:'품질이슈 전파·재고 회전',
+        target:'품질 이슈 사내 전파 속도·납품용 재고 회전율 달성',
+        metric:{ value:0, unit:'-', period:'-', direction:'review' },
+      weight:15, linkedGoal:GOAL_ORG },
+    ],
+    sahun:{
+      h1:{
+        label:'이해판단력',
+        desc:'고객 요구사항 해석 및 사내 대응 우선순위 판단',
+        questions:[
+          {q:'업무 지시·기준 이해 정확성', max:5},
+          {q:'우선순위 판단·자율 처리 역량', max:5},
+          {q:'상황 변화 시 유연한 대응', max:5},
+        ],
+        weight:15
+      },
+      h2:{
+        label:'직무지식',
+        desc:'LG 납입 기준·MES 운용·품질 이슈 처리 전문성',
+        questions:[
+          {q:'직무 기준·이론 이해도', max:5},
+          {q:'실무 적용 정확성·오류율', max:5},
+          {q:'지식 공유·전파 활동', max:5},
+        ],
+        weight:15
+      },
+      h3:{
+        label:'품질지향',
+        desc:'납품 품질 기준 준수 및 이슈 전파',
+        questions:[
+          {q:'품질 기준 준수율·오류 건수', max:5},
+          {q:'불량·오류 재발 방지 노력', max:5},
+          {q:'품질 개선 아이디어 제안', max:5},
+        ],
+        weight:15
+      },
+    },
+    auto:{ recommended:['A3','A4'], selected:[], maxScore:10 },
+  },
+
+  /* ════════════════════════════════════════════
+     영업팀
+  ════════════════════════════════════════════ */
+  {
+    id:'배규호', name:'배규호', team:'영업팀',
+    position:'과장', rank:'팀원',
+    evaluatorOnly:false,
+    kpi:[
+      { title:'생산계획 배포 정확도',
+        target:'거래처 서열 생산계획 배포 준수율·배포 오류 긴급 물류비 0건',
+        metric:{ value:0, unit:'건', period:'연', direction:'zero' },
+      weight:15, linkedGoal:GOAL_ORG },
+      { title:'제품식별·재고 적정화',
+        target:'영업창고 제품 식별표 관리율·과잉·부족 재고 최소화',
+        metric:{ value:0, unit:'-', period:'-', direction:'review' },
+      weight:15, linkedGoal:GOAL_COST },
+      { title:'물류비용 효율',
+        target:'공박스 회수율 달성·이물 불량 0건·불필요 재배송 0건',
+        metric:{ value:0, unit:'건', period:'연', direction:'zero' },
+      weight:15, linkedGoal:GOAL_SUST },
+    ],
+    sahun:{
+      h1:{
+        label:'이해판단력',
+        desc:'생산계획·납품 지시 이해 및 적시 배포',
+        questions:[
+          {q:'업무 지시·기준 이해 정확성', max:5},
+          {q:'우선순위 판단·자율 처리 역량', max:5},
+          {q:'상황 변화 시 유연한 대응', max:5},
+        ],
+        weight:15
+      },
+      h2:{
+        label:'협조성',
+        desc:'생산팀·창고팀과의 납품 일정 사전 소통',
+        questions:[
+          {q:'유관부서 요청 응대율', max:5},
+          {q:'팀 내 정보 공유 충실도', max:5},
+          {q:'협업 과제 기여·완수도', max:5},
+        ],
+        weight:15
+      },
+      h3:{
+        label:'성실성',
+        desc:'일일 체크리스트·거래명세서 등록 이행',
+        questions:[
+          {q:'일일 체크리스트·보고 이행률', max:5},
+          {q:'근태 준수·출결 관리', max:5},
+          {q:'맡은 업무 기한 내 완료율', max:5},
+        ],
+        weight:15
+      },
+    },
+    auto:{ recommended:['A3','A4'], selected:[], maxScore:10 },
+  },
+
+  /* ════════════════════════════════════════════
+     영업팀
+  ════════════════════════════════════════════ */
+  {
+    id:'신민호', name:'신민호', team:'영업팀',
+    position:'대리', rank:'팀원',
+    evaluatorOnly:false,
+    kpi:[
+      { title:'적기 납품률·오류 0건',
+        target:'완제품 적기 납품률·납품 수량·품목 오류 0건',
+        metric:{ value:0, unit:'건', period:'연', direction:'zero' },
+      weight:15, linkedGoal:GOAL_ORG },
+      { title:'납품준비 리드타임 단축',
+        target:'거래처별 납품준비 적기율·리드타임 단축 실적',
+        metric:{ value:0, unit:'-', period:'-', direction:'review' },
+      weight:15, linkedGoal:GOAL_COST },
+      { title:'육안검사·반품 비용 차단',
+        target:'완제품 최종 육안검사 이행률·초품 불량 사전 차단 반품비 0건',
+        metric:{ value:0, unit:'건', period:'연', direction:'zero' },
+      weight:15, linkedGoal:GOAL_SUST },
+    ],
+    sahun:{
+      h1:{
+        label:'책임감',
+        desc:'납품 체크리스트 이행 및 이상 즉시 보고',
+        questions:[
+          {q:'업무 마감·체크리스트 이행률', max:5},
+          {q:'이상 발생 시 즉시 보고 이행', max:5},
+          {q:'결과물 완성도·정확성', max:5},
+        ],
+        weight:15
+      },
+      h2:{
+        label:'솔선수범',
+        desc:'출하 사전 준비·동료 지원·선제 착수',
+        questions:[
+          {q:'자발적 업무 착수·선제 대응', max:5},
+          {q:'동료 지원·교차 업무 이행', max:5},
+          {q:'어려운 과제 자원 및 완수', max:5},
+        ],
+        weight:15
+      },
+      h3:{
+        label:'성실성',
+        desc:'근태 준수·일일 체크리스트·기한 이행',
+        questions:[
+          {q:'일일 체크리스트·보고 이행률', max:5},
+          {q:'근태 준수·출결 관리', max:5},
+          {q:'맡은 업무 기한 내 완료율', max:5},
+        ],
+        weight:15
+      },
+    },
+    auto:{ recommended:['A2','A4'], selected:[], maxScore:10 },
+  },
+
+  /* ════════════════════════════════════════════
+     영업팀
+  ════════════════════════════════════════════ */
+  {
+    id:'김수천', name:'김수천', team:'영업팀',
+    position:'대리', rank:'팀원',
+    evaluatorOnly:false,
+    kpi:[
+      { title:'CKD 포장 품질·클레임 0건',
+        target:'수출 파레트 포장 완성도·포장 불량 클레임 0건',
+        metric:{ value:0, unit:'건', period:'연', direction:'zero' },
+      weight:15, linkedGoal:GOAL_SUST },
+      { title:'창고 공간 효율',
+        target:'영업창고 레이아웃 최적화·불필요 점유 공간 축소',
+        metric:{ value:0, unit:'-', period:'-', direction:'review' },
+      weight:15, linkedGoal:GOAL_COST },
+      { title:'지게차·물류 운영',
+        target:'지게차 업무 효율·유지관리비 전년비 절감·작업 시간 단축',
+        metric:{ value:0, unit:'-', period:'-', direction:'review' },
+      weight:15, linkedGoal:GOAL_ORG },
+    ],
+    sahun:{
+      h1:{
+        label:'이해판단력',
+        desc:'포장 기준·창고 운용 이해 및 적절한 처리',
+        questions:[
+          {q:'업무 지시·기준 이해 정확성', max:5},
+          {q:'우선순위 판단·자율 처리 역량', max:5},
+          {q:'상황 변화 시 유연한 대응', max:5},
+        ],
+        weight:15
+      },
+      h2:{
+        label:'직무지식',
+        desc:'CKD 포장 기준·지게차 운용·창고 관리 전문성',
+        questions:[
+          {q:'직무 기준·이론 이해도', max:5},
+          {q:'실무 적용 정확성·오류율', max:5},
+          {q:'지식 공유·전파 활동', max:5},
+        ],
+        weight:15
+      },
+      h3:{
+        label:'성실성',
+        desc:'일일 현품표 작업·체크리스트·충전 관리',
+        questions:[
+          {q:'일일 체크리스트·보고 이행률', max:5},
+          {q:'근태 준수·출결 관리', max:5},
+          {q:'맡은 업무 기한 내 완료율', max:5},
+        ],
+        weight:15
+      },
+    },
+    auto:{ recommended:['A3','A2'], selected:[], maxScore:10 },
+  },
+
+  /* ════════════════════════════════════════════
+     영업팀
+  ════════════════════════════════════════════ */
+  {
+    id:'김호수', name:'김호수', team:'영업팀',
+    position:'주임', rank:'팀원',
+    evaluatorOnly:false,
+    kpi:[
+      { title:'재고실사 정확도·과잉재고 최소화',
+        target:'재고실사 오차율 최소화·과잉 재고 기준 이하 유지',
+        metric:{ value:0, unit:'-', period:'-', direction:'review' },
+      weight:15, linkedGoal:GOAL_COST },
+      { title:'출고서류 정합성·반품 0건',
+        target:'출고 서류·송장 정합성·서류 오류 반품·재발송 0건',
+        metric:{ value:0, unit:'건', period:'연', direction:'zero' },
+      weight:15, linkedGoal:GOAL_ORG },
+      { title:'창고 3정5S·공간 활용률',
+        target:'3정 5S 점검 수준·창고 공간 활용률 개선',
+        metric:{ value:0, unit:'-', period:'-', direction:'review' },
+      weight:15, linkedGoal:GOAL_SUST },
+    ],
+    sahun:{
+      h1:{
+        label:'책임감',
+        desc:'출고 체크리스트 이행 및 이상 즉시 보고',
+        questions:[
+          {q:'업무 마감·체크리스트 이행률', max:5},
+          {q:'이상 발생 시 즉시 보고 이행', max:5},
+          {q:'결과물 완성도·정확성', max:5},
+        ],
+        weight:15
+      },
+      h2:{
+        label:'협조성',
+        desc:'팀원 간 창고 교차 지원·재고 정보 공유',
+        questions:[
+          {q:'유관부서 요청 응대율', max:5},
+          {q:'팀 내 정보 공유 충실도', max:5},
+          {q:'협업 과제 기여·완수도', max:5},
+        ],
+        weight:15
+      },
+      h3:{
+        label:'성실성',
+        desc:'일일 보고·창고 정리 기한 내 이행',
+        questions:[
+          {q:'일일 체크리스트·보고 이행률', max:5},
+          {q:'근태 준수·출결 관리', max:5},
+          {q:'맡은 업무 기한 내 완료율', max:5},
+        ],
+        weight:15
+      },
+    },
+    auto:{ recommended:['A2','A4'], selected:[], maxScore:10 },
+  },
+
+  /* ════════════════════════════════════════════
+     구매팀
+  ════════════════════════════════════════════ */
+  {
+    id:'김대수', name:'김대수', team:'구매팀',
+    position:'부장', rank:'팀장',
+    evaluatorOnly:false,
+    kpi:[
+      { title:'결품 0건·정시조달',
+        target:'원부자재 결품 0건·정시 인도율(OTD) 달성',
+        metric:{ value:0, unit:'건', period:'연', direction:'zero' },
+      weight:15, linkedGoal:GOAL_ORG },
+      { title:'협력사 원가 개선',
+        target:'협력사 평가 이행률·단가 절감(CI) 달성·불량 협력사 개선 건수',
+        metric:{ value:0, unit:'-', period:'-', direction:'review' },
+      weight:15, linkedGoal:GOAL_COST },
+      { title:'공급망 지속가능성',
+        target:'구매 단가 절감(CD) 달성·불용재고 폐기 손실 전년비 감소',
+        metric:{ value:0, unit:'-', period:'-', direction:'review' },
+      weight:15, linkedGoal:GOAL_SUST },
+    ],
+    sahun:{
+      h1:{
+        label:'문제해결능력',
+        desc:'공급망 이슈 선제 정의·대응 방안 실행',
+        questions:[
+          {q:'이슈 원인 분석·데이터 기반 정의', max:5},
+          {q:'해결안 도출 및 실행 완결도', max:5},
+          {q:'재발 방지·표준화 이행', max:5},
+        ],
+        weight:15
+      },
+      h2:{
+        label:'의사결정능력',
+        desc:'발주·협력사 선정·단가 협상 판단',
+        questions:[
+          {q:'의사결정 적시성·기준 명확성', max:5},
+          {q:'원가·리스크 데이터 기반 판단', max:5},
+          {q:'결정 후 추적·결과 확인', max:5},
+        ],
+        weight:15
+      },
+      h3:{
+        label:'혁신지향',
+        desc:'구매 프로세스 개선·구매 데이터 자동화 제안',
+        questions:[
+          {q:'신규 아이디어 제시 건수', max:5},
+          {q:'파일럿·실행 여부', max:5},
+          {q:'표준화·재사용 가능 산출물', max:5},
+        ],
+        weight:15
+      },
+    },
+    auto:{ recommended:['A1','A3','A4'], selected:[], maxScore:10 },
+  },
+
+  /* ════════════════════════════════════════════
+     구매팀
+  ════════════════════════════════════════════ */
+  {
+    id:'이성호', name:'이성호', team:'구매팀',
+    position:'대리', rank:'팀원',
+    evaluatorOnly:false,
+    kpi:[
+      { title:'정시 인도율(OTD)',
+        target:'구매 자재 정시 인도율(OTD) 목표 달성',
+        metric:{ value:0, unit:'-', period:'-', direction:'review' },
+      weight:15, linkedGoal:GOAL_ORG },
+      { title:'원재료 잔량 최소화·폐기비 절감',
+        target:'원재료 잔량 전산 처리 적기율·폐기 비용 전년비 감소',
+        metric:{ value:0, unit:'-', period:'-', direction:'review' },
+      weight:15, linkedGoal:GOAL_COST },
+      { title:'구매 데이터 신뢰도·단가 모니터링',
+        target:'구매 통계 DB 정확도·이상 단가 사전 보고 건수',
+        metric:{ value:0, unit:'-', period:'-', direction:'review' },
+      weight:15, linkedGoal:GOAL_SUST },
+    ],
+    sahun:{
+      h1:{
+        label:'이해판단력',
+        desc:'발주·입고 기준 이해 및 자재 이슈 우선순위 판단',
+        questions:[
+          {q:'업무 지시·기준 이해 정확성', max:5},
+          {q:'우선순위 판단·자율 처리 역량', max:5},
+          {q:'상황 변화 시 유연한 대응', max:5},
+        ],
+        weight:15
+      },
+      h2:{
+        label:'직무지식',
+        desc:'구매 발주·자재 관리·지게차 운용 전문성',
+        questions:[
+          {q:'직무 기준·이론 이해도', max:5},
+          {q:'실무 적용 정확성·오류율', max:5},
+          {q:'지식 공유·전파 활동', max:5},
+        ],
+        weight:15
+      },
+      h3:{
+        label:'성실성',
+        desc:'일일 입출고 보고·점검 체크리스트 이행',
+        questions:[
+          {q:'일일 체크리스트·보고 이행률', max:5},
+          {q:'근태 준수·출결 관리', max:5},
+          {q:'맡은 업무 기한 내 완료율', max:5},
+        ],
+        weight:15
+      },
+    },
+    auto:{ recommended:['A3','A4'], selected:[], maxScore:10 },
+  },
+
+  /* ════════════════════════════════════════════
+     개발팀
+  ════════════════════════════════════════════ */
+  {
+    id:'김형권', name:'김형권', team:'개발팀',
+    position:'부장', rank:'팀장',
+    evaluatorOnly:false,
+    kpi:[
+      { title:'금형 자산 실사·손상비 0건',
+        target:'금형 자산 실사(QR) 이행률·손상 비용 청구 0건',
+        metric:{ value:0, unit:'건', period:'연', direction:'zero' },
+      weight:15, linkedGoal:GOAL_COST },
+      { title:'도면 업로드 적기·재제작 0건',
+        target:'도면 시스템 업로드 적기율·설계 오류 재제작 0건',
+        metric:{ value:0, unit:'건', period:'연', direction:'zero' },
+      weight:15, linkedGoal:GOAL_ORG },
+      { title:'고객심사·사이클타임 원가 기여',
+        target:'IATF16949 고객사 심사 대응·금형 개선 사이클타임 단축',
+        metric:{ value:0, unit:'-', period:'-', direction:'review' },
+      weight:15, linkedGoal:GOAL_SUST },
+    ],
+    sahun:{
+      h1:{
+        label:'문제해결능력',
+        desc:'금형·도면 이슈 선제 정의 및 조치',
+        questions:[
+          {q:'이슈 원인 분석·데이터 기반 정의', max:5},
+          {q:'해결안 도출 및 실행 완결도', max:5},
+          {q:'재발 방지·표준화 이행', max:5},
+        ],
+        weight:15
+      },
+      h2:{
+        label:'코칭피드백',
+        desc:'개발팀원 역량 육성·업무 위임',
+        questions:[
+          {q:'1:1 면담 주기·구체적 피드백 이행', max:5},
+          {q:'업무 위임·권한부여 적절성', max:5},
+          {q:'팀원 성장 가시적 변화', max:5},
+        ],
+        weight:15
+      },
+      h3:{
+        label:'혁신지향',
+        desc:'금형·공정 개선 아이디어 제안 및 표준화',
+        questions:[
+          {q:'신규 아이디어 제시 건수', max:5},
+          {q:'파일럿·실행 여부', max:5},
+          {q:'표준화·재사용 가능 산출물', max:5},
+        ],
+        weight:15
+      },
+    },
+    auto:{ recommended:['A2','A5','A6'], selected:[], maxScore:10 },
+  },
+
+  /* ════════════════════════════════════════════
+     개발팀  —  조경환
+  ════════════════════════════════════════════ */
+  {
+    id:'조경환', name:'조경환', team:'개발팀',
+    position:'이사', rank:'팀장',
+    evaluatorOnly:true,
+  },
+
+  /* ════════════════════════════════════════════
+     생산실
+  ════════════════════════════════════════════ */
+  {
+    id:'강한철', name:'강한철', team:'생산실',
+    position:'실장', rank:'팀장',
+    evaluatorOnly:false,
+    kpi:[
+      { title:'전공정 가동 효율·비가동 손실 감소',
+        target:'사출·후가공·조립 전 공정 가동 효율 달성률·비가동 손실 전년비 감소',
+        metric:{ value:0, unit:'-', period:'-', direction:'review' },
+      weight:15, linkedGoal:GOAL_COST },
+      { title:'3정5S·낭비 제거',
+        target:'전 공정 3정 5S 점검·개선 완료율(주 1회)·7대 낭비 개선 건수',
+        metric:{ value:1, unit:'회', period:'주', direction:'higher' },
+      weight:15, linkedGoal:GOAL_SUST },
+      { title:'원가혁신·TASK 활동 성과',
+        target:'TASK 활동 원가절감 아이디어 건수·절감 금액·부서 간 이슈 중재',
+        metric:{ value:0, unit:'-', period:'-', direction:'review' },
+      weight:15, linkedGoal:GOAL_ORG },
+    ],
+    sahun:{
+      h1:{
+        label:'문제해결능력',
+        desc:'전 공정 이슈 즉시 대응 및 재발 방지',
+        questions:[
+          {q:'이슈 원인 분석·데이터 기반 정의', max:5},
+          {q:'해결안 도출 및 실행 완결도', max:5},
+          {q:'재발 방지·표준화 이행', max:5},
+        ],
+        weight:15
+      },
+      h2:{
+        label:'부하육성',
+        desc:'팀장급 이하 현장 리더 역량 개발',
+        questions:[
+          {q:'OJT·개발 계획 수립 및 실행', max:5},
+          {q:'정기 피드백 주기·구체성', max:5},
+          {q:'역량 성장 가시적 성과', max:5},
+        ],
+        weight:15
+      },
+      h3:{
+        label:'원가의식',
+        desc:'전 공정 원가 구조 파악·낭비 제거 주도',
+        questions:[
+          {q:'원가 구성 항목 파악·모니터링', max:5},
+          {q:'낭비·로스 저감 활동 건수', max:5},
+          {q:'원가절감 제안 및 실행 성과', max:5},
+        ],
+        weight:15
+      },
+    },
+    auto:{ recommended:['A1','A2','A3'], selected:[], maxScore:10 },
+  },
+
+  /* ════════════════════════════════════════════
+     생산관리팀
+  ════════════════════════════════════════════ */
+  {
+    id:'신용석', name:'신용석', team:'생산관리팀',
+    position:'부장', rank:'팀장',
+    evaluatorOnly:false,
+    kpi:[
+      { title:'생산계획 달성률·손실 감소',
+        target:'생산 계획 대비 실적 달성률·비가동·재작업 손실 전년비 감소',
+        metric:{ value:0, unit:'-', period:'-', direction:'review' },
+      weight:15, linkedGoal:GOAL_ORG },
+      { title:'과잉재고 억제·재고원가',
+        target:'과잉 재고 억제율·재공품 회전율·불용재고 폐기 최소화',
+        metric:{ value:0, unit:'-', period:'-', direction:'review' },
+      weight:15, linkedGoal:GOAL_COST },
+      { title:'팀 운영·원가 보고 정확도',
+        target:'월별 생산원가 보고 정확도·원가 개선 활동 건수',
+        metric:{ value:0, unit:'-', period:'-', direction:'review' },
+      weight:15, linkedGoal:GOAL_SUST },
+    ],
+    sahun:{
+      h1:{
+        label:'문제해결능력',
+        desc:'생산 계획 이탈 원인 분석 및 즉시 조치',
+        questions:[
+          {q:'이슈 원인 분석·데이터 기반 정의', max:5},
+          {q:'해결안 도출 및 실행 완결도', max:5},
+          {q:'재발 방지·표준화 이행', max:5},
+        ],
+        weight:15
+      },
+      h2:{
+        label:'코칭피드백',
+        desc:'생산관리팀원 역량 개발·업무 위임',
+        questions:[
+          {q:'1:1 면담 주기·구체적 피드백 이행', max:5},
+          {q:'업무 위임·권한부여 적절성', max:5},
+          {q:'팀원 성장 가시적 변화', max:5},
+        ],
+        weight:15
+      },
+      h3:{
+        label:'원가의식',
+        desc:'재고·생산 원가 구조 모니터링 및 제안',
+        questions:[
+          {q:'원가 구성 항목 파악·모니터링', max:5},
+          {q:'낭비·로스 저감 활동 건수', max:5},
+          {q:'원가절감 제안 및 실행 성과', max:5},
+        ],
+        weight:15
+      },
+    },
+    auto:{ recommended:['A1','A3','A4'], selected:[], maxScore:10 },
+  },
+
+  /* ════════════════════════════════════════════
+     생산관리팀
+  ════════════════════════════════════════════ */
+  {
+    id:'박세진', name:'박세진', team:'생산관리팀',
+    position:'과장', rank:'팀원',
+    evaluatorOnly:false,
+    kpi:[
+      { title:'납기 준수율·긴급운송비 0건',
+        target:'고객 납기 일정 준수율·납기 지연 긴급 운송비 0건',
+        metric:{ value:0, unit:'건', period:'연', direction:'zero' },
+      weight:15, linkedGoal:GOAL_ORG },
+      { title:'물류 지시 정확도·재작업 0건',
+        target:'물류 이동 지시 정확도·잘못된 지시 재작업 0건',
+        metric:{ value:0, unit:'건', period:'연', direction:'zero' },
+      weight:15, linkedGoal:GOAL_COST },
+      { title:'D라인 계획 수립·생산 효율',
+        target:'D라인 생산계획 수립 적기율·계획 대비 실적 오차율 최소화',
+        metric:{ value:0, unit:'-', period:'-', direction:'review' },
+      weight:15, linkedGoal:GOAL_SUST },
+    ],
+    sahun:{
+      h1:{
+        label:'이해판단력',
+        desc:'납기·생산계획 정보 이해 및 우선순위 판단',
+        questions:[
+          {q:'업무 지시·기준 이해 정확성', max:5},
+          {q:'우선순위 판단·자율 처리 역량', max:5},
+          {q:'상황 변화 시 유연한 대응', max:5},
+        ],
+        weight:15
+      },
+      h2:{
+        label:'직무지식',
+        desc:'생산 계획·물류 지시·MES 운용 전문성',
+        questions:[
+          {q:'직무 기준·이론 이해도', max:5},
+          {q:'실무 적용 정확성·오류율', max:5},
+          {q:'지식 공유·전파 활동', max:5},
+        ],
+        weight:15
+      },
+      h3:{
+        label:'성실성',
+        desc:'납품 데이터 실시간 업데이트·일일 보고 이행',
+        questions:[
+          {q:'일일 체크리스트·보고 이행률', max:5},
+          {q:'근태 준수·출결 관리', max:5},
+          {q:'맡은 업무 기한 내 완료율', max:5},
+        ],
+        weight:15
+      },
+    },
+    auto:{ recommended:['A3','A4'], selected:[], maxScore:10 },
+  },
+
+  /* ════════════════════════════════════════════
+     생산관리팀
+  ════════════════════════════════════════════ */
+  {
+    id:'고윤상', name:'고윤상', team:'생산관리팀',
+    position:'대리', rank:'팀원',
+    evaluatorOnly:false,
+    kpi:[
+      { title:'부품부족 예측·결품 0시간',
+        target:'부품 부족 사전 예측 정확도·결품으로 인한 생산 중단 0시간',
+        metric:{ value:0, unit:'시간', period:'연', direction:'zero' },
+      weight:15, linkedGoal:GOAL_ORG },
+      { title:'계획 배포 준수',
+        target:'사출/조립 생산계획 배포 준수율·오류 재작업 비용 최소화',
+        metric:{ value:0, unit:'-', period:'-', direction:'review' },
+      weight:15, linkedGoal:GOAL_COST },
+      { title:'납품 내역·재공품 재고 최소화',
+        target:'고객 납품 내역 정리 정확도·재공품 재고 최소화',
+        metric:{ value:0, unit:'-', period:'-', direction:'review' },
+      weight:15, linkedGoal:GOAL_SUST },
+    ],
+    sahun:{
+      h1:{
+        label:'이해판단력',
+        desc:'자재 수급·계획 정보 이해 및 이상 감지',
+        questions:[
+          {q:'업무 지시·기준 이해 정확성', max:5},
+          {q:'우선순위 판단·자율 처리 역량', max:5},
+          {q:'상황 변화 시 유연한 대응', max:5},
+        ],
+        weight:15
+      },
+      h2:{
+        label:'협조성',
+        desc:'사출·조립팀과의 자재 이슈 공유·요청 응대',
+        questions:[
+          {q:'유관부서 요청 응대율', max:5},
+          {q:'팀 내 정보 공유 충실도', max:5},
+          {q:'협업 과제 기여·완수도', max:5},
+        ],
+        weight:15
+      },
+      h3:{
+        label:'성실성',
+        desc:'일일 수급 모니터링·보고 체크리스트 이행',
+        questions:[
+          {q:'일일 체크리스트·보고 이행률', max:5},
+          {q:'근태 준수·출결 관리', max:5},
+          {q:'맡은 업무 기한 내 완료율', max:5},
+        ],
+        weight:15
+      },
+    },
+    auto:{ recommended:['A3','A4'], selected:[], maxScore:10 },
+  },
+
+  /* ════════════════════════════════════════════
+     생산관리팀
+  ════════════════════════════════════════════ */
+  {
+    id:'지태범', name:'지태범', team:'생산관리팀',
+    position:'주임', rank:'팀원',
+    evaluatorOnly:false,
+    kpi:[
+      { title:'이동 시간 준수·불필요 이동 최소화',
+        target:'창고 간 제품 이동 시간 준수율·불필요 이동 최소화',
+        metric:{ value:0, unit:'-', period:'-', direction:'review' },
+      weight:15, linkedGoal:GOAL_COST },
+      { title:'물동량 매칭 정합성',
+        target:'상하차 물동량 매칭 정합성·오류 재작업 0건',
+        metric:{ value:0, unit:'건', period:'연', direction:'zero' },
+      weight:15, linkedGoal:GOAL_ORG },
+      { title:'공정 흐름 모니터링·대기 손실 0건',
+        target:'사출-도장 공정 흐름 모니터링·이동 지연 대기 손실 0건',
+        metric:{ value:0, unit:'건', period:'연', direction:'zero' },
+      weight:15, linkedGoal:GOAL_SUST },
+    ],
+    sahun:{
+      h1:{
+        label:'책임감',
+        desc:'이동 지시 이행 및 지연 즉시 보고',
+        questions:[
+          {q:'업무 마감·체크리스트 이행률', max:5},
+          {q:'이상 발생 시 즉시 보고 이행', max:5},
+          {q:'결과물 완성도·정확성', max:5},
+        ],
+        weight:15
+      },
+      h2:{
+        label:'솔선수범',
+        desc:'자발적 물동량 파악·선제 이동 준비',
+        questions:[
+          {q:'자발적 업무 착수·선제 대응', max:5},
+          {q:'동료 지원·교차 업무 이행', max:5},
+          {q:'어려운 과제 자원 및 완수', max:5},
+        ],
+        weight:15
+      },
+      h3:{
+        label:'성실성',
+        desc:'일일 이동 현황 보고·체크리스트 이행',
+        questions:[
+          {q:'일일 체크리스트·보고 이행률', max:5},
+          {q:'근태 준수·출결 관리', max:5},
+          {q:'맡은 업무 기한 내 완료율', max:5},
+        ],
+        weight:15
+      },
+    },
+    auto:{ recommended:['A2','A4'], selected:[], maxScore:10 },
+  },
+
+  /* ════════════════════════════════════════════
+     생산관리팀
+  ════════════════════════════════════════════ */
+  {
+    id:'도병구', name:'도병구', team:'생산관리팀',
+    position:'대리', rank:'팀원',
+    evaluatorOnly:false,
+    kpi:[
+      { title:'외주 조달 준수·생산 손실 0건',
+        target:'외주 발주·조달 준수율·납기 지연 생산 중단 0시간',
+        metric:{ value:0, unit:'시간', period:'연', direction:'zero' },
+      weight:15, linkedGoal:GOAL_ORG },
+      { title:'외주 단가 절감·매입 정확도',
+        target:'외주 매입 마감 정확도·단가 절감 또는 경쟁 입찰 건수',
+        metric:{ value:0, unit:'-', period:'-', direction:'review' },
+      weight:15, linkedGoal:GOAL_COST },
+      { title:'외주 원가 분석·정보 공유',
+        target:'외주 업체 정보 공유 실시간성·원가 분석 보고 월별 이행',
+        metric:{ value:0, unit:'-', period:'-', direction:'review' },
+      weight:15, linkedGoal:GOAL_SUST },
+    ],
+    sahun:{
+      h1:{
+        label:'이해판단력',
+        desc:'외주 발주·조달 기준 이해 및 납기 이슈 판단',
+        questions:[
+          {q:'업무 지시·기준 이해 정확성', max:5},
+          {q:'우선순위 판단·자율 처리 역량', max:5},
+          {q:'상황 변화 시 유연한 대응', max:5},
+        ],
+        weight:15
+      },
+      h2:{
+        label:'직무지식',
+        desc:'외주 구매·원가 분석·업체 관리 전문성',
+        questions:[
+          {q:'직무 기준·이론 이해도', max:5},
+          {q:'실무 적용 정확성·오류율', max:5},
+          {q:'지식 공유·전파 활동', max:5},
+        ],
+        weight:15
+      },
+      h3:{
+        label:'협조성',
+        desc:'유관부서 외주 정보 공유 및 협조 응대',
+        questions:[
+          {q:'유관부서 요청 응대율', max:5},
+          {q:'팀 내 정보 공유 충실도', max:5},
+          {q:'협업 과제 기여·완수도', max:5},
+        ],
+        weight:15
+      },
+    },
+    auto:{ recommended:['A3','A4'], selected:[], maxScore:10 },
+  },
+
+  /* ════════════════════════════════════════════
+     품질팀
+  ════════════════════════════════════════════ */
+  {
+    id:'황재훈', name:'황재훈', team:'품질팀',
+    position:'부장', rank:'팀장',
+    evaluatorOnly:false,
+    kpi:[
+      { title:'NCR 관리·재작업 비용 감소',
+        target:'품질 현황 지표(NCR) 관리·불량 재작업 손실 전년비 감소',
+        metric:{ value:0, unit:'-', period:'-', direction:'review' },
+      weight:15, linkedGoal:GOAL_COST },
+      { title:'IATF 심사 적합률',
+        target:'SQ/IATF 인증 심사 적합률 달성',
+        metric:{ value:0, unit:'-', period:'-', direction:'review' },
+      weight:15, linkedGoal:GOAL_SUST },
+      { title:'고객 대응·클레임 비용 감소',
+        target:'고객 요청 자료 대응 적기율·클레임 처리 비용 전년비 감소',
+        metric:{ value:0, unit:'-', period:'-', direction:'review' },
+      weight:15, linkedGoal:GOAL_ORG },
+    ],
+    sahun:{
+      h1:{
+        label:'문제해결능력',
+        desc:'품질 이슈 원인 분석 및 시스템적 대응',
+        questions:[
+          {q:'이슈 원인 분석·데이터 기반 정의', max:5},
+          {q:'해결안 도출 및 실행 완결도', max:5},
+          {q:'재발 방지·표준화 이행', max:5},
+        ],
+        weight:15
+      },
+      h2:{
+        label:'품질지향',
+        desc:'IATF 기준 준수 주도 및 현장 교육',
+        questions:[
+          {q:'품질 기준 준수 주도 및 현장 교육', max:5},
+          {q:'불량·클레임 재발 방지 체계화', max:5},
+          {q:'고객 품질 요구 사내 전달 정확성', max:5},
+        ],
+        weight:15
+      },
+      h3:{
+        label:'혁신지향',
+        desc:'품질 관리 프로세스·도구 개선 제안',
+        questions:[
+          {q:'신규 아이디어 제시 건수', max:5},
+          {q:'파일럿·실행 여부', max:5},
+          {q:'표준화·재사용 가능 산출물', max:5},
+        ],
+        weight:15
+      },
+    },
+    auto:{ recommended:['A2','A5','A6'], selected:[], maxScore:10 },
+  },
+
+  /* ════════════════════════════════════════════
+     품질팀
+  ════════════════════════════════════════════ */
+  {
+    id:'박기훈', name:'박기훈', team:'품질팀',
+    position:'부장', rank:'팀원',
+    evaluatorOnly:false,
+    kpi:[
+      { title:'부적합 대응·재발 방지 비용 절감',
+        target:'고객 부적합 대응 완료율·재작업비 전년비 감소',
+        metric:{ value:0, unit:'-', period:'-', direction:'review' },
+      weight:15, linkedGoal:GOAL_COST },
+      { title:'불시점검·불량 원가 개선',
+        target:'내부 불시 점검 개선 완료율·불량 원가 절감',
+        metric:{ value:0, unit:'-', period:'-', direction:'review' },
+      weight:15, linkedGoal:GOAL_SUST },
+      { title:'신뢰성 시험 달성',
+        target:'보증/신뢰성 시험 달성률·미이행 클레임 0건',
+        metric:{ value:0, unit:'건', period:'연', direction:'zero' },
+      weight:15, linkedGoal:GOAL_ORG },
+    ],
+    sahun:{
+      h1:{
+        label:'이해판단력',
+        desc:'부적합 기준 이해 및 대응 우선순위 판단',
+        questions:[
+          {q:'업무 지시·기준 이해 정확성', max:5},
+          {q:'우선순위 판단·자율 처리 역량', max:5},
+          {q:'상황 변화 시 유연한 대응', max:5},
+        ],
+        weight:15
+      },
+      h2:{
+        label:'직무지식',
+        desc:'신뢰성 시험·부적합 관리 기준 전문성',
+        questions:[
+          {q:'직무 기준·이론 이해도', max:5},
+          {q:'실무 적용 정확성·오류율', max:5},
+          {q:'지식 공유·전파 활동', max:5},
+        ],
+        weight:15
+      },
+      h3:{
+        label:'품질지향',
+        desc:'시험·점검 기준 준수 및 개선 제안',
+        questions:[
+          {q:'품질 기준 준수율·오류 건수', max:5},
+          {q:'불량·오류 재발 방지 노력', max:5},
+          {q:'품질 개선 아이디어 제안', max:5},
+        ],
+        weight:15
+      },
+    },
+    auto:{ recommended:['A2','A5'], selected:[], maxScore:10 },
+  },
+
+  /* ════════════════════════════════════════════
+     품질팀
+  ════════════════════════════════════════════ */
+  {
+    id:'박창선', name:'박창선', team:'품질팀',
+    position:'부장', rank:'팀원',
+    evaluatorOnly:false,
+    kpi:[
+      { title:'반출품 분석·폐기 손실 감소',
+        target:'반출품 분석·개선 대책 수립·폐기 손실 전년비 감소',
+        metric:{ value:0, unit:'-', period:'-', direction:'review' },
+      weight:15, linkedGoal:GOAL_COST },
+      { title:'밀시트 취합·원재료 재작업 0건',
+        target:'정기검사 밀시트 취합 이행률·원재료 미달 재작업 0건',
+        metric:{ value:0, unit:'건', period:'연', direction:'zero' },
+      weight:15, linkedGoal:GOAL_SUST },
+      { title:'한도 협의·클레임 비용 0건',
+        target:'주요 품목 외관 한도 협의 완료율·클레임 비용 0건',
+        metric:{ value:0, unit:'건', period:'연', direction:'zero' },
+      weight:15, linkedGoal:GOAL_ORG },
+    ],
+    sahun:{
+      h1:{
+        label:'이해판단력',
+        desc:'반출·검사 기준 이해 및 이슈 우선순위 판단',
+        questions:[
+          {q:'업무 지시·기준 이해 정확성', max:5},
+          {q:'우선순위 판단·자율 처리 역량', max:5},
+          {q:'상황 변화 시 유연한 대응', max:5},
+        ],
+        weight:15
+      },
+      h2:{
+        label:'직무지식',
+        desc:'밀시트·한도 협의·외관 검사 기준 전문성',
+        questions:[
+          {q:'직무 기준·이론 이해도', max:5},
+          {q:'실무 적용 정확성·오류율', max:5},
+          {q:'지식 공유·전파 활동', max:5},
+        ],
+        weight:15
+      },
+      h3:{
+        label:'품질지향',
+        desc:'외관 기준 준수 및 개선 제안',
+        questions:[
+          {q:'품질 기준 준수율·오류 건수', max:5},
+          {q:'불량·오류 재발 방지 노력', max:5},
+          {q:'품질 개선 아이디어 제안', max:5},
+        ],
+        weight:15
+      },
+    },
+    auto:{ recommended:['A2','A5'], selected:[], maxScore:10 },
+  },
+
+  /* ════════════════════════════════════════════
+     품질팀
+  ════════════════════════════════════════════ */
+  {
+    id:'이우진', name:'이우진', team:'품질팀',
+    position:'차장', rank:'팀원',
+    evaluatorOnly:false,
+    kpi:[
+      { title:'측정 정확도·재측정 비용 최소화',
+        target:'정밀 측정 처리 건수·오류 재측정 비용 최소화',
+        metric:{ value:0, unit:'-', period:'-', direction:'review' },
+      weight:15, linkedGoal:GOAL_COST },
+      { title:'출하 성적서 등록 적기율',
+        target:'출하 성적서 전산 등록 적기율 달성',
+        metric:{ value:0, unit:'-', period:'-', direction:'review' },
+      weight:15, linkedGoal:GOAL_ORG },
+      { title:'형합성 Test 적중률·재제작 0건',
+        target:'상대물 형합성 Test 적중률·재제작 비용 0건',
+        metric:{ value:0, unit:'건', period:'연', direction:'zero' },
+      weight:15, linkedGoal:GOAL_SUST },
+    ],
+    sahun:{
+      h1:{
+        label:'이해판단력',
+        desc:'측정 기준·공차 이해 및 이상값 판단',
+        questions:[
+          {q:'업무 지시·기준 이해 정확성', max:5},
+          {q:'우선순위 판단·자율 처리 역량', max:5},
+          {q:'상황 변화 시 유연한 대응', max:5},
+        ],
+        weight:15
+      },
+      h2:{
+        label:'직무지식',
+        desc:'정밀 측정·성적서 등록·형합성 평가 전문성',
+        questions:[
+          {q:'직무 기준·이론 이해도', max:5},
+          {q:'실무 적용 정확성·오류율', max:5},
+          {q:'지식 공유·전파 활동', max:5},
+        ],
+        weight:15
+      },
+      h3:{
+        label:'성실성',
+        desc:'교정 이력 기록·일지 충실도·기한 이행',
+        questions:[
+          {q:'일일 체크리스트·보고 이행률', max:5},
+          {q:'근태 준수·출결 관리', max:5},
+          {q:'맡은 업무 기한 내 완료율', max:5},
+        ],
+        weight:15
+      },
+    },
+    auto:{ recommended:['A5','A2'], selected:[], maxScore:10 },
+  },
+
+  /* ════════════════════════════════════════════
+     품질팀
+  ════════════════════════════════════════════ */
+  {
+    id:'이다연', name:'이다연', team:'품질팀',
+    position:'대리', rank:'팀원',
+    evaluatorOnly:false,
+    kpi:[
+      { title:'게이지 R&R 이행률',
+        target:'게이지 R&R 수행 이행률 달성',
+        metric:{ value:0, unit:'-', period:'-', direction:'review' },
+      weight:15, linkedGoal:GOAL_SUST },
+      { title:'품질 문서 표준화·외주비 절감',
+        target:'품질 문서 이력 표준화율·외주 의존 감소 비용 절감',
+        metric:{ value:0, unit:'-', period:'-', direction:'review' },
+      weight:15, linkedGoal:GOAL_COST },
+      { title:'개발 이슈 리드타임·재개발 0건',
+        target:'개발 이슈 대응 리드타임 달성·재개발 비용 0건',
+        metric:{ value:0, unit:'건', period:'연', direction:'zero' },
+      weight:15, linkedGoal:GOAL_ORG },
+    ],
+    sahun:{
+      h1:{
+        label:'업무개선능력',
+        desc:'품질 문서·프로세스 개선 제안 및 실행',
+        questions:[
+          {q:'현행 프로세스 문제점 발굴 건수', max:5},
+          {q:'개선 제안 구체성·실행 가능성', max:5},
+          {q:'실행 후 성과 측정·공유', max:5},
+        ],
+        weight:15
+      },
+      h2:{
+        label:'직무지식',
+        desc:'게이지 R&R·측정 데이터·문서 관리 전문성',
+        questions:[
+          {q:'직무 기준·이론 이해도', max:5},
+          {q:'실무 적용 정확성·오류율', max:5},
+          {q:'지식 공유·전파 활동', max:5},
+        ],
+        weight:15
+      },
+      h3:{
+        label:'성실성',
+        desc:'문서 갱신 주기 준수·데이터 업데이트 이행',
+        questions:[
+          {q:'일일 체크리스트·보고 이행률', max:5},
+          {q:'근태 준수·출결 관리', max:5},
+          {q:'맡은 업무 기한 내 완료율', max:5},
+        ],
+        weight:15
+      },
+    },
+    auto:{ recommended:['A5','A4'], selected:[], maxScore:10 },
+  },
+
+  /* ════════════════════════════════════════════
+     품질팀
+  ════════════════════════════════════════════ */
+  {
+    id:'최현숙', name:'최현숙', team:'품질팀',
+    position:'주임', rank:'팀원',
+    evaluatorOnly:false,
+    kpi:[
+      { title:'수입검사 적기율·불량 유입 0건',
+        target:'외주 입고 수입검사 적기율·불량 원재료 유입 생산 손실 0건',
+        metric:{ value:0, unit:'건', period:'연', direction:'zero' },
+      weight:15, linkedGoal:GOAL_SUST },
+      { title:'XRF 측정 계획 달성',
+        target:'원재료 XRF 측정 계획 달성률',
+        metric:{ value:0, unit:'-', period:'-', direction:'review' },
+      weight:15, linkedGoal:GOAL_ORG },
+      { title:'품질 보고 취합·차단 비용 집계',
+        target:'주간/월간 품질 보고 취합률·차단 불량 손실 비용 집계',
+        metric:{ value:0, unit:'-', period:'-', direction:'review' },
+      weight:15, linkedGoal:GOAL_COST },
+    ],
+    sahun:{
+      h1:{
+        label:'책임감',
+        desc:'검사 기준서 준수·불량 즉시 격리 보고',
+        questions:[
+          {q:'업무 마감·체크리스트 이행률', max:5},
+          {q:'이상 발생 시 즉시 보고 이행', max:5},
+          {q:'결과물 완성도·정확성', max:5},
+        ],
+        weight:15
+      },
+      h2:{
+        label:'직무지식',
+        desc:'XRF 측정·수입검사 기준·보고 취합 전문성',
+        questions:[
+          {q:'직무 기준·이론 이해도', max:5},
+          {q:'실무 적용 정확성·오류율', max:5},
+          {q:'지식 공유·전파 활동', max:5},
+        ],
+        weight:15
+      },
+      h3:{
+        label:'성실성',
+        desc:'XRF 일정 준수·검사 일지 기록 이행',
+        questions:[
+          {q:'일일 체크리스트·보고 이행률', max:5},
+          {q:'근태 준수·출결 관리', max:5},
+          {q:'맡은 업무 기한 내 완료율', max:5},
+        ],
+        weight:15
+      },
+    },
+    auto:{ recommended:['A5','A2'], selected:[], maxScore:10 },
+  },
+
+  /* ════════════════════════════════════════════
+     사출팀
+  ════════════════════════════════════════════ */
+  {
+    id:'김민수', name:'김민수', team:'사출팀',
+    position:'부장', rank:'팀장',
+    evaluatorOnly:false,
+    kpi:[
+      { title:'현장 가동률·비가동 손실 감소',
+        target:'사출 현장 가동률 달성·비가동 손실 전년비 감소',
+        metric:{ value:0, unit:'-', period:'-', direction:'review' },
+      weight:15, linkedGoal:GOAL_COST },
+      { title:'예방보전 이행·돌발 수리비 절감',
+        target:'예방보전 계획 이행률·돌발 수리비 전년비 감소',
+        metric:{ value:0, unit:'-', period:'-', direction:'review' },
+      weight:15, linkedGoal:GOAL_ORG },
+      { title:'금형 자산 대응·손상비 0건',
+        target:'고객사 금형 자산 실사 완료율·손상 비용 0건',
+        metric:{ value:0, unit:'건', period:'연', direction:'zero' },
+      weight:15, linkedGoal:GOAL_SUST },
+    ],
+    sahun:{
+      h1:{
+        label:'문제해결능력',
+        desc:'설비·공정 이슈 즉시 대응 및 재발 방지',
+        questions:[
+          {q:'이슈 원인 분석·데이터 기반 정의', max:5},
+          {q:'해결안 도출 및 실행 완결도', max:5},
+          {q:'재발 방지·표준화 이행', max:5},
+        ],
+        weight:15
+      },
+      h2:{
+        label:'부하육성',
+        desc:'사출팀원 역량 개발·교차공정 양성',
+        questions:[
+          {q:'OJT·개발 계획 수립 및 실행', max:5},
+          {q:'정기 피드백 주기·구체성', max:5},
+          {q:'역량 성장 가시적 성과', max:5},
+        ],
+        weight:15
+      },
+      h3:{
+        label:'원가의식',
+        desc:'설비 운용 비용·예방보전 원가 의식 주도',
+        questions:[
+          {q:'원가 구성 항목 파악·모니터링', max:5},
+          {q:'낭비·로스 저감 활동 건수', max:5},
+          {q:'원가절감 제안 및 실행 성과', max:5},
+        ],
+        weight:15
+      },
+    },
+    auto:{ recommended:['A1','A2','A3'], selected:[], maxScore:10 },
+  },
+
+  /* ════════════════════════════════════════════
+     사출팀
+  ════════════════════════════════════════════ */
+  {
+    id:'권경환', name:'권경환', team:'사출팀',
+    position:'차장', rank:'팀원',
+    evaluatorOnly:false,
+    kpi:[
+      { title:'금형 보전·수명 연장',
+        target:'금형 정기/예방 보전 이행률·교체 주기 연장 교체비 절감',
+        metric:{ value:0, unit:'-', period:'-', direction:'review' },
+      weight:15, linkedGoal:GOAL_COST },
+      { title:'금형 식별 정합성',
+        target:'금형 위치/식별 정합성(MES)·잘못된 투입 0건',
+        metric:{ value:0, unit:'건', period:'연', direction:'zero' },
+      weight:15, linkedGoal:GOAL_ORG },
+      { title:'금형 원가 절감·사이클타임 단축',
+        target:'금형 개선 원가 절감·사이클타임 단축 가공비 절감',
+        metric:{ value:0, unit:'-', period:'-', direction:'review' },
+      weight:15, linkedGoal:GOAL_SUST },
+    ],
+    sahun:{
+      h1:{
+        label:'이해판단력',
+        desc:'금형 보전 기준·이상 징후 판단',
+        questions:[
+          {q:'업무 지시·기준 이해 정확성', max:5},
+          {q:'우선순위 판단·자율 처리 역량', max:5},
+          {q:'상황 변화 시 유연한 대응', max:5},
+        ],
+        weight:15
+      },
+      h2:{
+        label:'직무지식',
+        desc:'금형 보전·사이클타임 분석·MES 운용 전문성',
+        questions:[
+          {q:'직무 기준·이론 이해도', max:5},
+          {q:'실무 적용 정확성·오류율', max:5},
+          {q:'지식 공유·전파 활동', max:5},
+        ],
+        weight:15
+      },
+      h3:{
+        label:'품질지향',
+        desc:'금형 이상 신호 사전 감지·불량 예방',
+        questions:[
+          {q:'품질 기준 준수율·오류 건수', max:5},
+          {q:'불량·오류 재발 방지 노력', max:5},
+          {q:'품질 개선 아이디어 제안', max:5},
+        ],
+        weight:15
+      },
+    },
+    auto:{ recommended:['A3','A4'], selected:[], maxScore:10 },
+  },
+
+  /* ════════════════════════════════════════════
+     사출팀
+  ════════════════════════════════════════════ */
+  {
+    id:'김택범', name:'김택범', team:'사출팀',
+    position:'사원', rank:'팀원',
+    evaluatorOnly:false,
+    kpi:[
+      { title:'표준서 관리·불량 방지',
+        target:'표준서/조건표 시스템 관리율·표준 미준수 불량 0건',
+        metric:{ value:0, unit:'건', period:'연', direction:'zero' },
+      weight:15, linkedGoal:GOAL_SUST },
+      { title:'생산 데이터 시각화·원가 기여',
+        target:'생산 데이터 시각화 활용도·원가 절감 아이디어 건수',
+        metric:{ value:0, unit:'-', period:'-', direction:'review' },
+      weight:15, linkedGoal:GOAL_COST },
+      { title:'사이클타임 취합·개선 제안',
+        target:'사이클타임 자료 취합 정확도·분석 기반 개선 건수',
+        metric:{ value:0, unit:'-', period:'-', direction:'review' },
+      weight:15, linkedGoal:GOAL_ORG },
+    ],
+    sahun:{
+      h1:{
+        label:'업무개선능력',
+        desc:'표준서·데이터 기반 공정 개선 제안',
+        questions:[
+          {q:'현행 프로세스 문제점 발굴 건수', max:5},
+          {q:'개선 제안 구체성·실행 가능성', max:5},
+          {q:'실행 후 성과 측정·공유', max:5},
+        ],
+        weight:15
+      },
+      h2:{
+        label:'직무지식',
+        desc:'사출 공정·표준서 관리·데이터 분석 전문성',
+        questions:[
+          {q:'직무 기준·이론 이해도', max:5},
+          {q:'실무 적용 정확성·오류율', max:5},
+          {q:'지식 공유·전파 활동', max:5},
+        ],
+        weight:15
+      },
+      h3:{
+        label:'성실성',
+        desc:'표준서 업데이트·체크리스트 기한 이행',
+        questions:[
+          {q:'일일 체크리스트·보고 이행률', max:5},
+          {q:'근태 준수·출결 관리', max:5},
+          {q:'맡은 업무 기한 내 완료율', max:5},
+        ],
+        weight:15
+      },
+    },
+    auto:{ recommended:['A1','A3'], selected:[], maxScore:10 },
+  },
+
+  /* ════════════════════════════════════════════
+     조립팀
+  ════════════════════════════════════════════ */
+  {
+    id:'양춘향', name:'양춘향', team:'조립팀',
+    position:'팀장대행', rank:'팀장',
+    evaluatorOnly:false,
+    kpi:[
+      { title:'조립라인 공정 불량률',
+        target:'월평균 ≤ 0.8%',
+        metric:{ value:0.8, unit:'%', period:'평균', direction:'lower' },
+      weight:15, linkedGoal:GOAL_SUST },
+      { title:'조립 원단위 로스율',
+        target:'전년 대비 -5%p',
+        metric:{ value:5, unit:'%p', period:'전년대비', direction:'higher' },
+      weight:15, linkedGoal:GOAL_COST },
+      { title:'조립팀 다기능공 양성',
+        target:'팀원 1인당 교차공정 2개',
+        metric:{ value:2, unit:'개', period:'연', direction:'higher' },
+      weight:15, linkedGoal:GOAL_ORG },
+    ],
+    sahun:{
+      h1:{
+        label:'문제해결능력',
+        desc:'라인 이슈 즉시 대응·재발방지 표준화',
+        questions:[
+          {q:'이슈 원인 분석·데이터 기반 정의', max:5},
+          {q:'해결안 도출 및 실행 완결도', max:5},
+          {q:'재발 방지·표준화 이행', max:5},
+        ],
+        weight:15
+      },
+      h2:{
+        label:'부하육성',
+        desc:'조립팀원 역량 개발·다기능공 양성',
+        questions:[
+          {q:'OJT·개발 계획 수립 및 실행', max:5},
+          {q:'정기 피드백 주기·구체성', max:5},
+          {q:'역량 성장 가시적 성과', max:5},
+        ],
+        weight:15
+      },
+      h3:{
+        label:'원가의식',
+        desc:'로스·재료비·인건비 원가 의식 주도',
+        questions:[
+          {q:'원가 구성 항목 파악·모니터링', max:5},
+          {q:'낭비·로스 저감 활동 건수', max:5},
+          {q:'원가절감 제안 및 실행 성과', max:5},
+        ],
+        weight:15
+      },
+    },
+    auto:{ recommended:['A2','A3','A4'], selected:[], maxScore:10 },
+  },
+
+  /* ════════════════════════════════════════════
+     후가공팀-도장1
+  ════════════════════════════════════════════ */
+  {
+    id:'장성수', name:'장성수', team:'후가공팀-도장1',
+    position:'부장', rank:'팀장',
+    evaluatorOnly:false,
+    kpi:[
+      { title:'도장 생산 달성률·도료 수율',
+        target:'도장 생산 계획 달성률·도료 수율 목표 달성',
+        metric:{ value:0, unit:'-', period:'-', direction:'review' },
+      weight:15, linkedGoal:GOAL_COST },
+      { title:'생산성·재작업 비용 감소',
+        target:'도장 공정 생산성 향상·불량 감소 재작업비 전년비 감소',
+        metric:{ value:0, unit:'-', period:'-', direction:'review' },
+      weight:15, linkedGoal:GOAL_ORG },
+      { title:'원부자재 이상 조치·불량 비용 0건',
+        target:'원부자재 이상 즉시 보고·불량 원자재 반품·불출 오류 0건',
+        metric:{ value:0, unit:'건', period:'연', direction:'zero' },
+      weight:15, linkedGoal:GOAL_SUST },
+    ],
+    sahun:{
+      h1:{
+        label:'문제해결능력',
+        desc:'도장 불량·공정 이슈 선제 대응',
+        questions:[
+          {q:'이슈 원인 분석·데이터 기반 정의', max:5},
+          {q:'해결안 도출 및 실행 완결도', max:5},
+          {q:'재발 방지·표준화 이행', max:5},
+        ],
+        weight:15
+      },
+      h2:{
+        label:'코칭피드백',
+        desc:'도장팀원 피드백·위임·성장 관리',
+        questions:[
+          {q:'1:1 면담 주기·구체적 피드백 이행', max:5},
+          {q:'업무 위임·권한부여 적절성', max:5},
+          {q:'팀원 성장 가시적 변화', max:5},
+        ],
+        weight:15
+      },
+      h3:{
+        label:'원가의식',
+        desc:'도료 수율·재작업 비용 원가 의식 주도',
+        questions:[
+          {q:'원가 구성 항목 파악·모니터링', max:5},
+          {q:'낭비·로스 저감 활동 건수', max:5},
+          {q:'원가절감 제안 및 실행 성과', max:5},
+        ],
+        weight:15
+      },
+    },
+    auto:{ recommended:['A2','A3','A4'], selected:[], maxScore:10 },
+  },
+
+  /* ════════════════════════════════════════════
+     후가공팀-도장1
+  ════════════════════════════════════════════ */
+  {
+    id:'신영종', name:'신영종', team:'후가공팀-도장1',
+    position:'주임', rank:'팀원',
+    evaluatorOnly:false,
+    kpi:[
+      { title:'자재 조달 적기율·결품 0건',
+        target:'자재 조달·지원 적기율·조달 지연 생산 중단 0건',
+        metric:{ value:0, unit:'건', period:'연', direction:'zero' },
+      weight:15, linkedGoal:GOAL_ORG },
+      { title:'수원공장 지원·물류비 절감',
+        target:'이동 자재 지원 실적·불필요 이중 이동 물류비 0건',
+        metric:{ value:0, unit:'건', period:'연', direction:'zero' },
+      weight:15, linkedGoal:GOAL_COST },
+      { title:'자재 낭비 감소·폐기 비용 절감',
+        target:'자재 낭비·폐기량 전년비 감소·잉여 재활용 처리',
+        metric:{ value:0, unit:'-', period:'-', direction:'review' },
+      weight:15, linkedGoal:GOAL_SUST },
+    ],
+    sahun:{
+      h1:{
+        label:'책임감',
+        desc:'자재 소진 예상 시 사전 발주·기한 이행',
+        questions:[
+          {q:'업무 마감·체크리스트 이행률', max:5},
+          {q:'이상 발생 시 즉시 보고 이행', max:5},
+          {q:'결과물 완성도·정확성', max:5},
+        ],
+        weight:15
+      },
+      h2:{
+        label:'협조성',
+        desc:'공장 간 자재 지원 요청 응대·소통',
+        questions:[
+          {q:'유관부서 요청 응대율', max:5},
+          {q:'팀 내 정보 공유 충실도', max:5},
+          {q:'협업 과제 기여·완수도', max:5},
+        ],
+        weight:15
+      },
+      h3:{
+        label:'성실성',
+        desc:'입출고 보고·체크리스트 충실 이행',
+        questions:[
+          {q:'일일 체크리스트·보고 이행률', max:5},
+          {q:'근태 준수·출결 관리', max:5},
+          {q:'맡은 업무 기한 내 완료율', max:5},
+        ],
+        weight:15
+      },
+    },
+    auto:{ recommended:['A3','A4'], selected:[], maxScore:10 },
+  },
+
+  /* ════════════════════════════════════════════
+     후가공팀-도장2
+  ════════════════════════════════════════════ */
+  {
+    id:'박준성', name:'박준성', team:'후가공팀-도장2',
+    position:'부장', rank:'팀장',
+    evaluatorOnly:false,
+    kpi:[
+      { title:'자동차 도장 수율·도료비 절감',
+        target:'도장 수율 달성률·수율 향상 도료비 절감',
+        metric:{ value:0, unit:'-', period:'-', direction:'review' },
+      weight:15, linkedGoal:GOAL_COST },
+      { title:'도장 불량률 감소·재작업비 절감',
+        target:'도장 불량률(이물) 감소·재작업비 전년비 절감',
+        metric:{ value:0, unit:'-', period:'-', direction:'review' },
+      weight:15, linkedGoal:GOAL_SUST },
+      { title:'도료 배합 정합성·원가 기여',
+        target:'배합 데이터 정합성·오류 0건·원가 절감 아이디어',
+        metric:{ value:0, unit:'건', period:'연', direction:'zero' },
+      weight:15, linkedGoal:GOAL_ORG },
+    ],
+    sahun:{
+      h1:{
+        label:'문제해결능력',
+        desc:'도장 불량·배합 이슈 선제 분석·대응',
+        questions:[
+          {q:'이슈 원인 분석·데이터 기반 정의', max:5},
+          {q:'해결안 도출 및 실행 완결도', max:5},
+          {q:'재발 방지·표준화 이행', max:5},
+        ],
+        weight:15
+      },
+      h2:{
+        label:'코칭피드백',
+        desc:'도장팀원 역량 피드백·위임',
+        questions:[
+          {q:'1:1 면담 주기·구체적 피드백 이행', max:5},
+          {q:'업무 위임·권한부여 적절성', max:5},
+          {q:'팀원 성장 가시적 변화', max:5},
+        ],
+        weight:15
+      },
+      h3:{
+        label:'원가의식',
+        desc:'도료·재작업 원가 구조 파악·절감 주도',
+        questions:[
+          {q:'원가 구성 항목 파악·모니터링', max:5},
+          {q:'낭비·로스 저감 활동 건수', max:5},
+          {q:'원가절감 제안 및 실행 성과', max:5},
+        ],
+        weight:15
+      },
+    },
+    auto:{ recommended:['A2','A3','A4'], selected:[], maxScore:10 },
+  },
+
+  /* ════════════════════════════════════════════
+     후가공팀-인쇄
+  ════════════════════════════════════════════ */
+  {
+    id:'김민식', name:'김민식', team:'후가공팀-인쇄',
+    position:'부장', rank:'팀장',
+    evaluatorOnly:false,
+    kpi:[
+      { title:'인쇄 수율·재료비 절감',
+        target:'인쇄 생산성·품질 수율 달성·수율 향상 재료비 절감',
+        metric:{ value:0, unit:'-', period:'-', direction:'review' },
+      weight:15, linkedGoal:GOAL_COST },
+      { title:'지그·제판 정확도·재제작 0건',
+        target:'인쇄 지그/제판 제작 정확도·재제작 비용 0건',
+        metric:{ value:0, unit:'건', period:'연', direction:'zero' },
+      weight:15, linkedGoal:GOAL_ORG },
+      { title:'인쇄 불량 개선·폐기 비용 감소',
+        target:'불량 원인 분석·개선 건수·폐기 손실 전년비 감소',
+        metric:{ value:0, unit:'-', period:'-', direction:'review' },
+      weight:15, linkedGoal:GOAL_SUST },
+    ],
+    sahun:{
+      h1:{
+        label:'문제해결능력',
+        desc:'인쇄 불량·제판 이슈 원인 분석·조치',
+        questions:[
+          {q:'이슈 원인 분석·데이터 기반 정의', max:5},
+          {q:'해결안 도출 및 실행 완결도', max:5},
+          {q:'재발 방지·표준화 이행', max:5},
+        ],
+        weight:15
+      },
+      h2:{
+        label:'코칭피드백',
+        desc:'인쇄팀원 기술 피드백·성장 지원',
+        questions:[
+          {q:'1:1 면담 주기·구체적 피드백 이행', max:5},
+          {q:'업무 위임·권한부여 적절성', max:5},
+          {q:'팀원 성장 가시적 변화', max:5},
+        ],
+        weight:15
+      },
+      h3:{
+        label:'혁신지향',
+        desc:'인쇄 수율·지그 개선 아이디어 제안·표준화',
+        questions:[
+          {q:'신규 아이디어 제시 건수', max:5},
+          {q:'파일럿·실행 여부', max:5},
+          {q:'표준화·재사용 가능 산출물', max:5},
+        ],
+        weight:15
+      },
+    },
+    auto:{ recommended:['A2','A3','A4'], selected:[], maxScore:10 },
+  },
+
+  /* ════════════════════════════════════════════
+     후가공팀-품질
+  ════════════════════════════════════════════ */
+  {
+    id:'박정금', name:'박정금', team:'후가공팀-품질',
+    position:'주임', rank:'팀원',
+    evaluatorOnly:false,
+    kpi:[
+      { title:'수입검사 적기율·불량 유입 차단',
+        target:'수입 부품 검사 적기율·불량 유입 생산 손실 0건',
+        metric:{ value:0, unit:'건', period:'연', direction:'zero' },
+      weight:15, linkedGoal:GOAL_SUST },
+      { title:'협력사 피드백·단가 개선 기여',
+        target:'협력사 품질 피드백 실적·불량 감소 원가 절감 기여',
+        metric:{ value:0, unit:'-', period:'-', direction:'review' },
+      weight:15, linkedGoal:GOAL_COST },
+      { title:'불량 데이터 분석·재발 0건',
+        target:'불량 데이터 분석 정확도·동일 불량 재발 0건',
+        metric:{ value:0, unit:'건', period:'연', direction:'zero' },
+      weight:15, linkedGoal:GOAL_ORG },
+    ],
+    sahun:{
+      h1:{
+        label:'이해판단력',
+        desc:'검사 기준 이해·불량 판정 우선순위',
+        questions:[
+          {q:'업무 지시·기준 이해 정확성', max:5},
+          {q:'우선순위 판단·자율 처리 역량', max:5},
+          {q:'상황 변화 시 유연한 대응', max:5},
+        ],
+        weight:15
+      },
+      h2:{
+        label:'직무지식',
+        desc:'수입검사·불량 데이터 분석·협력사 관리 전문성',
+        questions:[
+          {q:'직무 기준·이론 이해도', max:5},
+          {q:'실무 적용 정확성·오류율', max:5},
+          {q:'지식 공유·전파 활동', max:5},
+        ],
+        weight:15
+      },
+      h3:{
+        label:'품질지향',
+        desc:'검사 기준 준수·불량 재발 방지 제안',
+        questions:[
+          {q:'품질 기준 준수율·오류 건수', max:5},
+          {q:'불량·오류 재발 방지 노력', max:5},
+          {q:'품질 개선 아이디어 제안', max:5},
+        ],
+        weight:15
+      },
+    },
+    auto:{ recommended:['A2','A5'], selected:[], maxScore:10 },
+  },
+
+  /* ════════════════════════════════════════════
+     경영진 · 평가자 전용 (KPI 미입력)
+  ════════════════════════════════════════════ */
+  {
+    id:'김승규', name:'김승규', team:'경영진',
+    position:'사장', rank:'팀장',
+    evaluatorOnly:true,
+  },
+  {
+    id:'강동길', name:'강동길', team:'경영진',
+    position:'부사장', rank:'팀장',
+    evaluatorOnly:true,
+  },
+  {
+    id:'박재걸', name:'박재걸', team:'경영진',
+    position:'공장장', rank:'팀장',
+    evaluatorOnly:true,
+  },
+  {
+    id:'김은진', name:'김은진', team:'경영기획실',
+    position:'실장', rank:'팀장',
+    evaluatorOnly:true,
+  },
+  {
+    id:'임문호', name:'임문호', team:'후가공팀',
+    position:'이사', rank:'팀장',
+    evaluatorOnly:true,
+  },
+];
+
+// ── 시급직 직원 목록 ─────────────────────────────────
+// ⚠ 양춘향: hourly 레코드 삭제 완료 (annual 팀장대행으로 전환, A0029)
+const HOURLY_EMPLOYEES = [
+  { team:'생산관리팀', name:'공인선', rank:'대리', type:'hourly' },
+  { team:'품질팀', name:'장시영', rank:'대리', type:'hourly' },
+  { team:'품질팀', name:'박종현', rank:'부장', type:'hourly' },
+  { team:'품질팀', name:'박영미', rank:'주임', type:'hourly' },
+  { team:'사출팀', name:'이호정', rank:'차장', type:'hourly' },
+  { team:'사출팀', name:'김일봉', rank:'과장', type:'hourly' },
+  { team:'사출팀', name:'이봉철', rank:'과장', type:'hourly' },
+  { team:'사출팀', name:'신순월', rank:'대리', type:'hourly' },
+  { team:'조립팀', name:'김춘화', rank:'대리', type:'hourly' },
+  { team:'조립팀', name:'강영국', rank:'사원', type:'hourly' },
+  { team:'조립팀', name:'김선화', rank:'사원', type:'hourly' },
+  { team:'조립팀', name:'김연미', rank:'사원', type:'hourly' },
+  { team:'조립팀', name:'김향란', rank:'사원', type:'hourly' },
+];
+
+// ── 시급직 통합 평가 템플릿 (HOURLY_EVAL_TEMPLATE) ───────
+// 설계: 5문항 × 20점 = 100점 | 모든 시급직 동일 적용
+// 평가자 가중치: 본인30% / 반장40% / 팀장20% / 공장장10%
+// 법적 근거: 근로기준법 제23조, 대법원 2012다12870 (합리적 기준 + 절차적 공정성)
+// BARS(행동기준평가척도): 주관적 태도 표현 금지, 관찰 가능한 행동 사실 기준
+const HOURLY_EVAL_TEMPLATE = [
+  {
+    id: 'H1', label: '근태·출근 성실성', sahunRef: '성실성', weight: 20,
+    evidence: '전자출퇴근 기록, 결근신청서',
+    legalNote: '객관적 수치 기반 — 권고사직 시 가장 강력한 입증 자료',
+    questions: [
+      { q:'이달 지각·조퇴 횟수 (0회=5점, 1회=4점, 2회=3점, 3회=2점, 4회=1점, 5회이상=0점)', max:5, type:'objective' },
+      { q:'무단결근 없이 사전 연락(유선·문자) 후 결근 처리 이행 여부', max:5, type:'behavioral' },
+      { q:'작업 시작 전 준비(작업복·보호구 착용, 기계 점검) 이행률', max:5, type:'behavioral' },
+      { q:'잔업·특근 요청 시 합리적 사유 없이 반복 거부한 횟수 (0회=5점 역산)', max:5, type:'behavioral' },
+    ],
+  },
+  {
+    id: 'H2', label: '작업 지시 이행도', sahunRef: '책임감', weight: 20,
+    evidence: '일일 작업지시서, 생산실적일보, 재작업 기록',
+    legalNote: '재작업 지시 수용 여부는 업무명령 불이행 증빙으로 활용 가능',
+    questions: [
+      { q:'일일 작업지시서 완수율 (목표 대비 실적 달성 여부)', max:5, type:'objective' },
+      { q:'재작업·수정 지시 수용 및 기한 내 완수 여부', max:5, type:'behavioral' },
+      { q:'작업 완료 후 결과 보고 및 인수인계 체크리스트 이행', max:5, type:'behavioral' },
+      { q:'업무 마감 및 전후 공정 인수인계 적시성', max:5, type:'behavioral' },
+    ],
+  },
+  {
+    id: 'H3', label: '품질·공정 관리', sahunRef: '품질지향', weight: 20,
+    evidence: '자주검사 시트, 불량 발생 기록, 품질일보',
+    legalNote: '불량 수치는 수치화 입증 가능 — 동일 불량 반복 시 PIP 트리거 근거',
+    questions: [
+      { q:'담당 공정 불량 발생 건수 (팀 평균 이하=5점, 평균 수준=3점, 초과=1점)', max:5, type:'objective' },
+      { q:'자주검사 시트 누락 없이 기록·서명 이행 여부', max:5, type:'behavioral' },
+      { q:'불량·이상 발생 즉시 상급자 보고 및 격리 조치 이행', max:5, type:'behavioral' },
+      { q:'동일 불량 재발 방지 노력 (표준 준수, 개선 제안 여부)', max:5, type:'behavioral' },
+    ],
+  },
+  {
+    id: 'H4', label: '안전수칙 준수', sahunRef: '책임감', weight: 20,
+    evidence: '안전점검일지, 보호구 체크리스트, 교육이수 기록',
+    legalNote: '중대재해처벌법 대응 + 산재 발생 시 관리 소홀 입증 차단 목적',
+    questions: [
+      { q:'개인보호구(PPE) 착용 미준수 적발 횟수 (0회=5점, 1회=3점, 2회이상=0점)', max:5, type:'objective' },
+      { q:'작업구역 5S(정리·정돈·청소·청결·생활화) 유지 상태', max:5, type:'behavioral' },
+      { q:'위험 요인·아차사고 발견 시 즉시 보고 및 표시 이행 여부', max:5, type:'behavioral' },
+      { q:'월 안전교육 전 항목 이수 여부 (100 이수=5점, 미이수 1건당 -2점)', max:5, type:'objective' },
+    ],
+  },
+  {
+    id: 'H5', label: '협력·개선 참여', sahunRef: '팀웍', weight: 20,
+    evidence: '개선제안서, 반장 면담 기록, OJT 수료증',
+    legalNote: 'BARS 기반 필수 — 반장 관찰 일지에 행동 사실(날짜·상황·반응) 구체 기재',
+    questions: [
+      { q:'동료 요청 시 즉각 지원하고 업무 분담 마찰 없이 협조 (반장 관찰 기록 기준)', max:5, type:'behavioral' },
+      { q:'상급자 피드백·지도 수용 태도 (적극 수용=5점, 소극적=3점, 반복 거부=1점)', max:5, type:'behavioral' },
+      { q:'개선 제안 또는 아이디어 제출 여부 (1건 이상=5점, 0건=2점)', max:5, type:'behavioral' },
+      { q:'다기능 OJT 참여 의향 및 실제 이수 여부 (이수=5점, 참여의향=3점, 거부=1점)', max:5, type:'behavioral' },
+    ],
+  },
+];
+
+// 시급직 평가자별 가중치
+const HOURLY_EVAL_WEIGHTS = { self:30, foreman:40, teamLeader:20, factoryMgr:10 };
+
+const ALL_EMPLOYEES = [...ANNUAL_EMPLOYEES, ...HOURLY_EMPLOYEES];
+
+function getEmployee(name) {
+  return ALL_EMPLOYEES.find(e => e.name === name) || null;
+}
+
+function getEmployeesByTeam() {
+  const teams = {};
+  ALL_EMPLOYEES.forEach(e => {
+    if (!teams[e.team]) teams[e.team] = [];
+    teams[e.team].push(e);
+  });
+  return teams;
+}
+
+// Node.js 환경에서 검증 스크립트용 export
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = {
+    ANNUAL_EMPLOYEES, HOURLY_EMPLOYEES, ALL_EMPLOYEES,
+    AUTO_OPTIONS, GOAL_COST, GOAL_ORG, GOAL_SUST,
+    HOURLY_EVAL_TEMPLATE, HOURLY_EVAL_WEIGHTS,
+    calcKpiScore, getEmployee, getEmployeesByTeam
+  };
+}
+
+// ─────────────────────────────────────
+</script>
+<script>
+// ═══ 공용 유틸 ════════════════════════════════════════
+const SAHUN_MAP = {
+  '성실성':'근면성실', '책임감':'근면성실', '직무지식':'근면성실', '직무전문성':'근면성실',
+  '이해판단력':'책임완수', '문제해결능력':'책임완수', '의사결정능력':'책임완수',
+  '업무개선능력':'책임완수', '품질지향':'책임완수', '원가의식':'책임완수',
+  '혁신지향':'책임완수', '부하육성':'책임완수',
+  '코칭피드백':'인화단결', '코칭·피드백':'인화단결', '협조성':'인화단결',
+  '팀웍':'인화단결', '솔선수범':'인화단결', '멘토링':'인화단결',
+};
+function sahunOf(label) { return SAHUN_MAP[label] || '—'; }
+
+const DIR_LABEL = {
+  higher:'↑ 높을수록 좋음', lower:'↓ 낮을수록 좋음',
+  zero:'= 0이 목표', rate:'% 달성률 자체', review:'5월 합의 시 확정 예정'
+};
+function fmtTarget(m) {
+  if (m.direction === 'review') return '— 미정 (합의 필요) —';
+  const v = (m.value === 0 && m.direction === 'zero') ? '0' : m.value;
+  return `${v}${m.unit || ''}${m.period && m.period !== '-' ? ' / ' + m.period : ''}`;
+}
+
+function metricBlock(k, idPrefix, editable) {
+  const m = k.metric || { direction:'review', value:0, unit:'-', period:'-' };
+  const disabled = m.direction === 'review' ? 'disabled' : '';
+  const unitSafe = m.unit || '';
+  const dataM = JSON.stringify(m).replace(/'/g,'&#39;');
+  const targetPart = editable
+    ? `<label>목표 숫자</label>
+       <input type="number" step="any" value="${m.direction==='review'?'':m.value}" ${disabled}
+         onchange="updateMetric('${idPrefix}', this.value)" data-metric='${dataM}'
+         style="width:80px;padding:4px 6px;border:1px solid var(--border-strong);border-radius:4px;font-size:12.5px;">
+       <span style="color:var(--text-faint);font-size:11px;">${unitSafe}</span>
+       <span style="color:var(--text-faint);font-size:10px;">${m.period && m.period!=='-' ? '/ '+m.period : ''}</span>`
+    : `<span class="metric-target">목표: ${fmtTarget(m)}</span><span class="metric-dir">${DIR_LABEL[m.direction] || m.direction}</span>`;
+  const reviewHint = m.direction === 'review'
+    ? `<div class="review-hint">원문이 복합 지표 — 5월 합의 시 주지표로 축약</div>` : '';
+  return `
+    <div class="metric-box">
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">${targetPart}</div>
+      ${reviewHint}
+      <div class="metric-input-row">
+        <label>현재 실적</label>
+        <input type="number" step="any" ${disabled}
+          id="${idPrefix}-actual" data-metric='${dataM}' data-max="${k.weight}"
+          oninput="previewScore('${idPrefix}')" placeholder="숫자">
+        <span style="color:var(--text-faint);font-size:11px;">${unitSafe}</span>
+        <span class="autoscore" id="${idPrefix}-score">— 점</span>
+        <span class="autoscore-suffix">/ ${k.weight}점</span>
+      </div>
+    </div>`;
+}
+function previewScore(idPrefix) {
+  const input = document.getElementById(`${idPrefix}-actual`);
+  const out = document.getElementById(`${idPrefix}-score`);
+  if (!input || !out) return;
+  const raw = input.value;
+  if (raw === '') { out.textContent = '— 점'; return; }
+  const actual = Number(raw);
+  if (!isFinite(actual)) { out.textContent = '입력오류'; return; }
+  const metric = JSON.parse(input.dataset.metric);
+  const s = calcKpiScore(metric, actual, Number(input.dataset.max) || 15);
+  if (s == null) { out.textContent = '— 점'; return; }
+  out.textContent = s + '점';
+}
+function updateMetric(idPrefix, newValue) {
+  const actualInput = document.getElementById(`${idPrefix}-actual`);
+  if (!actualInput) return;
+  const m = JSON.parse(actualInput.dataset.metric);
+  m.value = Number(newValue);
+  actualInput.dataset.metric = JSON.stringify(m);
+  previewScore(idPrefix);
+}
+function confirmSahun() {
+  const btn = document.getElementById('sahun-confirm-btn');
+  const st = document.getElementById('sahun-status');
+  if (!btn) return;
+  btn.textContent = '확정 완료';
+  btn.classList.add('done');
+  btn.disabled = true;
+  if (st) { st.textContent = '✓ 3개 역량 확정됨'; st.style.color = '#22543d'; }
+}
+
+function renderKpiRow(k, idx, idPrefix) {
+  return `
+    <tr>
+      <td>
+        <div class="kpi-tag">KPI ${idx+1}</div>
+        <div class="kpi-title">${k.title}</div>
+        <div class="max-hint">만점 ${k.weight}점 · 연계 ${k.linkedGoal}</div>
+      </td>
+      <td>
+        <div style="color:var(--text-dim);font-size:12px;">${k.target}</div>
+        ${metricBlock(k, idPrefix, false)}
+      </td>
+      <td>
+        <div class="radio-group">
+          <label><input type="radio" name="${idPrefix}-status" value="합의" checked>합의</label>
+          <label><input type="radio" name="${idPrefix}-status" value="수정요청">수정요청</label>
+        </div>
+        <textarea placeholder="수정요청 사유 · 메모"></textarea>
+      </td>
+    </tr>`;
+}
+function renderTeamKpiRow(k, idx, idPrefix) {
+  return `
+    <tr>
+      <td>
+        <div class="kpi-tag">KPI ${idx+1}</div>
+        <div class="kpi-title">${k.title}</div>
+        <div class="max-hint">만점 ${k.weight}점 · 연계 ${k.linkedGoal}</div>
+      </td>
+      <td>
+        <div style="color:var(--text-dim);font-size:12px;">${k.target}</div>
+        ${metricBlock(k, idPrefix, true)}
+      </td>
+      <td><textarea placeholder="팀장 메모 · 수정 사유"></textarea></td>
+    </tr>`;
+}
+function renderSahunRow(s) {
+  const qTexts = (s.questions||[]).map(q => `<li>${q.q} <span style="color:var(--text-faint);">(${q.max}점)</span></li>`).join('');
+  return `
+    <tr>
+      <td><span class="sahun-badge">${sahunOf(s.label)}</span></td>
+      <td>
+        <div class="competency-label">${s.label}</div>
+        <div class="max-hint">만점 ${s.weight}점</div>
+      </td>
+      <td>
+        <div style="color:var(--text-dim);font-size:12px;">${s.desc}</div>
+        <ul class="q-list">${qTexts}</ul>
+      </td>
+    </tr>`;
+}
+
+// ═══ 시급직 유틸 ════════════════════════════════════
+function updateHourlyTotal(memberId) {
+  const inputs = document.querySelectorAll(`input[data-member="${memberId}"]`);
+  let total = 0;
+  inputs.forEach(i => {
+    const v = Number(i.value);
+    if (isFinite(v)) total += Math.max(0, Math.min(Number(i.max) || 20, v));
+  });
+  const totalEl = document.getElementById(`hourly-total-${memberId}`);
+  if (totalEl) totalEl.textContent = total + '점';
+}
+function renderHourlyMember(emp, axes) {
+  const memberId = emp.name.replace(/\s/g,'');
+  const cells = axes.map(a => `
+    <div class="axis-cell">
+      <div class="axis-label">${a.label}</div>
+      <div class="axis-sahun">${sahunOf(a.sahunRef) || '—'}</div>
+      <input type="number" class="axis-input" min="0" max="${a.weight}"
+        data-member="${memberId}"
+        oninput="updateHourlyTotal('${memberId}')" placeholder="0-${a.weight}">
+      <div class="axis-max">/ ${a.weight}점</div>
+    </div>`).join('');
+  return `
+    <div class="hourly-member">
+      <div class="hourly-name-row">
+        <span class="hourly-name">${emp.name}</span>
+        <span class="hourly-tag">${emp.rank} · 시급직</span>
+      </div>
+      <div class="axis-grid">${cells}</div>
+      <div class="hourly-total">
+        <span class="label">팀장 평가 총점 (가중치 20% 반영 전)</span>
+        <span class="score" id="hourly-total-${memberId}">0점</span>
+      </div>
+      <div class="hourly-memo">
+        <textarea placeholder="관찰 기록·행동 사실 기반 메모 (예: 5월 2주차 안전모 미착용 1회 지적)"></textarea>
+      </div>
+    </div>`;
+}
+
+// ═══ 시나리오 렌더러 ════════════════════════════════════
+function render이성호() {
+  document.body.dataset.theme = 'member';
+  const me = ANNUAL_EMPLOYEES.find(e => e.name === '이성호');
+  const kpiRows = me.kpi.map((k, i) => renderKpiRow(k, i, `self-kpi${i+1}`)).join('');
+  const sahunRows = ['h1','h2','h3'].map(key => me.sahun && me.sahun[key] ? renderSahunRow(me.sahun[key]) : '').join('');
+  document.getElementById('main').innerHTML = `
+    <div class="wrap">
+      <div class="hero">
+        <h1>이성호 · 대리 <span class="role-chip">구매팀 · 팀원</span></h1>
+        <div class="sub">2026 하반기 KPI 합의 · 1차 단계 (5월) — 본인 KPI 확인 및 사훈 역량 확정</div>
+      </div>
+      <div class="section">
+        <h2>내 KPI 확인 · 합의 의견</h2>
+        <div class="lead">팀장이 설정한 목표 숫자를 확인하고, 이대로 진행하면 합의, 바꾸고 싶으면 수정요청 후 사유를 남겨주세요.</div>
+        <table>
+          <thead><tr><th style="width:24%;">평가 항목</th><th style="width:50%;">세부 내용 · 숫자 기준</th><th style="width:26%;">합의 의견</th></tr></thead>
+          <tbody>${kpiRows}</tbody>
+        </table>
+        <div class="submit-row"><button class="primary" onclick="alert('[데모] KPI 3개 합의 제출 완료');">KPI 3개 합의 제출</button></div>
+      </div>
+      <div class="section">
+        <h2>사훈 연계 역량 평가</h2>
+        <div class="lead">우리 회사 사훈 <b>근면성실 · 책임완수 · 인화단결</b>에 각각 연결된 3개 역량입니다. 내용 확인 후 한 번에 확정합니다.</div>
+        <table>
+          <thead><tr><th style="width:16%;">사훈</th><th style="width:22%;">역량</th><th style="width:62%;">평가 관점 · 문항</th></tr></thead>
+          <tbody>${sahunRows}</tbody>
+        </table>
+        <div class="submit-row">
+          <span class="confirm-status" id="sahun-status">— 미확정</span>
+          <button class="primary confirm" id="sahun-confirm-btn" onclick="confirmSahun()">역량 3개 확정</button>
+        </div>
+      </div>
+      <div class="section">
+        <h2>종합 의견</h2>
+        <div class="lead">KPI 합의 미팅에서 추가로 논의하고 싶은 내용을 자유롭게 적어주세요.</div>
+        <textarea rows="4" placeholder="예: OTD 100%는 공급사 상황에 따라 98%로 조정 희망"></textarea>
+        <div class="submit-row"><button class="primary">의견 제출</button></div>
+      </div>
+      <div class="demo-note">데모 전용 · 실제 저장 없음 · 2026-04-21 검토용</div>
+    </div>`;
+  // 샘플 실적 — direction !== 'review' 인 KPI만
+  me.kpi.forEach((k, i) => {
+    if (k.metric && k.metric.direction !== 'review') {
+      const el = document.getElementById(`self-kpi${i+1}-actual`);
+      if (!el) return;
+      const sample = { higher: k.metric.value * 0.92, lower: k.metric.value * 1.05, zero: 0, rate: 85 }[k.metric.direction];
+      if (sample != null) { el.value = Math.round(sample*10)/10; el.dispatchEvent(new Event('input')); }
+    }
+  });
+}
+
+function render박제성() {
+  document.body.dataset.theme = 'leader';
+  const me = ANNUAL_EMPLOYEES.find(e => e.name === '박제성');
+  const teamMembers = ANNUAL_EMPLOYEES.filter(e => e.team === me.team && e.name !== me.name && !e.evaluatorOnly);
+  const kpiRows = me.kpi.map((k, i) => renderKpiRow(k, i, `self-kpi${i+1}`)).join('');
+  const sahunRows = ['h1','h2','h3'].map(key => me.sahun && me.sahun[key] ? renderSahunRow(me.sahun[key]) : '').join('');
+  const teamHtml = teamMembers.map(tm => `
+    <div class="team-member-card">
+      <div class="name-row">
+        <span class="name">${tm.name}</span>
+        <span class="tag">${tm.team} · ${tm.position} · ${tm.rank}</span>
+      </div>
+      <table>
+        <thead><tr><th style="width:24%;">평가 항목</th><th style="width:50%;">목표 숫자 (수정 가능)</th><th style="width:26%;">팀장 메모</th></tr></thead>
+        <tbody>${(tm.kpi||[]).map((k,i) => renderTeamKpiRow(k, i, `tm-${tm.name}-kpi${i+1}`)).join('')}</tbody>
+      </table>
+    </div>`).join('') || '<div style="color:var(--text-faint);padding:20px;text-align:center;">팀원이 없습니다.</div>';
+
+  document.getElementById('main').innerHTML = `
+    <div class="wrap">
+      <div class="hero">
+        <h1>박제성 · 부장 <span class="role-chip">경영지원팀 · 팀장</span></h1>
+        <div class="sub">2026 하반기 KPI 합의 · 1차 단계 (5월) — 본인 KPI + 사훈 역량 + 팀원 KPI 숫자 설정</div>
+      </div>
+      <div class="section">
+        <h2>내 KPI 확인 · 합의 의견</h2>
+        <div class="lead">목표 숫자에 실적을 넣으면 점수가 자동 계산됩니다. 이대로 진행하면 합의, 바꾸고 싶으면 수정요청 후 사유를 남겨주세요.</div>
+        <table>
+          <thead><tr><th style="width:24%;">평가 항목</th><th style="width:50%;">세부 내용 · 숫자 기준</th><th style="width:26%;">합의 의견</th></tr></thead>
+          <tbody>${kpiRows}</tbody>
+        </table>
+        <div class="submit-row"><button class="primary" onclick="alert('[데모] KPI 3개 합의 제출 완료');">KPI 3개 합의 제출</button></div>
+      </div>
+      <div class="section">
+        <h2>사훈 연계 역량 평가</h2>
+        <div class="lead">우리 회사 사훈 <b>근면성실 · 책임완수 · 인화단결</b>에 각각 연결된 3개 역량입니다. 내용 확인 후 한 번에 확정합니다.</div>
+        <table>
+          <thead><tr><th style="width:16%;">사훈</th><th style="width:22%;">역량</th><th style="width:62%;">평가 관점 · 문항</th></tr></thead>
+          <tbody>${sahunRows}</tbody>
+        </table>
+        <div class="submit-row">
+          <span class="confirm-status" id="sahun-status">— 미확정</span>
+          <button class="primary confirm" id="sahun-confirm-btn" onclick="confirmSahun()">역량 3개 확정</button>
+        </div>
+      </div>
+      <div class="section">
+        <h2>팀원 KPI 숫자 설정 <span class="role-chip">팀장 전용</span></h2>
+        <div class="lead">5월 합의 미팅에서 팀원별로 목표 숫자를 확정·조정하고, 수정이 필요하면 메모로 남깁니다.</div>
+        <div class="leader-only-note">팀장 권한: 팀원의 목표치 수정 / 메모 작성 / 합의 확정. 실제 배포 환경에선 확정평가항목 시트에 실시간 반영됩니다.</div>
+        ${teamHtml}
+      </div>
+      <div class="section">
+        <h2>종합 의견</h2>
+        <div class="lead">팀 전체 KPI 합의에서 다루고 싶은 내용을 자유롭게 남겨주세요.</div>
+        <textarea rows="4" placeholder="예: 올해는 RPA 도입이 핵심이라 KPI1 비중을 더 주고 싶습니다"></textarea>
+        <div class="submit-row"><button class="primary">의견 제출</button></div>
+      </div>
+      <div class="demo-note">데모 전용 · 실제 저장 없음 · 2026-04-21 검토용</div>
+    </div>`;
+  [[1,5],[2,85],[3,80]].forEach(([i,v]) => {
+    const el = document.getElementById(`self-kpi${i}-actual`);
+    if (el) { el.value = v; el.dispatchEvent(new Event('input')); }
+  });
+}
+
+function render양춘향() {
+  document.body.dataset.theme = 'leader';
+  const me = ANNUAL_EMPLOYEES.find(e => e.name === '양춘향');
+  const hourlyMembers = HOURLY_EMPLOYEES.filter(e => e.team === me.team);
+  const axes = HOURLY_EVAL_TEMPLATE;
+  const kpiRows = me.kpi.map((k, i) => renderKpiRow(k, i, `self-kpi${i+1}`)).join('');
+  const sahunRows = ['h1','h2','h3'].map(key => me.sahun && me.sahun[key] ? renderSahunRow(me.sahun[key]) : '').join('');
+  const axisInfo = axes.map(a => `
+    <tr>
+      <td><b style="color:var(--text);">${a.id}</b> · ${a.label}</td>
+      <td>${a.evidence}</td>
+      <td><span class="sahun-badge">${sahunOf(a.sahunRef) || '—'}</span></td>
+      <td style="text-align:center;">${a.weight}점</td>
+    </tr>`).join('');
+  const hourlyHtml = hourlyMembers.map(h => renderHourlyMember(h, axes)).join('');
+
+  document.getElementById('main').innerHTML = `
+    <div class="wrap">
+      <div class="hero">
+        <h1>양춘향 · 팀장대행 <span class="role-chip">조립팀 · 팀장</span></h1>
+        <div class="sub">2026 하반기 KPI 합의 · 1차 단계 (5월) — 본인 KPI + 사훈 역량 + 조립팀 시급직 5명 평가</div>
+      </div>
+      <div class="section">
+        <h2>내 KPI 확인 · 합의 의견</h2>
+        <div class="lead">목표 숫자에 실적을 넣으면 점수가 자동 계산됩니다.</div>
+        <table>
+          <thead><tr><th style="width:24%;">평가 항목</th><th style="width:50%;">세부 내용 · 숫자 기준</th><th style="width:26%;">합의 의견</th></tr></thead>
+          <tbody>${kpiRows}</tbody>
+        </table>
+        <div class="submit-row"><button class="primary" onclick="alert('[데모] KPI 3개 합의 제출 완료');">KPI 3개 합의 제출</button></div>
+      </div>
+      <div class="section">
+        <h2>사훈 연계 역량 평가</h2>
+        <div class="lead">우리 회사 사훈 <b>근면성실 · 책임완수 · 인화단결</b>에 각각 연결된 3개 역량입니다. 내용 확인 후 한 번에 확정합니다.</div>
+        <table>
+          <thead><tr><th style="width:16%;">사훈</th><th style="width:22%;">역량</th><th style="width:62%;">평가 관점 · 문항</th></tr></thead>
+          <tbody>${sahunRows}</tbody>
+        </table>
+        <div class="submit-row">
+          <span class="confirm-status" id="sahun-status">— 미확정</span>
+          <button class="primary confirm" id="sahun-confirm-btn" onclick="confirmSahun()">역량 3개 확정</button>
+        </div>
+      </div>
+      <div class="section">
+        <h2>시급직 팀원 평가 <span class="role-chip">팀장 전용</span></h2>
+        <div class="lead">조립팀 시급직 5명에 대해 5축 × 20점 = 100점 만점 템플릿으로 평가합니다. 팀장은 가중치 20% 역할.</div>
+        <div class="leader-only-note">평가 가중치: 본인 30% · 반장 40% · <b>팀장 20% (본인)</b> · 공장장 10%. 각 축 아래 4개 문항을 종합해 0~20점으로 입력합니다.</div>
+        <table class="axis-info-table">
+          <thead><tr><th>축</th><th>평가 기준</th><th>사훈 연계</th><th style="text-align:center;">만점</th></tr></thead>
+          <tbody>${axisInfo}</tbody>
+        </table>
+        ${hourlyHtml}
+      </div>
+      <div class="section">
+        <h2>종합 의견</h2>
+        <div class="lead">조립팀 전체 KPI 합의 및 시급직 평가에서 논의하고 싶은 내용을 자유롭게 남겨주세요.</div>
+        <textarea rows="4" placeholder="예: 김춘화 대리는 다기능공 인증 진행 중 · 김향란 사원 안전수칙 재교육 필요"></textarea>
+        <div class="submit-row"><button class="primary">의견 제출</button></div>
+      </div>
+      <div class="demo-note">데모 전용 · 실제 저장 없음 · 2026-04-21 검토용</div>
+    </div>`;
+  [[1,0.5],[2,-4],[3,2]].forEach(([i,v]) => {
+    const el = document.getElementById(`self-kpi${i}-actual`);
+    if (el) { el.value = v; el.dispatchEvent(new Event('input')); }
+  });
+  const sampleScores = [18,17,19,20,16];
+  document.querySelectorAll('input[data-member="김춘화"]').forEach((i, idx) => {
+    i.value = sampleScores[idx];
+    i.dispatchEvent(new Event('input'));
+  });
+}
+
+// ═══ 라우팅 ════════════════════════════════════════════
+function showCase(name) {
+  document.querySelectorAll('[data-case]').forEach(b => b.classList.toggle('active', b.dataset.case === name));
+  window.scrollTo(0, 0);
+  if (name === '이성호') render이성호();
+  else if (name === '박제성') render박제성();
+  else if (name === '양춘향') render양춘향();
+}
+document.querySelectorAll('[data-case]').forEach(b => b.onclick = () => {
+  showCase(b.dataset.case);
+  history.replaceState(null, '', '#' + encodeURIComponent(b.dataset.case));
+});
+const initial = decodeURIComponent((location.hash || '#이성호').slice(1));
+showCase(['이성호','박제성','양춘향'].includes(initial) ? initial : '이성호');
+</script>
+</body>
+</html>

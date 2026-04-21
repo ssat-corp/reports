@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>2026 신성오토텍㈜ — 인사평가 고도화전략</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Apple SD Gothic Neo','Malgun Gothic','맑은 고딕',sans-serif;
+  background: #0a0f1e;
+  color: #fff;
+  overflow-x: hidden;
+}
+
+/* ── 슬라이드 공통 ── */
+.slide {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 60px 100px 100px;
+  position: relative;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.slide-num {
+  position: absolute;
+  top: 32px; right: 56px;
+  font-size: 15px;
+  color: rgba(255,255,255,0.22);
+  letter-spacing: 2px;
+}
+.label {
+  display: inline-block;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #60a5fa;
+  margin-bottom: 20px;
+}
+.divider {
+  width: 60px; height: 4px;
+  background: linear-gradient(90deg, #3b82f6, #60a5fa);
+  border-radius: 2px;
+  margin-bottom: 36px;
+}
+.slide-title {
+  font-size: 46px;
+  font-weight: 800;
+  line-height: 1.25;
+  margin-bottom: 40px;
+  color: #f1f5f9;
+}
+.slide-title .hl { color: #60a5fa; }
+.body-lg {
+  font-size: 22px;
+  line-height: 1.85;
+  color: #cbd5e1;
+  max-width: 960px;
+}
+.body-lg strong { color: #f1f5f9; font-weight: 700; }
+
+/* ── 배경 ── */
+.bg-dark  { background: #0d1526; }
+.bg-navy  { background: linear-gradient(160deg,#0f1e3d 0%,#0d1526 100%); }
+.bg-slate { background: linear-gradient(160deg,#111827 0%,#0d1526 100%); }
+
+/* ── 표지 ── */
+#s0 {
+  background: linear-gradient(135deg,#0a0f1e 0%,#0f2044 55%,#0a0f1e 100%);
+  padding: 80px 120px 120px;
+}
+.cover-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.16);
+  border-radius: 6px;
+  padding: 10px 22px;
+  font-size: 16px; font-weight: 700; letter-spacing: 2px;
+  color: rgba(255,255,255,0.65);
+  margin-bottom: 44px;
+}
+.cover-classify {
+  display: inline-block;
+  background: #dc2626; color: white;
+  border-radius: 4px; padding: 6px 14px;
+  font-size: 13px; font-weight: 700; letter-spacing: 2px;
+  margin-left: 14px; vertical-align: middle;
+}
+#s0 h1 { font-size: 70px; font-weight: 900; line-height: 1.15; margin-bottom: 22px; }
+#s0 h1 .accent { color: #60a5fa; }
+.cover-sub { font-size: 26px; color: rgba(255,255,255,0.45); margin-bottom: 56px; }
+.cover-meta { display: flex; gap: 48px; flex-wrap: wrap; }
+.cover-meta-item { font-size: 18px; color: rgba(255,255,255,0.4); }
+.cover-meta-item strong { color: rgba(255,255,255,0.72); display: block; font-size: 19px; margin-bottom: 4px; }
+
+/* ── 2열 카드 ── */
+.big-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 4px;
+}
+.big-card {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.09);
+  border-radius: 18px;
+  padding: 32px 36px;
+}
+.big-card .bc-icon { font-size: 40px; margin-bottom: 16px; }
+.big-card h3 { font-size: 24px; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; line-height: 1.3; }
+.big-card p  { font-size: 18px; color: #94a3b8; line-height: 1.8; }
+.big-card p strong { color: #e2e8f0; }
+.big-card .bc-tag {
+  display:inline-block; margin-top:12px;
+  background:rgba(59,130,246,0.18); color:#93c5fd;
+  border-radius:6px; padding:4px 12px; font-size:14px; font-weight:700;
+}
+
+/* ── Before / After ── */
+.ba-grid { display:grid; grid-template-columns:1fr 1fr; gap:0; border-radius:18px; overflow:hidden; margin-top:4px; }
+.ba-col { padding:36px 44px; }
+.ba-before { background:rgba(127,29,29,0.3);  border:1px solid rgba(239,68,68,0.18);  border-right:none; border-radius:18px 0 0 18px; }
+.ba-after  { background:rgba(20,83,45,0.3);   border:1px solid rgba(34,197,94,0.18);  border-radius:0 18px 18px 0; }
+.ba-col h3 { font-size:20px; font-weight:700; margin-bottom:26px; }
+.ba-before h3 { color:#fca5a5; }
+.ba-after  h3 { color:#86efac; }
+.ba-row { display:flex; align-items:flex-start; gap:14px; margin-bottom:18px; }
+.ba-dot { margin-top:8px; flex-shrink:0; width:9px; height:9px; border-radius:50%; }
+.ba-before .ba-dot { background:#f87171; }
+.ba-after  .ba-dot { background:#4ade80; }
+.ba-row p { font-size:19px; color:#e2e8f0; line-height:1.65; }
+.ba-row p em { color:#94a3b8; font-style:normal; font-size:17px; }
+
+/* ── 점수 구조 ── */
+.score-grid { display:grid; grid-template-columns:1fr 1fr; gap:28px; margin-top:4px; }
+.score-box { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.09); border-radius:18px; overflow:hidden; }
+.score-box-head { padding:20px 30px; font-size:21px; font-weight:700; color:white; }
+.score-box-body { padding:22px 30px; }
+.sr-item { display:flex; justify-content:space-between; align-items:center; padding:13px 0; border-bottom:1px solid rgba(255,255,255,0.07); font-size:19px; }
+.sr-item:last-child { border-bottom:none; }
+.sr-name { color:#94a3b8; }
+.sr-val  { font-weight:700; color:#60a5fa; font-size:20px; background:rgba(59,130,246,0.15); padding:4px 16px; border-radius:20px; }
+.sr-val.green { color:#4ade80; background:rgba(34,197,94,0.15); }
+.score-total { background:rgba(59,130,246,0.18); border-top:1px solid rgba(59,130,246,0.25); padding:16px 30px; display:flex; justify-content:space-between; align-items:center; font-size:22px; font-weight:800; }
+.score-total.green-total { background:rgba(34,197,94,0.15); border-color:rgba(34,197,94,0.2); }
+.score-note { margin-top:18px; font-size:17px; color:#64748b; line-height:1.75; }
+.score-note strong { color:#94a3b8; }
+
+/* ── 타임라인 (가로) ── */
+.tl-wrap { position:relative; margin-top:8px; }
+.tl-track {
+  display:flex; gap:0;
+  position:relative;
+}
+.tl-track::before {
+  content:''; position:absolute;
+  top:44px; left:44px; right:44px; height:3px;
+  background:linear-gradient(90deg,#3b82f6,#10b981,#10b981,#f59e0b,#6366f1);
+}
+.tl-step { flex:1; text-align:center; position:relative; z-index:1; }
+.tl-circle {
+  width:88px; height:88px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:17px; font-weight:900; color:white;
+  margin:0 auto 18px;
+  box-shadow:0 4px 20px rgba(0,0,0,0.4);
+  line-height:1.2;
+}
+.tl-month  { font-size:17px; font-weight:700; color:#60a5fa; margin-bottom:8px; }
+.tl-desc   { font-size:17px; color:#94a3b8; line-height:1.65; padding:0 6px; }
+.tl-desc strong { color:#e2e8f0; display:block; margin-bottom:4px; font-size:18px; }
+
+/* ── 링크 카드 ── */
+.link-cards { display:grid; grid-template-columns:1fr 1fr 1fr; gap:22px; margin-top:8px; }
+.lcard {
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.09);
+  border-radius:18px; padding:32px 28px;
+  text-decoration:none; display:block; transition:all 0.25s;
+}
+.lcard:hover { border-color:#3b82f6; background:rgba(59,130,246,0.1); transform:translateY(-3px); }
+.lcard .lc-live { display:inline-block; background:rgba(16,185,129,0.18); color:#4ade80; border:1px solid rgba(74,222,128,0.25); border-radius:4px; padding:3px 10px; font-size:12px; font-weight:700; letter-spacing:1px; margin-bottom:14px; }
+.lcard .lc-icon  { font-size:40px; margin-bottom:14px; }
+.lcard .lc-title { font-size:21px; font-weight:700; color:#f1f5f9; margin-bottom:10px; }
+.lcard .lc-desc  { font-size:16px; color:#64748b; line-height:1.75; margin-bottom:14px; }
+.lcard .lc-url   { font-size:13px; color:#3b82f6; word-break:break-all; font-family:monospace; }
+
+/* ── 알림박스 ── */
+.abox { border-radius:14px; padding:26px 32px; font-size:20px; line-height:1.8; margin-top:28px; }
+.abox-blue   { background:rgba(59,130,246,0.12);  border-left:5px solid #3b82f6; color:#bfdbfe; }
+.abox-yellow { background:rgba(245,158,11,0.12);  border-left:5px solid #f59e0b; color:#fde68a; }
+.abox-red    { background:rgba(239,68,68,0.12);   border-left:5px solid #ef4444; color:#fecaca; }
+.abox-green  { background:rgba(34,197,94,0.12);   border-left:5px solid #22c55e; color:#bbf7d0; }
+.abox a { color:inherit; }
+
+/* ── 세부 리스트 ── */
+.detail-list { margin-top:28px; display:flex; flex-direction:column; gap:16px; }
+.dl-item { display:flex; align-items:flex-start; gap:18px; }
+.dl-num {
+  flex-shrink:0; width:36px; height:36px; border-radius:50%;
+  background:rgba(59,130,246,0.25); color:#93c5fd;
+  display:flex; align-items:center; justify-content:center;
+  font-size:16px; font-weight:800; margin-top:2px;
+}
+.dl-num.orange { background:rgba(245,158,11,0.2); color:#fbbf24; }
+.dl-num.green  { background:rgba(34,197,94,0.2);  color:#4ade80; }
+.dl-text { font-size:20px; color:#cbd5e1; line-height:1.8; }
+.dl-text strong { color:#f1f5f9; }
+
+/* ── 상태 뱃지 ── */
+.status { display:inline-block; border-radius:5px; padding:3px 10px; font-size:13px; font-weight:700; margin-left:8px; vertical-align:middle; }
+.s-done   { background:rgba(34,197,94,0.2);  color:#4ade80; }
+.s-prog   { background:rgba(245,158,11,0.2); color:#fbbf24; }
+.s-wait   { background:rgba(148,163,184,0.2);color:#94a3b8; }
+
+/* ── 하단 네비 ── */
+.nav-bar {
+  position:fixed; bottom:0; left:0; right:0;
+  background:rgba(10,15,30,0.93); backdrop-filter:blur(14px);
+  border-top:1px solid rgba(255,255,255,0.07);
+  padding:16px 48px;
+  display:flex; align-items:center; justify-content:space-between;
+  z-index:1000;
+}
+.nav-dots { display:flex; gap:8px; align-items:center; }
+.nav-dot { width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,0.2); cursor:pointer; transition:all 0.2s; }
+.nav-dot.active { background:#3b82f6; width:26px; border-radius:4px; }
+.nav-btn {
+  background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15);
+  color:white; border-radius:10px; padding:13px 32px;
+  font-size:18px; font-weight:600; cursor:pointer; font-family:inherit; transition:all 0.2s;
+}
+.nav-btn:hover { background:rgba(59,130,246,0.3); border-color:#3b82f6; }
+.nav-btn:disabled { opacity:0.3; cursor:not-allowed; }
+.nav-center { display:flex; flex-direction:column; align-items:center; gap:8px; }
+.nav-label { font-size:15px; color:rgba(255,255,255,0.38); }
+</style>
+</head>
+<body>
+
+<!-- ══════════ SLIDE 0 — 표지 ══════════ -->
+<section class="slide" id="s0">
+  <div class="slide-num">01 / 10</div>
+  <div class="cover-badge">SHINSUNG AUTOTECH Co., Ltd. <span class="cover-classify">INTERNAL</span></div>
+  <h1><span class="accent">2026 경영혁신</span><br>고도화전략 보고</h1>
+  <div class="cover-sub">인사평가 제도 · 산업안전보건 · IATF16949 — Top Management 보고</div>
+  <div class="cover-meta">
+    <div class="cover-meta-item"><strong>보고일</strong>2026년 4월 21일</div>
+    <div class="cover-meta-item"><strong>보고자</strong>경영기획실</div>
+    <div class="cover-meta-item"><strong>시행</strong>2026 파일럿 → 2027 공식 적용</div>
+  </div>
+</section>
+
+<!-- ══════════ SLIDE 1 — 인사평가 개요 ══════════ -->
+<section class="slide bg-navy" id="s1">
+  <div class="slide-num">02 / 10</div>
+  <div class="label">인사평가 — 배경 &amp; 목적</div>
+  <div class="divider"></div>
+  <div class="slide-title">인사평가 제도,<br><span class="hl">왜 도입하는가</span></div>
+  <div class="big-cards">
+    <div class="big-card">
+      <div class="bc-icon">⚖️</div>
+      <h3>기존 평가를 고도화합니다</h3>
+      <p>기존 사훈 기반 역량 평가에 <strong>본인 업무 KPI를 추가</strong>하여 정성·정량 평가를 결합한 체계로 고도화하였습니다.</p>
+    </div>
+    <div class="big-card">
+      <div class="bc-icon">📊</div>
+      <h3>업무별 정량 KPI를 도입합니다</h3>
+      <p>팀장과 본인이 합의하여 설정한 <strong>직무별 KPI 3개</strong>를 수치로 측정합니다. 누구나 납득할 수 있는 객관적 근거가 마련됩니다.</p>
+    </div>
+    <div class="big-card">
+      <div class="bc-icon">💻</div>
+      <h3>전면 디지털화로 투명하게 관리합니다</h3>
+      <p>종이·구두 평가를 <strong>웹 시스템</strong>으로 전환합니다. 입력·집계·보관이 모두 온라인으로 처리되어 속도와 투명성이 동시에 확보됩니다. 평가 결과는 <strong>본인만 열람</strong> 가능합니다.</p>
+    </div>
+    <div class="big-card">
+      <div class="bc-icon">🏭</div>
+      <h3>시급직(현장직)도 함께 평가합니다</h3>
+      <p>기존에는 시급직 평가가 전무하였습니다. 전 직원 동일 진행을 통해 <strong>현장 우수 인력을 발굴</strong>하고, 공정한 기준 아래 동기부여를 강화합니다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ SLIDE 2 — 평가 구성 ══════════ -->
+<section class="slide bg-dark" id="s2">
+  <div class="slide-num">03 / 10</div>
+  <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:32px; margin-bottom:36px;">
+    <div>
+      <div class="label">인사평가 — 평가 구성</div>
+      <div class="divider"></div>
+      <div class="slide-title" style="margin-bottom:0;">어떻게 평가하는가 —<br><span class="hl">구조와 배점</span></div>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:14px; flex-shrink:0; padding-top:4px;">
+      <a href="2026_KPI_평가화면_데모.html" target="_blank"
+        style="display:flex; align-items:center; gap:14px;
+               background:rgba(99,102,241,0.15); border:1px solid rgba(99,102,241,0.4);
+               border-radius:14px; padding:16px 24px; text-decoration:none;
+               transition:all 0.2s; min-width:260px;"
+        onmouseover="this.style.background='rgba(99,102,241,0.28)'"
+        onmouseout="this.style.background='rgba(99,102,241,0.15)'">
+        <span style="font-size:28px;">🎬</span>
+        <div>
+          <div style="font-size:14px; font-weight:700; color:#a5b4fc; letter-spacing:1px; margin-bottom:3px;">DEMO</div>
+          <div style="font-size:18px; font-weight:700; color:#e2e8f0;">평가 시스템 데모</div>
+          <div style="font-size:13px; color:#64748b; margin-top:2px;">실제 화면 시연 →</div>
+        </div>
+      </a>
+      <a href="https://ssat-corp.github.io/reports/eval/" target="_blank"
+        style="display:flex; align-items:center; gap:14px;
+               background:rgba(16,185,129,0.12); border:1px solid rgba(16,185,129,0.35);
+               border-radius:14px; padding:16px 24px; text-decoration:none;
+               transition:all 0.2s; min-width:260px;"
+        onmouseover="this.style.background='rgba(16,185,129,0.25)'"
+        onmouseout="this.style.background='rgba(16,185,129,0.12)'">
+        <span style="font-size:28px;">🌐</span>
+        <div>
+          <div style="font-size:14px; font-weight:700; color:#4ade80; letter-spacing:1px; margin-bottom:3px;">● LIVE</div>
+          <div style="font-size:18px; font-weight:700; color:#e2e8f0;">인사평가 사이트</div>
+          <div style="font-size:13px; color:#64748b; margin-top:2px;">ssat-corp.github.io/reports/eval/</div>
+        </div>
+      </a>
+    </div>
+  </div>
+  <div class="score-grid">
+    <!-- 연봉직 -->
+    <div class="score-box">
+      <div class="score-box-head" style="background:linear-gradient(90deg,#1e3a5f,#1e40af);">
+        🧑‍💼 &nbsp;연봉직 (사무·관리직)
+      </div>
+      <div class="score-box-body">
+        <div class="sr-item"><span class="sr-name">직무 KPI 3개 &nbsp;<span style="font-size:15px;color:#475569;">(팀장·본인 합의 설정)</span></span><span class="sr-val">45점</span></div>
+        <div class="sr-item"><span class="sr-name">사훈 역량 3개 &nbsp;<span style="font-size:15px;color:#475569;">(근면성실·책임완수·인화단결)</span></span><span class="sr-val">45점</span></div>
+        <div class="sr-item"><span class="sr-name">자율 평가 &nbsp;<span style="font-size:15px;color:#475569;">(디지털화·ESG·혁신 기여)</span></span><span class="sr-val">+10점</span></div>
+        <div class="score-total"><span style="color:#93c5fd;">합계</span><span>100점</span></div>
+        <div class="score-note">
+          <strong>평가자 가중치</strong><br>
+          자가평가 <strong style="color:#e2e8f0;">40%</strong> &nbsp;+&nbsp; 팀장평가 <strong style="color:#e2e8f0;">40%</strong> &nbsp;+&nbsp; 최고위자 <strong style="color:#e2e8f0;">20%</strong><br>
+          <span style="font-size:15px;">(최고위자: 공장장 / 부사장 / 사장)</span>
+        </div>
+      </div>
+    </div>
+    <!-- 시급직 -->
+    <div class="score-box">
+      <div class="score-box-head" style="background:linear-gradient(90deg,#14532d,#15803d);">
+        🏭 &nbsp;시급직 (현장 생산직) &nbsp;<span style="font-size:15px;background:rgba(255,255,255,0.18);border-radius:4px;padding:2px 8px;">최초 도입</span>
+      </div>
+      <div class="score-box-body">
+        <div class="sr-item"><span class="sr-name">H1 &nbsp;근태·출근 성실성</span><span class="sr-val green">20점</span></div>
+        <div class="sr-item"><span class="sr-name">H2 &nbsp;작업 지시 이행도</span><span class="sr-val green">20점</span></div>
+        <div class="sr-item"><span class="sr-name">H3 &nbsp;품질·공정 관리</span><span class="sr-val green">20점</span></div>
+        <div class="sr-item"><span class="sr-name">H4 &nbsp;안전수칙 준수</span><span class="sr-val green">20점</span></div>
+        <div class="sr-item"><span class="sr-name">H5 &nbsp;협력·개선 참여</span><span class="sr-val green">20점</span></div>
+        <div class="score-total green-total"><span style="color:#86efac;">합계</span><span>100점</span></div>
+        <div class="score-note">
+          <strong>평가자 가중치</strong><br>
+          자가평가 <strong style="color:#e2e8f0;">30%</strong> &nbsp;+&nbsp; 반장 <strong style="color:#e2e8f0;">40%</strong> &nbsp;+&nbsp; 팀장 <strong style="color:#e2e8f0;">20%</strong> &nbsp;+&nbsp; 공장장 <strong style="color:#e2e8f0;">10%</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ SLIDE 3 — 추진 일정 ══════════ -->
+<section class="slide bg-navy" id="s3">
+  <div class="slide-num">04 / 10</div>
+  <div class="label">인사평가 — 추진 일정</div>
+  <div class="divider"></div>
+  <div class="slide-title">2026년 <span class="hl">단계별 추진 계획</span></div>
+  <div class="tl-wrap">
+    <div class="tl-track">
+      <div class="tl-step">
+        <div class="tl-circle" style="background:linear-gradient(135deg,#1d4ed8,#3b82f6);">4월</div>
+        <div class="tl-month">2026년 4월</div>
+        <div class="tl-desc"><strong>전사 공지 / 팀장·조직장 설명회</strong>전 직원 대상 제도 변경 공지. 팀장·조직장 대상 별도 설명회 진행. 야간조 포함 전원 공지.</div>
+      </div>
+      <div class="tl-step">
+        <div class="tl-circle" style="background:linear-gradient(135deg,#5b21b6,#7c3aed);">5월</div>
+        <div class="tl-month">2026년 5월</div>
+        <div class="tl-desc"><strong>평가 항목 협의·확정</strong>팀장·팀원 간 KPI 항목 협의. 개인별 평가 기준 합의 후 홈페이지 등록 완료.</div>
+      </div>
+      <div class="tl-step">
+        <div class="tl-circle" style="background:linear-gradient(135deg,#065f46,#10b981);">6월~</div>
+        <div class="tl-month">6월 평가 시작</div>
+        <div class="tl-desc"><strong>1차 평가 기간 개시</strong>6월부터 평가 기간 시작. 웹 시스템으로 진행 상황 실시간 확인 가능.</div>
+      </div>
+      <div class="tl-step">
+        <div class="tl-circle" style="background:linear-gradient(135deg,#92400e,#f59e0b);">9월</div>
+        <div class="tl-month">2026년 9월</div>
+        <div class="tl-desc"><strong>1차 평가 마감</strong>6~9월 업무 기준 평가. 중간 점검·리마인드 면담 진행. 결과는 본인만 열람.</div>
+      </div>
+      <div class="tl-step">
+        <div class="tl-circle" style="background:linear-gradient(135deg,#3730a3,#6366f1);">12월</div>
+        <div class="tl-month">2026년 12월</div>
+        <div class="tl-desc"><strong>2차 평가 마감</strong>6~12월 누적 기준 최종 평가. 팀장 면담 후 결과 공개. 올해 결과는 임금 미반영.</div>
+      </div>
+    </div>
+  </div>
+  <div class="abox abox-yellow" style="margin-top:36px;">
+    ⚠️ &nbsp;<strong>2026년은 파일럿 운영입니다.</strong> 평가 결과를 실제 임금·승진에 반영하지 않으며, 전 직원이 제도를 경험하고 익숙해지는 과정으로 운영합니다. 2027년부터 본격 적용을 검토합니다.
+  </div>
+</section>
+
+<!-- ══════════ SLIDE 4 — 법적 근거 & 의의 ══════════ -->
+<section class="slide bg-slate" id="s4">
+  <div class="slide-num">05 / 10</div>
+  <div class="label">인사평가 — 법적 근거 &amp; 의의</div>
+  <div class="divider"></div>
+  <div class="slide-title">제도 도입의 <span class="hl">법적 근거와 의미</span></div>
+  <div class="body-lg" style="margin-bottom:36px;">
+    본 인사평가 제도는 <strong>근로기준법 및 관련 법령</strong> 테두리 안에서 설계되어,<br>
+    근로자와 회사 양측을 동시에 보호합니다.
+  </div>
+  <div class="detail-list">
+    <div class="dl-item">
+      <div class="dl-num">01</div>
+      <div class="dl-text"><strong>취업규칙 재점검 완료</strong> — 인사평가 제도 도입에 따른 취업규칙 내용을 검토·정비하였습니다. <span class="status s-done">완료</span></div>
+    </div>
+    <div class="dl-item">
+      <div class="dl-num">02</div>
+      <div class="dl-text"><strong>인사평가규정 수립 완료</strong> — 평가 기준, 이의신청 절차(결과 통보 후 7일 이내), 결과 활용 방침을 규정화하였습니다. <span class="status s-done">완료</span></div>
+    </div>
+    <div class="dl-item">
+      <div class="dl-num">03</div>
+      <div class="dl-text"><strong>근로자 보호</strong> — 평가 결과는 본인만 열람 가능하며, 주관적 판단이 아닌 관찰 가능한 사실에 근거한 평가로 부당한 인사 결정을 방지합니다.</div>
+    </div>
+    <div class="dl-item">
+      <div class="dl-num">04</div>
+      <div class="dl-text"><strong>회사 보호</strong> — 인사 결정의 객관적 근거가 문서화되어, 부당해고·차별 관련 분쟁 시 방어 근거로 활용됩니다.</div>
+    </div>
+    <div class="dl-item">
+      <div class="dl-num">05</div>
+      <div class="dl-text"><strong>동기부여 강화</strong> — 명확한 기준과 공정한 평가를 통해 구성원 개개인이 스스로 목표를 설정하고 성장하는 문화를 조성합니다.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ SLIDE 5 — 산업안전보건 ══════════ -->
+<section class="slide bg-dark" id="s5">
+  <div class="slide-num">06 / 10</div>
+  <div class="label">산업안전보건</div>
+  <div class="divider"></div>
+  <div class="slide-title">산업안전보건 —<br><span class="hl">통합 관리 체계 구축</span></div>
+  <div class="body-lg" style="margin-bottom:36px;">
+    당사는 현재 법적 기준에 따라 산업안전보건 업무를 성실히 이행하고 있습니다.<br>
+    다만, 업무 영역이 광범위하여 <strong>단일 채널로 통합 관리</strong>하고 운영 편의를 개선하고자 합니다.
+  </div>
+  <div class="big-cards">
+    <div class="big-card" style="border-color:rgba(245,158,11,0.25);">
+      <div class="bc-icon">🔍</div>
+      <h3>패트롤 &amp; TBM 정례화</h3>
+      <p>주 1~2회 패트롤 및 TBM(Tool Box Meeting) 진행 예정. 교육 세션을 별도 구성하여 <strong>사진 자료로 기록·보관</strong>합니다. 점검 사이트를 구축하였으며, 진행 방식에 대한 <strong>현장 회신 확인 후 시행</strong> 예정입니다. <span class="status s-wait">회신 대기 중</span></p>
+    </div>
+    <div class="big-card" style="border-color:rgba(245,158,11,0.25);">
+      <div class="bc-icon">🏗️</div>
+      <h3>안전 조직도 최종화</h3>
+      <p>사내 산업안전 조직도(통합 안전관리자 체계 포함)를 최종 업데이트하여 <strong>공장장님께 전달</strong> 예정입니다. 이에 따른 <strong>직책별 역할 및 업무 분장</strong>도 함께 공유드릴 예정입니다. <span class="status s-prog">진행 중</span></p>
+    </div>
+    <div class="big-card" style="border-color:rgba(245,158,11,0.25);">
+      <div class="bc-icon">📋</div>
+      <h3>현장 점검 체크리스트 정비</h3>
+      <p>현재 매일 운영 중인 현장 점검 시트(LG 기준 준용)의 항목을 <strong>워싱·정비</strong>하여 전달 예정입니다. 불필요 항목은 정리하고, 당사 현장에 맞는 항목으로 최적화합니다. <span class="status s-prog">진행 중</span></p>
+    </div>
+    <div class="big-card" style="border-color:rgba(245,158,11,0.25);">
+      <div class="bc-icon">🌐</div>
+      <h3>다국어 안전 표지 업데이트</h3>
+      <p>중국어 병기 안전 포스터 및 안전 비표를 사업장 전체에 <strong>순차적으로 업데이트</strong>하고 있습니다. 외국인 근로자 소통 강화 및 법적 의무 이행을 동시에 충족합니다. <span class="status s-prog">진행 중</span></p>
+    </div>
+  </div>
+  <a href="https://ssat-corp.github.io/reports/safety_dashboard.html" target="_blank" class="abox abox-yellow" style="display:block;text-decoration:none;margin-top:28px;">
+    🔗 &nbsp;<strong>산업안전 통합 관리 대시보드</strong> &nbsp;→&nbsp; ssat-corp.github.io/reports/safety_dashboard.html
+  </a>
+</section>
+
+<!-- ══════════ SLIDE 6 — IATF16949 ══════════ -->
+<section class="slide bg-navy" id="s6">
+  <div class="slide-num">07 / 10</div>
+  <div class="label">IATF16949 품질 경영</div>
+  <div class="divider"></div>
+  <div class="slide-title">IATF16949 —<br><span class="hl">통합 관리 체계 구축</span></div>
+  <div class="body-lg" style="margin-bottom:36px;">
+    IATF16949 관련 업무 역시 <strong>통합 관리 체계</strong>를 구축하는 작업을 진행 중입니다.<br>
+    경영기획실과 개발팀을 중심으로 운영하며, 파일 포맷을 통일하여 변경 사항을 체계적으로 관리합니다.
+  </div>
+  <div class="detail-list">
+    <div class="dl-item">
+      <div class="dl-num orange">01</div>
+      <div class="dl-text"><strong>서류 체계 통일</strong> — 관련 서류의 파일 포맷을 표준화하고, 변경 사항 발생 시 즉시 업데이트하여 관리하는 체계를 구축합니다. <span class="status s-prog">진행 중</span></div>
+    </div>
+    <div class="dl-item">
+      <div class="dl-num orange">02</div>
+      <div class="dl-text"><strong>관련 서류 취합 예정</strong> — 심사 대응에 필요한 서류를 각 담당 부서에 요청하여 일괄 취합 및 정비할 예정입니다. <span class="status s-wait">예정</span></div>
+    </div>
+    <div class="dl-item">
+      <div class="dl-num orange">03</div>
+      <div class="dl-text"><strong>최종 대응 담당: 황재훈 부장</strong> — 고객사 심사 대응 및 인증 관련 최종 책임자는 황재훈 부장님이 담당하십니다.</div>
+    </div>
+    <div class="dl-item">
+      <div class="dl-num orange">04</div>
+      <div class="dl-text"><strong>시스템·서류 점검: 경영기획실(김은진)</strong> — 경영기획실에서 시스템 점검 및 서류 관리를 병행하며 업무를 파악해 나갈 예정입니다.</div>
+    </div>
+    <div class="dl-item">
+      <div class="dl-num orange">05</div>
+      <div class="dl-text"><strong>보조 담당자 배치 검토</strong> — 업무 과중이 발생할 경우를 대비하여 보조 업무 담당자 지정을 함께 검토 중에 있습니다. <span class="status s-wait">검토 중</span></div>
+    </div>
+  </div>
+  <a href="https://ssat-corp.github.io/reports/SSAT_IATF16949_%EC%8A%B9%EC%9D%B8%EA%B3%BC%EC%A0%95_%EC%A2%85%ED%95%A9%EA%B0%80%EC%9D%B4%EB%93%9C.html" target="_blank" class="abox abox-blue" style="display:block;text-decoration:none;margin-top:28px;">
+    🔗 &nbsp;<strong>IATF16949 승인과정 종합가이드</strong> &nbsp;→&nbsp; ssat-corp.github.io/reports/SSAT_IATF16949_승인과정_종합가이드.html
+  </a>
+</section>
+
+<!-- ══════════ SLIDE 7 — 운영 시스템 ══════════ -->
+<section class="slide bg-slate" id="s7">
+  <div class="slide-num">08 / 10</div>
+  <div class="label">운영 시스템</div>
+  <div class="divider"></div>
+  <div class="slide-title">현재 <span class="hl">운영 중인 시스템</span></div>
+  <div class="link-cards">
+    <a href="https://ssat-corp.github.io/reports/eval/" target="_blank" class="lcard">
+      <div class="lc-live">● LIVE 운영중</div>
+      <div class="lc-icon">📋</div>
+      <div class="lc-title">인사평가 시스템 (PMS)</div>
+      <div class="lc-desc">직원 로그인 → 자기평가 입력 → 팀장 피드백 → 관리자 대시보드. 이름 + 생년월일 6자리로 접속.</div>
+      <div class="lc-url">ssat-corp.github.io/reports/eval/</div>
+    </a>
+    <a href="https://ssat-corp.github.io/reports/safety_dashboard.html" target="_blank" class="lcard">
+      <div class="lc-live">● LIVE 운영중</div>
+      <div class="lc-icon">⛑️</div>
+      <div class="lc-title">산업안전 통합 대시보드</div>
+      <div class="lc-desc">패트롤·TBM 기록, 위험성평가 현황, 교육 이행률, 법정검사 현황 통합 모니터링.</div>
+      <div class="lc-url">ssat-corp.github.io/reports/safety_dashboard.html</div>
+    </a>
+    <a href="https://ssat-corp.github.io/reports/SSAT_IATF16949_%EC%8A%B9%EC%9D%B8%EA%B3%BC%EC%A0%95_%EC%A2%85%ED%95%A9%EA%B0%80%EC%9D%B4%EB%93%9C.html" target="_blank" class="lcard">
+      <div class="lc-live">● LIVE 운영중</div>
+      <div class="lc-icon">🏆</div>
+      <div class="lc-title">IATF16949 종합가이드</div>
+      <div class="lc-desc">승인과정 종합가이드. 고객사 심사 대응 절차, SQ 준비, 파일 포맷 기준 통합.</div>
+      <div class="lc-url">ssat-corp.github.io/reports/SSAT_IATF16949_승인과정_종합가이드.html</div>
+    </a>
+  </div>
+  <div class="abox abox-green">
+    ✅ &nbsp;세 시스템 모두 <strong>스마트폰·태블릿·PC</strong>에서 URL 직접 접속으로 이용 가능합니다. 별도 설치 없이 사용하실 수 있습니다.
+  </div>
+</section>
+
+<!-- ══════════ SLIDE 8 — 향후 과제 ══════════ -->
+<section class="slide bg-dark" id="s8">
+  <div class="slide-num">09 / 10</div>
+  <div class="label">향후 과제 &amp; 요청사항</div>
+  <div class="divider"></div>
+  <div class="slide-title">2026 파일럿 이후 —<br><span class="hl">검토 및 협조 요청</span></div>
+  <div class="detail-list">
+    <div class="dl-item">
+      <div class="dl-num green">①</div>
+      <div class="dl-text"><strong>인사평가 설명회 일정 확정</strong> — 4월 중 경영진 보고 완료 후, 전 직원 대상 설명회 일정을 확정하여 주시기 바랍니다.</div>
+    </div>
+    <div class="dl-item">
+      <div class="dl-num green">②</div>
+      <div class="dl-text"><strong>산업안전 패트롤·TBM 진행 방식 회신</strong> — 점검 사이트 구축이 완료되었으나 현장 진행 방식에 대한 검토 의견을 회신해 주시기 바랍니다.</div>
+    </div>
+    <div class="dl-item">
+      <div class="dl-num green">③</div>
+      <div class="dl-text"><strong>산업안전 조직도 최종 확인</strong> — 완성된 조직도(통합 안전관리자 체계)를 검토하시고, 역할 분장 내용에 대한 승인을 요청드립니다.</div>
+    </div>
+    <div class="dl-item">
+      <div class="dl-num green">④</div>
+      <div class="dl-text"><strong>IATF 보조 담당자 지정 검토</strong> — 황재훈 부장님 업무 부담을 고려하여 보조 담당자 배치 여부를 검토해 주시기 바랍니다.</div>
+    </div>
+    <div class="dl-item">
+      <div class="dl-num green">⑤</div>
+      <div class="dl-text"><strong>2027 본격 시행 방침 결정</strong> — 파일럿 결과를 검토한 후, 임금·승진 연계 방식 및 공식 적용 범위에 대한 경영진 의사결정을 요청드릴 예정입니다.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ SLIDE 9 — 마무리 ══════════ -->
+<section class="slide" id="s9" style="background:linear-gradient(135deg,#0f2044 0%,#0a0f1e 100%);align-items:center;justify-content:center;text-align:center;">
+  <div class="slide-num">10 / 10</div>
+  <div style="font-size:56px;font-weight:900;line-height:1.2;margin-bottom:24px;">
+    2026년, <span style="color:#60a5fa;">신성오토텍㈜이<br>달라집니다</span>
+  </div>
+  <div class="body-lg" style="text-align:center;margin:0 auto 48px;max-width:800px;">
+    인사평가 · 산업안전보건 · IATF16949 —<br>
+    세 축을 동시에 체계화하여 <strong>공정한 조직, 안전한 현장, 국제 수준의 품질</strong>을 실현합니다.<br><br>
+    모든 변화는 구성원과 회사가 함께 성장하기 위한 기반입니다.
+  </div>
+  <div style="color:rgba(255,255,255,0.28);font-size:17px;">
+    신성오토텍㈜ 경영기획실 &nbsp;|&nbsp; 2026년 4월 21일 &nbsp;|&nbsp; INTERNAL — 외부 배포 금지
+  </div>
+</section>
+
+<!-- ══════════ 하단 네비게이션 ══════════ -->
+<div class="nav-bar">
+  <button class="nav-btn" id="btn-prev" onclick="navigate(-1)" disabled>← 이전</button>
+  <div class="nav-center">
+    <div class="nav-dots" id="nav-dots"></div>
+    <div class="nav-label" id="nav-label">표지</div>
+  </div>
+  <button class="nav-btn" id="btn-next" onclick="navigate(1)">다음 →</button>
+</div>
+
+<script>
+const slides = ['s0','s1','s2','s3','s4','s5','s6','s7','s8','s9'];
+const labels = [
+  '표지',
+  '1. 인사평가 배경',
+  '2. 평가 구성·배점',
+  '3. 추진 일정',
+  '4. 법적 근거·의의',
+  '5. 산업안전보건',
+  '6. IATF16949',
+  '7. 운영 시스템',
+  '8. 향후 과제',
+  '마무리'
+];
+let cur = 0;
+
+const dotsEl = document.getElementById('nav-dots');
+slides.forEach((_, i) => {
+  const d = document.createElement('div');
+  d.className = 'nav-dot' + (i === 0 ? ' active' : '');
+  d.onclick = () => goTo(i);
+  dotsEl.appendChild(d);
+});
+
+function goTo(idx) {
+  cur = Math.max(0, Math.min(slides.length - 1, idx));
+  document.getElementById(slides[cur]).scrollIntoView({ behavior: 'smooth', block: 'start' });
+  document.querySelectorAll('.nav-dot').forEach((d, i) => d.classList.toggle('active', i === cur));
+  document.getElementById('nav-label').textContent = labels[cur];
+  document.getElementById('btn-prev').disabled = cur === 0;
+  document.getElementById('btn-next').disabled = cur === slides.length - 1;
+}
+
+function navigate(dir) { goTo(cur + dir); }
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') navigate(1);
+  if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   navigate(-1);
+});
+
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const idx = slides.indexOf(e.target.id);
+      if (idx !== -1 && idx !== cur) { cur = idx; goTo(cur); }
+    }
+  });
+}, { threshold: 0.45 });
+slides.forEach(id => { const el = document.getElementById(id); if (el) observer.observe(el); });
+</script>
+</body>
+</html>
