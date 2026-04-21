@@ -20,9 +20,10 @@ body{font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif
 .page-header .stats-row .badge{background:rgba(255,255,255,0.15);color:#fff;font-size:12px;padding:4px 12px;border-radius:12px;font-weight:700;}
 .conn-dot{width:7px;height:7px;border-radius:50%;background:#94a3b8;}
 .conn-dot.connected{background:#fbbf24;animation:pulse 2s infinite;}
+.conn-dot.error{background:#ef4444;}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
 
-.container{max-width:1200px;margin:0 auto;padding:20px 20px 60px;}
+.container{max-width:1300px;margin:0 auto;padding:20px 20px 60px;}
 
 .card{background:#fff;border:1px solid #fed7aa;border-radius:12px;padding:14px 16px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,0.04);}
 .btn{display:inline-block;padding:7px 14px;background:#ea580c;color:#fff;border:none;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;text-decoration:none;transition:all 0.15s;}
@@ -36,13 +37,31 @@ body{font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif
 .table-wrap{overflow-x:auto;}
 .badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;}
 
-/* 사진 확대 Lightbox */
+.warn-banner{background:#fffbeb;border:1px solid #fbbf24;border-left:4px solid #f59e0b;border-radius:8px;padding:12px 16px;font-size:13px;color:#92400e;margin-bottom:14px;display:none;}
+.warn-banner.show{display:block;}
+
 .photo-lightbox{position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px;cursor:zoom-out;}
 .photo-lightbox.show{display:flex;}
 .photo-lightbox img{max-width:95%;max-height:92vh;object-fit:contain;border-radius:6px;box-shadow:0 4px 24px rgba(0,0,0,0.5);}
 .photo-lightbox .close-btn{position:absolute;top:16px;right:20px;background:rgba(255,255,255,0.15);color:#fff;border:none;width:44px;height:44px;border-radius:50%;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
 .photo-lightbox .close-btn:hover{background:rgba(255,255,255,0.3);}
 .photo-lightbox .caption{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);color:#fff;background:rgba(0,0,0,0.6);padding:8px 16px;border-radius:8px;font-size:13px;max-width:80%;text-align:center;}
+
+/* 파일 모달 (첨부파일 여러개 관리) */
+.files-modal{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:900;display:none;align-items:center;justify-content:center;padding:20px;}
+.files-modal.show{display:flex;}
+.files-modal-inner{background:#fff;border-radius:12px;padding:20px;max-width:500px;width:100%;max-height:80vh;overflow-y:auto;}
+.files-modal-title{font-size:15px;font-weight:800;color:#7c2d12;margin-bottom:12px;padding-bottom:10px;border-bottom:2px solid #ea580c;display:flex;justify-content:space-between;align-items:center;}
+.files-modal-close{background:none;border:none;font-size:22px;cursor:pointer;color:#9ca3af;padding:0;line-height:1;}
+.file-item{display:flex;align-items:center;gap:10px;padding:8px;border:1px solid #fed7aa;border-radius:8px;margin-bottom:6px;background:#fff7ed;}
+.file-item .fi-icon{font-size:22px;flex-shrink:0;}
+.file-item .fi-info{flex:1;min-width:0;}
+.file-item .fi-name{font-size:12px;font-weight:600;color:#7c2d12;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.file-item .fi-meta{font-size:10px;color:#9a3412;}
+.file-item .fi-actions{display:flex;gap:4px;flex-shrink:0;}
+.file-item .fi-actions button, .file-item .fi-actions a{padding:3px 8px;font-size:10px;border-radius:4px;border:none;cursor:pointer;text-decoration:none;font-weight:600;}
+.file-item .view-btn{background:#ea580c;color:#fff;}
+.file-item .del-btn{background:#fee2e2;color:#dc2626;}
 
 @media print{
   .no-print{display:none!important;}
@@ -56,24 +75,44 @@ body{font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif
 <body>
 
 <div class="page-header">
-  <div class="conn no-print"><span id="conn-dot" class="conn-dot"></span><span id="conn-text">로컬 저장소 사용 중</span></div>
+  <div class="conn no-print"><span id="conn-dot" class="conn-dot"></span><span id="conn-text">연결 확인 중...</span></div>
   <div class="icon">📋</div>
   <h1>지적사항 관리</h1>
-  <div class="sub">현장 점검 · 개선 여부 기록 · 누적 추적</div>
+  <div class="sub">현장 점검 · 개선 여부 기록 · 누적 추적 · 다중 첨부파일</div>
   <div class="stats-row">
     <span class="badge" id="issue-stat-open-badge">미완료 0건</span>
     <span class="badge" id="issue-stat-done-badge">완료 0건</span>
   </div>
 </div>
 
-<!-- 사진 확대 Lightbox -->
 <div class="photo-lightbox" id="photo-lightbox" onclick="closePhotoLightbox()">
   <button class="close-btn" onclick="event.stopPropagation();closePhotoLightbox()">✕</button>
   <img id="lightbox-img" src="" alt="">
   <div class="caption" id="lightbox-caption"></div>
 </div>
 
+<!-- 첨부파일 관리 모달 -->
+<div class="files-modal" id="files-modal" onclick="if(event.target.id==='files-modal') closeFilesModal()">
+  <div class="files-modal-inner">
+    <div class="files-modal-title">
+      <span id="files-modal-title-text">📎 첨부파일</span>
+      <button class="files-modal-close" onclick="closeFilesModal()">✕</button>
+    </div>
+    <div id="files-modal-list" style="margin-bottom:12px;"></div>
+    <div style="border-top:1px dashed #fed7aa;padding-top:12px;">
+      <label for="files-modal-input" class="btn btn-outline btn-sm no-print" style="cursor:pointer;display:inline-block;">📎 파일 추가 (사진·PDF·엑셀·문서)</label>
+      <input type="file" id="files-modal-input" multiple style="display:none;" onchange="addIssueFiles(this)">
+      <div style="font-size:11px;color:#6b7280;margin-top:6px;">여러 개 동시 선택 가능 · 50MB까지</div>
+    </div>
+  </div>
+</div>
+
 <div class="container">
+
+  <div id="warn-no-supa" class="warn-banner">
+    ⚠️ <strong>Supabase 미연결.</strong> 대시보드 → 설정에서 Supabase URL/Key를 먼저 입력해주세요.
+    <a href="safety_dashboard.html" style="color:#92400e;text-decoration:underline;font-weight:700;">설정하러 가기 →</a>
+  </div>
 
   <div class="no-print" style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;">
     <a href="safety_dashboard.html" class="btn btn-outline btn-sm">📊 메인 대시보드</a>
@@ -94,7 +133,6 @@ body{font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif
     </div>
   </div>
 
-  <!-- 스프레드시트 테이블 -->
   <div class="card" style="padding:0;border-radius:0 0 10px 10px;overflow:hidden;">
     <div class="table-wrap" style="border:none;">
       <table id="issue-sheet" style="font-size:12px;border-collapse:collapse;width:100%;">
@@ -108,7 +146,7 @@ body{font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif
             <th style="width:45px;padding:8px 6px;text-align:center;font-size:11px;color:#fff;">개선</th>
             <th style="width:82px;padding:8px 6px;font-size:11px;color:#fff;">개선일</th>
             <th style="width:130px;padding:8px 6px;font-size:11px;color:#fff;">개선내역/비고</th>
-            <th style="width:46px;padding:8px 6px;text-align:center;font-size:11px;color:#fff;" class="no-print">사진</th>
+            <th style="width:70px;padding:8px 6px;text-align:center;font-size:11px;color:#fff;" class="no-print">첨부</th>
             <th style="width:32px;padding:8px 6px;text-align:center;font-size:11px;color:#fff;" class="no-print">×</th>
           </tr>
         </thead>
@@ -131,116 +169,83 @@ body{font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif
 
 <script>
 // ============================================================
-// SHARED INFRASTRUCTURE
+// SHARED: Supabase 연결
 // ============================================================
-const DRIVE_UPLOAD_URL = 'https://script.google.com/macros/s/AKfycbyiZ5j5XH7G3gOMXzlSxbX9hJ5WxCf2J3PMUGGZfaQI3jQC7s0NOn-T8grEmi7LRpIZuA/exec';
-
 let supaClient = null;
-function initSupabase(url, key){
-  if(!url || !key) return;
-  try{
-    supaClient = supabase.createClient(url, key);
-    document.getElementById('conn-dot').className = 'conn-dot connected';
-    document.getElementById('conn-text').textContent = '실시간 공유 연결됨';
-    supaClient.channel('issues_sync')
-      .on('postgres_changes', {event:'*', schema:'public', table:'safety_store'}, () => {
-        supaLoadAll().then(() => renderSiteIssues());
-      })
-      .subscribe();
-    supaLoadAll();
-  }catch(e){ console.error('Supabase 연결 실패:', e); }
-}
-async function supaLoadAll(){
-  if(!supaClient) return;
-  try{
-    const {data} = await supaClient.from('safety_store').select('*');
-    if(!data) return;
-    data.forEach(row => localStorage.setItem('safety_'+row.key, JSON.stringify(row.value)));
-  }catch(e){ console.error('supaLoad 오류:', e); }
-}
-async function supaSync(key){
-  if(!supaClient) return;
-  try{
-    const value = JSON.parse(localStorage.getItem('safety_'+key) || '[]');
-    await supaClient.from('safety_store').upsert({key, value}, {onConflict:'key'});
-  }catch(e){ console.error('supaSync 오류:', e); }
-}
 
 const DB = {
   get(key){ try{return JSON.parse(localStorage.getItem('safety_'+key))||[];}catch{return [];} },
   getObj(key){ try{return JSON.parse(localStorage.getItem('safety_'+key))||{};}catch{return {};} },
-  set(key,val){ localStorage.setItem('safety_'+key, JSON.stringify(val)); supaSync(key); try{scheduleKVSync(key);}catch(e){} }
+  async set(key, val){
+    localStorage.setItem('safety_'+key, JSON.stringify(val));
+    if(!supaClient) return;
+    try{
+      await supaClient.from('safety_store').upsert({key, value:val}, {onConflict:'key'});
+    }catch(e){ console.error('Supabase upsert 실패:', key, e); }
+  }
 };
 
-const TRACKED_KEYS = ['patrol','tbm','patrolCalendar','tbmCalendar','siteIssues'];
-const CloudDB = (() => {
-  function url(){ return DRIVE_UPLOAD_URL || ''; }
-  function getJSONP(params){
-    return new Promise((resolve,reject)=>{
-      const U = url();
-      if(!U){ reject(new Error('CloudDB URL not set')); return; }
-      const cb = '_cb_' + Date.now() + '_' + Math.floor(Math.random()*1e6);
-      const s = document.createElement('script');
-      const to = setTimeout(()=>{ cleanup(); reject(new Error('JSONP timeout')); }, 30000);
-      const cleanup = ()=>{ try{delete window[cb];}catch(e){} s.remove(); clearTimeout(to); };
-      window[cb] = (data)=>{ cleanup(); resolve(data); };
-      const q = Object.entries({...params, callback: cb})
-        .map(([k,v])=>encodeURIComponent(k)+'='+encodeURIComponent(v)).join('&');
-      s.src = U + '?' + q;
-      s.onerror = ()=>{ cleanup(); reject(new Error('JSONP network error')); };
-      document.body.appendChild(s);
-    });
-  }
-  async function postJSON(body){
-    const U = url();
-    if(!U) throw new Error('CloudDB URL not set');
-    const res = await fetch(U, {method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'}, body: JSON.stringify(body), redirect:'follow'});
-    return res.json();
-  }
-  async function kvSet(key, value){ return postJSON({action:'kvSet', key, value}); }
-  async function kvAll(){ const r = await getJSONP({action:'kvAll'}); return r.values || {}; }
-  let hydrated = false;
-  async function hydrate(){
-    if(!url() || hydrated) return;
-    try{
-      const remote = await kvAll();
-      ['siteIssues','patrol','tbm'].forEach(k => {
-        const remoteVal = remote[k];
-        const hasRemote = Array.isArray(remoteVal) ? remoteVal.length > 0
-                       : (remoteVal && typeof remoteVal === 'object') ? Object.keys(remoteVal).length > 0
-                       : !!remoteVal;
-        if(hasRemote) localStorage.setItem('safety_'+k, JSON.stringify(remoteVal));
-      });
-      hydrated = true;
-      renderSiteIssues();
-      console.log('✅ CloudDB hydrated');
-    }catch(e){ console.warn('CloudDB hydrate 실패:', e.message); }
-  }
-  return {url, kvSet, kvAll, hydrate};
-})();
+async function loadFromSupabase(){
+  if(!supaClient) return;
+  try{
+    const {data, error} = await supaClient.from('safety_store').select('*');
+    if(error) throw error;
+    if(data) data.forEach(row => localStorage.setItem('safety_'+row.key, JSON.stringify(row.value)));
+  }catch(e){ console.error('supaLoad:', e); }
+}
 
-const _kvPending = {};
-function scheduleKVSync(key){
-  if(!TRACKED_KEYS.includes(key)) return;
-  if(!CloudDB.url()) return;
-  clearTimeout(_kvPending[key]);
-  _kvPending[key] = setTimeout(async () => {
-    try{
-      const raw = localStorage.getItem('safety_'+key);
-      let val = null;
-      if(raw){ try{ val = JSON.parse(raw); }catch(e){} }
-      await CloudDB.kvSet(key, val);
-    }catch(e){ console.warn('시트 동기화 실패:', key, e.message); }
-  }, 500);
+function initSupabase(url, key){
+  try{
+    supaClient = supabase.createClient(url, key);
+    document.getElementById('conn-dot').className = 'conn-dot connected';
+    document.getElementById('conn-text').textContent = '실시간 공유 연결됨';
+    document.getElementById('warn-no-supa').classList.remove('show');
+    supaClient.channel('issues_sync')
+      .on('postgres_changes', {event:'*', schema:'public', table:'safety_store'}, async () => {
+        await loadFromSupabase();
+        renderSiteIssues();
+        // 파일 모달 열려있으면 갱신
+        const modal = document.getElementById('files-modal');
+        if(modal.classList.contains('show') && modal.dataset.issueId){
+          renderIssueFiles(parseInt(modal.dataset.issueId, 10));
+        }
+      })
+      .subscribe();
+    return true;
+  }catch(e){
+    console.error('Supabase 연결 실패:', e);
+    document.getElementById('conn-dot').className = 'conn-dot error';
+    document.getElementById('conn-text').textContent = '연결 실패';
+    return false;
+  }
+}
+
+async function uploadToStorage(file, subfolder){
+  if(!supaClient) throw new Error('Supabase 미연결');
+  const ts = Date.now();
+  const safeName = file.name.replace(/[^a-zA-Z0-9가-힣._-]/g, '_');
+  const path = `${subfolder}/${ts}_${safeName}`;
+  const {error} = await supaClient.storage.from('safety-files').upload(path, file, {
+    contentType: file.type || 'application/octet-stream', upsert: false
+  });
+  if(error) throw error;
+  const {data:urlData} = supaClient.storage.from('safety-files').getPublicUrl(path);
+  return {name:file.name, url:urlData.publicUrl, path, mime:file.type||'application/octet-stream', size:file.size, uploadedAt:new Date().toISOString()};
+}
+
+async function deleteFromStorage(path){
+  if(!supaClient || !path) return;
+  try{ await supaClient.storage.from('safety-files').remove([path]); }
+  catch(e){ console.warn('Storage 삭제 실패:', path, e); }
 }
 
 // ============================================================
 // 지적사항 CRUD
 // ============================================================
 function getSiteIssues(){ return DB.get('siteIssues'); }
-function saveSiteIssues(list){ DB.set('siteIssues', list); }
+async function saveSiteIssues(list){ await DB.set('siteIssues', list); }
 
-function addSiteIssue(){
+async function addSiteIssue(){
   const desc = document.getElementById('iss-desc').value.trim();
   if(!desc){ alert('지적사항 내용을 입력하세요.'); return; }
   const issues = getSiteIssues();
@@ -254,16 +259,16 @@ function addSiteIssue(){
     status: 'open',
     resolvedDate: '',
     memo: '',
-    photo: ''
+    files: []
   });
-  saveSiteIssues(issues);
+  await saveSiteIssues(issues);
   document.getElementById('iss-desc').value = '';
   document.getElementById('iss-location').value = '';
   document.getElementById('iss-desc').focus();
   renderSiteIssues();
 }
 
-function toggleIssueStatus(id){
+async function toggleIssueStatus(id){
   const issues = getSiteIssues();
   const issue = issues.find(i=>i.id===id);
   if(!issue) return;
@@ -274,78 +279,32 @@ function toggleIssueStatus(id){
     issue.status='open';
     issue.resolvedDate='';
   }
-  saveSiteIssues(issues);
+  await saveSiteIssues(issues);
   renderSiteIssues();
 }
 
-function deleteSiteIssue(id){
-  if(!confirm('삭제하시겠습니까?')) return;
-  saveSiteIssues(getSiteIssues().filter(i=>i.id!==id));
+async function deleteSiteIssue(id){
+  if(!confirm('삭제하시겠습니까? 첨부파일도 Storage에서 함께 삭제됩니다.')) return;
+  const issues = getSiteIssues();
+  const issue = issues.find(i=>i.id===id);
+  // 첨부파일 Storage에서 삭제
+  if(issue && Array.isArray(issue.files)){
+    for(const f of issue.files){
+      if(f.path) await deleteFromStorage(f.path);
+    }
+  }
+  await saveSiteIssues(issues.filter(i=>i.id!==id));
   renderSiteIssues();
 }
 
-function updateIssueMemo(id){
+async function updateIssueMemo(id){
   const issues = getSiteIssues();
   const issue = issues.find(i=>i.id===id);
   if(!issue) return;
   const el = document.getElementById('iss-memo-'+id);
   if(el) issue.memo = el.value;
-  saveSiteIssues(issues);
+  await saveSiteIssues(issues);
 }
-
-function handleIssuePhoto(id, input){
-  if(!input.files||!input.files[0]) return;
-  const file = input.files[0];
-  if(file.size > 500000){
-    const reader = new FileReader();
-    reader.onload = function(e){
-      const img = new Image();
-      img.onload = function(){
-        const canvas = document.createElement('canvas');
-        const max = 400;
-        let w=img.width, h=img.height;
-        if(w>h){h=h*(max/w);w=max;} else {w=w*(max/h);h=max;}
-        canvas.width=w; canvas.height=h;
-        canvas.getContext('2d').drawImage(img,0,0,w,h);
-        saveIssuePhoto(id, canvas.toDataURL('image/jpeg',0.6));
-      };
-      img.src = e.target.result;
-    };
-    reader.readAsDataURL(file);
-  } else {
-    const reader = new FileReader();
-    reader.onload = function(e){ saveIssuePhoto(id, e.target.result); };
-    reader.readAsDataURL(file);
-  }
-}
-
-function saveIssuePhoto(id, dataUrl){
-  const issues = getSiteIssues();
-  const issue = issues.find(i=>i.id===id);
-  if(!issue) return;
-  issue.photo = dataUrl;
-  saveSiteIssues(issues);
-  const preview = document.getElementById('iss-photo-preview-'+id);
-  if(preview) preview.innerHTML = `<img src="${dataUrl}" style="width:32px;height:32px;object-fit:cover;border-radius:4px;cursor:pointer;" onclick="openPhotoLightbox(this.src, '지적사항 사진')">`;
-}
-
-// ============================================================
-// 사진 Lightbox
-// ============================================================
-function openPhotoLightbox(src, caption){
-  const lb = document.getElementById('photo-lightbox');
-  document.getElementById('lightbox-img').src = src;
-  document.getElementById('lightbox-caption').textContent = caption || '';
-  lb.classList.add('show');
-  document.body.style.overflow = 'hidden';
-}
-function closePhotoLightbox(){
-  document.getElementById('photo-lightbox').classList.remove('show');
-  document.body.style.overflow = '';
-}
-document.addEventListener('keydown', (e) => {
-  if(e.key === 'Escape') closePhotoLightbox();
-});
 
 function renderSiteIssues(){
   const issues = getSiteIssues();
@@ -374,9 +333,9 @@ function renderSiteIssues(){
       const isDone = issue.status==='done';
       const rowBg = isDone ? '#f0fdf4' : (idx%2===0?'#fff':'#fafbfc');
       const textStyle = isDone ? 'color:#9ca3af;text-decoration:line-through;' : '';
-      const photoPreview = issue.photo
-        ? `<img src="${issue.photo}" style="width:32px;height:32px;object-fit:cover;border-radius:4px;cursor:pointer;" onclick="openPhotoLightbox(this.src, '지적사항 사진')">`
-        : '';
+      // 첨부파일 수 (신규 files 배열 + 레거시 photo 필드)
+      const fileCount = (Array.isArray(issue.files) ? issue.files.length : 0) + (issue.photo ? 1 : 0);
+      const attachBtn = `<button class="btn btn-outline btn-sm" onclick="openFilesModal(${issue.id})" style="font-size:10px;padding:4px 8px;white-space:nowrap;">📎 ${fileCount}개</button>`;
       return `<tr style="background:${rowBg};">
         <td style="text-align:center;padding:6px;border-bottom:1px solid #e5e7eb;font-size:11px;color:#9ca3af;">${issues.length - issues.indexOf(issue)}</td>
         <td style="padding:6px;border-bottom:1px solid #e5e7eb;font-size:11px;white-space:nowrap;">${issue.date}</td>
@@ -392,10 +351,7 @@ function renderSiteIssues(){
             style="width:100%;border:none;border-bottom:1px dotted #d1d5db;font-size:11px;padding:2px 4px;background:transparent;"
             onchange="updateIssueMemo(${issue.id})">
         </td>
-        <td style="text-align:center;padding:4px;border-bottom:1px solid #e5e7eb;" class="no-print">
-          <div id="iss-photo-preview-${issue.id}" style="display:inline-block;">${photoPreview}</div>
-          ${!issue.photo?`<label style="cursor:pointer;font-size:10px;color:#6b7280;" title="사진 첨부"><input type="file" accept="image/*" style="display:none;" onchange="handleIssuePhoto(${issue.id},this)">📷</label>`:''}
-        </td>
+        <td style="text-align:center;padding:4px;border-bottom:1px solid #e5e7eb;" class="no-print">${attachBtn}</td>
         <td style="text-align:center;padding:4px;border-bottom:1px solid #e5e7eb;" class="no-print">
           <button onclick="deleteSiteIssue(${issue.id})" style="background:none;border:none;color:#d1d5db;cursor:pointer;font-size:14px;" title="삭제">&times;</button>
         </td>
@@ -408,17 +364,163 @@ function renderSiteIssues(){
 }
 
 // ============================================================
+// 첨부파일 관리 (여러 개, Supabase Storage)
+// ============================================================
+function openFilesModal(issueId){
+  const modal = document.getElementById('files-modal');
+  modal.dataset.issueId = String(issueId);
+  const issues = getSiteIssues();
+  const issue = issues.find(i=>i.id===issueId);
+  document.getElementById('files-modal-title-text').textContent = `📎 첨부파일 — ${issue?.desc || ''}`.slice(0,50);
+  renderIssueFiles(issueId);
+  modal.classList.add('show');
+}
+function closeFilesModal(){
+  document.getElementById('files-modal').classList.remove('show');
+  document.getElementById('files-modal').dataset.issueId = '';
+  document.getElementById('files-modal-input').value = '';
+}
+
+function renderIssueFiles(issueId){
+  const issues = getSiteIssues();
+  const issue = issues.find(i=>i.id===issueId);
+  if(!issue) return;
+  const listEl = document.getElementById('files-modal-list');
+  const files = Array.isArray(issue.files) ? issue.files : [];
+  // 레거시 photo 필드 호환
+  const legacyPhoto = issue.photo ? [{name:'기존 사진', url:issue.photo, mime:'image/jpeg', _legacy:true}] : [];
+  const all = [...files, ...legacyPhoto];
+  if(all.length === 0){
+    listEl.innerHTML = '<div style="text-align:center;color:#9ca3af;padding:20px;font-size:12px;">첨부파일 없음</div>';
+    return;
+  }
+  listEl.innerHTML = all.map((f, i) => {
+    const icon = getFileIcon(f.mime || '', f.name);
+    const sizeStr = f.size ? `${(f.size/1024).toFixed(1)}KB` : '';
+    const isImage = (f.mime||'').startsWith('image/');
+    const viewBtn = isImage
+      ? `<button class="view-btn" onclick="openPhotoLightbox('${f.url}','${(f.name||'').replace(/'/g,'&apos;')}')">보기</button>`
+      : `<a class="view-btn" href="${f.url}" target="_blank" rel="noopener">열기</a>`;
+    const delBtn = f._legacy
+      ? `<button class="del-btn" onclick="removeLegacyPhoto(${issueId})">삭제</button>`
+      : `<button class="del-btn" onclick="removeIssueFile(${issueId},${i})">삭제</button>`;
+    return `<div class="file-item">
+      <div class="fi-icon">${icon}</div>
+      <div class="fi-info">
+        <div class="fi-name">${f.name||'파일'}</div>
+        <div class="fi-meta">${sizeStr}${f._legacy?' · (레거시 저장)':''}</div>
+      </div>
+      <div class="fi-actions">${viewBtn}${delBtn}</div>
+    </div>`;
+  }).join('');
+}
+
+function getFileIcon(mime, name){
+  const n = (name||'').toLowerCase();
+  if(mime.startsWith('image/')) return '🖼️';
+  if(mime === 'application/pdf' || n.endsWith('.pdf')) return '📄';
+  if(n.endsWith('.xlsx') || n.endsWith('.xls') || mime.includes('spreadsheet')) return '📊';
+  if(n.endsWith('.docx') || n.endsWith('.doc') || mime.includes('word')) return '📝';
+  if(n.endsWith('.pptx') || n.endsWith('.ppt') || mime.includes('presentation')) return '📽️';
+  if(n.endsWith('.zip') || n.endsWith('.7z') || n.endsWith('.rar')) return '📦';
+  return '📎';
+}
+
+async function addIssueFiles(input){
+  if(!supaClient){ alert('Supabase 미연결. 대시보드 설정에서 먼저 연결해주세요.'); input.value=''; return; }
+  if(!input.files.length) return;
+  const modal = document.getElementById('files-modal');
+  const issueId = parseInt(modal.dataset.issueId, 10);
+  if(!issueId){ alert('지적사항을 먼저 선택하세요.'); return; }
+
+  const issues = getSiteIssues();
+  const issue = issues.find(i=>i.id===issueId);
+  if(!issue) return;
+  if(!Array.isArray(issue.files)) issue.files = [];
+
+  const listEl = document.getElementById('files-modal-list');
+  const files = Array.from(input.files);
+  for(let i = 0; i < files.length; i++){
+    const file = files[i];
+    const placeholder = document.createElement('div');
+    placeholder.style.cssText = 'padding:8px;border:1px dashed #ea580c;border-radius:6px;margin-bottom:6px;font-size:11px;color:#ea580c;';
+    placeholder.textContent = `업로드 중... ${file.name} (${i+1}/${files.length})`;
+    listEl.appendChild(placeholder);
+    try{
+      const meta = await uploadToStorage(file, `issues/${issueId}`);
+      issue.files.push(meta);
+      placeholder.remove();
+    }catch(err){
+      placeholder.style.border = '1px solid #dc2626';
+      placeholder.style.color = '#dc2626';
+      placeholder.textContent = `❌ ${file.name}: ${err.message||err}`;
+      console.error(err);
+    }
+  }
+  await saveSiteIssues(issues);
+  renderIssueFiles(issueId);
+  renderSiteIssues();
+  input.value = '';
+}
+
+async function removeIssueFile(issueId, fileIdx){
+  if(!confirm('이 파일을 삭제하시겠습니까?')) return;
+  const issues = getSiteIssues();
+  const issue = issues.find(i=>i.id===issueId);
+  if(!issue || !Array.isArray(issue.files)) return;
+  const file = issue.files[fileIdx];
+  if(file && file.path) await deleteFromStorage(file.path);
+  issue.files.splice(fileIdx, 1);
+  await saveSiteIssues(issues);
+  renderIssueFiles(issueId);
+  renderSiteIssues();
+}
+
+async function removeLegacyPhoto(issueId){
+  if(!confirm('기존 사진을 삭제하시겠습니까?')) return;
+  const issues = getSiteIssues();
+  const issue = issues.find(i=>i.id===issueId);
+  if(!issue) return;
+  issue.photo = '';
+  await saveSiteIssues(issues);
+  renderIssueFiles(issueId);
+  renderSiteIssues();
+}
+
+// ============================================================
+// Lightbox
+// ============================================================
+function openPhotoLightbox(src, caption){
+  document.getElementById('lightbox-img').src = src;
+  document.getElementById('lightbox-caption').textContent = caption || '';
+  document.getElementById('photo-lightbox').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+function closePhotoLightbox(){
+  document.getElementById('photo-lightbox').classList.remove('show');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', (e) => {
+  if(e.key === 'Escape'){
+    closePhotoLightbox();
+    closeFilesModal();
+  }
+});
+
+// ============================================================
 // INIT
 // ============================================================
-window.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('DOMContentLoaded', async () => {
   const sup = DB.getObj('supabase');
-  if(sup.url && sup.key) initSupabase(sup.url, sup.key);
-  renderSiteIssues();
-  setTimeout(() => CloudDB.hydrate(), 600);
-  if(!supaClient){
-    const txt = document.getElementById('conn-text');
-    if(CloudDB.url() && txt) txt.textContent = '구글 시트 연동 중';
+  if(sup.url && sup.key){
+    initSupabase(sup.url, sup.key);
+    await loadFromSupabase();
+  } else {
+    document.getElementById('conn-dot').className = 'conn-dot error';
+    document.getElementById('conn-text').textContent = 'Supabase 미연결';
+    document.getElementById('warn-no-supa').classList.add('show');
   }
+  renderSiteIssues();
   window.addEventListener('storage', (e) => {
     if(e.key === 'safety_siteIssues') renderSiteIssues();
   });

@@ -1452,7 +1452,25 @@ function toggleSidebar(){
   document.getElementById('sidebar').classList.toggle('open');
   document.getElementById('sidebar-overlay').classList.toggle('show');
 }
+// 설정 페이지 접근 비밀번호 (세션 동안만 유지, 탭 닫으면 재입력)
+const SETTINGS_PASSWORD = '김은진';
+function checkSettingsAuth(){
+  if(sessionStorage.getItem('settings_auth') === 'ok') return true;
+  const pw = prompt('🔒 설정 접근 비밀번호를 입력하세요');
+  if(pw === null) return false; // 취소
+  if(pw === SETTINGS_PASSWORD){
+    sessionStorage.setItem('settings_auth', 'ok');
+    return true;
+  }
+  alert('❌ 비밀번호가 올바르지 않습니다.');
+  return false;
+}
+
 function showSection(id){
+  // 설정 페이지는 비밀번호 확인
+  if(id === 'settings' && !checkSettingsAuth()){
+    return; // 인증 실패 시 이동 취소
+  }
   if(window.innerWidth<=768){document.getElementById('sidebar').classList.remove('open');document.getElementById('sidebar-overlay').classList.remove('show');}
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   document.getElementById('section-'+id).classList.add('active');
