@@ -236,10 +236,18 @@ h1, h2, h3, h4, h5, h6, p, li, span, a, button { word-break: keep-all; overflow-
   white-space: nowrap;
 }
 .num-value .suffix { font-size: 0.5em; color: var(--blue); margin-left: 4px; }
-.num-label { white-space: normal; }
 .num-label {
-  font-size: 14px; font-weight: 600;
-  color: var(--text-mute); letter-spacing: 0.05em;
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  white-space: normal;
+}
+.num-label-en {
+  font-size: 12.5px; font-weight: 500;
+  color: var(--text-mute); letter-spacing: 0.04em;
+  font-family: 'Inter', sans-serif;
+}
+.num-label-ko {
+  font-size: 14px; font-weight: 700;
+  color: var(--navy); letter-spacing: 0.02em;
 }
 .num-item + .num-item { border-left: 1px solid var(--border); }
 
@@ -891,7 +899,8 @@ h1, h2, h3, h4, h5, h6, p, li, span, a, button { word-break: keep-all; overflow-
   .numbers { padding: 56px 0; }
   .num-grid { gap: 20px 16px; }
   .num-value { font-size: clamp(32px, 12vw, 44px); }
-  .num-label { font-size: 12px; }
+  .num-label-en { font-size: 11px; }
+  .num-label-ko { font-size: 12.5px; }
   .hero { min-height: 80vh; }
   .hero-badge { font-size: 10.5px; padding: 6px 14px; }
   .btn { padding: 13px 22px; font-size: 14px; }
@@ -960,19 +969,19 @@ h1, h2, h3, h4, h5, h6, p, li, span, a, button { word-break: keep-all; overflow-
     <div class="num-grid">
       <div class="num-item reveal">
         <div class="num-value"><span class="count" data-target="40">0</span><span class="suffix">+</span></div>
-        <div class="num-label">Years of Experience · 업력</div>
+        <div class="num-label"><span class="num-label-en">Years of Experience</span><span class="num-label-ko">사업 운영의 역사</span></div>
       </div>
       <div class="num-item reveal reveal-delay-1">
         <div class="num-value"><span class="count" data-target="3">0</span></div>
-        <div class="num-label">Core Certifications · 핵심 인증</div>
+        <div class="num-label"><span class="num-label-en">Core Certifications</span><span class="num-label-ko">제조 핵심 인증</span></div>
       </div>
       <div class="num-item reveal reveal-delay-2">
         <div class="num-value"><span class="count" data-target="5">0</span></div>
-        <div class="num-label">Registered Patents · 보유 특허</div>
+        <div class="num-label"><span class="num-label-en">Registered Patents</span><span class="num-label-ko">국내외 보유 특허</span></div>
       </div>
       <div class="num-item reveal reveal-delay-3">
         <div class="num-value"><span class="count" data-target="7">0</span></div>
-        <div class="num-label">Integrated Processes · 통합 생산 공정 단계</div>
+        <div class="num-label"><span class="num-label-en">Integrated Processes</span><span class="num-label-ko">통합 생산 공정 단계</span></div>
       </div>
     </div>
   </div>
