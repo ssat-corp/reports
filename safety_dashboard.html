@@ -1261,6 +1261,9 @@ table tr:hover td{background:#f8fafc;}
 // ============================================================
 // SUPABASE LAYER
 // ============================================================
+// 기본값 (localStorage에 저장된 값이 있으면 그게 우선 — 모든 기기/브라우저에서 자동 연결)
+const DEFAULT_SUPABASE_URL = 'https://onohwrswzaiwbabiusrj.supabase.co';
+const DEFAULT_SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9ub2h3cnN3emFpd2JhYml1c3JqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyMjQ5MTgsImV4cCI6MjA4OTgwMDkxOH0.vK_l0iWBJyZmLwzNfQHob2ejEZGfg8mQ8mV-6-lXaN0';
 let supaClient = null;
 
 function initSupabase(url, key) {
@@ -5149,12 +5152,16 @@ window.onload = function(){
   checkTbmPhotoAlert();
   renderCN('all');
   renderPT('all');
-  // 저장된 Supabase 설정 불러와서 자동 연결 시도 (loadSettings에서도 처리되나 명시적으로 추가)
+  // Supabase 자동 연결: 저장된 값 우선, 없으면 기본값 사용 (모든 기기/브라우저에서 즉시 동작)
   const sup = DB.getObj('supabase');
-  if(sup.url && sup.key) {
-    document.getElementById('s-supa-url') && (document.getElementById('s-supa-url').value = sup.url);
-    document.getElementById('s-supa-key') && (document.getElementById('s-supa-key').value = sup.key);
-    initSupabase(sup.url, sup.key);
+  const supaUrl = sup.url || DEFAULT_SUPABASE_URL;
+  const supaKey = sup.key || DEFAULT_SUPABASE_KEY;
+  if(supaUrl && supaKey){
+    // 설정 입력칸에 현재 연결된 값 표시 (읽기만)
+    const u = document.getElementById('s-supa-url'), k = document.getElementById('s-supa-key');
+    if(u && !u.value) u.value = supaUrl;
+    if(k && !k.value) k.value = supaKey;
+    initSupabase(supaUrl, supaKey);
   }
 };
 </script>

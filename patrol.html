@@ -173,6 +173,9 @@ td{padding:8px 10px;border-bottom:1px solid #f1f5f9;}
 // ============================================================
 // SHARED: Supabase 연결 + 데이터 계층
 // ============================================================
+// 기본값 (localStorage에 저장된 값이 있으면 그게 우선 — 모든 기기/브라우저에서 자동 연결)
+const DEFAULT_SUPABASE_URL = 'https://onohwrswzaiwbabiusrj.supabase.co';
+const DEFAULT_SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9ub2h3cnN3emFpd2JhYml1c3JqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyMjQ5MTgsImV4cCI6MjA4OTgwMDkxOH0.vK_l0iWBJyZmLwzNfQHob2ejEZGfg8mQ8mV-6-lXaN0';
 let supaClient = null;
 
 const DB = {
@@ -623,8 +626,10 @@ document.addEventListener('keydown', (e) => { if(e.key === 'Escape') closePhotoL
 // ============================================================
 window.addEventListener('DOMContentLoaded', async () => {
   const sup = DB.getObj('supabase');
-  if(sup.url && sup.key){
-    initSupabase(sup.url, sup.key);
+  const supaUrl = sup.url || DEFAULT_SUPABASE_URL;
+  const supaKey = sup.key || DEFAULT_SUPABASE_KEY;
+  if(supaUrl && supaKey){
+    initSupabase(supaUrl, supaKey);
     await loadFromSupabase();
   } else {
     document.getElementById('conn-dot').className = 'conn-dot error';
