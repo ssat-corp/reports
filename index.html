@@ -13,7 +13,7 @@
             line-height: 1.7;
         }
         .container {
-            max-width: 720px;
+            max-width: 1100px;
             margin: 40px auto;
             background: #fff;
             border-radius: 12px;
@@ -27,7 +27,90 @@
         }
         .header h1 { font-size: 22px; margin-bottom: 6px; }
         .header .sub { font-size: 13px; opacity: 0.7; }
+        .body-split {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 0;
+        }
         .content { padding: 30px 40px; }
+        .sidebar {
+            padding: 30px 24px 30px 20px;
+            border-left: 1px solid #eee;
+            background: #fafbfc;
+        }
+        .sidebar-title {
+            font-size: 13px;
+            font-weight: 800;
+            color: #1a1a2e;
+            letter-spacing: 0.3px;
+            margin-bottom: 14px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #1a3a6e;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .sidebar-sub {
+            font-size: 11px;
+            color: #888;
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+        .monthly-card {
+            display: block;
+            text-decoration: none;
+            color: #333;
+            padding: 12px 14px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #ffffff, #f5f7fa);
+            border: 1px solid #e8ecf0;
+            transition: all 0.2s;
+        }
+        .monthly-card:hover {
+            background: #eef4ff;
+            border-color: #1a3a6e;
+            transform: translateX(2px);
+            box-shadow: 0 2px 8px rgba(26,58,110,0.08);
+        }
+        .monthly-card .m-month {
+            font-size: 15px;
+            font-weight: 800;
+            color: #1a3a6e;
+        }
+        .monthly-card .m-desc {
+            font-size: 11px;
+            color: #666;
+            margin-top: 3px;
+            line-height: 1.4;
+        }
+        .monthly-card .m-tag {
+            font-size: 10px;
+            padding: 2px 8px;
+            background: #eef2ff;
+            color: #4f46e5;
+            border-radius: 10px;
+            margin-top: 6px;
+            display: inline-block;
+            font-weight: 600;
+        }
+        .monthly-empty {
+            font-size: 12px;
+            color: #9ca3af;
+            padding: 16px;
+            text-align: center;
+            border: 1.5px dashed #d1d5db;
+            border-radius: 8px;
+            background: #fff;
+        }
+        @media (max-width: 900px) {
+            .body-split { grid-template-columns: 1fr; }
+            .sidebar {
+                border-left: none;
+                border-top: 1px solid #eee;
+                padding: 20px 40px 30px;
+            }
+        }
 
         .card {
             display: block;
@@ -88,6 +171,7 @@
             <h1>신성오토텍(주) 내부 보고서</h1>
             <div class="sub">경영지원팀 | 보고서 모음</div>
         </div>
+        <div class="body-split">
         <div class="content">
 
             <a class="card" href="인사평가_고도화전략_2026/2026_인사평가_고도화전략.html" style="border-left-color: #4f46e5; background: #eef2ff;">
@@ -222,6 +306,17 @@
                 <span class="date">2026.03.20</span>
             </a>
 
+        </div>
+        <aside class="sidebar">
+            <div class="sidebar-title">📅 월간 AI 업무 리포트</div>
+            <div class="sidebar-sub">매월 말 Claude Code와 함께한 작업 하이라이트.<br>분기별 공유 자료로 활용.</div>
+            <div id="monthly-list">
+                <div class="monthly-empty">
+                    📝 2026년 4월 리포트<br>
+                    <span style="font-size:10px;">4월 30일 생성 예정</span>
+                </div>
+            </div>
+        </aside>
         </div>
         <div class="footer">
             신성오토텍(주) 수원 본사 · 화성공장
