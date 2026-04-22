@@ -74,7 +74,6 @@
   .yb.active { background: var(--blue); color: #fff; border-color: var(--blue); }
 
   .compare-btn {
-    margin-left: auto;
     padding: 6px 14px; font-size: 12px; font-weight: 600;
     border: 1.5px solid var(--border); border-radius: 20px;
     cursor: pointer; background: #fff; color: var(--gray-600);
@@ -85,6 +84,18 @@
   .compare-btn.active { background: var(--teal); color: #fff; border-color: var(--teal); }
   .compare-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--gray-400); transition: background 0.15s; }
   .compare-btn.active .compare-dot { background: #fff; }
+
+  .source-btn {
+    margin-left: auto;
+    padding: 6px 14px; font-size: 12px; font-weight: 600;
+    border: 1.5px solid var(--blue); border-radius: 20px;
+    cursor: pointer; background: var(--blue); color: #fff;
+    display: inline-flex; align-items: center; gap: 6px;
+    transition: all 0.15s; font-family: inherit;
+    text-decoration: none;
+  }
+  .source-btn:hover { background: var(--blue-mid); border-color: var(--blue-mid); }
+  .source-btn svg { width: 13px; height: 13px; fill: currentColor; }
 
   .compare-hint {
     display: none; font-size: 11px; color: var(--gray-600);
@@ -116,17 +127,18 @@
   .status-banner code { background: rgba(0,0,0,0.06); padding: 1px 5px; border-radius: 3px; font-size: 12px; }
 
   .tabs {
-    display: flex; gap: 2px; margin-bottom: 24px;
+    display: flex; gap: 4px; margin-bottom: 24px;
     background: var(--gray-100); border-radius: var(--radius);
-    padding: 4px;
+    padding: 4px; border: 1px solid var(--border);
   }
   .tab {
     flex: 1; padding: 9px 16px; font-size: 13px; font-weight: 500;
-    border: none; cursor: pointer; border-radius: 7px;
+    border: 1px solid transparent; cursor: pointer; border-radius: 7px;
     background: transparent; color: var(--gray-600); transition: all 0.15s;
+    font-family: inherit;
   }
-  .tab.active { background: #fff; color: var(--blue); box-shadow: var(--shadow); }
-  .tab:hover:not(.active) { color: var(--gray-900); }
+  .tab.active { background: #fff; color: var(--blue); box-shadow: var(--shadow); border-color: var(--border); }
+  .tab:hover:not(.active) { color: var(--gray-900); background: #fff; border-color: var(--border); }
 
   .section { display: none; }
   .section.active { display: block; }
@@ -293,6 +305,10 @@
   <div class="year-bar">
     <span class="year-label">연도</span>
     <div id="dashYearTabs"></div>
+    <a class="source-btn" href="https://docs.google.com/spreadsheets/d/1jfoUk56Mr7H28GzKjdLKZO9keSGSeaM-p87_kyqVQ14/edit?gid=632389656#gid=632389656" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zM7 10h5v2H7zm0 4h5v2H7zm6-4h4v2h-4zm0 4h4v2h-4z"/></svg>
+      원본 데이터 입력
+    </a>
     <button id="compareBtn" class="compare-btn" onclick="toggleCompare()">
       <span class="compare-dot"></span>
       <span id="compareLabel">전년 대비 보기</span>
