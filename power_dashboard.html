@@ -98,19 +98,6 @@
   .source-btn:hover { background: var(--blue-mid); border-color: var(--blue-mid); }
   .source-btn svg { width: 13px; height: 13px; fill: currentColor; }
 
-  .compare-hint {
-    display: none; font-size: 11px; color: var(--gray-600);
-    margin: -8px 0 16px; padding: 7px 12px;
-    background: var(--gray-50); border-radius: var(--radius-sm);
-    border-left: 3px solid var(--gray-400);
-  }
-  .compare-hint.visible { display: block; }
-  .compare-hint .dash-icon {
-    display: inline-block; width: 18px; height: 2px;
-    background: repeating-linear-gradient(to right, var(--gray-400) 0 4px, transparent 4px 7px);
-    vertical-align: middle; margin: 0 4px;
-  }
-
   .mc-delta {
     font-size: 11px; font-weight: 600; margin-top: 5px;
     display: inline-block; padding: 2px 7px; border-radius: 10px;
@@ -315,10 +302,6 @@
       <span id="compareLabel">전년 대비 보기</span>
     </button>
   </div>
-  <div id="compareHint" class="compare-hint">
-    비교 대상: <b><span id="compareHintYear">2025</span>년 동기</b> · 메트릭 카드 = 증감률 · 차트 <span class="dash-icon"></span> 회색 점선 = 전년 동월 데이터
-  </div>
-
   <div id="statusBanner" class="status-banner"></div>
 
   <div class="tabs">
@@ -677,14 +660,10 @@ function setDashYear(y) {
 
 function syncCompareUI() {
   const btn = document.getElementById('compareBtn');
-  const hint = document.getElementById('compareHint');
-  const hintYear = document.getElementById('compareHintYear');
   const label = document.getElementById('compareLabel');
   const hasPrev = !!(data[dashYear - 1] && data[dashYear - 1].length);
   btn.classList.toggle('active', compareMode && hasPrev);
   label.textContent = compareMode ? '전년 대비 켜짐' : '전년 대비 보기';
-  hintYear.textContent = (dashYear - 1);
-  hint.classList.toggle('visible', compareMode && hasPrev);
   btn.disabled = !hasPrev;
   btn.title = hasPrev ? '' : `${dashYear - 1}년 데이터가 없어 비교할 수 없습니다`;
   btn.style.opacity = hasPrev ? '' : '0.5';
@@ -712,7 +691,6 @@ function showTab(name) {
   document.getElementById(name).classList.add('active');
   const onDash = name === 'dashboard';
   document.getElementById('compareBtn').style.display = onDash ? '' : 'none';
-  document.getElementById('compareHint').classList.toggle('visible', onDash && compareMode && !!(data[dashYear - 1] && data[dashYear - 1].length));
   if (onDash) { updateMetrics(); setTimeout(updateCharts, 50); }
   if (name === 'table') { buildYearTabs('tableYearTabs', tableYear, 'setTableYear'); updateTable(); }
 }
