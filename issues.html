@@ -187,12 +187,33 @@ const DB = {
   }
 };
 
+// 값이 "비어있다"는 판단: null, 빈 배열, 빈 객체
+function _isEmptySafetyValue(v){
+  if(v === null || v === undefined) return true;
+  if(Array.isArray(v)) return v.length === 0;
+  if(typeof v === 'object') return Object.keys(v).length === 0;
+  return false;
+}
+
 async function loadFromSupabase(){
   if(!supaClient) return;
   try{
     const {data, error} = await supaClient.from('safety_store').select('*');
     if(error) throw error;
-    if(data) data.forEach(row => localStorage.setItem('safety_'+row.key, JSON.stringify(row.value)));
+    if(data) data.forEach(row => {
+      // 가드: 원격이 비어있고 로컬에 데이터가 있으면 덮어쓰지 않음 (데이터 소실 방지)
+      const localRaw = localStorage.getItem('safety_'+row.key);
+      if(_isEmptySafetyValue(row.value) && localRaw){
+        try{
+          const localVal = JSON.parse(localRaw);
+          if(!_isEmptySafetyValue(localVal)){
+            console.warn('[supaLoad 가드]', row.key, '원격 빈 값 감지 → 로컬 보존');
+            return;
+          }
+        }catch(e){}
+      }
+      localStorage.setItem('safety_'+row.key, JSON.stringify(row.value));
+    });
   }catch(e){ console.error('supaLoad:', e); }
 }
 

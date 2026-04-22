@@ -1106,7 +1106,7 @@ table tr:hover td{background:#f8fafc;}
       <div class="alert info">현장 비표는 설치 후 연 1회 이상 상태 점검 필요. 파손·퇴색 시 즉시 교체.</div>
       <div class="table-wrap">
         <table>
-          <thead><tr><th>설치 위치</th><th>비표 내용</th><th>색상 기준</th><th>설치일</th><th>최근 점검일</th><th>상태</th><th>관리</th></tr></thead>
+          <thead><tr><th style="min-width:160px;white-space:nowrap;">설치 위치</th><th>비표 내용</th><th style="white-space:nowrap;">색상 기준</th><th style="white-space:nowrap;">설치일</th><th style="white-space:nowrap;">최근 점검일</th><th style="white-space:nowrap;">상태</th><th style="width:78px;white-space:nowrap;">관리</th></tr></thead>
           <tbody id="signs-table-body"></tbody>
         </table>
       </div>
@@ -1285,12 +1285,31 @@ function initSupabase(url, key) {
   }
 }
 
+// 값이 "비어있다"는 판단: null, 빈 배열, 빈 객체
+function _isEmptySafetyValue(v){
+  if(v === null || v === undefined) return true;
+  if(Array.isArray(v)) return v.length === 0;
+  if(typeof v === 'object') return Object.keys(v).length === 0;
+  return false;
+}
+
 async function supaLoadAll() {
   if (!supaClient) return;
   try {
     const { data } = await supaClient.from('safety_store').select('*');
     if (!data) return;
     data.forEach(row => {
+      // 가드: 원격이 비어있고 로컬에 데이터가 있으면 덮어쓰지 않음 (데이터 소실 방지)
+      const localRaw = localStorage.getItem('safety_' + row.key);
+      if(_isEmptySafetyValue(row.value) && localRaw){
+        try{
+          const localVal = JSON.parse(localRaw);
+          if(!_isEmptySafetyValue(localVal)){
+            console.warn('[supaLoad 가드]', row.key, '원격 빈 값 감지 → 로컬 보존');
+            return;
+          }
+        }catch(e){}
+      }
       localStorage.setItem('safety_' + row.key, JSON.stringify(row.value));
     });
   } catch(e) { console.error('supaLoad 오류:', e); }
@@ -4098,12 +4117,12 @@ function renderSigns(){
       miniSign = `<div style="width:28px;height:22px;border-radius:3px;background:#2E7D32;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="color:#fff;font-size:12px;">🚪</span></div>`;
     }
     return `<tr>
-      <td>
+      <td style="white-space:nowrap;">
         <div style="display:flex;align-items:center;gap:8px;">
           ${miniSign}
           <div>
-            <div style="font-weight:600;font-size:13px;">${s.location}</div>
-            <a href="safety_signs_print.html#${s.id}" target="_blank" style="font-size:10px;color:#1e5096;text-decoration:none;">🖨️ 인쇄용 보기</a>
+            <div style="font-weight:600;font-size:13px;white-space:nowrap;">${s.location}</div>
+            <a href="safety_signs_print.html#${s.id}" target="_blank" style="font-size:10px;color:#1e5096;text-decoration:none;white-space:nowrap;">🖨️ 인쇄용 보기</a>
           </div>
         </div>
       </td>
@@ -4122,9 +4141,11 @@ function renderSigns(){
           <option value="교체필요" ${s.status==='교체필요'?'selected':''}>⚠️ 교체필요</option>
         </select>
       </td>
-      <td style="display:flex;flex-direction:column;gap:4px;">
-        <button class="btn btn-outline btn-sm" onclick="editSignMemo('${s.id}')" style="font-size:10px;">📝 메모</button>
-        <label class="btn btn-outline btn-sm" style="font-size:10px;cursor:pointer;margin:0;">📷 사진<input type="file" accept="image/*" style="display:none;" onchange="uploadSignImage('${s.id}',this)"></label>
+      <td style="white-space:nowrap;">
+        <div style="display:flex;flex-direction:column;gap:4px;align-items:stretch;">
+          <button class="btn btn-outline btn-sm" onclick="editSignMemo('${s.id}')" style="font-size:10px;white-space:nowrap;">📝 메모</button>
+          <label class="btn btn-outline btn-sm" style="font-size:10px;cursor:pointer;margin:0;white-space:nowrap;text-align:center;">📷 사진<input type="file" accept="image/*" style="display:none;" onchange="uploadSignImage('${s.id}',this)"></label>
+        </div>
       </td>
     </tr>`;
   }).join('');
