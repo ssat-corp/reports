@@ -45,6 +45,8 @@ body{font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif
 label.field{display:block;margin-bottom:16px;}
 label.field > .lb{display:flex;align-items:center;gap:10px;font-size:15px;font-weight:700;color:#a8a29e;margin-bottom:10px;letter-spacing:-0.015em;transition:color 0.2s;}
 label.field > .lb .no{display:inline-flex;align-items:center;justify-content:center;min-width:34px;height:24px;padding:0 8px;background:#fafaf9;border:1px solid #d6d3d1;color:#a8a29e;font-size:11px;font-weight:800;letter-spacing:0.08em;border-radius:3px;transition:all 0.2s;font-feature-settings:"tnum";}
+label.field > .lb .lb-hint{margin-left:6px;font-size:12px;font-weight:500;color:#a8a29e;letter-spacing:normal;}
+label.field.filled > .lb .lb-hint{color:#a8a29e;}
 label.field > .hint{display:block;font-size:12px;color:#a8a29e;margin-top:6px;transition:color 0.2s;}
 label.field.filled > .lb{color:#1c1917;}
 label.field.filled > .lb .no{background:#1c1917;color:#fff;border-color:#1c1917;}
@@ -176,18 +178,16 @@ label.field.filled input::placeholder, label.field.filled textarea::placeholder{
       </label>
       <label class="field">
         <span class="lb"><span class="no">03</span> 담당자</span>
-        <input type="text" id="f-lecturer" placeholder="이름">
-        <span class="hint">관리감독자 · 파트장 · 조장</span>
+        <input type="text" id="f-lecturer" placeholder="이름 (관리감독자 : 팀장, 파트장, 조장)">
       </label>
       <label class="field">
-        <span class="lb"><span class="no">04</span> 참석 / 총원</span>
+        <span class="lb"><span class="no">04</span> 참석 / 총원 <span class="lb-hint">휴가자 제외 인원 기재</span></span>
         <div class="inline-2">
           <input type="number" id="f-attended" placeholder="참석" min="0">
           <span class="sep">/</span>
           <input type="number" id="f-total" placeholder="총원" min="0">
           <span class="unit">명</span>
         </div>
-        <span class="hint">휴가자 제외 인원 기재</span>
       </label>
 
       <div class="section-title"><span class="roman">II.</span><span class="label">안전 수칙 · 위험요인</span></div>
