@@ -10,6 +10,7 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
 *{margin:0;padding:0;box-sizing:border-box;}
+html{scrollbar-gutter:stable;}
 body{font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;background:#f5f5f4;color:#1c1917;min-height:100vh;font-size:13px;}
 
 .page-header{color:#fff;padding:20px 18px 18px;box-shadow:0 1px 0 #1c1917;position:relative;background:#292524;border-bottom:3px solid #1c1917;}
@@ -251,6 +252,10 @@ body.printing #print-form{display:block;padding:14px;max-width:210mm;margin:0 au
         <div class="cal-grid" id="cal-grid"></div>
         <div style="margin-top:10px;font-size:12px;color:#78716c;line-height:1.6;">
           날짜를 클릭하면 그 날의 팀별 기록이 나오고, 각 기록을 눌러 인쇄용 양식으로 출력할 수 있습니다.
+        </div>
+        <div style="margin-top:14px;padding-top:12px;border-top:1px dashed #d6d3d1;">
+          <button type="button" class="btn btn-outline btn-sm" onclick="previewPrintSample()" style="font-size:12px;">인쇄 양식 샘플 보기</button>
+          <span style="margin-left:8px;font-size:11px;color:#a8a29e;">실제 기록 없이 미리보기</span>
         </div>
       </div>
     </div>
@@ -767,8 +772,36 @@ function closeDayModal(){
   document.body.style.overflow = '';
 }
 
-function preparePrint(recordId){
-  const rec = getTbmRecords().find(r => r.id === recordId);
+function previewPrintSample(){
+  const sample = {
+    id: 'sample',
+    team: 'injection_day',
+    teamLabel: '사출팀 (주간)',
+    process: 'injection',
+    date: new Date().toISOString().split('T')[0],
+    time: '08:45',
+    lecturer: '홍길동',
+    attended: 10,
+    total: 12,
+    tbmNo: 7,
+    tbmTitle: '분쇄기 끼임 사고 예방',
+    tbmMessage: '불량품 분쇄 시 투입구 내부로 손을 넣지 말고 전용 막대를 사용하세요.',
+    riskIdx: 3,
+    riskCategory: '기계설비',
+    riskText: '분쇄기 가동 중 손가락 말림',
+    measureText: '투입구 방호 덮개 설치 및 긴 도구 활용',
+    freeNote: '(샘플 양식) 현장에서 기재한 자유 의견이 이 영역에 들어갑니다. 여러 줄도 지원됩니다.',
+    photoUrl: '',
+    photoPath: '',
+    createdAt: new Date().toISOString()
+  };
+  preparePrint(sample);
+}
+
+function preparePrint(recordOrId){
+  const rec = (typeof recordOrId === 'object' && recordOrId !== null)
+    ? recordOrId
+    : getTbmRecords().find(r => r.id === recordOrId);
   if(!rec) return;
   const m = TEAM_META[rec.team] || {label:rec.teamLabel||rec.team, code:'TBM'};
   const pf = document.getElementById('print-form');
