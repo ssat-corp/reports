@@ -122,11 +122,12 @@ textarea{resize:vertical;min-height:90px;line-height:1.55;}
 .issue-card .del-btn:hover{background:#fee2e2;}
 
 /* 사진 업로드 */
-.photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px;margin-top:10px;}
+.photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;margin-top:10px;}
 .photo-item{position:relative;border:1px solid #d6d3d1;border-radius:3px;overflow:hidden;aspect-ratio:1;background:#fafaf9;}
 .photo-item img{width:100%;height:100%;object-fit:cover;cursor:pointer;}
-.photo-item .rm{position:absolute;top:4px;right:4px;width:22px;height:22px;border-radius:50%;background:rgba(28,25,23,0.75);color:#fff;border:none;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;}
+.photo-item .rm{position:absolute;top:5px;right:5px;width:28px;height:28px;border-radius:50%;background:rgba(28,25,23,0.85);color:#fff;border:2px solid #fff;cursor:pointer;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(0,0,0,0.25);}
 .photo-item .rm:hover{background:#991b1b;}
+.photo-item .ph-idx{position:absolute;bottom:4px;left:4px;font-size:10px;font-weight:800;letter-spacing:0.08em;color:#fff;background:rgba(28,25,23,0.75);padding:2px 7px;border-radius:2px;}
 .photo-btn-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
 .photo-add{border:2px dashed #a8a29e;border-radius:3px;padding:16px 12px;text-align:center;cursor:pointer;background:#fafaf9;display:block;color:#78716c;font-size:13px;font-weight:700;transition:all 0.15s;letter-spacing:0.02em;}
 .photo-add:hover{border-color:#292524;color:#292524;background:#fff;}
@@ -236,18 +237,21 @@ textarea{resize:vertical;min-height:90px;line-height:1.55;}
     <div id="issues-container"></div>
     <button type="button" class="btn btn-outline btn-sm" onclick="addIssueRow()" style="margin-top:6px;">+ 지적사항 추가</button>
 
-    <div class="section-title"><span class="roman">V.</span>현장 사진</div>
+    <div class="section-title"><span class="roman">V.</span>현장 사진 <span id="photo-count" style="margin-left:auto;font-size:11px;font-weight:700;letter-spacing:0.05em;color:#44403c;text-transform:none;"></span></div>
     <div class="photo-btn-row">
       <label class="photo-add cam">
-        <div class="pa-main">사진 촬영</div>
-        <div class="pa-sub">카메라 바로 열기</div>
+        <div class="pa-main">+ 사진 촬영</div>
+        <div class="pa-sub">카메라 열기 · 여러 번 촬영 가능</div>
         <input type="file" accept="image/*" capture="environment" onchange="onPhotosPicked(this)">
       </label>
       <label class="photo-add">
-        <div class="pa-main">갤러리에서 선택</div>
-        <div class="pa-sub">여러 장 가능</div>
+        <div class="pa-main">+ 갤러리에서 추가</div>
+        <div class="pa-sub">여러 장 동시 선택</div>
         <input type="file" id="f-photos" accept="image/*" multiple onchange="onPhotosPicked(this)">
       </label>
+    </div>
+    <div style="font-size:11px;color:#a8a29e;margin-top:8px;line-height:1.5;">
+      촬영·선택할 때마다 아래 목록에 누적됩니다. 개별 사진 오른쪽 상단 <strong>✕</strong> 버튼으로 삭제할 수 있어요.
     </div>
     <div class="photo-grid" id="photo-preview"></div>
 
@@ -560,9 +564,12 @@ async function onPhotosPicked(input){
 }
 function renderPhotoPreview(){
   const el = document.getElementById('photo-preview');
+  const cnt = document.getElementById('photo-count');
+  if(cnt) cnt.textContent = state.photos.length ? `· ${state.photos.length}장 첨부됨` : '';
   el.innerHTML = state.photos.map((p,i) => `<div class="photo-item">
     <img src="${p.url}" onclick="openPhotoLightbox('${p.url}')" alt="${escapeAttr(p.name||'')}">
-    <button type="button" class="rm" onclick="removePhoto(${i})">✕</button>
+    <button type="button" class="rm" onclick="removePhoto(${i})" title="이 사진 삭제">✕</button>
+    <div class="ph-idx">${i+1}</div>
   </div>`).join('');
 }
 async function removePhoto(i){
