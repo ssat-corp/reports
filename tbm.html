@@ -24,6 +24,14 @@ body{font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
 
 .container{max-width:720px;margin:0 auto;padding:16px 14px 60px;}
+.container.wide{max-width:1180px;}
+/* 팀 선택 뷰 레이아웃 — 모바일 세로, PC 2단 (왼쪽: 팀/안내, 오른쪽: 캘린더) */
+#view-select.select-layout{display:none;}
+#view-select.select-layout.shown{display:block;}
+#view-select.select-layout .col-left, #view-select.select-layout .col-right{min-width:0;}
+@media(min-width:960px){
+  #view-select.select-layout.shown{display:grid;grid-template-columns:minmax(380px,1fr) minmax(480px,1.2fr);gap:16px;align-items:start;}
+}
 
 .card{background:#fff;border:1px solid #d6d3d1;border-radius:4px;padding:22px 18px;margin-bottom:14px;box-shadow:none;}
 @media(min-width:600px){.card{padding:32px 34px;}}
@@ -114,12 +122,84 @@ label.field.filled input::placeholder, label.field.filled textarea::placeholder{
 
 .thumb{width:54px;height:54px;object-fit:cover;border-radius:4px;border:1px solid #d6d3d1;cursor:pointer;flex-shrink:0;}
 
+/* ===== 월별 캘린더 (관리자용) ===== */
+.cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.cal-nav button{background:#fff;border:1px solid #a8a29e;color:#1c1917;padding:6px 14px;font-size:14px;font-weight:700;border-radius:3px;cursor:pointer;}
+.cal-nav button:hover{background:#f5f5f4;}
+.cal-nav .month-label{font-size:16px;font-weight:900;color:#1c1917;letter-spacing:-0.01em;}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;background:#d6d3d1;border:1px solid #d6d3d1;}
+.cal-grid .cal-dow{background:#292524;color:#fff;font-size:11px;font-weight:700;text-align:center;padding:8px 0;letter-spacing:0.12em;}
+.cal-grid .cal-dow.sun{color:#fca5a5;}
+.cal-grid .cal-dow.sat{color:#93c5fd;}
+.cal-day{background:#fff;min-height:84px;padding:6px;display:flex;flex-direction:column;cursor:pointer;transition:background 0.15s;position:relative;}
+.cal-day:hover{background:#fafaf9;}
+.cal-day.empty{background:#f5f5f4;cursor:default;}
+.cal-day.today{background:#fafaf9;outline:2px solid #1c1917;outline-offset:-2px;}
+.cal-day .d-num{font-size:13px;font-weight:800;color:#1c1917;}
+.cal-day.sun .d-num{color:#dc2626;}
+.cal-day.sat .d-num{color:#2563eb;}
+.cal-day .d-badges{margin-top:4px;display:flex;flex-wrap:wrap;gap:3px;}
+.cal-day .t-pill{font-size:9px;font-weight:800;letter-spacing:0.05em;padding:1px 5px;border:1px solid #1c1917;background:#1c1917;color:#fff;border-radius:2px;}
+.cal-day .t-pill.has-photo{background:#44403c;}
+.cal-day .d-count{margin-top:auto;font-size:9px;color:#78716c;font-weight:700;}
+
+/* ===== 날짜 상세 모달 ===== */
+.day-modal{position:fixed;inset:0;background:rgba(28,25,23,0.55);z-index:900;display:none;align-items:flex-start;justify-content:center;padding:30px 16px;overflow-y:auto;}
+.day-modal.show{display:flex;}
+.day-modal-inner{background:#fff;border:1px solid #1c1917;border-radius:4px;max-width:700px;width:100%;}
+.day-modal-title{padding:14px 20px;border-bottom:2px solid #1c1917;display:flex;justify-content:space-between;align-items:center;}
+.day-modal-title .d-big{font-size:18px;font-weight:900;color:#1c1917;letter-spacing:-0.02em;}
+.day-modal-title button{background:none;border:none;font-size:22px;cursor:pointer;color:#78716c;padding:0 4px;line-height:1;}
+.day-modal-body{padding:16px 20px 20px;}
+.team-row{border:1px solid #d6d3d1;border-radius:3px;margin-bottom:10px;overflow:hidden;}
+.team-row .tr-head{background:#fafaf9;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #e7e5e4;}
+.team-row .tr-head .tr-code{font-size:11px;font-weight:800;letter-spacing:0.15em;color:#44403c;padding:2px 8px;border:1px solid #d6d3d1;background:#fff;border-radius:2px;}
+.team-row .tr-head .tr-name{font-size:15px;font-weight:800;color:#1c1917;margin-left:8px;flex:1;}
+.team-row .tr-head .tr-status{font-size:11px;font-weight:700;padding:3px 10px;border-radius:2px;letter-spacing:0.05em;}
+.team-row .tr-head .tr-status.done{background:#1c1917;color:#fff;}
+.team-row .tr-head .tr-status.empty{background:#f5f5f4;color:#a8a29e;border:1px solid #d6d3d1;}
+.team-row .tr-body{padding:12px 14px;font-size:13px;color:#292524;line-height:1.6;}
+.team-row .tr-body .kv{display:flex;gap:8px;padding:3px 0;}
+.team-row .tr-body .kv .k{min-width:86px;font-size:11px;font-weight:700;letter-spacing:0.08em;color:#78716c;text-transform:uppercase;padding-top:2px;}
+.team-row .tr-body .kv .v{flex:1;color:#1c1917;}
+.team-row .tr-body .empty-msg{color:#a8a29e;font-style:italic;padding:6px 0;}
+.team-row .tr-body .print-btn{margin-top:10px;padding:8px 16px;background:#292524;color:#fff;border:none;border-radius:3px;font-size:12px;font-weight:700;cursor:pointer;letter-spacing:0.08em;}
+.team-row .tr-body .print-btn:hover{background:#1c1917;}
+
+/* ===== 인쇄용 양식 (단일 일지 · A4 한 장) ===== */
+#print-form{display:none;}
+body.printing > *:not(#print-form):not(#print-bar){display:none !important;}
+body.printing{background:#fff;padding-top:52px;}
+body.printing #print-form{display:block;padding:14px;max-width:210mm;margin:0 auto;}
+#print-form .pf-sheet{color:#000;font-size:10pt;line-height:1.45;}
+#print-form .pf-head{border-bottom:2.5pt solid #000;padding-bottom:6pt;margin-bottom:10pt;display:flex;justify-content:space-between;align-items:flex-end;}
+#print-form .pf-head .pf-doc{font-size:8pt;font-weight:700;letter-spacing:0.2em;border:1pt solid #000;padding:1pt 7pt;display:inline-block;margin-bottom:4pt;}
+#print-form .pf-head .pf-title{font-size:17pt;font-weight:900;letter-spacing:-0.02em;line-height:1.2;}
+#print-form .pf-head .pf-date{font-size:10pt;text-align:right;white-space:nowrap;}
+#print-form .pf-sec{font-size:9pt;font-weight:800;letter-spacing:0.22em;border-bottom:1pt solid #000;padding:4pt 0 3pt;margin:10pt 0 5pt;text-transform:uppercase;color:#000;}
+#print-form .pf-sec:first-of-type{margin-top:0;}
+#print-form .pf-kv{display:flex;padding:3pt 0;border-bottom:0.5pt dotted #aaa;min-height:14pt;}
+#print-form .pf-kv .k{width:28%;font-weight:700;font-size:9pt;letter-spacing:0.04em;color:#333;padding-top:1pt;}
+#print-form .pf-kv .v{flex:1;font-size:10.5pt;color:#000;word-break:break-word;}
+#print-form .pf-free{border:1pt solid #000;padding:6pt 8pt;min-height:36pt;margin-top:4pt;font-size:10pt;line-height:1.5;white-space:pre-wrap;}
+#print-form .pf-photo{margin-top:5pt;float:right;}
+#print-form .pf-photo img{max-width:42mm;max-height:32mm;border:1pt solid #000;display:block;}
+#print-form .pf-sign{margin-top:12pt;display:flex;gap:10pt;clear:both;}
+#print-form .pf-sign .sign-box{flex:1;border:1pt solid #000;padding:6pt 9pt 24pt;position:relative;min-height:54pt;}
+#print-form .pf-sign .sign-box .sl{font-size:8pt;font-weight:800;letter-spacing:0.18em;color:#333;margin-bottom:4pt;text-transform:uppercase;}
+#print-form .pf-sign .sign-box .sn{font-size:11pt;font-weight:700;min-height:16pt;color:#000;}
+#print-form .pf-sign .sign-box .sb{position:absolute;right:8pt;bottom:6pt;font-size:8pt;color:#666;}
+#print-form .pf-sign .sign-box input{width:100%;border:none;border-bottom:0.5pt solid #000;padding:1pt 0;font-size:11pt;font-weight:700;font-family:inherit;color:#000;background:transparent;}
+#print-form .pf-footer{margin-top:8pt;padding-top:6pt;border-top:0.5pt solid #999;font-size:8pt;color:#666;text-align:center;letter-spacing:0.05em;}
+
 @media print{
-  .no-print{display:none!important;}
-  body{background:#fff;}
-  .page-header{background:#292524!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
-  .card{box-shadow:none!important;border:1px solid #000!important;break-inside:avoid;}
-  @page{size:A4 portrait;margin:10mm;}
+  .no-print, #print-bar{display:none!important;}
+  body{background:#fff;padding:0 !important;}
+  body.printing #print-form{padding:0 !important;max-width:none;}
+  #print-form .pf-sheet{font-size:10pt;}
+  #print-form .pf-head .pf-title{font-size:16pt;}
+  @page{size:A4 portrait;margin:10mm 12mm;}
+  #print-form, #print-form *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important;}
 }
 </style>
 </head>
@@ -144,17 +224,34 @@ label.field.filled input::placeholder, label.field.filled textarea::placeholder{
   </div>
 
   <!-- ============ 팀 미선택: 선택 화면 ============ -->
-  <div id="view-select" style="display:none;">
-    <div class="card">
-      <div class="card-title">팀 선택</div>
-      <div style="font-size:16px;color:#57534e;margin-bottom:16px;line-height:1.6;">
-        각 팀은 전용 링크(QR)로 접근해 본인 팀의 TBM 일지만 작성합니다.
+  <div id="view-select" class="select-layout">
+    <div class="col-left">
+      <div class="card">
+        <div class="card-title">팀 선택</div>
+        <div style="font-size:16px;color:#57534e;margin-bottom:16px;line-height:1.6;">
+          각 팀은 전용 링크(QR)로 접근해 본인 팀의 TBM 일지만 작성합니다.
+        </div>
+        <div class="team-select-grid" id="team-select-grid"></div>
       </div>
-      <div class="team-select-grid" id="team-select-grid"></div>
+      <div class="card" style="background:#fafaf9;">
+        <div style="font-size:14px;color:#44403c;line-height:1.7;">
+          <strong>안내</strong> &nbsp;—&nbsp; 각 팀의 담당자는 위 카드를 눌러 해당 팀 전용 일지 페이지로 이동하거나, 관리자가 제공한 QR 코드를 통해 접속합니다.
+        </div>
+      </div>
     </div>
-    <div class="card" style="background:#fafaf9;">
-      <div style="font-size:14px;color:#44403c;line-height:1.7;">
-        <strong>안내</strong> &nbsp;—&nbsp; 각 팀의 담당자는 위 카드를 눌러 해당 팀 전용 일지 페이지로 이동하거나, 관리자가 제공한 QR 코드를 통해 접속합니다.
+    <div class="col-right">
+      <!-- 월별 캘린더 (관리자용) -->
+      <div class="card">
+        <div class="card-title">TBM 기록 캘린더</div>
+        <div class="cal-nav">
+          <button type="button" onclick="calPrev()">◀</button>
+          <span class="month-label" id="cal-month-label"></span>
+          <button type="button" onclick="calNext()">▶</button>
+        </div>
+        <div class="cal-grid" id="cal-grid"></div>
+        <div style="margin-top:10px;font-size:12px;color:#78716c;line-height:1.6;">
+          날짜를 클릭하면 그 날의 팀별 기록이 나오고, 각 기록을 눌러 인쇄용 양식으로 출력할 수 있습니다.
+        </div>
       </div>
     </div>
   </div>
@@ -244,6 +341,20 @@ label.field.filled input::placeholder, label.field.filled textarea::placeholder{
   </div>
 
 </div>
+
+<!-- 날짜 상세 모달 (body 직계) -->
+<div class="day-modal" id="day-modal" onclick="if(event.target.id==='day-modal') closeDayModal()">
+  <div class="day-modal-inner">
+    <div class="day-modal-title">
+      <span class="d-big" id="day-modal-date"></span>
+      <button type="button" onclick="closeDayModal()">✕</button>
+    </div>
+    <div class="day-modal-body" id="day-modal-body"></div>
+  </div>
+</div>
+
+<!-- 인쇄용 단일 일지 양식 (body 직계) -->
+<div id="print-form"></div>
 
 <script>
 // ============================================================
@@ -552,6 +663,215 @@ function renderTeamSelectView(){
   }).join('');
 }
 
+// ============================================================
+// 관리자용 월별 캘린더 + 날짜 상세 모달 + 인쇄
+// ============================================================
+let calCurrent = new Date();
+function calPrev(){ calCurrent.setMonth(calCurrent.getMonth()-1); renderTbmCalendar(); }
+function calNext(){ calCurrent.setMonth(calCurrent.getMonth()+1); renderTbmCalendar(); }
+
+function renderTbmCalendar(){
+  const grid = document.getElementById('cal-grid');
+  const label = document.getElementById('cal-month-label');
+  if(!grid || !label) return;
+  const y = calCurrent.getFullYear();
+  const m = calCurrent.getMonth();
+  label.textContent = `${y}년 ${m+1}월`;
+  const first = new Date(y, m, 1);
+  const firstDow = first.getDay();
+  const daysInMonth = new Date(y, m+1, 0).getDate();
+  const today = new Date();
+  const todayYmd = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+
+  const records = getTbmRecords();
+  const byDate = {};
+  records.forEach(r => {
+    if(!byDate[r.date]) byDate[r.date] = [];
+    byDate[r.date].push(r);
+  });
+
+  const dow = ['일','월','화','수','목','금','토'];
+  let html = dow.map((d,i)=>`<div class="cal-dow ${i===0?'sun':''}${i===6?'sat':''}">${d}</div>`).join('');
+  for(let i=0;i<firstDow;i++) html += `<div class="cal-day empty"></div>`;
+  for(let d=1;d<=daysInMonth;d++){
+    const ymd = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const day = new Date(y,m,d).getDay();
+    const dayRecs = byDate[ymd] || [];
+    const dayClass = ['cal-day'];
+    if(day===0) dayClass.push('sun');
+    if(day===6) dayClass.push('sat');
+    if(ymd===todayYmd) dayClass.push('today');
+    const pills = Object.keys(TEAM_META).map(code => {
+      const rec = dayRecs.find(r => r.team === code);
+      if(!rec) return '';
+      const photoCls = rec.photoUrl ? ' has-photo' : '';
+      return `<span class="t-pill${photoCls}" title="${TEAM_META[code].label}${rec.photoUrl?' · 사진':''}">${TEAM_META[code].num}</span>`;
+    }).join('');
+    const countTxt = dayRecs.length ? `${dayRecs.length}/4` : '';
+    html += `<div class="${dayClass.join(' ')}" onclick="openDayModal('${ymd}')">
+      <div class="d-num">${d}</div>
+      <div class="d-badges">${pills}</div>
+      ${countTxt?`<div class="d-count">${countTxt}</div>`:''}
+    </div>`;
+  }
+  grid.innerHTML = html;
+}
+
+function openDayModal(ymd){
+  const records = getTbmRecords().filter(r => r.date === ymd);
+  const byTeam = {};
+  records.forEach(r => { if(!byTeam[r.team]) byTeam[r.team] = r; }); // 한 팀당 최초 기록
+  const titleEl = document.getElementById('day-modal-date');
+  const bodyEl = document.getElementById('day-modal-body');
+  const dateObj = new Date(ymd + 'T00:00:00');
+  const dowKo = ['일','월','화','수','목','금','토'][dateObj.getDay()];
+  titleEl.textContent = `${ymd} (${dowKo}) · 팀별 TBM 기록`;
+  bodyEl.innerHTML = Object.keys(TEAM_META).map(code => {
+    const m = TEAM_META[code];
+    const rec = byTeam[code];
+    if(!rec){
+      return `<div class="team-row">
+        <div class="tr-head">
+          <div style="display:flex;align-items:center;flex:1;">
+            <span class="tr-code">${m.code}</span>
+            <span class="tr-name">${m.label}</span>
+          </div>
+          <span class="tr-status empty">미기록</span>
+        </div>
+      </div>`;
+    }
+    return `<div class="team-row">
+      <div class="tr-head">
+        <div style="display:flex;align-items:center;flex:1;">
+          <span class="tr-code">${m.code}</span>
+          <span class="tr-name">${m.label}</span>
+        </div>
+        <span class="tr-status done">기록 완료${rec.photoUrl?' · 사진':''}</span>
+      </div>
+      <div class="tr-body">
+        <div class="kv"><span class="k">시간</span><span class="v">${escapeHtml(rec.time||'-')}</span></div>
+        <div class="kv"><span class="k">담당자</span><span class="v">${escapeHtml(rec.lecturer||'-')}</span></div>
+        <div class="kv"><span class="k">참석/총원</span><span class="v">${rec.attended||0} / ${rec.total||0} 명</span></div>
+        <div class="kv"><span class="k">TBM 명</span><span class="v">${escapeHtml(rec.tbmTitle||'-')}</span></div>
+        <div class="kv"><span class="k">유해위험요인</span><span class="v">${escapeHtml(rec.riskText||'-')} <span class="cat-chip" style="margin-left:0;">${escapeHtml(rec.riskCategory||'')}</span></span></div>
+        ${(rec.freeNote||'').trim()?`<div class="kv"><span class="k">자유 기재</span><span class="v">${escapeHtml(rec.freeNote)}</span></div>`:''}
+        <button type="button" class="print-btn" onclick="preparePrint(${rec.id})">이 기록 인쇄용 보기</button>
+      </div>
+    </div>`;
+  }).join('');
+  document.getElementById('day-modal').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+function closeDayModal(){
+  document.getElementById('day-modal').classList.remove('show');
+  document.body.style.overflow = '';
+}
+
+function preparePrint(recordId){
+  const rec = getTbmRecords().find(r => r.id === recordId);
+  if(!rec) return;
+  const m = TEAM_META[rec.team] || {label:rec.teamLabel||rec.team, code:'TBM'};
+  const pf = document.getElementById('print-form');
+  const dateObj = new Date(rec.date + 'T00:00:00');
+  const dowKo = ['일','월','화','수','목','금','토'][dateObj.getDay()];
+  pf.innerHTML = `<div class="pf-sheet">
+    <div class="pf-head">
+      <div>
+        <div class="pf-doc">${m.code}</div>
+        <div class="pf-title">${escapeHtml(m.label)} · TBM 일지</div>
+      </div>
+      <div class="pf-date">
+        <div>${rec.date} (${dowKo})</div>
+        <div style="font-size:10pt;color:#666;">${escapeHtml(rec.time||'')}</div>
+      </div>
+    </div>
+
+    <div class="pf-sec">I. 기본 정보</div>
+    <div class="pf-kv"><span class="k">날짜</span><span class="v">${rec.date} (${dowKo})</span></div>
+    <div class="pf-kv"><span class="k">시간</span><span class="v">${escapeHtml(rec.time||'-')}</span></div>
+    <div class="pf-kv"><span class="k">담당자</span><span class="v">${escapeHtml(rec.lecturer||'-')}</span></div>
+    <div class="pf-kv"><span class="k">참석 / 총원</span><span class="v">${rec.attended||0} / ${rec.total||0} 명</span></div>
+
+    <div class="pf-sec">II. 안전 수칙 · 위험요인</div>
+    <div class="pf-kv"><span class="k">TBM 명</span><span class="v">${escapeHtml(rec.tbmTitle||'-')}</span></div>
+    <div class="pf-kv"><span class="k">주요 전달 사항</span><span class="v">${escapeHtml(rec.tbmMessage||'-')}</span></div>
+    <div class="pf-kv"><span class="k">유해위험요인</span><span class="v">[${escapeHtml(rec.riskCategory||'')}] ${escapeHtml(rec.riskText||'-')}</span></div>
+    <div class="pf-kv"><span class="k">감소 대책</span><span class="v">${escapeHtml(rec.measureText||'-')}</span></div>
+
+    <div class="pf-sec">III. 현장 기록</div>
+    <div class="pf-kv"><span class="k">자유 기재</span></div>
+    <div class="pf-free">${escapeHtml(rec.freeNote||'(기재 내용 없음)')}</div>
+    ${rec.photoUrl?`<div class="pf-photo"><img src="${rec.photoUrl}" alt="현장 사진"></div>`:''}
+
+    <div class="pf-sec">IV. 서명</div>
+    <div class="pf-sign">
+      <div class="sign-box">
+        <div class="sl">담당자 (기록자)</div>
+        <div class="sn">${escapeHtml(rec.lecturer||'')}</div>
+        <div class="sb">(인)</div>
+      </div>
+      <div class="sign-box">
+        <div class="sl">교육 실시자 (관리자)</div>
+        <input type="text" id="pf-trainer" placeholder="이름" value="">
+        <div class="sb">(인)</div>
+      </div>
+    </div>
+  </div>`;
+
+  // 인쇄 모드 진입: 다른 요소 모두 숨기고 print-form만 표시
+  document.body.classList.add('printing');
+  closeDayModal();
+
+  // 인쇄 전에 관리자 이름을 확인할 시간을 주되, 이 뷰에서 '인쇄' 버튼으로 바로 출력
+  // 상단에 임시 bar 삽입
+  const bar = document.createElement('div');
+  bar.id = 'print-bar';
+  bar.className = 'no-print';
+  bar.style.cssText = 'position:fixed;top:0;left:0;right:0;background:#292524;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;z-index:1200;';
+  bar.innerHTML = `
+    <div style="font-size:13px;">인쇄용 양식 — 교육 실시자 이름을 입력 후 인쇄하세요</div>
+    <div style="display:flex;gap:8px;">
+      <button type="button" onclick="doPrint()" style="background:#fff;color:#1c1917;border:none;padding:7px 16px;border-radius:3px;font-weight:800;cursor:pointer;font-size:12px;letter-spacing:0.08em;">인쇄</button>
+      <button type="button" onclick="exitPrint()" style="background:transparent;color:#fff;border:1px solid #fff;padding:7px 16px;border-radius:3px;font-weight:700;cursor:pointer;font-size:12px;">닫기</button>
+    </div>`;
+  document.body.appendChild(bar);
+  document.body.style.paddingTop = '52px';
+  window.scrollTo(0,0);
+}
+
+function doPrint(){
+  document.getElementById('print-bar')?.remove();
+  window.print();
+  // 인쇄 취소/완료 후 다시 bar 복원
+  setTimeout(() => {
+    if(document.body.classList.contains('printing')){
+      // 다시 bar 추가
+      const rec = (document.getElementById('print-form').querySelector('.pf-title')?.textContent) || '';
+      preparePrintBar();
+    }
+  }, 300);
+}
+function preparePrintBar(){
+  if(document.getElementById('print-bar')) return;
+  const bar = document.createElement('div');
+  bar.id = 'print-bar';
+  bar.className = 'no-print';
+  bar.style.cssText = 'position:fixed;top:0;left:0;right:0;background:#292524;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;z-index:1200;';
+  bar.innerHTML = `
+    <div style="font-size:13px;">인쇄용 양식 — 교육 실시자 이름을 입력 후 인쇄하세요</div>
+    <div style="display:flex;gap:8px;">
+      <button type="button" onclick="doPrint()" style="background:#fff;color:#1c1917;border:none;padding:7px 16px;border-radius:3px;font-weight:800;cursor:pointer;font-size:12px;letter-spacing:0.08em;">인쇄</button>
+      <button type="button" onclick="exitPrint()" style="background:transparent;color:#fff;border:1px solid #fff;padding:7px 16px;border-radius:3px;font-weight:700;cursor:pointer;font-size:12px;">닫기</button>
+    </div>`;
+  document.body.appendChild(bar);
+}
+function exitPrint(){
+  document.body.classList.remove('printing');
+  document.body.style.paddingTop = '';
+  document.getElementById('print-bar')?.remove();
+  document.getElementById('print-form').innerHTML = '';
+}
+
 function populateDropdowns(){
   const meta = TEAM_META[teamCode];
   const tbmSel = document.getElementById('f-tbm-no');
@@ -639,8 +959,19 @@ window.addEventListener('DOMContentLoaded', async () => {
   await loadFromSupabase();
 
   if(!teamCode || !TEAM_META[teamCode]){
-    document.getElementById('view-select').style.display = 'block';
+    document.getElementById('view-select').classList.add('shown');
+    document.querySelector('.container').classList.add('wide');
     renderTeamSelectView();
+    renderTbmCalendar();
+    // 관리자 뷰에서는 실시간 동기화 후에도 캘린더 갱신
+    if(supaClient){
+      supaClient.channel('tbm_daily_sync_admin')
+        .on('postgres_changes', {event:'*', schema:'public', table:'safety_store'}, async () => {
+          await loadFromSupabase();
+          renderTbmCalendar();
+        })
+        .subscribe();
+    }
     return;
   }
 
