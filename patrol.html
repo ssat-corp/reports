@@ -25,6 +25,24 @@ body{font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
 
 .container{max-width:760px;margin:0 auto;padding:16px 14px 60px;}
+.container.wide{max-width:1100px;}
+
+/* 사이트 선택 화면 */
+#view-select, #view-input{display:none;}
+#view-select.shown, #view-input.shown{display:block;}
+.site-grid{display:grid;grid-template-columns:1fr;gap:12px;margin-top:10px;}
+@media(min-width:640px){.site-grid{grid-template-columns:1fr 1fr;}}
+.site-card{display:block;padding:22px 20px;text-decoration:none;background:#fff;border:1px solid #d6d3d1;border-left:4px solid #44403c;border-radius:4px;color:#292524;transition:all 0.15s;position:relative;}
+.site-card:hover{background:#fafaf9;border-left-color:#292524;border-color:#78716c;}
+.site-card .sc-code{font-size:11px;font-weight:800;letter-spacing:0.22em;color:#78716c;}
+.site-card .sc-name{font-size:22px;font-weight:900;margin-top:6px;letter-spacing:-0.025em;color:#292524;}
+.site-card .sc-sub{font-size:12px;color:#78716c;margin-top:4px;font-weight:500;}
+.site-card .sc-stats{margin-top:14px;padding-top:12px;border-top:1px dashed #e7e5e4;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;}
+.site-card .sc-stats .pill{display:inline-block;font-size:11px;font-weight:800;padding:3px 10px;border-radius:2px;letter-spacing:0.05em;}
+.site-card .sc-stats .pill.ok{background:#e8e6e1;color:#44403c;border:1px solid #d6d3d1;}
+.site-card .sc-stats .pill.warn{background:#fefce8;color:#713f12;border:1px solid #e4dcc5;}
+.site-card .sc-stats .last{font-size:11px;color:#a8a29e;}
+.site-card .arrow{position:absolute;top:22px;right:20px;font-size:20px;color:#a8a29e;font-weight:300;}
 .card{background:#fff;border:1px solid #d6d3d1;border-radius:4px;padding:22px 18px;margin-bottom:14px;box-shadow:none;}
 @media(min-width:600px){.card{padding:30px 32px;}}
 .card-title{font-size:22px;font-weight:900;color:#292524;margin-bottom:22px;padding:2px 0 12px 16px;border-left:5px solid #292524;border-bottom:2px solid #292524;letter-spacing:-0.025em;line-height:1.25;}
@@ -143,11 +161,11 @@ textarea{resize:vertical;min-height:90px;line-height:1.55;}
 </head>
 <body>
 
-<div class="page-header">
+<div class="page-header" id="page-header">
   <div class="conn no-print"><span id="conn-dot" class="conn-dot"></span><span id="conn-text">연결 확인 중...</span></div>
-  <div class="doc-no">PTR-ENV</div>
-  <h1>환경운영점검표</h1>
-  <div class="sub">매주 금요일 실시 권장 · 월 1~2회 · 현장 환경·안전 순회 점검</div>
+  <div class="doc-no" id="h-code">PTR-ENV</div>
+  <h1 id="h-title">환경운영점검표</h1>
+  <div class="sub" id="h-sub">매주 금요일 실시 권장 · 월 1~2회 · 현장 환경·안전 순회 점검</div>
 </div>
 
 <div class="photo-lightbox" id="photo-lightbox" onclick="closePhotoLightbox()">
@@ -161,6 +179,23 @@ textarea{resize:vertical;min-height:90px;line-height:1.55;}
     <strong>※ 실시간 공유 연결 실패.</strong> 관리자에게 문의해주세요.
   </div>
 
+  <!-- ============ 사이트 미선택: 선택 화면 ============ -->
+  <div id="view-select">
+    <div class="card">
+      <div class="card-title">사업장 선택</div>
+      <div style="font-size:14px;color:#57534e;margin-bottom:4px;line-height:1.6;">
+        환경운영점검을 실시할 사업장을 선택하세요. 각 사업장은 월 2회 이상 점검이 권장됩니다.
+      </div>
+      <div class="site-grid" id="site-grid"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">전체 최근 점검 내역 <span id="overall-count" style="font-size:13px;font-weight:400;color:#78716c;letter-spacing:normal;"></span></div>
+      <div id="overall-recent"></div>
+    </div>
+  </div>
+
+  <!-- ============ 사이트 선택: 입력 화면 ============ -->
+  <div id="view-input">
   <div id="weekly-banner" class="warn-banner">
     <strong>※ 이번 주 환경점검이 아직 기록되지 않았습니다.</strong> 매주 금요일 기준 실시 권장.
   </div>
@@ -181,7 +216,7 @@ textarea{resize:vertical;min-height:90px;line-height:1.55;}
 
     <div class="section-title"><span class="roman">II.</span>구역별 체크리스트</div>
     <div style="font-size:12px;color:#78716c;margin-bottom:12px;line-height:1.6;">
-      각 항목을 OK / 불량 / N/A 로 표시하세요. 불량 선택 시 사유·처리방안 기재란이 자동으로 나타납니다.
+      각 항목을 <strong style="color:#44403c;">OK</strong> 또는 <strong style="color:#991b1b;">NG</strong> 로 체크하세요. NG를 선택하면 사유·조치 방안을 적는 칸이 자동으로 열립니다. 구역별로 모든 항목을 체크하면 자동으로 접혀서 남은 구역만 보입니다.
     </div>
     <div id="areas-container"></div>
 
@@ -210,6 +245,7 @@ textarea{resize:vertical;min-height:90px;line-height:1.55;}
     <div class="card-title">최근 점검 기록 <span id="recent-count" style="font-size:13px;font-weight:400;color:#78716c;letter-spacing:normal;"></span></div>
     <div id="recent-records"></div>
   </div>
+  </div><!-- /view-input -->
 
   <div style="text-align:center;color:#a8a29e;font-size:11px;margin-top:30px;">
     © 신성오토텍 안전환경팀 · 환경운영점검표
@@ -218,6 +254,16 @@ textarea{resize:vertical;min-height:90px;line-height:1.55;}
 </div>
 
 <script>
+// ============================================================
+// SITE META — 수원 / 화성 두 사업장
+// ============================================================
+const SITE_META = {
+  suwon:    {code:'suwon',    label:'수원 사업장', short:'SUWON',    sub:'사출 · 조립 · 본사',   doc:'PTR-ENV · SUWON'},
+  hwaseong: {code:'hwaseong', label:'화성 사업장', short:'HWASEONG', sub:'도장 · 화학 · 2공장', doc:'PTR-ENV · HWASEONG'}
+};
+const urlParams = new URLSearchParams(location.search);
+const siteCode = urlParams.get('site');
+
 // ============================================================
 // SUPABASE LAYER (TBM과 동일 공용)
 // ============================================================
@@ -274,8 +320,8 @@ function initSupabase(url, key){
     supaClient.channel('patrol_env_sync')
       .on('postgres_changes', {event:'*', schema:'public', table:'safety_store'}, async () => {
         await loadFromSupabase();
-        renderRecent();
-        checkWeeklyBanner();
+        if(siteCode && SITE_META[siteCode]){ renderRecent(); checkWeeklyBanner(); }
+        else { renderSiteSelect(); renderOverallRecent(); }
       })
       .subscribe();
     return true;
@@ -546,6 +592,7 @@ async function savePatrol(){
 
   const record = {
     id: Date.now(),
+    site: siteCode || '',
     date,
     inspector,
     checks: {...state.checks},
@@ -584,7 +631,8 @@ function resetForm(){
 function renderRecent(){
   const box = document.getElementById('recent-records');
   const cnt = document.getElementById('recent-count');
-  const all = getPatrolRecords().slice().sort((a,b)=> new Date(b.date) - new Date(a.date) || b.id - a.id);
+  const allRaw = getPatrolRecords().filter(r => !siteCode || (r.site||'') === siteCode);
+  const all = allRaw.slice().sort((a,b)=> new Date(b.date) - new Date(a.date) || b.id - a.id);
   if(cnt) cnt.textContent = `(총 ${all.length}건, 최신 10개)`;
   const recent = all.slice(0, 10);
   if(recent.length === 0){
@@ -629,10 +677,78 @@ async function deletePatrol(id){
 function checkWeeklyBanner(){
   const b = document.getElementById('weekly-banner');
   if(!b) return;
-  // 최근 7일 이내 기록이 있으면 배너 숨김
   const cutoff = new Date(Date.now() - 7*24*60*60*1000);
-  const has = getPatrolRecords().some(r => new Date(r.date) >= cutoff);
+  const has = getPatrolRecords().some(r => (!siteCode || r.site === siteCode) && new Date(r.date) >= cutoff);
   b.classList.toggle('show', !has);
+}
+
+// 사이트 선택 카드 렌더
+function renderSiteSelect(){
+  const grid = document.getElementById('site-grid');
+  if(!grid) return;
+  const now = new Date();
+  const ym = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+  const all = getPatrolRecords();
+  grid.innerHTML = Object.values(SITE_META).map(m => {
+    const siteRecs = all.filter(r => (r.site||'') === m.code);
+    const monthly = siteRecs.filter(r => (r.date||'').startsWith(ym));
+    const count = monthly.length;
+    const target = 2;
+    const pillCls = count >= target ? 'ok' : 'warn';
+    const pillTxt = count >= target ? `이번 달 ${count}/${target}회 완료` : `이번 달 ${count}/${target}회`;
+    const lastRec = siteRecs.slice().sort((a,b)=> new Date(b.date) - new Date(a.date))[0];
+    const lastTxt = lastRec ? `최근 ${lastRec.date}` : '기록 없음';
+    return `<a href="?site=${m.code}" class="site-card">
+      <div class="sc-code">${m.short}</div>
+      <div class="sc-name">${m.label}</div>
+      <div class="sc-sub">${m.sub}</div>
+      <div class="sc-stats">
+        <span class="pill ${pillCls}">${pillTxt}</span>
+        <span class="last">${lastTxt}</span>
+      </div>
+      <div class="arrow">→</div>
+    </a>`;
+  }).join('');
+}
+
+// 전체 최근 내역 (사이트 미선택 시)
+function renderOverallRecent(){
+  const box = document.getElementById('overall-recent');
+  const cnt = document.getElementById('overall-count');
+  if(!box) return;
+  const all = getPatrolRecords().slice().sort((a,b)=> new Date(b.date) - new Date(a.date) || b.id - a.id);
+  if(cnt) cnt.textContent = `(총 ${all.length}건, 최신 10개)`;
+  const recent = all.slice(0, 10);
+  if(recent.length === 0){
+    box.innerHTML = '<div style="text-align:center;color:#a8a29e;padding:20px;font-size:13px;">아직 저장된 기록이 없습니다.</div>';
+    return;
+  }
+  box.innerHTML = recent.map(r => {
+    const siteLabel = SITE_META[r.site]?.label || r.site || '-';
+    const dateObj = new Date(r.date + 'T00:00:00');
+    const dow = ['일','월','화','수','목','금','토'][dateObj.getDay()];
+    const chips = [];
+    if(r.badCount) chips.push(`<span class="chip bad">불량 ${r.badCount}</span>`);
+    if(r.issues && r.issues.length) chips.push(`<span class="chip bad">지적 ${r.issues.length}</span>`);
+    if(r.photos && r.photos.length) chips.push(`<span class="chip photo">사진 ${r.photos.length}</span>`);
+    return `<div class="recent-row">
+      <div class="d">${r.date}<div class="wd">${dow}요일</div></div>
+      <div class="t">
+        <div class="tt"><span style="display:inline-block;font-size:10px;font-weight:800;letter-spacing:0.12em;padding:2px 8px;background:#e8e6e1;color:#44403c;border-radius:2px;margin-right:6px;">${escapeHtml(siteLabel)}</span>점검자 ${escapeHtml(r.inspector||'-')} · ${r.checkedCount||0}/${r.totalItems||0} 항목</div>
+        ${r.remark?`<div class="stats">${escapeHtml(r.remark)}</div>`:''}
+        <div class="chips">${chips.join('')}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function applySiteHeader(){
+  const m = SITE_META[siteCode];
+  if(!m) return;
+  document.getElementById('h-code').textContent = m.doc;
+  document.getElementById('h-title').textContent = `${m.label} · 환경운영점검표`;
+  document.getElementById('h-sub').textContent = `${m.sub} · 매주 금요일 실시 권장 · 월 2회 권장`;
+  document.title = `${m.label} 환경점검 | 산업안전보건`;
 }
 
 // ============================================================
@@ -665,6 +781,22 @@ document.addEventListener('keydown', e => { if(e.key === 'Escape') closePhotoLig
 window.addEventListener('DOMContentLoaded', async () => {
   initSupabase(DEFAULT_SUPABASE_URL, DEFAULT_SUPABASE_KEY);
   await loadFromSupabase();
+
+  if(!siteCode || !SITE_META[siteCode]){
+    // 사이트 선택 화면
+    document.getElementById('view-select').classList.add('shown');
+    document.querySelector('.container').classList.add('wide');
+    renderSiteSelect();
+    renderOverallRecent();
+    window.addEventListener('storage', e => {
+      if(e.key === 'safety_patrol_env'){ renderSiteSelect(); renderOverallRecent(); }
+    });
+    return;
+  }
+
+  // 입력 화면 (사이트별)
+  applySiteHeader();
+  document.getElementById('view-input').classList.add('shown');
   document.getElementById('f-date').value = new Date().toISOString().split('T')[0];
   renderAreas();
   renderIssues();
