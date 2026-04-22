@@ -116,10 +116,27 @@ textarea{resize:vertical;min-height:90px;line-height:1.55;}
 .issue-card .ic-no{font-size:11px;font-weight:800;letter-spacing:0.12em;color:#78716c;padding:2px 8px;border:1px solid #d6d3d1;background:#fff;border-radius:2px;}
 .issue-card .ic-grid{display:grid;grid-template-columns:1fr;gap:8px;}
 @media(min-width:600px){.issue-card .ic-grid{grid-template-columns:1fr 1fr;}}
-.issue-card .ic-field > .lb{display:block;font-size:11px;font-weight:800;letter-spacing:0.12em;color:#78716c;margin-bottom:4px;text-transform:uppercase;}
+.issue-card .ic-field > .lb{display:flex;align-items:baseline;gap:5px;font-size:11px;font-weight:800;letter-spacing:0.12em;color:#78716c;margin-bottom:4px;text-transform:uppercase;}
+.issue-card .ic-field > .lb .auto-tag{font-size:9px;font-weight:700;letter-spacing:0.1em;color:#44403c;background:#e8e6e1;padding:1px 6px;border-radius:2px;text-transform:none;}
 .issue-card input{padding:10px 12px;font-size:15px;background:#fff;color:#292524;border-color:#d6d3d1;}
 .issue-card .del-btn{background:#fef2f2;border:1px solid #e7d3d3;color:#991b1b;padding:4px 10px;font-size:11px;font-weight:700;border-radius:3px;cursor:pointer;}
 .issue-card .del-btn:hover{background:#fee2e2;}
+
+/* 지적사항 내 사진 */
+.ic-photos{margin-top:10px;padding-top:10px;border-top:1px dashed #e7e5e4;}
+.ic-photos .ph-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.ic-photos .ph-title{font-size:11px;font-weight:800;letter-spacing:0.12em;color:#78716c;text-transform:uppercase;}
+.ic-photos .ph-title .cnt{margin-left:6px;color:#44403c;}
+.ic-photos .ph-btns{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px;}
+.ic-photos .ph-btn{display:block;text-align:center;padding:10px 6px;border:1.5px dashed #a8a29e;border-radius:3px;background:#fff;cursor:pointer;font-size:12px;font-weight:700;color:#44403c;letter-spacing:0.02em;}
+.ic-photos .ph-btn:hover{border-color:#292524;background:#fafaf9;}
+.ic-photos .ph-btn.cam{border-style:solid;border-color:#44403c;}
+.ic-photos .ph-btn input{display:none;}
+.ic-photos .ph-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:6px;}
+.ic-photos .ph-item{position:relative;border:1px solid #d6d3d1;border-radius:3px;overflow:hidden;aspect-ratio:1;background:#fff;}
+.ic-photos .ph-item img{width:100%;height:100%;object-fit:cover;cursor:pointer;}
+.ic-photos .ph-item .rm{position:absolute;top:3px;right:3px;width:24px;height:24px;border-radius:50%;background:rgba(28,25,23,0.85);color:#fff;border:1.5px solid #fff;cursor:pointer;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;}
+.ic-photos .ph-item .rm:hover{background:#991b1b;}
 
 /* 사진 업로드 */
 .photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;margin-top:10px;}
@@ -504,34 +521,93 @@ function toggleArea(areaCode){
 function renderIssues(){
   const box = document.getElementById('issues-container');
   if(state.issues.length === 0){
-    box.innerHTML = '<div style="font-size:12px;color:#a8a29e;padding:8px 0 10px;">지적사항이 없으면 비워두세요.</div>';
+    box.innerHTML = '<div style="font-size:12px;color:#a8a29e;padding:8px 0 10px;">지적사항이 없으면 비워두세요. 사진과 함께 기록할 항목이 있으면 아래 버튼을 눌러 추가하세요.</div>';
     return;
   }
-  box.innerHTML = state.issues.map((iss, i) => `<div class="issue-card" data-iid="${iss.id}">
-    <div class="ic-top">
-      <span class="ic-no">No. ${i+1}</span>
-      <button type="button" class="del-btn" onclick="removeIssue(${iss.id})">삭제</button>
-    </div>
-    <div class="ic-grid">
-      <div class="ic-field"><div class="lb">장소</div><input type="text" value="${escapeAttr(iss.location||'')}" oninput="updateIssue(${iss.id},'location',this.value)"></div>
-      <div class="ic-field"><div class="lb">담당</div><input type="text" value="${escapeAttr(iss.assignee||'')}" oninput="updateIssue(${iss.id},'assignee',this.value)"></div>
-      <div class="ic-field" style="grid-column:1/-1;"><div class="lb">문제점</div><input type="text" value="${escapeAttr(iss.problem||'')}" oninput="updateIssue(${iss.id},'problem',this.value)"></div>
-      <div class="ic-field" style="grid-column:1/-1;"><div class="lb">조치사항</div><input type="text" value="${escapeAttr(iss.action||'')}" oninput="updateIssue(${iss.id},'action',this.value)"></div>
-      <div class="ic-field"><div class="lb">완료(예정)일</div><input type="date" value="${escapeAttr(iss.date||'')}" oninput="updateIssue(${iss.id},'date',this.value)"></div>
-    </div>
-  </div>`).join('');
+  box.innerHTML = state.issues.map((iss, i) => {
+    const photos = iss.photos || [];
+    const photosHtml = photos.length ? photos.map((p,pi) => `<div class="ph-item">
+      <img src="${p.url}" onclick="openPhotoLightbox('${p.url}')" alt="">
+      <button type="button" class="rm" title="삭제" onclick="removeIssuePhoto(${iss.id},${pi})">✕</button>
+    </div>`).join('') : '';
+    return `<div class="issue-card" data-iid="${iss.id}">
+      <div class="ic-top">
+        <span class="ic-no">No. ${i+1}</span>
+        <button type="button" class="del-btn" onclick="removeIssue(${iss.id})">삭제</button>
+      </div>
+      <div class="ic-grid">
+        <div class="ic-field"><div class="lb">장소</div><input type="text" placeholder="예: 3층 자재창고" value="${escapeAttr(iss.location||'')}" oninput="updateIssue(${iss.id},'location',this.value)"></div>
+        <div class="ic-field"><div class="lb">담당 <span class="auto-tag">자동</span></div><input type="text" value="${escapeAttr(iss.assignee||'')}" oninput="updateIssue(${iss.id},'assignee',this.value)"></div>
+        <div class="ic-field" style="grid-column:1/-1;"><div class="lb">문제점</div><input type="text" placeholder="예: 천장등 깜박임" value="${escapeAttr(iss.problem||'')}" oninput="updateIssue(${iss.id},'problem',this.value)"></div>
+        <div class="ic-field" style="grid-column:1/-1;"><div class="lb">조치사항</div><input type="text" placeholder="예: 전구 교체" value="${escapeAttr(iss.action||'')}" oninput="updateIssue(${iss.id},'action',this.value)"></div>
+        <div class="ic-field"><div class="lb">완료(예정)일 <span class="auto-tag">자동 = 오늘</span></div><input type="date" value="${escapeAttr(iss.date||'')}" oninput="updateIssue(${iss.id},'date',this.value)"></div>
+      </div>
+      <div class="ic-photos">
+        <div class="ph-head">
+          <div class="ph-title">현장 사진 <span class="cnt">${photos.length?photos.length+'장':''}</span></div>
+        </div>
+        <div class="ph-btns">
+          <label class="ph-btn cam">
+            + 사진 촬영
+            <input type="file" accept="image/*" capture="environment" onchange="addIssuePhoto(${iss.id}, this)">
+          </label>
+          <label class="ph-btn">
+            + 갤러리
+            <input type="file" accept="image/*" multiple onchange="addIssuePhoto(${iss.id}, this)">
+          </label>
+        </div>
+        ${photos.length?`<div class="ph-grid">${photosHtml}</div>`:''}
+      </div>
+    </div>`;
+  }).join('');
 }
+
 function addIssueRow(){
-  state.issues.push({id: Date.now()+Math.floor(Math.random()*1000), location:'', problem:'', assignee:'', action:'', date:''});
+  const inspector = (document.getElementById('f-inspector')?.value || '').trim();
+  const today = new Date().toISOString().split('T')[0];
+  state.issues.push({id: Date.now()+Math.floor(Math.random()*1000), location:'', problem:'', assignee:inspector, action:'', date:today, photos:[]});
   renderIssues();
 }
 function removeIssue(id){
+  const iss = state.issues.find(i => i.id === id);
+  if(iss && iss.photos && iss.photos.length){
+    if(!confirm(`첨부된 사진 ${iss.photos.length}장도 함께 삭제됩니다. 계속할까요?`)) return;
+    iss.photos.forEach(p => { if(p.path) deleteFromStorage(p.path); });
+  }
   state.issues = state.issues.filter(i => i.id !== id);
   renderIssues();
 }
 function updateIssue(id, field, value){
   const iss = state.issues.find(i => i.id === id);
   if(iss) iss[field] = value;
+}
+
+async function addIssuePhoto(issueId, input){
+  if(!input.files || !input.files.length) return;
+  if(!supaClient){ alert('실시간 공유 미연결 상태. 잠시 후 다시 시도해주세요.'); input.value=''; return; }
+  const iss = state.issues.find(i => i.id === issueId);
+  if(!iss){ input.value=''; return; }
+  if(!iss.photos) iss.photos = [];
+  const date = document.getElementById('f-date').value || new Date().toISOString().split('T')[0];
+  const files = Array.from(input.files);
+  for(const f of files){
+    try{
+      const meta = await uploadToStorage(f, `patrol_env/${date}/issue_${issueId}`);
+      iss.photos.push(meta);
+      renderIssues();
+    }catch(e){ console.error(e); alert('업로드 실패: '+(e.message||e)); }
+  }
+  input.value = '';
+}
+
+async function removeIssuePhoto(issueId, photoIdx){
+  if(!confirm('이 사진을 삭제할까요?')) return;
+  const iss = state.issues.find(i => i.id === issueId);
+  if(!iss || !iss.photos) return;
+  const p = iss.photos[photoIdx];
+  if(p && p.path) await deleteFromStorage(p.path);
+  iss.photos.splice(photoIdx, 1);
+  renderIssues();
 }
 
 // ============================================================
