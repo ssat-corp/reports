@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>전력 사용량 관리 대시보드</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  :root {
+    --blue: #185FA5;
+    --blue-mid: #378ADD;
+    --blue-light: #85B7EB;
+    --blue-lighter: #E6F1FB;
+    --teal: #1D9E75;
+    --teal-dark: #0F6E56;
+    --teal-light: #E1F5EE;
+    --gray-50: #f8f9fa;
+    --gray-100: #f1f3f4;
+    --gray-200: #e8eaed;
+    --gray-400: #9aa0a6;
+    --gray-600: #5f6368;
+    --gray-800: #3c4043;
+    --gray-900: #202124;
+    --border: #e0e0e0;
+    --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+    --radius: 10px;
+    --radius-sm: 6px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #f0f2f5;
+    color: var(--gray-900);
+    min-height: 100vh;
+  }
+  header {
+    background: var(--blue);
+    color: #fff;
+    padding: 0 24px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+  .header-left { display: flex; align-items: center; gap: 12px; }
+  .header-icon {
+    width: 32px; height: 32px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .header-icon svg { width: 18px; height: 18px; fill: #fff; }
+  header h1 { font-size: 16px; font-weight: 600; letter-spacing: -0.3px; }
+  .header-year { font-size: 13px; opacity: 0.8; }
+
+  .container { max-width: 1100px; margin: 0 auto; padding: 24px 20px; }
+
+  .year-bar {
+    display: flex; gap: 8px; margin-bottom: 20px; align-items: center;
+  }
+  .year-label { font-size: 12px; color: var(--gray-600); margin-right: 4px; }
+  .yb {
+    padding: 6px 18px; font-size: 13px; font-weight: 500;
+    border: 1.5px solid var(--border); border-radius: 20px;
+    cursor: pointer; background: #fff; color: var(--gray-600);
+    transition: all 0.15s;
+  }
+  .yb:hover { border-color: var(--blue-mid); color: var(--blue); }
+  .yb.active { background: var(--blue); color: #fff; border-color: var(--blue); }
+
+  .compare-btn {
+    margin-left: auto;
+    padding: 6px 14px; font-size: 12px; font-weight: 600;
+    border: 1.5px solid var(--border); border-radius: 20px;
+    cursor: pointer; background: #fff; color: var(--gray-600);
+    display: inline-flex; align-items: center; gap: 7px;
+    transition: all 0.15s; font-family: inherit;
+  }
+  .compare-btn:hover { border-color: var(--teal); color: var(--teal-dark); }
+  .compare-btn.active { background: var(--teal); color: #fff; border-color: var(--teal); }
+  .compare-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--gray-400); transition: background 0.15s; }
+  .compare-btn.active .compare-dot { background: #fff; }
+
+  .compare-hint {
+    display: none; font-size: 11px; color: var(--gray-600);
+    margin: -8px 0 16px; padding: 7px 12px;
+    background: var(--gray-50); border-radius: var(--radius-sm);
+    border-left: 3px solid var(--gray-400);
+  }
+  .compare-hint.visible { display: block; }
+  .compare-hint .dash-icon {
+    display: inline-block; width: 18px; height: 2px;
+    background: repeating-linear-gradient(to right, var(--gray-400) 0 4px, transparent 4px 7px);
+    vertical-align: middle; margin: 0 4px;
+  }
+
+  .mc-delta {
+    font-size: 11px; font-weight: 600; margin-top: 5px;
+    display: inline-block; padding: 2px 7px; border-radius: 10px;
+  }
+  .mc-delta.up   { color: #C62828; background: #FEE2E2; }
+  .mc-delta.down { color: #2E7D32; background: #DCFCE7; }
+  .mc-delta.flat { color: var(--gray-600); background: var(--gray-100); }
+
+  .status-banner {
+    display: none; padding: 12px 16px; border-radius: var(--radius-sm);
+    margin-bottom: 16px; font-size: 13px; line-height: 1.5;
+  }
+  .status-banner.sample { background: #FFF4E5; color: #B86E00; border: 1px solid #FFD591; }
+  .status-banner.cache  { background: #FEE2E2; color: #B91C1C; border: 1px solid #FCA5A5; }
+  .status-banner code { background: rgba(0,0,0,0.06); padding: 1px 5px; border-radius: 3px; font-size: 12px; }
+
+  .tabs {
+    display: flex; gap: 2px; margin-bottom: 24px;
+    background: var(--gray-100); border-radius: var(--radius);
+    padding: 4px;
+  }
+  .tab {
+    flex: 1; padding: 9px 16px; font-size: 13px; font-weight: 500;
+    border: none; cursor: pointer; border-radius: 7px;
+    background: transparent; color: var(--gray-600); transition: all 0.15s;
+  }
+  .tab.active { background: #fff; color: var(--blue); box-shadow: var(--shadow); }
+  .tab:hover:not(.active) { color: var(--gray-900); }
+
+  .section { display: none; }
+  .section.active { display: block; }
+
+  .metric-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px; margin-bottom: 24px;
+  }
+  .mc {
+    background: #fff; border-radius: var(--radius);
+    padding: 16px 18px; box-shadow: var(--shadow);
+    border-left: 3px solid var(--blue-lighter);
+    transition: box-shadow 0.15s;
+  }
+  .mc:hover { box-shadow: var(--shadow-md); }
+  .mc.accent { border-left-color: var(--teal); }
+  .mc-label { font-size: 11px; color: var(--gray-400); margin-bottom: 6px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+  .mc-value { font-size: 22px; font-weight: 700; color: var(--gray-900); line-height: 1; }
+  .mc-unit { font-size: 12px; color: var(--gray-400); font-weight: 400; margin-left: 3px; }
+
+  .charts-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px; margin-bottom: 16px;
+  }
+  .chart-card {
+    background: #fff; border-radius: var(--radius);
+    padding: 20px; box-shadow: var(--shadow);
+  }
+  .chart-card.full { grid-column: 1 / -1; }
+  .chart-card-header {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    margin-bottom: 14px;
+  }
+  .chart-card-title { font-size: 13px; font-weight: 600; color: var(--gray-800); }
+  .chart-card-sub { font-size: 11px; color: var(--gray-400); margin-top: 2px; }
+  .legend { display: flex; flex-wrap: wrap; gap: 10px; }
+  .legend span { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--gray-600); }
+  .ld { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+
+  .form-section {
+    background: #fff; border-radius: var(--radius);
+    padding: 24px; box-shadow: var(--shadow); max-width: 700px;
+  }
+  .form-title { font-size: 15px; font-weight: 600; color: var(--gray-900); margin-bottom: 4px; }
+  .form-desc { font-size: 12px; color: var(--gray-400); margin-bottom: 20px; }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px; }
+  .fg { display: flex; flex-direction: column; gap: 6px; }
+  .fl { font-size: 12px; font-weight: 500; color: var(--gray-600); }
+  input[type=number], select {
+    font-size: 14px; padding: 9px 12px;
+    border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+    background: #fff; color: var(--gray-900); width: 100%;
+    transition: border-color 0.15s;
+    font-family: inherit;
+  }
+  input[type=number]:focus, select:focus { outline: none; border-color: var(--blue-mid); }
+  .form-divider { font-size: 11px; font-weight: 600; color: var(--gray-400); text-transform: uppercase; letter-spacing: 0.8px; grid-column: 1/-1; margin-top: 4px; padding-top: 14px; border-top: 1px solid var(--gray-100); }
+  .btn-row { display: flex; gap: 10px; }
+  .btn {
+    padding: 10px 22px; font-size: 13px; font-weight: 600;
+    border-radius: var(--radius-sm); cursor: pointer; border: 1.5px solid var(--border);
+    background: #fff; color: var(--gray-700); transition: all 0.15s; font-family: inherit;
+  }
+  .btn:hover { background: var(--gray-50); }
+  .btn-primary { background: var(--blue); color: #fff; border-color: var(--blue); }
+  .btn-primary:hover { background: #0C447C; }
+  .save-msg {
+    display: none; margin-top: 12px; padding: 10px 14px;
+    background: var(--teal-light); color: var(--teal-dark);
+    border-radius: var(--radius-sm); font-size: 13px; font-weight: 500;
+  }
+
+  .table-card { background: #fff; border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; font-size: 13px; border-collapse: collapse; }
+  thead { background: var(--gray-50); }
+  th { text-align: right; padding: 12px 14px; color: var(--gray-600); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.4px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+  th:first-child { text-align: left; }
+  td { text-align: right; padding: 11px 14px; border-bottom: 1px solid var(--gray-100); color: var(--gray-800); white-space: nowrap; }
+  td:first-child { text-align: left; color: var(--gray-600); font-weight: 500; }
+  tr:last-child td { border-bottom: none; font-weight: 700; background: var(--blue-lighter); color: var(--blue); }
+  tr:last-child td:first-child { color: var(--blue); }
+  tbody tr:hover td { background: var(--gray-50); }
+  tbody tr:last-child:hover td { background: var(--blue-lighter); }
+  .empty-msg { padding: 48px; text-align: center; color: var(--gray-400); font-size: 14px; }
+
+  @media (max-width: 680px) {
+    .charts-grid { grid-template-columns: 1fr; }
+    .form-grid { grid-template-columns: 1fr; }
+    .metric-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+<style>
+  #lockOverlay {
+    position: fixed; inset: 0; z-index: 9999;
+    background: #f0f2f5;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .lock-box {
+    background: #fff; border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+    padding: 48px 40px; width: 360px; text-align: center;
+  }
+  .lock-icon {
+    width: 56px; height: 56px; border-radius: 16px;
+    background: var(--blue); margin: 0 auto 20px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .lock-icon svg { width: 28px; height: 28px; fill: #fff; }
+  .lock-title { font-size: 18px; font-weight: 700; color: var(--gray-900); margin-bottom: 6px; }
+  .lock-desc { font-size: 13px; color: var(--gray-400); margin-bottom: 28px; }
+  .lock-input {
+    width: 100%; padding: 12px 16px; font-size: 15px;
+    border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+    text-align: center; letter-spacing: 4px; outline: none;
+    font-family: inherit; transition: border-color 0.15s;
+    margin-bottom: 14px;
+  }
+  .lock-input:focus { border-color: var(--blue-mid); }
+  .lock-input.error { border-color: #d93025; animation: shake 0.3s; }
+  .lock-btn {
+    width: 100%; padding: 12px; font-size: 14px; font-weight: 600;
+    background: var(--blue); color: #fff; border: none;
+    border-radius: var(--radius-sm); cursor: pointer;
+    transition: background 0.15s; font-family: inherit;
+  }
+  .lock-btn:hover { background: #0C447C; }
+  .lock-err { font-size: 12px; color: #d93025; margin-top: 10px; display: none; }
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
+  }
+</style>
+</head>
+<body>
+
+<div id="lockOverlay">
+  <div class="lock-box">
+    <div class="lock-icon">
+      <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+    </div>
+    <div class="lock-title">전력 사용량 관리 대시보드</div>
+    <div class="lock-desc">접근하려면 비밀번호를 입력하세요</div>
+    <input type="password" id="pwInput" class="lock-input" placeholder="••••" maxlength="20">
+    <button class="lock-btn" onclick="checkPassword()">입력</button>
+    <div class="lock-err" id="pwErr">비밀번호가 올바르지 않습니다</div>
+  </div>
+</div>
+
+<header>
+  <div class="header-left">
+    <div class="header-icon">
+      <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+    </div>
+    <h1>전력 사용량 관리 대시보드</h1>
+  </div>
+  <span class="header-year" id="headerYear"></span>
+</header>
+
+<div class="container">
+  <div class="year-bar">
+    <span class="year-label">연도</span>
+    <div id="dashYearTabs"></div>
+    <button id="compareBtn" class="compare-btn" onclick="toggleCompare()">
+      <span class="compare-dot"></span>
+      <span id="compareLabel">전년 대비 보기</span>
+    </button>
+  </div>
+  <div id="compareHint" class="compare-hint">
+    비교 대상: <b><span id="compareHintYear">2025</span>년 동기</b> · 메트릭 카드 = 증감률 · 차트 <span class="dash-icon"></span> 회색 점선 = 전년 동월 데이터
+  </div>
+
+  <div id="statusBanner" class="status-banner"></div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('dashboard')">대시보드</button>
+    <button class="tab" onclick="showTab('table')">전체 데이터</button>
+  </div>
+
+  <div id="dashboard" class="section active">
+    <div class="metric-grid" id="metricCards"></div>
+
+    <div class="charts-grid">
+      <div class="chart-card">
+        <div class="chart-card-header">
+          <div>
+            <div class="chart-card-title">재생에너지 비율</div>
+            <div class="chart-card-sub">태양광 / 전체 사용전력</div>
+          </div>
+          <div class="legend"><span><span class="ld" style="background:#1D9E75"></span>비율 (%)</span></div>
+        </div>
+        <div style="position:relative;width:100%;height:200px"><canvas id="renewChart" role="img" aria-label="월별 재생에너지 비율"></canvas></div>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-card-header">
+          <div>
+            <div class="chart-card-title">전력비율</div>
+            <div class="chart-card-sub">전기세 / 매출액</div>
+          </div>
+          <div class="legend"><span><span class="ld" style="background:#378ADD"></span>비율 (%)</span></div>
+        </div>
+        <div style="position:relative;width:100%;height:200px"><canvas id="powerChart" role="img" aria-label="월별 전력비율"></canvas></div>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-card-header">
+          <div>
+            <div class="chart-card-title">월별 전기세</div>
+            <div class="chart-card-sub">단위: 백만원</div>
+          </div>
+          <div class="legend"><span><span class="ld" style="background:#185FA5"></span>전기세 (만원)</span></div>
+        </div>
+        <div style="position:relative;width:100%;height:200px"><canvas id="costChart" role="img" aria-label="월별 전기세"></canvas></div>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-card-header">
+          <div>
+            <div class="chart-card-title">월별 사용전력</div>
+            <div class="chart-card-sub">단위: MWh</div>
+          </div>
+          <div class="legend">
+            <span><span class="ld" style="background:#85B7EB"></span>사용전력</span>
+            <span><span class="ld" style="background:#1D9E75"></span>태양광</span>
+          </div>
+        </div>
+        <div style="position:relative;width:100%;height:200px"><canvas id="usageChart" role="img" aria-label="월별 사용전력 및 태양광"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="table" class="section">
+    <div class="year-bar">
+      <span class="year-label">연도</span>
+      <div id="tableYearTabs"></div>
+    </div>
+    <div class="table-card">
+      <div class="table-wrap" id="tableArea"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// 비밀번호 잠금 (SHA-256 해시)
+const PW_HASH = '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4';
+const AUTH_KEY = 'power_dashboard_auth';
+
+async function sha256(text) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+async function checkPassword() {
+  const val = document.getElementById('pwInput').value;
+  const hash = await sha256(val);
+  if (hash === PW_HASH) {
+    sessionStorage.setItem(AUTH_KEY, '1');
+    document.getElementById('lockOverlay').style.display = 'none';
+  } else {
+    const inp = document.getElementById('pwInput');
+    inp.classList.add('error');
+    document.getElementById('pwErr').style.display = 'block';
+    setTimeout(() => inp.classList.remove('error'), 400);
+    inp.value = '';
+    inp.focus();
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  if (sessionStorage.getItem(AUTH_KEY) === '1') {
+    document.getElementById('lockOverlay').style.display = 'none';
+  }
+  document.getElementById('pwInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') checkPassword();
+  });
+  setTimeout(() => document.getElementById('pwInput').focus(), 100);
+});
+
+// ====== 구글 스프레드시트 연동 설정 ======
+// Apps Script Web App 배포 후 URL / TOKEN 을 여기에 입력하세요.
+const API_URL = 'https://script.google.com/macros/s/AKfycbzxMb8aVz1iX4DCk14DHUImb72kYzrOyW-HAS-UwvRT2pqZ-A2HjseO1mNFSJ4HQqnq0w/exec';
+const API_TOKEN = 'Tlstjddhxhxpr7611!';
+const CACHE_KEY = 'power_dashboard_cache_v1';
+
+// API 연결 전까지 보여줄 샘플 데이터 (연결되면 덮어씀)
+const SAMPLE_DATA = {
+  2025: [
+    {m:1,revenue:2308444647,elecCost:62645141,usage:305373,solar:7521,factoryCost:25595648,hqCost:37049493,factoryUsage:109079,hqUsage:196294,solarRate:197.6},
+    {m:2,revenue:2745172460,elecCost:57565156,usage:275717,solar:12023,factoryCost:26463845,hqCost:31101311,factoryUsage:113285,hqUsage:162432,solarRate:197.3},
+    {m:3,revenue:2650301444,elecCost:55239027,usage:262433,solar:12623,factoryCost:23004934,hqCost:32234093,factoryUsage:93802,hqUsage:168631,solarRate:178.8},
+    {m:4,revenue:3048076203,elecCost:47677753,usage:246219,solar:14981,factoryCost:20661471,hqCost:27016282,factoryUsage:90245,hqUsage:155974,solarRate:173.8},
+    {m:5,revenue:2194264500,elecCost:42646586,usage:230710,solar:11192,factoryCost:17381682,hqCost:25264904,factoryUsage:80655,hqUsage:150055,solarRate:182.1},
+    {m:6,revenue:2087634799,elecCost:32946429,usage:165867,solar:11087,factoryCost:13019119,hqCost:19927310,factoryUsage:52949,hqUsage:112918,solarRate:198.7},
+    {m:7,revenue:2001576075,elecCost:39304499,usage:183135,solar:9647,factoryCost:14184374,hqCost:25120125,factoryUsage:52685,hqUsage:130450,solarRate:207.8},
+    {m:8,revenue:1605865264,elecCost:45816410,usage:200608,solar:6805,factoryCost:16627147,hqCost:29189263,factoryUsage:56155,hqUsage:144453,solarRate:214.6},
+    {m:9,revenue:1518479222,elecCost:39151854,usage:164520,solar:9282,factoryCost:14202566,hqCost:24949288,factoryUsage:45115,hqUsage:119405,solarRate:188.2},
+    {m:10,revenue:1146683448,elecCost:40398527,usage:194030,solar:7502,factoryCost:15686816,hqCost:24711711,factoryUsage:59174,hqUsage:134856,solarRate:190.5},
+    {m:11,revenue:1371601802,elecCost:27560998,usage:129698,solar:8990,factoryCost:10876626,hqCost:16684372,factoryUsage:39734,hqUsage:89964,solarRate:198.9},
+    {m:12,revenue:1449905225,elecCost:37939197,usage:176988,solar:8392,factoryCost:16104999,hqCost:21834198,factoryUsage:64272,hqUsage:112716,solarRate:205.8},
+  ],
+  2026: [
+    {m:1,revenue:1872162945,elecCost:45424263,usage:204002,solar:11040,factoryCost:20514138,hqCost:24910125,factoryUsage:79709,hqUsage:124293,solarRate:197.1},
+    {m:2,revenue:1520640465,elecCost:55516459,usage:262346,solar:9763,factoryCost:23103768,hqCost:32412691,factoryUsage:93499,hqUsage:168847,solarRate:194.6},
+    {m:3,revenue:2368440147,elecCost:53813154,usage:257892,solar:15700,factoryCost:22444715,hqCost:31368439,factoryUsage:92386,hqUsage:165506,solarRate:172.6},
+  ]
+};
+
+async function fetchData() {
+  if (!API_URL) return { data: SAMPLE_DATA, source: 'sample' };
+  try {
+    const url = API_URL + (API_URL.includes('?') ? '&' : '?') + 'token=' + encodeURIComponent(API_TOKEN);
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const json = await res.json();
+    if (json.error) throw new Error(json.error);
+    try { localStorage.setItem(CACHE_KEY, JSON.stringify(json)); } catch(e) {}
+    return { data: json, source: 'api' };
+  } catch(e) {
+    console.warn('스프레드시트 연결 실패:', e);
+    try {
+      const cached = localStorage.getItem(CACHE_KEY);
+      if (cached) return { data: JSON.parse(cached), source: 'cache' };
+    } catch(e2) {}
+    return { data: SAMPLE_DATA, source: 'sample' };
+  }
+}
+
+function showStatusBanner(source) {
+  const el = document.getElementById('statusBanner');
+  if (source === 'sample') {
+    el.className = 'status-banner sample';
+    el.innerHTML = '⚙️ <b>스프레드시트 연결 대기 중</b> — 샘플 데이터를 표시하고 있습니다. '
+                 + 'HTML 상단 <code>API_URL</code>, <code>API_TOKEN</code>을 입력하면 실시간 연동됩니다.';
+    el.style.display = 'block';
+  } else if (source === 'cache') {
+    el.className = 'status-banner cache';
+    el.innerHTML = '⚠️ 스프레드시트에 접속할 수 없어 마지막으로 성공한 캐시 데이터를 표시합니다.';
+    el.style.display = 'block';
+  } else {
+    el.style.display = 'none';
+  }
+}
+
+let data = {};
+let dashYear = 2026, tableYear = 2026;
+let compareMode = false;
+let charts = {};
+
+function calcRow(r) {
+  return { ...r, powerRatio: r.revenue > 0 ? r.elecCost / r.revenue : 0, renewRatio: r.usage > 0 ? r.solar / r.usage : 0 };
+}
+function getYears() { return Object.keys(data).map(Number).sort(); }
+function fmt(n) { return Number(n).toLocaleString('ko-KR'); }
+function pct(n) { return (n * 100).toFixed(2) + '%'; }
+
+function buildYearTabs(cid, active, cbName) {
+  document.getElementById(cid).innerHTML = getYears().map(y =>
+    `<button class="yb ${y === active ? 'active' : ''}" onclick="${cbName}(${y})">${y}년</button>`
+  ).join('');
+}
+
+function updateMetrics() {
+  const rows = (data[dashYear] || []).map(calcRow);
+  document.getElementById('headerYear').textContent = dashYear + '년';
+  if (!rows.length) { document.getElementById('metricCards').innerHTML = '<p class="empty-msg">데이터 없음</p>'; return; }
+
+  const cmpAll = (data[dashYear - 1] || []).map(calcRow);
+  const cmpEnabled = compareMode && cmpAll.length > 0;
+  // 전년 비교는 두 해 모두에 존재하는 월에 한해서만 합산
+  const cmpMonthSet = new Set(cmpAll.map(r => r.m));
+  const curMonthSet = new Set(rows.map(r => r.m));
+  const curMatched = rows.filter(r => cmpMonthSet.has(r.m));
+  const cmpMatched = cmpAll.filter(r => curMonthSet.has(r.m));
+
+  const sum = (arr, k) => arr.reduce((a, r) => a + r[k], 0);
+  const totalCost = sum(rows, 'elecCost');
+  const totalUsage = sum(rows, 'usage');
+  const totalSolar = sum(rows, 'solar');
+  const totalRevenue = sum(rows, 'revenue');
+
+  function deltaPct(cur, prev, betterIf) {
+    if (!cmpEnabled || !prev) return '';
+    const pct = (cur - prev) / prev * 100;
+    const sign = pct >= 0 ? '▲' : '▼';
+    const flat = Math.abs(pct) < 0.05;
+    const isGood = betterIf === 'up' ? pct >= 0 : pct < 0;
+    const cls = flat ? 'flat' : (isGood ? 'down' : 'up');
+    return `<div class="mc-delta ${cls}">${sign} ${Math.abs(pct).toFixed(1)}% vs ${dashYear - 1}</div>`;
+  }
+  function deltaPp(cNum, cDen, pNum, pDen, betterIf) {
+    if (!cmpEnabled || !pDen || !cDen) return '';
+    const diff = (cNum / cDen - pNum / pDen) * 100;
+    const sign = diff >= 0 ? '▲' : '▼';
+    const flat = Math.abs(diff) < 0.05;
+    const isGood = betterIf === 'up' ? diff >= 0 : diff < 0;
+    const cls = flat ? 'flat' : (isGood ? 'down' : 'up');
+    return `<div class="mc-delta ${cls}">${sign} ${Math.abs(diff).toFixed(2)}%p vs ${dashYear - 1}</div>`;
+  }
+
+  const cCost = sum(curMatched, 'elecCost'), pCost = sum(cmpMatched, 'elecCost');
+  const cUsage = sum(curMatched, 'usage'),   pUsage = sum(cmpMatched, 'usage');
+  const cSolar = sum(curMatched, 'solar'),   pSolar = sum(cmpMatched, 'solar');
+  const cRev = sum(curMatched, 'revenue'),   pRev = sum(cmpMatched, 'revenue');
+
+  document.getElementById('metricCards').innerHTML = `
+    <div class="mc"><div class="mc-label">입력 월수</div><div class="mc-value">${rows.length}<span class="mc-unit">개월</span></div></div>
+    <div class="mc"><div class="mc-label">누적 전기세</div><div class="mc-value">${fmt(Math.round(totalCost/1000000))}<span class="mc-unit">백만원</span></div>${deltaPct(cCost, pCost, 'down')}</div>
+    <div class="mc"><div class="mc-label">누적 사용전력</div><div class="mc-value">${fmt(Math.round(totalUsage/1000))}<span class="mc-unit">MWh</span></div>${deltaPct(cUsage, pUsage, 'down')}</div>
+    <div class="mc accent"><div class="mc-label">누적 태양광</div><div class="mc-value">${(totalSolar/1000).toFixed(1)}<span class="mc-unit">MWh</span></div>${deltaPct(cSolar, pSolar, 'up')}</div>
+    <div class="mc accent"><div class="mc-label">평균 재생에너지</div><div class="mc-value">${(totalSolar/Math.max(totalUsage,1)*100).toFixed(1)}<span class="mc-unit">%</span></div>${deltaPp(cSolar, cUsage, pSolar, pUsage, 'up')}</div>
+    <div class="mc"><div class="mc-label">평균 전력비율</div><div class="mc-value">${(totalCost/Math.max(totalRevenue,1)*100).toFixed(2)}<span class="mc-unit">%</span></div>${deltaPp(cCost, cRev, pCost, pRev, 'down')}</div>
+  `;
+}
+
+function destroyChart(key) { if (charts[key]) { try { charts[key].destroy(); } catch(e) {} delete charts[key]; } }
+
+const gridColor = 'rgba(0,0,0,0.05)';
+const textColor = '#9aa0a6';
+
+function makeLabelPlugin(labelColor, fmtFn, inside) {
+  return {
+    id: 'lbl_' + Math.random(),
+    afterDatasetsDraw(chart) {
+      const ctx = chart.ctx;
+      chart.data.datasets.forEach((ds, di) => {
+        if (ds.skipLabel) return;
+        const meta = chart.getDatasetMeta(di);
+        if (meta.hidden) return;
+        meta.data.forEach((el, i) => {
+          const val = ds.data[i];
+          if (val == null || val === 0) return;
+          ctx.save();
+          ctx.font = '600 10px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillStyle = labelColor || '#555';
+          const label = fmtFn ? fmtFn(val) : String(val);
+          if (inside) {
+            const { x, y } = el.getCenterPoint();
+            ctx.textBaseline = 'middle';
+            ctx.fillText(label, x, y);
+          } else {
+            ctx.textBaseline = 'bottom';
+            ctx.fillText(label, el.x, el.y - 5);
+          }
+          ctx.restore();
+        });
+      });
+    }
+  };
+}
+
+function baseOpts(yFmt, topPad) {
+  return {
+    responsive: true, maintainAspectRatio: false,
+    layout: { padding: { top: topPad || 22, right: 8 } },
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { ticks: { color: textColor, font: { size: 11 }, autoSkip: false, maxRotation: 0 }, grid: { color: gridColor } },
+      y: { ticks: { color: textColor, font: { size: 11 }, callback: yFmt || undefined }, grid: { color: gridColor } }
+    }
+  };
+}
+
+function updateCharts() {
+  const rows = (data[dashYear] || []).map(calcRow);
+  const labels = rows.map(r => r.m + '월');
+  const cmpRows = (data[dashYear - 1] || []).map(calcRow);
+  const cmpEnabled = compareMode && cmpRows.length > 0;
+  const cmpAt = (m, fn) => {
+    const r = cmpRows.find(c => c.m === m);
+    return r ? fn(r) : null;
+  };
+  const cmpSeries = (fn) => rows.map(r => cmpAt(r.m, fn));
+  const cmpLineStyle = (extra) => ({
+    borderColor: '#9aa0a6', backgroundColor: 'transparent',
+    borderDash: [5, 4], tension: 0.3, fill: false,
+    pointRadius: 3, pointBackgroundColor: '#9aa0a6',
+    spanGaps: true, skipLabel: true, ...extra
+  });
+
+  destroyChart('renew');
+  const renewDS = [{ data: rows.map(r => parseFloat((r.renewRatio * 100).toFixed(2))), borderColor: '#1D9E75', backgroundColor: 'rgba(29,158,117,0.08)', tension: 0.4, fill: true, pointRadius: 4, pointBackgroundColor: '#1D9E75' }];
+  if (cmpEnabled) renewDS.push({ data: cmpSeries(r => parseFloat((r.renewRatio * 100).toFixed(2))), ...cmpLineStyle({ tension: 0.4 }) });
+  charts['renew'] = new Chart(document.getElementById('renewChart'), {
+    type: 'line', data: { labels, datasets: renewDS },
+    options: baseOpts(v => v.toFixed(1) + '%'),
+    plugins: [makeLabelPlugin('#0F6E56', v => v.toFixed(1) + '%')]
+  });
+
+  destroyChart('power');
+  const powerDS = [{ data: rows.map(r => parseFloat((r.powerRatio * 100).toFixed(2))), borderColor: '#378ADD', backgroundColor: 'rgba(55,138,221,0.08)', tension: 0.4, fill: true, pointRadius: 4, pointBackgroundColor: '#378ADD' }];
+  if (cmpEnabled) powerDS.push({ data: cmpSeries(r => parseFloat((r.powerRatio * 100).toFixed(2))), ...cmpLineStyle({ tension: 0.4 }) });
+  charts['power'] = new Chart(document.getElementById('powerChart'), {
+    type: 'line', data: { labels, datasets: powerDS },
+    options: baseOpts(v => v.toFixed(2) + '%'),
+    plugins: [makeLabelPlugin('#185FA5', v => v.toFixed(2) + '%')]
+  });
+
+  destroyChart('cost');
+  const costDS = [{ type: 'bar', data: rows.map(r => parseFloat((r.elecCost / 1000000).toFixed(1))), backgroundColor: '#185FA5' }];
+  if (cmpEnabled) costDS.push({ type: 'line', data: cmpSeries(r => parseFloat((r.elecCost / 1000000).toFixed(1))), ...cmpLineStyle() });
+  charts['cost'] = new Chart(document.getElementById('costChart'), {
+    type: 'bar', data: { labels, datasets: costDS },
+    options: baseOpts(v => v + '백만', 28),
+    plugins: [makeLabelPlugin('#3c4043', v => v + '백만', false)]
+  });
+
+  destroyChart('usage');
+  const usageDS = [
+    { type: 'bar', data: rows.map(r => Math.round(r.usage / 1000)), backgroundColor: '#85B7EB' },
+    { type: 'bar', data: rows.map(r => parseFloat((r.solar / 1000).toFixed(1))), backgroundColor: '#1D9E75' }
+  ];
+  if (cmpEnabled) usageDS.push({ type: 'line', data: cmpSeries(r => Math.round(r.usage / 1000)), ...cmpLineStyle({ borderColor: '#6c7581', pointBackgroundColor: '#6c7581' }) });
+  charts['usage'] = new Chart(document.getElementById('usageChart'), {
+    type: 'bar', data: { labels, datasets: usageDS },
+    options: baseOpts(v => v + 'MWh', 28),
+    plugins: [makeLabelPlugin('#3c4043', v => String(v), false)]
+  });
+}
+
+function setDashYear(y) {
+  dashYear = y;
+  buildYearTabs('dashYearTabs', dashYear, 'setDashYear');
+  syncCompareUI();
+  updateMetrics(); updateCharts();
+}
+
+function syncCompareUI() {
+  const btn = document.getElementById('compareBtn');
+  const hint = document.getElementById('compareHint');
+  const hintYear = document.getElementById('compareHintYear');
+  const label = document.getElementById('compareLabel');
+  const hasPrev = !!(data[dashYear - 1] && data[dashYear - 1].length);
+  btn.classList.toggle('active', compareMode && hasPrev);
+  label.textContent = compareMode ? '전년 대비 켜짐' : '전년 대비 보기';
+  hintYear.textContent = (dashYear - 1);
+  hint.classList.toggle('visible', compareMode && hasPrev);
+  btn.disabled = !hasPrev;
+  btn.title = hasPrev ? '' : `${dashYear - 1}년 데이터가 없어 비교할 수 없습니다`;
+  btn.style.opacity = hasPrev ? '' : '0.5';
+  btn.style.cursor = hasPrev ? 'pointer' : 'not-allowed';
+}
+
+function toggleCompare() {
+  const hasPrev = !!(data[dashYear - 1] && data[dashYear - 1].length);
+  if (!hasPrev) return;
+  compareMode = !compareMode;
+  syncCompareUI();
+  updateMetrics();
+  updateCharts();
+}
+function setTableYear(y) {
+  tableYear = y;
+  buildYearTabs('tableYearTabs', tableYear, 'setTableYear');
+  updateTable();
+}
+
+function showTab(name) {
+  const tabs = ['dashboard','table'];
+  document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', tabs[i] === name));
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById(name).classList.add('active');
+  const onDash = name === 'dashboard';
+  document.getElementById('compareBtn').style.display = onDash ? '' : 'none';
+  document.getElementById('compareHint').classList.toggle('visible', onDash && compareMode && !!(data[dashYear - 1] && data[dashYear - 1].length));
+  if (onDash) { updateMetrics(); setTimeout(updateCharts, 50); }
+  if (name === 'table') { buildYearTabs('tableYearTabs', tableYear, 'setTableYear'); updateTable(); }
+}
+
+function updateTable() {
+  const rows = (data[tableYear] || []).map(calcRow);
+  if (!rows.length) { document.getElementById('tableArea').innerHTML = '<p class="empty-msg">데이터 없음</p>'; return; }
+  let html = `<table><thead><tr><th>월</th><th>매출액 (백만원)</th><th>전기세 (원)</th><th>전력비율</th><th>사용전력 (kWh)</th><th>태양광 (kWh)</th><th>재생에너지비율</th></tr></thead><tbody>`;
+  rows.forEach(r => {
+    html += `<tr><td>${r.m}월</td><td>${fmt(Math.round(r.revenue/1000000))}</td><td>${fmt(r.elecCost)}</td><td>${pct(r.powerRatio)}</td><td>${fmt(r.usage)}</td><td>${fmt(r.solar)}</td><td>${pct(r.renewRatio)}</td></tr>`;
+  });
+  const tot = rows.reduce((a,r) => ({revenue:a.revenue+r.revenue,elecCost:a.elecCost+r.elecCost,usage:a.usage+r.usage,solar:a.solar+r.solar}), {revenue:0,elecCost:0,usage:0,solar:0});
+  html += `<tr><td>합계 / 평균</td><td>${fmt(Math.round(tot.revenue/1000000))}</td><td>${fmt(tot.elecCost)}</td><td>${pct(tot.elecCost/Math.max(tot.revenue,1))}</td><td>${fmt(tot.usage)}</td><td>${fmt(tot.solar)}</td><td>${pct(tot.solar/Math.max(tot.usage,1))}</td></tr>`;
+  html += '</tbody></table>';
+  document.getElementById('tableArea').innerHTML = html;
+}
+
+(async () => {
+  const result = await fetchData();
+  data = result.data;
+  showStatusBanner(result.source);
+  const years = Object.keys(data).map(Number).filter(y => !isNaN(y)).sort();
+  if (years.length) {
+    const latest = years[years.length - 1];
+    dashYear = latest; tableYear = latest;
+  }
+  buildYearTabs('dashYearTabs', dashYear, 'setDashYear');
+  syncCompareUI();
+  updateMetrics();
+  setTimeout(updateCharts, 100);
+})();
+</script>
+</body>
+</html>
