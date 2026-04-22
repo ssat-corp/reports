@@ -982,49 +982,40 @@ document.addEventListener('keydown', e => { if(e.key === 'Escape') closePhotoLig
 // ============================================================
 // INIT
 // ============================================================
-window.addEventListener('DOMContentLoaded', async () => {
-  initSupabase(DEFAULT_SUPABASE_URL, DEFAULT_SUPABASE_KEY);
-  await loadFromSupabase();
+window.addEventListener('DOMContentLoaded', () => {
+  const isAdmin = (!teamCode || !TEAM_META[teamCode]);
 
-  if(!teamCode || !TEAM_META[teamCode]){
+  // 1) 즉시 로컬 데이터로 렌더 (체감 속도 개선)
+  if(isAdmin){
     document.getElementById('view-select').classList.add('shown');
     document.querySelector('.container').classList.add('wide');
     renderTeamSelectView();
     renderTbmCalendar();
-    // 관리자 뷰에서는 실시간 동기화 후에도 캘린더 갱신
-    if(supaClient){
-      supaClient.channel('tbm_daily_sync_admin')
-        .on('postgres_changes', {event:'*', schema:'public', table:'safety_store'}, async () => {
-          await loadFromSupabase();
-          renderTbmCalendar();
-        })
-        .subscribe();
-    }
-    return;
+  } else {
+    applyTeamHeader();
+    document.getElementById('view-input').style.display = 'block';
+    const now = new Date();
+    document.getElementById('f-date').value = now.toISOString().split('T')[0];
+    document.getElementById('f-time').value = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+    populateDropdowns();
+    setupFieldFilled();
+    renderRecentRecords();
+    checkFreeNoteBanner();
+    checkMonthPhotoStatus();
   }
 
-  // 팀별 입력 화면
-  applyTeamHeader();
-  document.getElementById('view-input').style.display = 'block';
-
-  // 기본값 세팅 — 현재 날짜·시각 (사용자가 수동으로 다른 날짜/시각으로 수정 가능)
-  const meta = TEAM_META[teamCode];
-  const now = new Date();
-  document.getElementById('f-date').value = now.toISOString().split('T')[0];
-  document.getElementById('f-time').value = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
-
-  populateDropdowns();
-  setupFieldFilled();
-  renderRecentRecords();
-  checkFreeNoteBanner();
-  checkMonthPhotoStatus();
+  // 2) Supabase는 백그라운드 연결/동기화
+  initSupabase(DEFAULT_SUPABASE_URL, DEFAULT_SUPABASE_KEY);
+  loadFromSupabase().then(() => {
+    if(isAdmin) renderTbmCalendar();
+    else { renderRecentRecords(); checkFreeNoteBanner(); checkMonthPhotoStatus(); }
+  });
 
   // 저장소 실시간 이벤트
   window.addEventListener('storage', e => {
     if(e.key === 'safety_tbm_daily'){
-      renderRecentRecords();
-      checkFreeNoteBanner();
-      checkMonthPhotoStatus();
+      if(isAdmin) renderTbmCalendar();
+      else { renderRecentRecords(); checkFreeNoteBanner(); checkMonthPhotoStatus(); }
     }
   });
 });

@@ -127,9 +127,14 @@ textarea{resize:vertical;min-height:90px;line-height:1.55;}
 .photo-item img{width:100%;height:100%;object-fit:cover;cursor:pointer;}
 .photo-item .rm{position:absolute;top:4px;right:4px;width:22px;height:22px;border-radius:50%;background:rgba(28,25,23,0.75);color:#fff;border:none;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;}
 .photo-item .rm:hover{background:#991b1b;}
-.photo-add{border:2px dashed #a8a29e;border-radius:3px;padding:18px;text-align:center;cursor:pointer;background:#fafaf9;display:block;color:#78716c;font-size:13px;font-weight:700;transition:all 0.15s;}
+.photo-btn-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.photo-add{border:2px dashed #a8a29e;border-radius:3px;padding:16px 12px;text-align:center;cursor:pointer;background:#fafaf9;display:block;color:#78716c;font-size:13px;font-weight:700;transition:all 0.15s;letter-spacing:0.02em;}
 .photo-add:hover{border-color:#292524;color:#292524;background:#fff;}
+.photo-add.cam{border-color:#44403c;color:#292524;background:#fff;}
+.photo-add.cam:hover{background:#fafaf9;border-color:#292524;}
 .photo-add input{display:none;}
+.photo-add .pa-main{font-size:14px;font-weight:800;letter-spacing:0.04em;}
+.photo-add .pa-sub{font-size:10px;font-weight:500;color:#a8a29e;margin-top:2px;letter-spacing:0.05em;}
 
 /* 배너 */
 .warn-banner{background:#fefce8;border:1px solid #e4dcc5;border-left:3px solid #a16207;border-radius:3px;padding:12px 14px;font-size:13px;color:#713f12;margin-bottom:14px;line-height:1.6;display:none;}
@@ -166,6 +171,7 @@ textarea{resize:vertical;min-height:90px;line-height:1.55;}
   <div class="doc-no" id="h-code">PTR-ENV</div>
   <h1 id="h-title">환경운영점검표</h1>
   <div class="sub" id="h-sub">매주 금요일 실시 권장 · 월 1~2회 · 현장 환경·안전 순회 점검</div>
+  <div style="margin-top:8px;font-size:10px;font-weight:700;letter-spacing:0.18em;padding:2px 8px;border:1px solid rgba(255,255,255,0.25);border-radius:2px;color:rgba(255,255,255,0.75);display:inline-block;">ISO 14001 심사 대응 서류</div>
 </div>
 
 <div class="photo-lightbox" id="photo-lightbox" onclick="closePhotoLightbox()">
@@ -231,10 +237,18 @@ textarea{resize:vertical;min-height:90px;line-height:1.55;}
     <button type="button" class="btn btn-outline btn-sm" onclick="addIssueRow()" style="margin-top:6px;">+ 지적사항 추가</button>
 
     <div class="section-title"><span class="roman">V.</span>현장 사진</div>
-    <label class="photo-add">
-      사진 선택 (여러 장 · 현장 증빙용)
-      <input type="file" id="f-photos" accept="image/*" multiple onchange="onPhotosPicked(this)">
-    </label>
+    <div class="photo-btn-row">
+      <label class="photo-add cam">
+        <div class="pa-main">사진 촬영</div>
+        <div class="pa-sub">카메라 바로 열기</div>
+        <input type="file" accept="image/*" capture="environment" onchange="onPhotosPicked(this)">
+      </label>
+      <label class="photo-add">
+        <div class="pa-main">갤러리에서 선택</div>
+        <div class="pa-sub">여러 장 가능</div>
+        <input type="file" id="f-photos" accept="image/*" multiple onchange="onPhotosPicked(this)">
+      </label>
+    </div>
     <div class="photo-grid" id="photo-preview"></div>
 
     <button class="btn btn-primary-big" type="button" onclick="savePatrol()">점검 기록 저장</button>
@@ -778,35 +792,38 @@ document.addEventListener('keydown', e => { if(e.key === 'Escape') closePhotoLig
 // ============================================================
 // INIT
 // ============================================================
-window.addEventListener('DOMContentLoaded', async () => {
-  initSupabase(DEFAULT_SUPABASE_URL, DEFAULT_SUPABASE_KEY);
-  await loadFromSupabase();
-
-  if(!siteCode || !SITE_META[siteCode]){
-    // 사이트 선택 화면
+window.addEventListener('DOMContentLoaded', () => {
+  // 1) 즉시 로컬 데이터로 렌더 (로딩 체감 개선)
+  const isSelect = (!siteCode || !SITE_META[siteCode]);
+  if(isSelect){
     document.getElementById('view-select').classList.add('shown');
     document.querySelector('.container').classList.add('wide');
     renderSiteSelect();
     renderOverallRecent();
-    window.addEventListener('storage', e => {
-      if(e.key === 'safety_patrol_env'){ renderSiteSelect(); renderOverallRecent(); }
-    });
-    return;
+  } else {
+    applySiteHeader();
+    document.getElementById('view-input').classList.add('shown');
+    document.getElementById('f-date').value = new Date().toISOString().split('T')[0];
+    renderAreas();
+    renderIssues();
+    renderPhotoPreview();
+    renderRecent();
+    checkWeeklyBanner();
+    setupFilledWatch();
   }
 
-  // 입력 화면 (사이트별)
-  applySiteHeader();
-  document.getElementById('view-input').classList.add('shown');
-  document.getElementById('f-date').value = new Date().toISOString().split('T')[0];
-  renderAreas();
-  renderIssues();
-  renderPhotoPreview();
-  renderRecent();
-  checkWeeklyBanner();
-  setupFilledWatch();
+  // 2) Supabase 연결·동기화는 백그라운드에서 진행
+  initSupabase(DEFAULT_SUPABASE_URL, DEFAULT_SUPABASE_KEY);
+  loadFromSupabase().then(() => {
+    if(isSelect){ renderSiteSelect(); renderOverallRecent(); }
+    else { renderRecent(); checkWeeklyBanner(); }
+  });
 
   window.addEventListener('storage', e => {
-    if(e.key === 'safety_patrol_env'){ renderRecent(); checkWeeklyBanner(); }
+    if(e.key === 'safety_patrol_env'){
+      if(isSelect){ renderSiteSelect(); renderOverallRecent(); }
+      else { renderRecent(); checkWeeklyBanner(); }
+    }
   });
 });
 </script>
