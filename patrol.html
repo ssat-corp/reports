@@ -4,178 +4,212 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<title>현장 패트롤 점검 | 산업안전보건</title>
+<title>환경운영점검표 | 산업안전보건</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="patrol_data.js?v=20260422"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
 *{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;background:#f5f5f4;color:#1c1917;min-height:100vh;font-size:13px;}
+html{scrollbar-gutter:stable;}
+body{font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;background:#f5f5f4;color:#292524;min-height:100vh;font-size:13px;}
 
-.page-header{background:#292524;color:#fff;padding:24px 28px 20px;box-shadow:0 1px 0 #1c1917;position:relative;border-bottom:3px solid #1c1917;}
+.page-header{color:#fff;padding:20px 18px 18px;background:#44403c;position:relative;border-bottom:3px solid #292524;}
+@media(min-width:600px){.page-header{padding:24px 28px 20px;}}
 .page-header .doc-no{display:inline-block;font-size:10px;font-weight:700;letter-spacing:0.18em;padding:2px 10px;border:1px solid rgba(255,255,255,0.3);border-radius:2px;margin-bottom:10px;color:rgba(255,255,255,0.85);}
 .page-header h1{font-size:20px;font-weight:900;letter-spacing:-0.02em;}
 .page-header .sub{font-size:12px;opacity:0.7;margin-top:4px;}
-.page-header .conn{position:absolute;top:16px;right:20px;font-size:11px;background:rgba(255,255,255,0.1);padding:4px 10px;border-radius:4px;display:flex;align-items:center;gap:6px;}
+.page-header .conn{position:absolute;top:16px;right:18px;font-size:11px;background:rgba(255,255,255,0.1);padding:4px 10px;border-radius:4px;display:flex;align-items:center;gap:6px;}
 .conn-dot{width:7px;height:7px;border-radius:50%;background:#78716c;}
 .conn-dot.connected{background:#d6d3d1;animation:pulse 2s infinite;}
 .conn-dot.error{background:#ef4444;}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
 
-.container{max-width:1200px;margin:0 auto;padding:20px 20px 60px;}
+.container{max-width:760px;margin:0 auto;padding:16px 14px 60px;}
+.card{background:#fff;border:1px solid #d6d3d1;border-radius:4px;padding:22px 18px;margin-bottom:14px;box-shadow:none;}
+@media(min-width:600px){.card{padding:30px 32px;}}
+.card-title{font-size:22px;font-weight:900;color:#292524;margin-bottom:22px;padding:2px 0 12px 16px;border-left:5px solid #292524;border-bottom:2px solid #292524;letter-spacing:-0.025em;line-height:1.25;}
+.section-title{font-size:13px;font-weight:800;letter-spacing:0.22em;color:#292524;padding:10px 14px;margin:24px 0 14px;background:#e8e6e1;border-left:4px solid #292524;border-bottom:1px solid #a8a29e;text-transform:uppercase;display:flex;align-items:baseline;gap:12px;}
+.section-title:first-of-type{margin-top:6px;}
+.section-title .roman{display:inline-block;font-size:16px;font-weight:900;color:#292524;letter-spacing:0.06em;}
 
-.card{background:#fff;border:1px solid #d6d3d1;border-radius:6px;padding:18px 20px;margin-bottom:14px;box-shadow:none;}
-.card-title{font-size:14px;font-weight:800;color:#1c1917;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid #d6d3d1;letter-spacing:-0.01em;}
-.btn{display:inline-block;padding:7px 14px;background:#292524;color:#fff;border:none;border-radius:4px;font-size:12px;font-weight:700;cursor:pointer;text-decoration:none;transition:background 0.15s;letter-spacing:-0.01em;}
-.btn:hover{background:#1c1917;}
+.btn{display:inline-block;padding:8px 14px;background:#44403c;color:#fff;border:none;border-radius:3px;font-size:12px;font-weight:700;cursor:pointer;text-decoration:none;transition:background 0.15s;letter-spacing:0.02em;font-family:inherit;}
+.btn:hover{background:#292524;}
 .btn-outline{background:#fff;color:#44403c;border:1px solid #a8a29e;}
 .btn-outline:hover{background:#f5f5f4;border-color:#78716c;}
-.btn-success{background:#44403c;}
-.btn-success:hover{background:#292524;}
 .btn-sm{padding:5px 10px;font-size:11px;}
+.btn-primary-big{padding:16px 24px;font-size:13px;width:100%;font-weight:800;letter-spacing:0.25em;text-transform:uppercase;margin-top:10px;}
 
-.table-wrap{border:1px solid #d6d3d1;border-radius:4px;overflow:hidden;overflow-x:auto;}
-table{width:100%;border-collapse:collapse;font-size:13px;}
-th{background:#292524;padding:8px 10px;text-align:left;font-weight:700;color:#fff;border-right:1px solid #44403c;font-size:11px;letter-spacing:0.01em;}
-th:last-child{border-right:none;}
-td{padding:8px 10px;border-bottom:1px solid #e7e5e4;border-right:1px solid #e7e5e4;}
-td:last-child{border-right:none;}
-tbody tr:last-child td{border-bottom:none;}
-tbody tr:nth-child(even) td{background:#fafaf9;}
+label.field{display:block;margin-bottom:18px;padding-bottom:14px;border-bottom:1px dashed #e7e5e4;}
+label.field:last-of-type{border-bottom:none;}
+label.field > .lb{display:flex;align-items:center;gap:10px;font-size:15px;font-weight:700;color:#a8a29e;margin-bottom:10px;letter-spacing:-0.015em;transition:color 0.2s;}
+label.field > .lb .no{display:inline-flex;align-items:center;justify-content:center;min-width:34px;height:24px;padding:0 8px;background:#fafaf9;border:1px solid #d6d3d1;color:#a8a29e;font-size:11px;font-weight:800;letter-spacing:0.08em;border-radius:3px;transition:all 0.2s;}
+label.field.filled > .lb{color:#292524;}
+label.field.filled > .lb .no{background:#292524;color:#fff;border-color:#292524;}
+label.field > .hint{display:block;font-size:12px;color:#a8a29e;margin-top:6px;}
+input[type="text"], input[type="date"], select, textarea{
+  width:100%;border:1px solid #d6d3d1;border-radius:4px;padding:12px 14px;font-size:16px;font-family:inherit;
+  background:#fff;color:#a8a29e;transition:color 0.2s, border-color 0.15s;-webkit-appearance:none;
+}
+input[type="date"]{-webkit-appearance:listbox;}
+label.field.filled input, label.field.filled textarea, label.field.filled select{color:#292524;border-color:#a8a29e;}
+input:focus, select:focus, textarea:focus{outline:none;border-color:#292524;color:#292524;}
+textarea{resize:vertical;min-height:90px;line-height:1.55;}
 
-.badge{display:inline-block;padding:2px 8px;border-radius:3px;font-size:10px;font-weight:700;border:1px solid transparent;}
-.badge.green{background:#f0f0ee;color:#44403c;border-color:#d6d3d1;}
-.badge.yellow{background:#fefce8;color:#713f12;border-color:#e4dcc5;}
-.badge.red{background:#fef2f2;color:#991b1b;border-color:#e7d3d3;}
-.badge.blue{background:#f0f0ee;color:#44403c;border-color:#d6d3d1;}
-.badge.gray{background:#f5f5f4;color:#57534e;border-color:#d6d3d1;}
+/* ===== 구역별 체크리스트 ===== */
+.area-card{border:1px solid #d6d3d1;border-radius:4px;margin-bottom:14px;background:#fff;overflow:hidden;}
+.area-header{background:#fafaf9;padding:12px 14px;border-bottom:1px solid #e7e5e4;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;}
+.area-header .area-name{font-size:15px;font-weight:800;color:#292524;letter-spacing:-0.02em;display:flex;align-items:center;gap:10px;flex:1;}
+.area-header .area-count{font-size:11px;font-weight:700;color:#78716c;padding:2px 8px;background:#fff;border:1px solid #d6d3d1;border-radius:2px;letter-spacing:0.05em;}
+.area-header .area-actions{display:flex;gap:4px;flex-wrap:wrap;}
+.area-header .mini-btn{background:#fff;border:1px solid #a8a29e;color:#292524;padding:4px 10px;font-size:11px;font-weight:700;border-radius:3px;cursor:pointer;}
+.area-header .mini-btn:hover{background:#f5f5f4;}
+.area-header .mini-btn.reset{color:#991b1b;border-color:#c7a4a4;}
 
-.filter-bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px;background:#fafaf9;border:1px solid #e7e5e4;padding:10px 14px;border-radius:4px;}
-.pf-site{transition:all 0.15s;}
+.cat-block{padding:6px 14px 10px;border-bottom:1px dashed #e7e5e4;}
+.cat-block:last-child{border-bottom:none;}
+.cat-name{font-size:11px;font-weight:800;letter-spacing:0.18em;color:#78716c;padding:10px 0 8px;text-transform:uppercase;}
 
-.warn-banner{background:#fefce8;border:1px solid #e4dcc5;border-left:3px solid #a16207;border-radius:4px;padding:10px 14px;font-size:12px;color:#713f12;margin-bottom:14px;display:none;}
+.check-row{padding:10px 0;border-bottom:1px dotted #e7e5e4;}
+.check-row:last-child{border-bottom:none;}
+.check-row .item-text{font-size:14px;color:#292524;line-height:1.5;margin-bottom:8px;}
+.status-group{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;}
+.status-btn{padding:10px 4px;border:1px solid #d6d3d1;background:#fff;color:#78716c;font-size:13px;font-weight:700;cursor:pointer;border-radius:3px;text-align:center;letter-spacing:0.04em;font-family:inherit;}
+.status-btn:hover{background:#fafaf9;}
+.status-btn.active.ok{background:#44403c;color:#fff;border-color:#44403c;}
+.status-btn.active.bad{background:#991b1b;color:#fff;border-color:#991b1b;}
+.status-btn.active.na{background:#a8a29e;color:#fff;border-color:#a8a29e;}
+.bad-note{width:100%;margin-top:8px;padding:9px 10px;border:1px solid #c7a4a4;border-radius:3px;font-size:14px;resize:vertical;min-height:42px;font-family:inherit;display:none;background:#fdf5f5;color:#991b1b;}
+.bad-note.show{display:block;}
+
+/* 지적사항 카드 */
+.issue-card{border:1px solid #d6d3d1;border-radius:4px;padding:14px;margin-bottom:10px;background:#fafaf9;}
+.issue-card .ic-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.issue-card .ic-no{font-size:11px;font-weight:800;letter-spacing:0.12em;color:#78716c;padding:2px 8px;border:1px solid #d6d3d1;background:#fff;border-radius:2px;}
+.issue-card .ic-grid{display:grid;grid-template-columns:1fr;gap:8px;}
+@media(min-width:600px){.issue-card .ic-grid{grid-template-columns:1fr 1fr;}}
+.issue-card .ic-field > .lb{display:block;font-size:11px;font-weight:800;letter-spacing:0.12em;color:#78716c;margin-bottom:4px;text-transform:uppercase;}
+.issue-card input{padding:10px 12px;font-size:15px;background:#fff;color:#292524;border-color:#d6d3d1;}
+.issue-card .del-btn{background:#fef2f2;border:1px solid #e7d3d3;color:#991b1b;padding:4px 10px;font-size:11px;font-weight:700;border-radius:3px;cursor:pointer;}
+.issue-card .del-btn:hover{background:#fee2e2;}
+
+/* 사진 업로드 */
+.photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px;margin-top:10px;}
+.photo-item{position:relative;border:1px solid #d6d3d1;border-radius:3px;overflow:hidden;aspect-ratio:1;background:#fafaf9;}
+.photo-item img{width:100%;height:100%;object-fit:cover;cursor:pointer;}
+.photo-item .rm{position:absolute;top:4px;right:4px;width:22px;height:22px;border-radius:50%;background:rgba(28,25,23,0.75);color:#fff;border:none;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;}
+.photo-item .rm:hover{background:#991b1b;}
+.photo-add{border:2px dashed #a8a29e;border-radius:3px;padding:18px;text-align:center;cursor:pointer;background:#fafaf9;display:block;color:#78716c;font-size:13px;font-weight:700;transition:all 0.15s;}
+.photo-add:hover{border-color:#292524;color:#292524;background:#fff;}
+.photo-add input{display:none;}
+
+/* 배너 */
+.warn-banner{background:#fefce8;border:1px solid #e4dcc5;border-left:3px solid #a16207;border-radius:3px;padding:12px 14px;font-size:13px;color:#713f12;margin-bottom:14px;line-height:1.6;display:none;}
 .warn-banner.show{display:block;}
+.warn-banner.sup{display:none;}
+.warn-banner.sup.show{display:block;}
+
+/* 최근 기록 */
+.recent-row{display:flex;gap:12px;padding:12px 0;border-bottom:1px dotted #e7e5e4;align-items:flex-start;font-size:13px;}
+.recent-row:last-child{border-bottom:none;}
+.recent-row .d{font-weight:700;color:#292524;min-width:95px;}
+.recent-row .d .wd{font-size:10px;font-weight:500;color:#a8a29e;}
+.recent-row .t{flex:1;color:#44403c;line-height:1.5;}
+.recent-row .t .tt{font-weight:700;color:#292524;}
+.recent-row .t .stats{font-size:12px;color:#78716c;margin-top:2px;}
+.recent-row .t .chips{margin-top:4px;display:flex;gap:4px;flex-wrap:wrap;}
+.recent-row .t .chip{display:inline-block;font-size:10px;font-weight:700;padding:2px 7px;border-radius:2px;letter-spacing:0.05em;}
+.recent-row .t .chip.bad{background:#fef2f2;color:#991b1b;border:1px solid #e7d3d3;}
+.recent-row .t .chip.photo{background:#f0f0ee;color:#44403c;border:1px solid #d6d3d1;}
+.recent-row .act{display:flex;flex-direction:column;gap:4px;}
 
 .photo-lightbox{position:fixed;inset:0;background:rgba(28,25,23,0.9);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px;cursor:zoom-out;}
 .photo-lightbox.show{display:flex;}
-.photo-lightbox img{max-width:95%;max-height:92vh;object-fit:contain;border-radius:4px;box-shadow:0 4px 24px rgba(0,0,0,0.5);}
-.photo-lightbox .close-btn{position:absolute;top:16px;right:20px;background:rgba(255,255,255,0.15);color:#fff;border:none;width:40px;height:40px;border-radius:50%;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
-.photo-lightbox .close-btn:hover{background:rgba(255,255,255,0.3);}
-.photo-lightbox .caption{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);color:#fff;background:rgba(0,0,0,0.6);padding:8px 16px;border-radius:4px;font-size:13px;max-width:80%;text-align:center;}
+.photo-lightbox img{max-width:95%;max-height:92vh;object-fit:contain;border-radius:4px;}
+.photo-lightbox .close-btn{position:absolute;top:16px;right:20px;background:rgba(255,255,255,0.15);color:#fff;border:none;width:40px;height:40px;border-radius:50%;font-size:20px;cursor:pointer;}
 
-@media print{
-  .no-print{display:none!important;}
-  body{background:#fff;}
-  .page-header{background:#292524!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
-  .card{box-shadow:none!important;border:1px solid #000!important;break-inside:avoid;}
-  #patrol-check-table thead tr{background:#292524!important;color:#fff!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
-  #patrol-check-table tr[style*="f1f5f9"] td{background:#e7e5e4!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
-  @page{size:A4 portrait;margin:10mm;}
-}
+@media print{.no-print{display:none!important;}body{background:#fff;}.card{border:1px solid #000!important;}@page{size:A4 portrait;margin:10mm;}}
 </style>
 </head>
 <body>
 
 <div class="page-header">
   <div class="conn no-print"><span id="conn-dot" class="conn-dot"></span><span id="conn-text">연결 확인 중...</span></div>
-  <div class="doc-no">PTR-FORM</div>
-  <h1>현장 패트롤 점검</h1>
-  <div class="sub">담당자 · 주간 순회점검 · 사업장별 체크리스트</div>
+  <div class="doc-no">PTR-ENV</div>
+  <h1>환경운영점검표</h1>
+  <div class="sub">매주 금요일 실시 권장 · 월 1~2회 · 현장 환경·안전 순회 점검</div>
 </div>
 
 <div class="photo-lightbox" id="photo-lightbox" onclick="closePhotoLightbox()">
   <button class="close-btn" onclick="event.stopPropagation();closePhotoLightbox()">✕</button>
   <img id="lightbox-img" src="" alt="">
-  <div class="caption" id="lightbox-caption"></div>
 </div>
 
 <div class="container">
 
-  <div id="warn-no-supa" class="warn-banner">
+  <div id="warn-no-supa" class="warn-banner sup">
     <strong>※ 실시간 공유 연결 실패.</strong> 관리자에게 문의해주세요.
   </div>
 
-  <div class="no-print" style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;">
-    <a href="patrol_print.html" target="_blank" class="btn btn-sm">통합 인쇄용 체크리스트</a>
-  </div>
-
-  <div class="filter-bar no-print">
-    <span style="font-size:11px;font-weight:800;letter-spacing:0.15em;color:#57534e;text-transform:uppercase;">사업장 선택</span>
-    <button class="pf-site btn btn-sm" onclick="setPatrolFilter('suwon',this)" style="background:#292524;color:#fff;">수원 · 사출·조립</button>
-    <button class="pf-site btn btn-outline btn-sm" onclick="setPatrolFilter('hwaseong',this)">화성 · 도색·화학</button>
+  <div id="weekly-banner" class="warn-banner">
+    <strong>※ 이번 주 환경점검이 아직 기록되지 않았습니다.</strong> 매주 금요일 기준 실시 권장.
   </div>
 
   <div class="card">
-    <div id="patrol-calendar"></div>
-  </div>
+    <div class="card-title">환경운영점검 기록</div>
 
-  <div id="patrol-checklist-form" style="display:none;">
-    <div class="card">
-      <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:12px;border-bottom:2px solid #1c1917;margin-bottom:12px;flex-wrap:wrap;gap:10px;">
-        <div>
-          <div style="font-size:18px;font-weight:900;color:#1c1917;" id="patrol-form-title">현장 패트롤 점검표</div>
-          <div style="font-size:12px;color:#6b7280;margin-top:2px;" id="patrol-form-date"></div>
-        </div>
-        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
-          <button class="btn btn-outline btn-sm no-print" onclick="window.print()">이 점검표 인쇄</button>
-          <div style="text-align:right;font-size:11px;color:#6b7280;">
-            <div>점검자: <input type="text" id="p-inspector" placeholder="이름" style="border:none;border-bottom:1px solid #d1d5db;width:80px;font-size:11px;padding:2px 4px;"></div>
-            <div style="margin-top:4px;">날씨:
-              <select id="p-weather" style="border:none;border-bottom:1px solid #d1d5db;font-size:11px;padding:2px;">
-                <option>맑음</option><option>흐림</option><option>비</option><option>눈</option>
-              </select>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div class="section-title"><span class="roman">I.</span>기본 정보</div>
 
-      <div class="table-wrap">
-        <table id="patrol-check-table" style="font-size:13px;">
-          <thead><tr style="background:#1c1917;color:#fff;">
-            <th style="width:30%;padding:10px 12px;color:#fff;">점검사항</th>
-            <th style="width:40%;padding:10px 12px;color:#fff;">점검내용</th>
-            <th style="width:50px;padding:10px;text-align:center;color:#fff;">점검</th>
-            <th style="width:25%;padding:10px 12px;color:#fff;">비고</th>
-          </tr></thead>
-          <tbody id="patrol-check-tbody"></tbody>
-        </table>
-      </div>
+    <label class="field">
+      <span class="lb"><span class="no">01</span> 점검 일자</span>
+      <input type="date" id="f-date">
+    </label>
+    <label class="field">
+      <span class="lb"><span class="no">02</span> 점검자</span>
+      <input type="text" id="f-inspector" placeholder="이름">
+    </label>
 
-      <div style="margin-top:16px;padding-top:12px;border-top:2px solid #d6d3d1;">
-        <div style="font-size:13px;font-weight:700;color:#1c1917;margin-bottom:8px;">조치 사항</div>
-        <textarea id="p-issues" placeholder="특이사항, 불량/개선 필요 사항, 조치 완료 사항 기재" style="width:100%;min-height:60px;padding:10px;border:1px solid #d1d5db;border-radius:8px;font-size:13px;font-family:inherit;resize:vertical;"></textarea>
-      </div>
-
-      <div style="margin-top:12px;padding-top:12px;border-top:2px solid #d6d3d1;" class="no-print">
-        <div style="font-size:11px;font-weight:800;letter-spacing:0.15em;color:#57534e;margin-bottom:8px;text-transform:uppercase;">현장 사진 <span style="font-size:10px;font-weight:500;color:#a8a29e;letter-spacing:normal;text-transform:none;">(여러 장 · Storage 공개 URL)</span></div>
-        <input type="file" id="p-photos" accept="image/*" multiple onchange="addPatrolPhotos(this)" style="width:100%;padding:4px;border:1px solid #d1d5db;border-radius:6px;font-size:12px;">
-        <div id="p-photos-preview" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;"></div>
-      </div>
-
-      <div class="no-print" style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px;">
-        <button class="btn btn-success" onclick="savePatrolDay()">💾 점검 저장</button>
-      </div>
+    <div class="section-title"><span class="roman">II.</span>구역별 체크리스트</div>
+    <div style="font-size:12px;color:#78716c;margin-bottom:12px;line-height:1.6;">
+      각 항목을 OK / 불량 / N/A 로 표시하세요. 불량 선택 시 사유·처리방안 기재란이 자동으로 나타납니다.
     </div>
+    <div id="areas-container"></div>
+
+    <div class="section-title"><span class="roman">III.</span>기타 전달사항</div>
+    <label class="field">
+      <span class="lb"><span class="no">03</span> 기타 특이사항</span>
+      <textarea id="f-remark" placeholder="예: 3층 자재창고 천장등 교체 등"></textarea>
+    </label>
+
+    <div class="section-title"><span class="roman">IV.</span>지적사항 (문제점 · 조치)</div>
+    <div id="issues-container"></div>
+    <button type="button" class="btn btn-outline btn-sm" onclick="addIssueRow()" style="margin-top:6px;">+ 지적사항 추가</button>
+
+    <div class="section-title"><span class="roman">V.</span>현장 사진</div>
+    <label class="photo-add">
+      사진 선택 (여러 장 · 현장 증빙용)
+      <input type="file" id="f-photos" accept="image/*" multiple onchange="onPhotosPicked(this)">
+    </label>
+    <div class="photo-grid" id="photo-preview"></div>
+
+    <button class="btn btn-primary-big" type="button" onclick="savePatrol()">점검 기록 저장</button>
   </div>
 
+  <!-- 최근 기록 -->
   <div class="card">
-    <div class="card-title">📜 패트롤 이력</div>
-    <div class="table-wrap"><table>
-      <thead><tr><th>날짜</th><th>사업장</th><th>점검자</th><th>점검</th><th>불량</th><th class="no-print">작업</th></tr></thead>
-      <tbody id="patrol-history-body"></tbody>
-    </table></div>
+    <div class="card-title">최근 점검 기록 <span id="recent-count" style="font-size:13px;font-weight:400;color:#78716c;letter-spacing:normal;"></span></div>
+    <div id="recent-records"></div>
   </div>
 
   <div style="text-align:center;color:#a8a29e;font-size:11px;margin-top:30px;">
-    © 신성오토텍 안전환경팀 · 현장 패트롤 점검
+    © 신성오토텍 안전환경팀 · 환경운영점검표
   </div>
 
 </div>
 
 <script>
 // ============================================================
-// SHARED: Supabase 연결 + 데이터 계층
+// SUPABASE LAYER (TBM과 동일 공용)
 // ============================================================
-// 기본값 (localStorage에 저장된 값이 있으면 그게 우선 — 모든 기기/브라우저에서 자동 연결)
 const DEFAULT_SUPABASE_URL = 'https://onohwrswzaiwbabiusrj.supabase.co';
 const DEFAULT_SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9ub2h3cnN3emFpd2JhYml1c3JqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyMjQ5MTgsImV4cCI6MjA4OTgwMDkxOH0.vK_l0iWBJyZmLwzNfQHob2ejEZGfg8mQ8mV-6-lXaN0';
 let supaClient = null;
@@ -186,13 +220,11 @@ const DB = {
   async set(key, val){
     localStorage.setItem('safety_'+key, JSON.stringify(val));
     if(!supaClient) return;
-    try{
-      await supaClient.from('safety_store').upsert({key, value:val}, {onConflict:'key'});
-    }catch(e){ console.error('Supabase upsert 실패:', key, e); }
+    try{ await supaClient.from('safety_store').upsert({key, value:val}, {onConflict:'key'}); }
+    catch(e){ console.error('Supabase upsert 실패:', key, e); }
   }
 };
 
-// 값이 "비어있다"는 판단: null, 빈 배열, 빈 객체
 function _isEmptySafetyValue(v){
   if(v === null || v === undefined) return true;
   if(Array.isArray(v)) return v.length === 0;
@@ -205,436 +237,229 @@ async function loadFromSupabase(){
   try{
     const {data, error} = await supaClient.from('safety_store').select('*');
     if(error) throw error;
-    if(data){
-      data.forEach(row => {
-        // 가드: 원격이 비어있고 로컬에 데이터가 있으면 덮어쓰지 않음 (데이터 소실 방지)
-        const localRaw = localStorage.getItem('safety_'+row.key);
-        if(_isEmptySafetyValue(row.value) && localRaw){
-          try{
-            const localVal = JSON.parse(localRaw);
-            if(!_isEmptySafetyValue(localVal)){
-              console.warn('[supaLoad 가드]', row.key, '원격 빈 값 감지 → 로컬 보존');
-              return;
-            }
-          }catch(e){}
-        }
-        localStorage.setItem('safety_'+row.key, JSON.stringify(row.value));
-      });
-    }
-  }catch(e){ console.error('supaLoad 오류:', e); }
+    if(data) data.forEach(row => {
+      const localRaw = localStorage.getItem('safety_'+row.key);
+      if(_isEmptySafetyValue(row.value) && localRaw){
+        try{
+          const localVal = JSON.parse(localRaw);
+          if(!_isEmptySafetyValue(localVal)){
+            console.warn('[supaLoad 가드]', row.key, '원격 빈 값 감지 → 로컬 보존');
+            return;
+          }
+        }catch(e){}
+      }
+      localStorage.setItem('safety_'+row.key, JSON.stringify(row.value));
+    });
+  }catch(e){ console.error('supaLoad:', e); }
 }
 
 function initSupabase(url, key){
   try{
     supaClient = supabase.createClient(url, key);
-    document.getElementById('conn-dot').className = 'conn-dot connected';
-    document.getElementById('conn-text').textContent = '실시간 공유 연결됨';
-    document.getElementById('warn-no-supa').classList.remove('show');
-    supaClient.channel('patrol_sync')
+    const dot=document.getElementById('conn-dot'); const txt=document.getElementById('conn-text');
+    if(dot) dot.className = 'conn-dot connected';
+    if(txt) txt.textContent = '실시간 공유 연결됨';
+    document.getElementById('warn-no-supa')?.classList.remove('show');
+    supaClient.channel('patrol_env_sync')
       .on('postgres_changes', {event:'*', schema:'public', table:'safety_store'}, async () => {
         await loadFromSupabase();
-        renderPatrolCalendar(); renderHistories();
-        const form = document.getElementById('patrol-checklist-form');
-        if(form.style.display === 'block' && form.dataset.key){
-          const day = parseInt(form.dataset.key.split('-').pop(), 10);
-          openPatrolDay(day);
-        }
+        renderRecent();
+        checkWeeklyBanner();
       })
       .subscribe();
     return true;
   }catch(e){
     console.error('Supabase 연결 실패:', e);
-    document.getElementById('conn-dot').className = 'conn-dot error';
-    document.getElementById('conn-text').textContent = '연결 실패';
+    const dot=document.getElementById('conn-dot'); const txt=document.getElementById('conn-text');
+    if(dot) dot.className = 'conn-dot error';
+    if(txt) txt.textContent = '연결 실패';
     return false;
   }
 }
 
-// Supabase Storage에 사진 업로드 → 공개 URL 반환
 async function uploadToStorage(file, subfolder){
   if(!supaClient) throw new Error('Supabase 미연결');
   const ts = Date.now();
   const safeName = file.name.replace(/[^a-zA-Z0-9가-힣._-]/g, '_');
   const path = `${subfolder}/${ts}_${safeName}`;
   const {error} = await supaClient.storage.from('safety-files').upload(path, file, {
-    contentType: file.type,
-    upsert: false
+    contentType: file.type || 'application/octet-stream', upsert: false
   });
   if(error) throw error;
   const {data:urlData} = supaClient.storage.from('safety-files').getPublicUrl(path);
-  return {
-    name: file.name,
-    url: urlData.publicUrl,
-    path: path,
-    mime: file.type,
-    size: file.size,
-    uploadedAt: new Date().toISOString()
-  };
+  return {url:urlData.publicUrl, path, name:file.name};
 }
-
 async function deleteFromStorage(path){
   if(!supaClient || !path) return;
-  try{
-    await supaClient.storage.from('safety-files').remove([path]);
-  }catch(e){ console.warn('Storage 삭제 실패:', path, e); }
+  try{ await supaClient.storage.from('safety-files').remove([path]); }catch(e){ console.warn(e); }
 }
 
 // ============================================================
-// PATROL ZONES DATA
+// 로컬 상태 (입력 중)
 // ============================================================
-let patrolSiteFilter = 'suwon';
-const patrolZones = [
-  {id:'pc1', site:'all', level:'manager', name:'🛡️ 현장관리 기본', items:[
-    'TBM 활동 실시 확인',
-    '보호구(안전모·안전화·보안경) 착용 확인 및 미착용자 시정',
-    '통로 확보 (60cm↑) 및 바닥 미끄럼 요인 없음',
-    '안전표지·수칙 게시 상태 양호',
-    '비상연락망·응급처치함 비치 확인',
-    '작업 중 휴대폰 사용 금지 준수'
-  ]},
-  {id:'pc6', site:'all', level:'manager', name:'🧯 소방·비상', items:[
-    '소화기 배치·압력(녹색)·안전핀·몸체 상태 양호',
-    '소화전 표시등 점등 / 호스·노즐 결합 상태',
-    '비상구 표시등 점등 / 장애물 없음 (항시 개방)',
-    '대피로 확보 / 구급함 비치 확인',
-    '비상 연락처 게시판 부착 상태'
-  ]},
-  {id:'pc5', site:'all', level:'manager', name:'⚡ 전기·분전반', items:[
-    '각 층 분전반 문 잠금 / 내부 이물질·피복 양호',
-    '분전반 접지 상태 양호',
-    '조명 손상·탈락 / 콘센트 파손 없음',
-    '임시 연장선 방치 없음 / 가연성 물질 없음'
-  ]},
-  {id:'pc9', site:'all', level:'manager', name:'🏢 공용구역·외부', items:[
-    '사무동 통로 정리정돈 / 대피 동선 장애물 없음',
-    '비상구 표시 명확 / 출입구 물건 방치 없음',
-    '외부 통로 바닥(균열·미끄럼) / 주차장 정리',
-    '외부 조명·배수로 상태 양호'
-  ]},
-  {id:'pc10', site:'all', level:'team', name:'✨ 3정5S 점검', items:[
-    '[정품] 지정 자재·부품만 있는가 (불필요 물품 제거)',
-    '[정량] 적정 수량만 보관 (과다 적재 없음)',
-    '[정위치] 자재·공구 지정 위치 보관 (위치 표시 확인)',
-    '[정리] 필요/불필요 구분 완료',
-    '[정돈] 누구나 꺼내고 되돌릴 수 있게 정돈',
-    '[청소] 작업장·설비·바닥 청소 상태',
-    '공구 사용 후 제자리 반납 / 퇴근 전 5분 정리'
-  ]},
-  {id:'pc8', site:'all', level:'team', name:'🌊 환경·폐기물', items:[
-    '환풍기 작동 / 작업장 환기 상태 양호',
-    '외부 배수관(맨홀) 막힘 없음',
-    '폐기물 지정 장소 외 방치·넘침 없음',
-    '분리수거 적정 / 유해 폐기물 별도 보관'
-  ]},
-  {id:'pc2s', site:'suwon', level:'manager', name:'🏭 사출·조립 설비', items:[
-    '사출기 안전문 닫힘 / 비상정지 작동',
-    '사출기 주변 오일·수지 누출 없음',
-    '금형 체결 상태 (볼트 완료)',
-    '컨베이어 안전덮개 정상 (목장갑 금지 구역)',
-    '래핑기 안전덮개·비상정지 정상',
-    '건조기 온도·잠금 / 리프트 안전바·하중',
-    '각 설비 비상정지·스위치 작동 확인',
-    '방호장치·안전가드 설치 상태',
-    '설비 정비 시 LOTO 실시 확인'
-  ]},
-  {id:'pc3s', site:'suwon', level:'manager', name:'🏗️ 천장주행크레인·금형', items:[
-    '체인·와이어 마모 없음 / 훅 해지장치 정상',
-    '최대하중 표시 확인 (초과 없음)',
-    '인양 중 하부 작업자 없음 / 키 이상 운반 없음',
-    '금형 2인1조+신호수 / 안전모 착용',
-    '금형 보관대 안전 고정 상태'
-  ]},
-  {id:'pc4s', site:'suwon', level:'team', name:'🚜 지게차·운반 (수원)', items:[
-    '지게차 통로 구분 / 보행자 혼용 없음',
-    '후방경보·제동 정상 / 면허 소지 확인',
-    '포크 20~30cm 유지 / 키 분리보관',
-    '운반대차 하중 준수 / 전방 주시',
-    '중량물 2인↑ 운반 (25kg 이상)'
-  ]},
-  {id:'pcsw', site:'suwon', level:'team', name:'🌊 수원 환경설비', items:[
-    '쿨링타워 가동 상태 (동절기 12~2월 확인)',
-    '쿨링타워 누수 없음 / 냉각수 보충',
-    '콤프레샤 작동 및 이상음 없음'
-  ]},
-  {id:'pc2h', site:'hwaseong', level:'manager', name:'🏭 도색·레이저 설비', items:[
-    '도색 부스 환기·배기장치 정상 작동',
-    '도색실 방폭 설비·접지 상태 양호',
-    '레이저 장비 안전커버·인터록 정상',
-    '레이저 보안경 착용 확인 (작업자 전원)',
-    '각 설비 비상정지·스위치 작동 확인',
-    '방호장치·안전가드 설치 상태',
-    '설비 정비 시 LOTO 실시 확인'
-  ]},
-  {id:'pc7h', site:'hwaseong', level:'manager', name:'🧪 유해물질·화학물질', items:[
-    '유해물질 지정 장소 보관 / 경고표지 부착',
-    'MSDS 비치 및 작업자 숙지 확인',
-    '취급 시 보호구(방독마스크·내화학장갑) 착용',
-    '화학물질 보관소 소화기·환기 상태',
-    '유해물질 취급자 교육 실시 확인',
-    '유기용제 전용 용기 사용 / 밀폐 보관'
-  ]},
-  {id:'pc4h', site:'hwaseong', level:'team', name:'🚜 지게차·운반 (화성)', items:[
-    '지게차 통로 구분 / 보행자 혼용 없음',
-    '후방경보·제동 정상 / 면허 소지 확인',
-    '포크 20~30cm 유지 / 키 분리보관',
-    '운반대차 하중 준수 / 전방 주시',
-    '중량물 2인↑ 운반 (25kg 이상)'
-  ]},
-  {id:'pchw', site:'hwaseong', level:'team', name:'🌬️ 화성 환경설비', items:[
-    '도색실 배기·집진 장치 작동 확인',
-    '유기용제 작업장 환기 상태 양호',
-    '소음·분진 수준 이상 없음',
-    '폐도료·폐용제 별도 수거 보관'
-  ]}
-];
+let state = {
+  checks: {},     // {'area:cat:idx': {status:'ok|bad|na', note:''}}
+  issues: [],     // [{id, location, problem, assignee, action, date}]
+  photos: []      // [{url, path, name}]
+};
 
-function setPatrolFilter(val, btn){
-  patrolSiteFilter = val;
-  document.querySelectorAll('.pf-site').forEach(b=>{
-    b.classList.add('btn-outline');
-    b.style.background='#fff'; b.style.color='#292524';
-  });
-  if(btn){ btn.style.background='#292524'; btn.style.color='#fff'; btn.classList.remove('btn-outline'); }
-  const form = document.getElementById('patrol-checklist-form');
-  if(form.style.display === 'block' && form.dataset.key){
-    const day = parseInt(form.dataset.key.split('-').pop(), 10);
-    openPatrolDay(day);
-  }
-}
-function getFilteredZones(){
-  return patrolZones.filter(z => z.site==='all' || z.site===patrolSiteFilter);
-}
+function ckey(areaCode, catName, idx){ return `${areaCode}:${catName}:${idx}`; }
 
 // ============================================================
-// 달력 · 체크리스트
+// RENDER: 구역별 체크리스트
 // ============================================================
-function renderPatrolCalendar(){
-  const el = document.getElementById('patrol-calendar');
-  if(!el) return;
-  const now = new Date();
-  const year = now.getFullYear(), month = now.getMonth(), todayDate = now.getDate();
-  const firstDay = new Date(year, month, 1).getDay();
-  const daysInMonth = new Date(year, month+1, 0).getDate();
-  const dayNames = ['일','월','화','수','목','금','토'];
-  const patrolData = DB.getObj('patrolCalendar');
-  const monthKey = `${year}-${String(month+1).padStart(2,'0')}`;
-
-  let doneCount = 0;
-  for(let d=1; d<=daysInMonth; d++){
-    const key = `${monthKey}-${String(d).padStart(2,'0')}`;
-    if(patrolData[key] && patrolData[key].done) doneCount++;
-  }
-
-  let html = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-    <span style="font-size:14px;font-weight:700;color:#1c1917;">${year}년 ${month+1}월 패트롤</span>
-    <span style="font-size:12px;color:#6b7280;">실시: <strong style="color:#292524;">${doneCount}</strong>회</span>
-  </div>`;
-  html += '<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;text-align:center;font-size:12px;">';
-  dayNames.forEach((d,i)=> html += `<div style="font-weight:700;color:${i===0?'#dc2626':'#6b7280'};padding:4px 0;">${d}</div>`);
-  for(let i=0; i<firstDay; i++) html += '<div></div>';
-  for(let d=1; d<=daysInMonth; d++){
-    const dow = (firstDay + d - 1) % 7;
-    const key = `${monthKey}-${String(d).padStart(2,'0')}`;
-    const dayData = patrolData[key];
-    const isDone = dayData && dayData.done;
-    const isToday = d === todayDate;
-    const bg = isDone ? '#e7e5e4' : isToday ? '#f5f5f4' : '#fff';
-    const border = isToday ? '2px solid #292524' : '1px solid #d6d3d1';
-    const icon = isDone ? '✅' : '';
-    html += `<div onclick="openPatrolDay(${d})" style="padding:6px 2px;border-radius:8px;background:${bg};border:${border};cursor:pointer;min-height:44px;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform=''">
-      <div style="font-size:12px;font-weight:${isToday?'800':'500'};color:${dow===0?'#dc2626':'#374151'};">${d}</div>
-      <div style="font-size:13px;margin-top:1px;">${icon}</div>
-    </div>`;
-  }
-  html += '</div>';
-  el.innerHTML = html;
-}
-
-function openPatrolDay(day){
-  const now = new Date();
-  const monthKey = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
-  const key = `${monthKey}-${String(day).padStart(2,'0')}`;
-  const dayNames = ['일','월','화','수','목','금','토'];
-  const dateObj = new Date(now.getFullYear(), now.getMonth(), day);
-  const dayName = dayNames[dateObj.getDay()];
-
-  document.getElementById('patrol-form-title').textContent = '현장 패트롤 점검표';
-  document.getElementById('patrol-form-date').textContent = `${key} (${dayName})`;
-  document.getElementById('patrol-checklist-form').style.display = 'block';
-  document.getElementById('patrol-checklist-form').dataset.key = key;
-
-  const filtered = getFilteredZones();
-  const patrolData = DB.getObj('patrolCalendar');
-  const saved = patrolData[key] || {};
-  const tbody = document.getElementById('patrol-check-tbody');
-  let rows = '';
-  filtered.forEach(zone=>{
-    const icon = zone.name.match(/^(\S+)/)?.[1]||'';
-    const label = zone.name.replace(/^(\S+)\s*/,'');
-    rows += `<tr style="background:#f5f5f4;"><td colspan="4" style="padding:8px 12px;font-weight:800;font-size:13px;color:#1c1917;">${icon} ${label}</td></tr>`;
-    zone.items.forEach((item,i)=>{
-      const itemKey = `${zone.id}_${i}`;
-      const checked = saved[itemKey] ? 'checked' : '';
-      const memo = saved[`${itemKey}_memo`] || '';
-      rows += `<tr>
-        <td style="padding:6px 12px;font-size:12px;color:#374151;border-bottom:1px solid #e7e5e4;" colspan="2">${item}</td>
-        <td style="text-align:center;border-bottom:1px solid #e7e5e4;"><input type="checkbox" ${checked} data-key="${itemKey}" style="width:18px;height:18px;accent-color:#292524;"></td>
-        <td style="border-bottom:1px solid #e7e5e4;"><input type="text" value="${memo.replace(/"/g,'&quot;')}" data-memo="${itemKey}" placeholder="" style="width:100%;border:none;font-size:11px;padding:4px;color:#6b7280;"></td>
-      </tr>`;
+function renderAreas(){
+  const box = document.getElementById('areas-container');
+  box.innerHTML = PATROL_DATA.areas.map(area => {
+    let inner = '';
+    let total = 0;
+    area.categories.forEach(cat => {
+      total += cat.items.length;
+      inner += `<div class="cat-block">
+        <div class="cat-name">${cat.name}</div>`;
+      cat.items.forEach((item, idx) => {
+        const k = ckey(area.code, cat.name, idx);
+        inner += `<div class="check-row" data-key="${k}">
+          <div class="item-text">${escapeHtml(item)}</div>
+          <div class="status-group">
+            <button type="button" class="status-btn ok" onclick="setStatus('${k}','ok',this)">OK</button>
+            <button type="button" class="status-btn bad" onclick="setStatus('${k}','bad',this)">불량</button>
+            <button type="button" class="status-btn na" onclick="setStatus('${k}','na',this)">N/A</button>
+          </div>
+          <textarea class="bad-note" placeholder="부적합 사유 및 처리방안" oninput="updateNote('${k}',this)"></textarea>
+        </div>`;
+      });
+      inner += `</div>`;
     });
-  });
-  tbody.innerHTML = rows;
-
-  document.getElementById('p-issues').value = saved.issues || '';
-  if(saved.inspector) document.getElementById('p-inspector').value = saved.inspector;
-  if(saved.weather) document.getElementById('p-weather').value = saved.weather;
-
-  renderPatrolPhotosPreview(key);
-  document.getElementById('patrol-checklist-form').scrollIntoView({behavior:'smooth', block:'start'});
-}
-
-async function savePatrolDay(){
-  const form = document.getElementById('patrol-checklist-form');
-  const key = form.dataset.key;
-  if(!key){ alert('날짜가 선택되지 않았습니다.'); return; }
-  const patrolData = DB.getObj('patrolCalendar');
-  const dayData = patrolData[key] || {};
-  let totalChecked = 0, totalItems = 0;
-  document.querySelectorAll('#patrol-check-tbody input[type=checkbox]').forEach(cb=>{
-    dayData[cb.dataset.key] = cb.checked;
-    totalItems++;
-    if(cb.checked) totalChecked++;
-  });
-  document.querySelectorAll('#patrol-check-tbody input[data-memo]').forEach(inp=>{
-    if(inp.value) dayData[inp.dataset.memo+'_memo'] = inp.value;
-    else delete dayData[inp.dataset.memo+'_memo'];
-  });
-  dayData.done = totalChecked > 0;
-  dayData.totalChecked = totalChecked;
-  dayData.totalItems = totalItems;
-  dayData.issues = document.getElementById('p-issues').value || '';
-  dayData.inspector = document.getElementById('p-inspector').value || '';
-  dayData.weather = document.getElementById('p-weather').value || '';
-  dayData.siteFilter = patrolSiteFilter;
-  dayData.savedAt = new Date().toISOString();
-  patrolData[key] = dayData;
-  await DB.set('patrolCalendar', patrolData);
-
-  const existing = DB.get('patrol');
-  const filtered = existing.filter(r=>r.date!==key);
-  filtered.unshift({
-    id:Date.now(), date:key, inspector:dayData.inspector, type:'패트롤 점검',
-    weather:dayData.weather, siteFilter:patrolSiteFilter,
-    totalChecked, totalItems, badCount:totalItems-totalChecked,
-    issues:dayData.issues, createdAt:new Date().toISOString()
-  });
-  await DB.set('patrol', filtered);
-
-  alert(`✅ ${key} 패트롤 저장! (${totalChecked}/${totalItems} 점검)\n\n메인 대시보드에도 실시간 반영됩니다.`);
-  renderPatrolCalendar();
-  renderHistories();
-}
-
-// ============================================================
-// 사진 (Supabase Storage)
-// ============================================================
-async function addPatrolPhotos(input){
-  if(!supaClient){ alert('Supabase 미연결 상태입니다. 대시보드 설정에서 먼저 연결해주세요.'); input.value=''; return; }
-  const form = document.getElementById('patrol-checklist-form');
-  const key = form?.dataset.key;
-  if(!key){ alert('먼저 달력에서 날짜를 선택하세요.'); input.value=''; return; }
-  const patrolData = DB.getObj('patrolCalendar');
-  if(!patrolData[key]) patrolData[key] = {};
-  if(!Array.isArray(patrolData[key].photos)) patrolData[key].photos = [];
-  const previewEl = document.getElementById('p-photos-preview');
-  const files = Array.from(input.files);
-
-  for(let i = 0; i < files.length; i++){
-    const file = files[i];
-    const placeholder = document.createElement('div');
-    placeholder.style.cssText = 'width:100px;height:100px;border:2px dashed #d1d5db;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:10px;color:#292524;text-align:center;padding:4px;';
-    placeholder.textContent = `업로드 중... ${i+1}/${files.length}`;
-    previewEl.appendChild(placeholder);
-
-    try{
-      const meta = await uploadToStorage(file, `patrol/${key}`);
-      patrolData[key].photos.push(meta);
-      await DB.set('patrolCalendar', patrolData);
-      placeholder.remove();
-      renderPatrolPhotosPreview(key);
-    }catch(err){
-      placeholder.style.border = '2px solid #dc2626';
-      placeholder.style.color = '#dc2626';
-      placeholder.textContent = '실패: ' + (err.message||'').slice(0,30);
-      console.error('패트롤 사진 업로드 오류:', err);
-    }
-  }
-  input.value = '';
-}
-
-function renderPatrolPhotosPreview(key){
-  const previewEl = document.getElementById('p-photos-preview');
-  if(!previewEl) return;
-  const patrolData = DB.getObj('patrolCalendar');
-  const photos = (patrolData[key] && Array.isArray(patrolData[key].photos)) ? patrolData[key].photos : [];
-  if(photos.length === 0){ previewEl.innerHTML = ''; return; }
-  previewEl.innerHTML = photos.map((p, i)=>{
-    // url이 있으면 Supabase Storage, 없으면 레거시(base64 data)
-    const src = p.url || p.data || '';
-    const name = (p.name || '사진').replace(/'/g,'&apos;');
-    return `<div style="position:relative;">
-      <img src="${src}" style="width:100px;height:100px;object-fit:cover;border-radius:4px;border:1px solid #d6d3d1;cursor:pointer;" onclick="openPhotoLightbox('${src}','${name}')" title="클릭 = 크게 보기">
-      <button onclick="removePatrolPhoto('${key}',${i})" style="position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;background:#dc2626;color:#fff;border:none;cursor:pointer;font-size:11px;line-height:1;">✕</button>
+    return `<div class="area-card" data-area="${area.code}">
+      <div class="area-header">
+        <div class="area-name">${escapeHtml(area.name)}<span class="area-count">${total}개</span></div>
+        <div class="area-actions">
+          <button type="button" class="mini-btn" onclick="fillArea('${area.code}','ok')">전체 OK</button>
+          <button type="button" class="mini-btn reset" onclick="fillArea('${area.code}','')">초기화</button>
+        </div>
+      </div>
+      ${inner}
     </div>`;
   }).join('');
 }
 
-async function removePatrolPhoto(key, idx){
+function setStatus(key, status, btn){
+  state.checks[key] = state.checks[key] || {status:'', note:''};
+  state.checks[key].status = status;
+  const row = btn.closest('.check-row');
+  row.querySelectorAll('.status-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const note = row.querySelector('.bad-note');
+  if(status === 'bad') note.classList.add('show');
+  else { note.classList.remove('show'); note.value = ''; state.checks[key].note=''; }
+}
+
+function updateNote(key, ta){
+  state.checks[key] = state.checks[key] || {status:'bad', note:''};
+  state.checks[key].note = ta.value;
+}
+
+function fillArea(areaCode, status){
+  document.querySelectorAll(`.area-card[data-area="${areaCode}"] .check-row`).forEach(row => {
+    const k = row.dataset.key;
+    row.querySelectorAll('.status-btn').forEach(b => b.classList.remove('active'));
+    const note = row.querySelector('.bad-note');
+    note.classList.remove('show'); note.value='';
+    if(status){
+      const target = row.querySelector(`.status-btn.${status}`);
+      if(target){
+        target.classList.add('active');
+        state.checks[k] = {status, note:''};
+      }
+    } else {
+      delete state.checks[k];
+    }
+  });
+}
+
+// ============================================================
+// RENDER: 지적사항 (동적 카드)
+// ============================================================
+function renderIssues(){
+  const box = document.getElementById('issues-container');
+  if(state.issues.length === 0){
+    box.innerHTML = '<div style="font-size:12px;color:#a8a29e;padding:8px 0 10px;">지적사항이 없으면 비워두세요.</div>';
+    return;
+  }
+  box.innerHTML = state.issues.map((iss, i) => `<div class="issue-card" data-iid="${iss.id}">
+    <div class="ic-top">
+      <span class="ic-no">No. ${i+1}</span>
+      <button type="button" class="del-btn" onclick="removeIssue(${iss.id})">삭제</button>
+    </div>
+    <div class="ic-grid">
+      <div class="ic-field"><div class="lb">장소</div><input type="text" value="${escapeAttr(iss.location||'')}" oninput="updateIssue(${iss.id},'location',this.value)"></div>
+      <div class="ic-field"><div class="lb">담당</div><input type="text" value="${escapeAttr(iss.assignee||'')}" oninput="updateIssue(${iss.id},'assignee',this.value)"></div>
+      <div class="ic-field" style="grid-column:1/-1;"><div class="lb">문제점</div><input type="text" value="${escapeAttr(iss.problem||'')}" oninput="updateIssue(${iss.id},'problem',this.value)"></div>
+      <div class="ic-field" style="grid-column:1/-1;"><div class="lb">조치사항</div><input type="text" value="${escapeAttr(iss.action||'')}" oninput="updateIssue(${iss.id},'action',this.value)"></div>
+      <div class="ic-field"><div class="lb">완료(예정)일</div><input type="date" value="${escapeAttr(iss.date||'')}" oninput="updateIssue(${iss.id},'date',this.value)"></div>
+    </div>
+  </div>`).join('');
+}
+function addIssueRow(){
+  state.issues.push({id: Date.now()+Math.floor(Math.random()*1000), location:'', problem:'', assignee:'', action:'', date:''});
+  renderIssues();
+}
+function removeIssue(id){
+  state.issues = state.issues.filter(i => i.id !== id);
+  renderIssues();
+}
+function updateIssue(id, field, value){
+  const iss = state.issues.find(i => i.id === id);
+  if(iss) iss[field] = value;
+}
+
+// ============================================================
+// 사진 업로드 (Supabase Storage)
+// ============================================================
+async function onPhotosPicked(input){
+  if(!input.files || !input.files.length) return;
+  if(!supaClient){ alert('실시간 공유 미연결 상태. 잠시 후 다시 시도해주세요.'); input.value=''; return; }
+  const date = document.getElementById('f-date').value || new Date().toISOString().split('T')[0];
+  const preview = document.getElementById('photo-preview');
+  const files = Array.from(input.files);
+  for(const f of files){
+    const tmp = document.createElement('div');
+    tmp.className = 'photo-item';
+    tmp.style.display='flex'; tmp.style.alignItems='center'; tmp.style.justifyContent='center';
+    tmp.style.fontSize='11px'; tmp.style.color='#78716c';
+    tmp.textContent = '업로드 중...';
+    preview.appendChild(tmp);
+    try{
+      const meta = await uploadToStorage(f, `patrol_env/${date}`);
+      state.photos.push(meta);
+      tmp.remove();
+      renderPhotoPreview();
+    }catch(e){
+      tmp.style.color='#991b1b'; tmp.textContent = '실패';
+      console.error(e);
+    }
+  }
+  input.value = '';
+}
+function renderPhotoPreview(){
+  const el = document.getElementById('photo-preview');
+  el.innerHTML = state.photos.map((p,i) => `<div class="photo-item">
+    <img src="${p.url}" onclick="openPhotoLightbox('${p.url}')" alt="${escapeAttr(p.name||'')}">
+    <button type="button" class="rm" onclick="removePhoto(${i})">✕</button>
+  </div>`).join('');
+}
+async function removePhoto(i){
+  const p = state.photos[i];
+  if(!p) return;
   if(!confirm('이 사진을 삭제하시겠습니까?')) return;
-  const patrolData = DB.getObj('patrolCalendar');
-  if(!patrolData[key] || !Array.isArray(patrolData[key].photos)) return;
-  const photo = patrolData[key].photos[idx];
-  if(photo && photo.path) await deleteFromStorage(photo.path);
-  patrolData[key].photos.splice(idx, 1);
-  await DB.set('patrolCalendar', patrolData);
-  renderPatrolPhotosPreview(key);
+  if(p.path) await deleteFromStorage(p.path);
+  state.photos.splice(i,1);
+  renderPhotoPreview();
 }
 
-// ============================================================
-// 이력
-// ============================================================
-function renderHistories(){
-  const tbody = document.getElementById('patrol-history-body');
-  if(!tbody) return;
-  const data = DB.get('patrol');
-  tbody.innerHTML = data.length===0
-    ? '<tr><td colspan="6" style="text-align:center;color:#9ca3af;padding:20px;">기록 없음</td></tr>'
-    : data.map(r=>{
-        const siteLabel = r.siteFilter==='suwon'?'수원':r.siteFilter==='hwaseong'?'화성':'전체';
-        return `<tr>
-          <td>${r.date}</td>
-          <td><span class="badge ${r.siteFilter==='suwon'?'blue':r.siteFilter==='hwaseong'?'yellow':'gray'}">${siteLabel}</span></td>
-          <td>${r.inspector||'-'}</td>
-          <td>${r.totalChecked||0}/${r.totalItems||0}</td>
-          <td><span class="badge ${r.badCount===0?'green':r.badCount<=3?'yellow':'red'}">${r.badCount||0}건</span></td>
-          <td class="no-print"><button class="btn btn-outline btn-sm" onclick="deletePatrolRecord(${r.id})">삭제</button></td>
-        </tr>`;
-      }).join('');
-}
-
-async function deletePatrolRecord(id){
-  if(!confirm('이 이력을 삭제하시겠습니까?')) return;
-  const arr = DB.get('patrol').filter(r=>r.id!==id);
-  await DB.set('patrol', arr);
-  renderHistories();
-}
-
-// ============================================================
-// Lightbox
-// ============================================================
-function openPhotoLightbox(src, caption){
+function openPhotoLightbox(src){
   document.getElementById('lightbox-img').src = src;
-  document.getElementById('lightbox-caption').textContent = caption || '';
   document.getElementById('photo-lightbox').classList.add('show');
   document.body.style.overflow = 'hidden';
 }
@@ -642,30 +467,158 @@ function closePhotoLightbox(){
   document.getElementById('photo-lightbox').classList.remove('show');
   document.body.style.overflow = '';
 }
-document.addEventListener('keydown', (e) => { if(e.key === 'Escape') closePhotoLightbox(); });
+
+// ============================================================
+// 저장
+// ============================================================
+function getPatrolRecords(){ return DB.get('patrol_env'); }
+async function savePatrolRecordsAll(list){ await DB.set('patrol_env', list); }
+
+async function savePatrol(){
+  const date = document.getElementById('f-date').value;
+  const inspector = document.getElementById('f-inspector').value.trim();
+  if(!date){ alert('점검 일자를 선택해주세요.'); return; }
+  if(!inspector){ alert('점검자 이름을 입력해주세요.'); return; }
+
+  const totalItems = PATROL_DATA.areas.reduce((s,a)=>s + a.categories.reduce((ss,c)=>ss+c.items.length,0), 0);
+  const checked = Object.values(state.checks).filter(c=>c.status).length;
+  const bads = Object.values(state.checks).filter(c=>c.status==='bad').length;
+
+  if(checked === 0 && state.issues.length===0 && state.photos.length===0 && !document.getElementById('f-remark').value.trim()){
+    if(!confirm('아무 항목도 체크되지 않았습니다. 그대로 저장할까요?')) return;
+  }
+
+  const record = {
+    id: Date.now(),
+    date,
+    inspector,
+    checks: {...state.checks},
+    remark: document.getElementById('f-remark').value.trim(),
+    issues: state.issues.map(({id, ...rest}) => rest),
+    photos: [...state.photos],
+    totalItems,
+    checkedCount: checked,
+    badCount: bads,
+    createdAt: new Date().toISOString()
+  };
+  const list = getPatrolRecords();
+  list.push(record);
+  await savePatrolRecordsAll(list);
+
+  alert(`✓ 점검 기록 저장 완료 (점검 ${checked}/${totalItems} · 불량 ${bads}건 · 지적 ${record.issues.length}건 · 사진 ${record.photos.length}장)`);
+  resetForm();
+  renderRecent();
+  checkWeeklyBanner();
+}
+
+function resetForm(){
+  state = {checks:{}, issues:[], photos:[]};
+  document.getElementById('f-remark').value = '';
+  document.getElementById('f-date').value = new Date().toISOString().split('T')[0];
+  document.querySelectorAll('.status-btn.active').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.bad-note.show').forEach(n => { n.classList.remove('show'); n.value=''; });
+  renderIssues();
+  renderPhotoPreview();
+  setupFilledWatch();
+}
+
+// ============================================================
+// 최근 기록 · 주간 배너
+// ============================================================
+function renderRecent(){
+  const box = document.getElementById('recent-records');
+  const cnt = document.getElementById('recent-count');
+  const all = getPatrolRecords().slice().sort((a,b)=> new Date(b.date) - new Date(a.date) || b.id - a.id);
+  if(cnt) cnt.textContent = `(총 ${all.length}건, 최신 10개)`;
+  const recent = all.slice(0, 10);
+  if(recent.length === 0){
+    box.innerHTML = '<div style="text-align:center;color:#a8a29e;padding:20px;font-size:13px;">아직 저장된 기록이 없습니다.</div>';
+    return;
+  }
+  box.innerHTML = recent.map(r => {
+    const dateObj = new Date(r.date + 'T00:00:00');
+    const dow = ['일','월','화','수','목','금','토'][dateObj.getDay()];
+    const chips = [];
+    if(r.badCount) chips.push(`<span class="chip bad">불량 ${r.badCount}</span>`);
+    if(r.issues && r.issues.length) chips.push(`<span class="chip bad">지적 ${r.issues.length}</span>`);
+    if(r.photos && r.photos.length) chips.push(`<span class="chip photo">사진 ${r.photos.length}</span>`);
+    return `<div class="recent-row">
+      <div class="d">${r.date}<div class="wd">${dow}요일</div></div>
+      <div class="t">
+        <div class="tt">점검자 ${escapeHtml(r.inspector||'-')} · ${r.checkedCount||0}/${r.totalItems||0} 항목</div>
+        ${r.remark?`<div class="stats">${escapeHtml(r.remark)}</div>`:''}
+        <div class="chips">${chips.join('')}</div>
+      </div>
+      <div class="act no-print">
+        <button type="button" class="btn btn-outline btn-sm" onclick="deletePatrol(${r.id})" style="font-size:10px;">삭제</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function deletePatrol(id){
+  if(!confirm('이 기록과 첨부 사진을 삭제할까요?')) return;
+  const list = getPatrolRecords();
+  const rec = list.find(r => r.id === id);
+  if(rec && rec.photos && supaClient){
+    for(const p of rec.photos){
+      if(p.path) await deleteFromStorage(p.path);
+    }
+  }
+  await savePatrolRecordsAll(list.filter(r => r.id !== id));
+  renderRecent();
+  checkWeeklyBanner();
+}
+
+function checkWeeklyBanner(){
+  const b = document.getElementById('weekly-banner');
+  if(!b) return;
+  // 최근 7일 이내 기록이 있으면 배너 숨김
+  const cutoff = new Date(Date.now() - 7*24*60*60*1000);
+  const has = getPatrolRecords().some(r => new Date(r.date) >= cutoff);
+  b.classList.toggle('show', !has);
+}
+
+// ============================================================
+// Filled 라벨 워처 (TBM과 동일)
+// ============================================================
+function setupFilledWatch(){
+  document.querySelectorAll('label.field').forEach(label => {
+    const ctrl = label.querySelector('input, select, textarea');
+    if(!ctrl) return;
+    const upd = () => {
+      let v = (ctrl.value||'').trim();
+      label.classList.toggle('filled', v !== '');
+    };
+    ctrl.addEventListener('input', upd);
+    ctrl.addEventListener('change', upd);
+    upd();
+  });
+}
+
+// ============================================================
+// UTIL
+// ============================================================
+function escapeHtml(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function escapeAttr(s){ return escapeHtml(s); }
+document.addEventListener('keydown', e => { if(e.key === 'Escape') closePhotoLightbox(); });
 
 // ============================================================
 // INIT
 // ============================================================
 window.addEventListener('DOMContentLoaded', async () => {
-  const sup = DB.getObj('supabase');
-  const supaUrl = sup.url || DEFAULT_SUPABASE_URL;
-  const supaKey = sup.key || DEFAULT_SUPABASE_KEY;
-  if(supaUrl && supaKey){
-    initSupabase(supaUrl, supaKey);
-    await loadFromSupabase();
-  } else {
-    document.getElementById('conn-dot').className = 'conn-dot error';
-    document.getElementById('conn-text').textContent = 'Supabase 미연결';
-    document.getElementById('warn-no-supa').classList.add('show');
-  }
-  renderPatrolCalendar();
-  renderHistories();
+  initSupabase(DEFAULT_SUPABASE_URL, DEFAULT_SUPABASE_KEY);
+  await loadFromSupabase();
+  document.getElementById('f-date').value = new Date().toISOString().split('T')[0];
+  renderAreas();
+  renderIssues();
+  renderPhotoPreview();
+  renderRecent();
+  checkWeeklyBanner();
+  setupFilledWatch();
 
-  window.addEventListener('storage', (e) => {
-    if(e.key === 'safety_patrol' || e.key === 'safety_patrolCalendar'){
-      renderPatrolCalendar(); renderHistories();
-    }
+  window.addEventListener('storage', e => {
+    if(e.key === 'safety_patrol_env'){ renderRecent(); checkWeeklyBanner(); }
   });
 });
 </script>
