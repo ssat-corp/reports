@@ -11,9 +11,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
 *{margin:0;padding:0;box-sizing:border-box;}
 html{scrollbar-gutter:stable;}
-body{font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;background:#f5f5f4;color:#1c1917;min-height:100vh;font-size:13px;}
+body{font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;background:#f5f5f4;color:#292524;min-height:100vh;font-size:13px;}
 
-.page-header{color:#fff;padding:20px 18px 18px;box-shadow:0 1px 0 #1c1917;position:relative;background:#292524;border-bottom:3px solid #1c1917;}
+.page-header{color:#fff;padding:20px 18px 18px;box-shadow:0 1px 0 #292524;position:relative;background:#44403c;border-bottom:3px solid #292524;}
 @media(min-width:600px){.page-header{padding:24px 28px 20px;}}
 .page-header .doc-no{display:inline-block;font-size:10px;font-weight:700;letter-spacing:0.18em;padding:2px 10px;border:1px solid rgba(255,255,255,0.3);border-radius:2px;margin-bottom:10px;color:rgba(255,255,255,0.85);}
 .page-header h1{font-size:20px;font-weight:900;letter-spacing:-0.02em;}
@@ -36,15 +36,15 @@ body{font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif
 
 .card{background:#fff;border:1px solid #d6d3d1;border-radius:4px;padding:22px 18px;margin-bottom:14px;box-shadow:none;}
 @media(min-width:600px){.card{padding:32px 34px;}}
-.card-title{font-size:22px;font-weight:900;color:#1c1917;margin-bottom:24px;padding:2px 0 14px 16px;border-left:5px solid #1c1917;border-bottom:2px solid #1c1917;display:flex;justify-content:space-between;align-items:center;letter-spacing:-0.025em;line-height:1.25;}
+.card-title{font-size:22px;font-weight:900;color:#292524;margin-bottom:24px;padding:2px 0 14px 16px;border-left:5px solid #292524;border-bottom:2px solid #292524;display:flex;justify-content:space-between;align-items:center;letter-spacing:-0.025em;line-height:1.25;}
 
-.section-title{font-size:13px;font-weight:800;letter-spacing:0.22em;color:#1c1917;padding:10px 14px;margin:28px 0 18px;background:#e8e6e1;border-left:4px solid #1c1917;border-bottom:1px solid #a8a29e;text-transform:uppercase;display:flex;align-items:baseline;gap:12px;}
+.section-title{font-size:13px;font-weight:800;letter-spacing:0.22em;color:#292524;padding:10px 14px;margin:28px 0 18px;background:#e8e6e1;border-left:4px solid #292524;border-bottom:1px solid #a8a29e;text-transform:uppercase;display:flex;align-items:baseline;gap:12px;}
 .section-title:first-of-type{margin-top:6px;}
-.section-title .roman{display:inline-block;font-size:17px;font-weight:900;color:#1c1917;letter-spacing:0.06em;}
-.section-title .label{letter-spacing:0.22em;color:#1c1917;}
+.section-title .roman{display:inline-block;font-size:17px;font-weight:900;color:#292524;letter-spacing:0.06em;}
+.section-title .label{letter-spacing:0.22em;color:#292524;}
 
-.btn{display:inline-block;padding:8px 16px;background:#292524;color:#fff;border:none;border-radius:3px;font-size:12px;font-weight:700;cursor:pointer;text-decoration:none;transition:background 0.15s;letter-spacing:0.02em;}
-.btn:hover{background:#1c1917;}
+.btn{display:inline-block;padding:8px 16px;background:#44403c;color:#fff;border:none;border-radius:3px;font-size:12px;font-weight:700;cursor:pointer;text-decoration:none;transition:background 0.15s;letter-spacing:0.02em;}
+.btn:hover{background:#292524;}
 .btn-outline{background:#fff;color:#44403c;border:1px solid #a8a29e;}
 .btn-outline:hover{background:#f5f5f4;border-color:#78716c;}
 .btn-sm{padding:5px 10px;font-size:11px;}
@@ -57,8 +57,8 @@ label.field > .lb .no{display:inline-flex;align-items:center;justify-content:cen
 label.field > .lb .lb-hint{margin-left:6px;font-size:12px;font-weight:500;color:#a8a29e;letter-spacing:normal;}
 label.field.filled > .lb .lb-hint{color:#a8a29e;}
 label.field > .hint{display:block;font-size:12px;color:#a8a29e;margin-top:6px;transition:color 0.2s;}
-label.field.filled > .lb{color:#1c1917;}
-label.field.filled > .lb .no{background:#1c1917;color:#fff;border-color:#1c1917;}
+label.field.filled > .lb{color:#292524;}
+label.field.filled > .lb .no{background:#292524;color:#fff;border-color:#292524;}
 label.field.filled > .hint{color:#78716c;}
 input[type="text"], input[type="date"], input[type="time"], input[type="number"], select, textarea{
   width:100%;border:1px solid #d6d3d1;border-radius:4px;padding:12px 14px;font-size:16px;font-family:inherit;
@@ -66,8 +66,8 @@ input[type="text"], input[type="date"], input[type="time"], input[type="number"]
   -webkit-appearance:none;
 }
 input[type="date"], input[type="time"]{-webkit-appearance:listbox;}
-label.field.filled input, label.field.filled select, label.field.filled textarea{color:#1c1917;border-color:#a8a29e;}
-input:focus, select:focus, textarea:focus{outline:none;border-color:#44403c;color:#1c1917;}
+label.field.filled input, label.field.filled select, label.field.filled textarea{color:#292524;border-color:#a8a29e;}
+input:focus, select:focus, textarea:focus{outline:none;border-color:#44403c;color:#292524;}
 textarea{resize:vertical;min-height:100px;}
 /* 4가지 필드 세로 분리 배치 — 모바일 우선 */
 label.field{display:block;margin-bottom:20px;padding-bottom:16px;border-bottom:1px dashed #e7e5e4;}
@@ -79,7 +79,7 @@ label.field:last-of-type{border-bottom:none;}
 .inline-2 .unit{color:#78716c;font-size:13px;}
 
 .readonly-box{background:#fafaf9;border:1px dashed #d6d3d1;border-radius:4px;padding:12px 14px;font-size:16px;color:#a8a29e;min-height:46px;line-height:1.55;white-space:pre-wrap;transition:color 0.2s, border-color 0.2s, background 0.2s;font-family:inherit;}
-label.field.filled .readonly-box{color:#1c1917;border-color:#a8a29e;border-style:solid;background:#fff;}
+label.field.filled .readonly-box{color:#292524;border-color:#a8a29e;border-style:solid;background:#fff;}
 .cat-chip{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:3px;background:#e7e5e4;color:#44403c;margin-left:4px;border:1px solid #d6d3d1;}
 
 .warn-banner{background:#fefce8;border:1px solid #e4dcc5;border-left:3px solid #a16207;border-radius:4px;padding:10px 14px;font-size:12px;color:#713f12;margin-bottom:14px;line-height:1.6;}
@@ -95,18 +95,18 @@ label.field.filled input::placeholder, label.field.filled textarea::placeholder{
 
 .team-select-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;}
 @media(max-width:600px){.team-select-grid{grid-template-columns:1fr;}}
-.team-card{border-radius:6px;padding:28px 24px;color:#fff;cursor:pointer;transition:background 0.15s;text-decoration:none;display:block;background:#292524;border:1px solid #1c1917;position:relative;}
-.team-card:hover{background:#1c1917;}
-.team-card .num{font-size:14px;font-weight:700;letter-spacing:0.22em;opacity:0.6;}
-.team-card .nm{font-size:26px;font-weight:900;margin-top:10px;letter-spacing:-0.025em;line-height:1.2;}
-.team-card .dsc{font-size:14px;opacity:0.75;margin-top:8px;font-weight:500;}
-.team-card .arrow{position:absolute;top:24px;right:22px;font-size:22px;opacity:0.5;font-weight:300;}
+.team-card{border-radius:6px;padding:26px 22px;color:#292524;cursor:pointer;transition:all 0.15s;text-decoration:none;display:block;background:#fff;border:1px solid #d6d3d1;border-left:4px solid #44403c;position:relative;}
+.team-card:hover{background:#fafaf9;border-color:#78716c;border-left-color:#292524;}
+.team-card .num{font-size:13px;font-weight:700;letter-spacing:0.22em;color:#78716c;}
+.team-card .nm{font-size:24px;font-weight:900;margin-top:8px;letter-spacing:-0.025em;line-height:1.2;color:#292524;}
+.team-card .dsc{font-size:13px;color:#78716c;margin-top:6px;font-weight:500;}
+.team-card .arrow{position:absolute;top:22px;right:20px;font-size:20px;color:#a8a29e;font-weight:300;}
 
 .recent-row{display:flex;gap:10px;align-items:flex-start;padding:10px;border-bottom:1px solid #e7e5e4;font-size:12px;}
 .recent-row:last-child{border-bottom:none;}
-.recent-row .d{font-weight:700;color:#1c1917;min-width:90px;}
+.recent-row .d{font-weight:700;color:#292524;min-width:90px;}
 .recent-row .t{flex:1;color:#44403c;}
-.recent-row .t .tt{font-weight:700;color:#1c1917;}
+.recent-row .t .tt{font-weight:700;color:#292524;}
 .recent-row .t .msg{color:#78716c;margin-top:2px;}
 .recent-row .t .note{margin-top:4px;padding:6px 10px;background:#fafaf9;border:1px solid #e7e5e4;border-radius:3px;color:#44403c;font-size:11px;}
 .recent-row .t .note .note-label{display:inline-block;font-size:9px;font-weight:800;letter-spacing:0.12em;color:#78716c;padding:1px 6px;border:1px solid #d6d3d1;background:#fff;border-radius:2px;margin-right:4px;}
@@ -125,47 +125,47 @@ label.field.filled input::placeholder, label.field.filled textarea::placeholder{
 
 /* ===== 월별 캘린더 (관리자용) ===== */
 .cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
-.cal-nav button{background:#fff;border:1px solid #a8a29e;color:#1c1917;padding:6px 14px;font-size:14px;font-weight:700;border-radius:3px;cursor:pointer;}
+.cal-nav button{background:#fff;border:1px solid #a8a29e;color:#292524;padding:6px 14px;font-size:14px;font-weight:700;border-radius:3px;cursor:pointer;}
 .cal-nav button:hover{background:#f5f5f4;}
-.cal-nav .month-label{font-size:16px;font-weight:900;color:#1c1917;letter-spacing:-0.01em;}
+.cal-nav .month-label{font-size:16px;font-weight:900;color:#292524;letter-spacing:-0.01em;}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;background:#d6d3d1;border:1px solid #d6d3d1;}
-.cal-grid .cal-dow{background:#292524;color:#fff;font-size:11px;font-weight:700;text-align:center;padding:8px 0;letter-spacing:0.12em;}
+.cal-grid .cal-dow{background:#44403c;color:#fff;font-size:11px;font-weight:700;text-align:center;padding:8px 0;letter-spacing:0.12em;}
 .cal-grid .cal-dow.sun{color:#fca5a5;}
 .cal-grid .cal-dow.sat{color:#93c5fd;}
 .cal-day{background:#fff;min-height:84px;padding:6px;display:flex;flex-direction:column;cursor:pointer;transition:background 0.15s;position:relative;}
 .cal-day:hover{background:#fafaf9;}
 .cal-day.empty{background:#f5f5f4;cursor:default;}
-.cal-day.today{background:#fafaf9;outline:2px solid #1c1917;outline-offset:-2px;}
-.cal-day .d-num{font-size:13px;font-weight:800;color:#1c1917;}
+.cal-day.today{background:#fafaf9;outline:2px solid #292524;outline-offset:-2px;}
+.cal-day .d-num{font-size:13px;font-weight:800;color:#292524;}
 .cal-day.sun .d-num{color:#dc2626;}
 .cal-day.sat .d-num{color:#2563eb;}
 .cal-day .d-badges{margin-top:4px;display:flex;flex-wrap:wrap;gap:3px;}
-.cal-day .t-pill{font-size:9px;font-weight:800;letter-spacing:0.05em;padding:1px 5px;border:1px solid #1c1917;background:#1c1917;color:#fff;border-radius:2px;}
+.cal-day .t-pill{font-size:9px;font-weight:800;letter-spacing:0.05em;padding:1px 5px;border:1px solid #292524;background:#292524;color:#fff;border-radius:2px;}
 .cal-day .t-pill.has-photo{background:#44403c;}
 .cal-day .d-count{margin-top:auto;font-size:9px;color:#78716c;font-weight:700;}
 
 /* ===== 날짜 상세 모달 ===== */
 .day-modal{position:fixed;inset:0;background:rgba(28,25,23,0.55);z-index:900;display:none;align-items:flex-start;justify-content:center;padding:30px 16px;overflow-y:auto;}
 .day-modal.show{display:flex;}
-.day-modal-inner{background:#fff;border:1px solid #1c1917;border-radius:4px;max-width:700px;width:100%;}
-.day-modal-title{padding:14px 20px;border-bottom:2px solid #1c1917;display:flex;justify-content:space-between;align-items:center;}
-.day-modal-title .d-big{font-size:18px;font-weight:900;color:#1c1917;letter-spacing:-0.02em;}
+.day-modal-inner{background:#fff;border:1px solid #292524;border-radius:4px;max-width:700px;width:100%;}
+.day-modal-title{padding:14px 20px;border-bottom:2px solid #292524;display:flex;justify-content:space-between;align-items:center;}
+.day-modal-title .d-big{font-size:18px;font-weight:900;color:#292524;letter-spacing:-0.02em;}
 .day-modal-title button{background:none;border:none;font-size:22px;cursor:pointer;color:#78716c;padding:0 4px;line-height:1;}
 .day-modal-body{padding:16px 20px 20px;}
 .team-row{border:1px solid #d6d3d1;border-radius:3px;margin-bottom:10px;overflow:hidden;}
 .team-row .tr-head{background:#fafaf9;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #e7e5e4;}
 .team-row .tr-head .tr-code{font-size:11px;font-weight:800;letter-spacing:0.15em;color:#44403c;padding:2px 8px;border:1px solid #d6d3d1;background:#fff;border-radius:2px;}
-.team-row .tr-head .tr-name{font-size:15px;font-weight:800;color:#1c1917;margin-left:8px;flex:1;}
+.team-row .tr-head .tr-name{font-size:15px;font-weight:800;color:#292524;margin-left:8px;flex:1;}
 .team-row .tr-head .tr-status{font-size:11px;font-weight:700;padding:3px 10px;border-radius:2px;letter-spacing:0.05em;}
-.team-row .tr-head .tr-status.done{background:#1c1917;color:#fff;}
+.team-row .tr-head .tr-status.done{background:#292524;color:#fff;}
 .team-row .tr-head .tr-status.empty{background:#f5f5f4;color:#a8a29e;border:1px solid #d6d3d1;}
-.team-row .tr-body{padding:12px 14px;font-size:13px;color:#292524;line-height:1.6;}
+.team-row .tr-body{padding:12px 14px;font-size:13px;color:#44403c;line-height:1.6;}
 .team-row .tr-body .kv{display:flex;gap:8px;padding:3px 0;}
 .team-row .tr-body .kv .k{min-width:86px;font-size:11px;font-weight:700;letter-spacing:0.08em;color:#78716c;text-transform:uppercase;padding-top:2px;}
-.team-row .tr-body .kv .v{flex:1;color:#1c1917;}
+.team-row .tr-body .kv .v{flex:1;color:#292524;}
 .team-row .tr-body .empty-msg{color:#a8a29e;font-style:italic;padding:6px 0;}
-.team-row .tr-body .print-btn{margin-top:10px;padding:8px 16px;background:#292524;color:#fff;border:none;border-radius:3px;font-size:12px;font-weight:700;cursor:pointer;letter-spacing:0.08em;}
-.team-row .tr-body .print-btn:hover{background:#1c1917;}
+.team-row .tr-body .print-btn{margin-top:10px;padding:8px 16px;background:#44403c;color:#fff;border:none;border-radius:3px;font-size:12px;font-weight:700;cursor:pointer;letter-spacing:0.08em;}
+.team-row .tr-body .print-btn:hover{background:#292524;}
 
 /* ===== 인쇄용 양식 (단일 일지 · A4 한 장) ===== */
 #print-form{display:none;}
@@ -855,11 +855,11 @@ function preparePrint(recordOrId){
   const bar = document.createElement('div');
   bar.id = 'print-bar';
   bar.className = 'no-print';
-  bar.style.cssText = 'position:fixed;top:0;left:0;right:0;background:#292524;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;z-index:1200;';
+  bar.style.cssText = 'position:fixed;top:0;left:0;right:0;background:#44403c;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;z-index:1200;';
   bar.innerHTML = `
     <div style="font-size:13px;">인쇄용 양식 — 교육 실시자 이름을 입력 후 인쇄하세요</div>
     <div style="display:flex;gap:8px;">
-      <button type="button" onclick="doPrint()" style="background:#fff;color:#1c1917;border:none;padding:7px 16px;border-radius:3px;font-weight:800;cursor:pointer;font-size:12px;letter-spacing:0.08em;">인쇄</button>
+      <button type="button" onclick="doPrint()" style="background:#fff;color:#292524;border:none;padding:7px 16px;border-radius:3px;font-weight:800;cursor:pointer;font-size:12px;letter-spacing:0.08em;">인쇄</button>
       <button type="button" onclick="exitPrint()" style="background:transparent;color:#fff;border:1px solid #fff;padding:7px 16px;border-radius:3px;font-weight:700;cursor:pointer;font-size:12px;">닫기</button>
     </div>`;
   document.body.appendChild(bar);
@@ -884,11 +884,11 @@ function preparePrintBar(){
   const bar = document.createElement('div');
   bar.id = 'print-bar';
   bar.className = 'no-print';
-  bar.style.cssText = 'position:fixed;top:0;left:0;right:0;background:#292524;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;z-index:1200;';
+  bar.style.cssText = 'position:fixed;top:0;left:0;right:0;background:#44403c;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;z-index:1200;';
   bar.innerHTML = `
     <div style="font-size:13px;">인쇄용 양식 — 교육 실시자 이름을 입력 후 인쇄하세요</div>
     <div style="display:flex;gap:8px;">
-      <button type="button" onclick="doPrint()" style="background:#fff;color:#1c1917;border:none;padding:7px 16px;border-radius:3px;font-weight:800;cursor:pointer;font-size:12px;letter-spacing:0.08em;">인쇄</button>
+      <button type="button" onclick="doPrint()" style="background:#fff;color:#292524;border:none;padding:7px 16px;border-radius:3px;font-weight:800;cursor:pointer;font-size:12px;letter-spacing:0.08em;">인쇄</button>
       <button type="button" onclick="exitPrint()" style="background:transparent;color:#fff;border:1px solid #fff;padding:7px 16px;border-radius:3px;font-weight:700;cursor:pointer;font-size:12px;">닫기</button>
     </div>`;
   document.body.appendChild(bar);
