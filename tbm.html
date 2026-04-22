@@ -6,58 +6,87 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <title>TBM 일지 | 산업안전보건</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="tbm_data.js?v=20260422"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;background:#f0fdf4;color:#374151;min-height:100vh;}
 
-.page-header{background:linear-gradient(135deg,#065f46,#10b981);color:#fff;padding:28px 28px 22px;box-shadow:0 2px 12px rgba(0,0,0,0.08);position:relative;}
+.page-header{color:#fff;padding:28px 28px 22px;box-shadow:0 2px 12px rgba(0,0,0,0.08);position:relative;background:linear-gradient(135deg,#065f46,#10b981);}
 .page-header .icon{font-size:38px;margin-bottom:4px;}
 .page-header h1{font-size:22px;font-weight:900;letter-spacing:-0.02em;}
-.page-header .sub{font-size:13px;opacity:0.85;margin-top:2px;}
-.page-header .conn{position:absolute;top:16px;right:20px;font-size:11px;background:rgba(255,255,255,0.15);padding:4px 10px;border-radius:12px;display:flex;align-items:center;gap:6px;}
+.page-header .sub{font-size:13px;opacity:0.9;margin-top:4px;}
+.page-header .conn{position:absolute;top:16px;right:20px;font-size:11px;background:rgba(255,255,255,0.18);padding:4px 10px;border-radius:12px;display:flex;align-items:center;gap:6px;}
 .conn-dot{width:7px;height:7px;border-radius:50%;background:#94a3b8;}
 .conn-dot.connected{background:#86efac;animation:pulse 2s infinite;}
 .conn-dot.error{background:#ef4444;}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
 
-.container{max-width:1100px;margin:0 auto;padding:20px 20px 60px;}
+.container{max-width:900px;margin:0 auto;padding:20px 20px 60px;}
 
 .card{background:#fff;border:1px solid #d1fae5;border-radius:12px;padding:18px 20px;margin-bottom:14px;box-shadow:0 1px 3px rgba(0,0,0,0.04);}
-.card-title{font-size:14px;font-weight:800;color:#065f46;margin-bottom:12px;padding-bottom:10px;border-bottom:2px solid #10b981;}
-.btn{display:inline-block;padding:8px 16px;background:#10b981;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;text-decoration:none;transition:all 0.15s;}
+.card-title{font-size:14px;font-weight:800;color:#065f46;margin-bottom:12px;padding-bottom:10px;border-bottom:2px solid #10b981;display:flex;justify-content:space-between;align-items:center;}
+
+.btn{display:inline-block;padding:9px 18px;background:#10b981;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;transition:all 0.15s;}
 .btn:hover{background:#065f46;}
 .btn-outline{background:#fff;color:#10b981;border:1.5px solid #10b981;}
 .btn-outline:hover{background:#ecfdf5;}
-.btn-success{background:#16a34a;}
-.btn-success:hover{background:#15803d;}
 .btn-sm{padding:6px 12px;font-size:12px;}
+.btn-lg{padding:14px 28px;font-size:15px;}
+.btn-primary-big{padding:16px 32px;font-size:16px;width:100%;font-weight:800;}
 
-.table-wrap{border:1px solid #d1fae5;border-radius:8px;overflow:hidden;overflow-x:auto;}
-table{width:100%;border-collapse:collapse;font-size:13px;}
-th{padding:8px 10px;text-align:left;font-weight:700;font-size:12px;}
-td{padding:8px 10px;border-bottom:1px solid #f1f5f9;}
+label.field{display:block;margin-bottom:14px;}
+label.field > .lb{display:block;font-size:12px;font-weight:700;color:#065f46;margin-bottom:6px;}
+label.field > .hint{display:block;font-size:11px;color:#6b7280;margin-top:4px;}
+input[type="text"], input[type="date"], input[type="number"], select, textarea{
+  width:100%;border:1.5px solid #d1fae5;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;
+  transition:border-color 0.15s;
+}
+input:focus, select:focus, textarea:focus{outline:none;border-color:#10b981;}
+textarea{resize:vertical;min-height:80px;}
+.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;}
+.form-grid.three{grid-template-columns:repeat(3,1fr);}
+@media(max-width:600px){.form-grid, .form-grid.three{grid-template-columns:1fr;}}
 
-.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;}
-.badge.green{background:#dcfce7;color:#15803d;}
-.badge.yellow{background:#fef3c7;color:#a16207;}
-.badge.red{background:#fef2f2;color:#b91c1c;}
+.readonly-box{background:#ecfdf5;border:1px dashed #10b981;border-radius:8px;padding:10px 12px;font-size:13px;color:#065f46;min-height:42px;line-height:1.6;white-space:pre-wrap;}
+.cat-chip{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:8px;background:#fee2e2;color:#991b1b;margin-left:4px;}
 
-.theme-box{background:#eef4ff;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:13px;border-left:4px solid #1e5096;}
-.warn-banner{background:#fffbeb;border:1px solid #fbbf24;border-left:4px solid #f59e0b;border-radius:8px;padding:12px 16px;font-size:13px;color:#92400e;margin-bottom:14px;display:none;}
-.warn-banner.show{display:block;}
+.warn-banner{background:#fffbeb;border:1px solid #fbbf24;border-left:4px solid #f59e0b;border-radius:8px;padding:14px 16px;font-size:13px;color:#92400e;margin-bottom:14px;line-height:1.6;}
+.warn-banner.sup{display:none;}
+.warn-banner.sup.show{display:block;}
+
+.team-select-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:12px;}
+@media(max-width:600px){.team-select-grid{grid-template-columns:1fr;}}
+.team-card{border-radius:14px;padding:22px 20px;color:#fff;cursor:pointer;transition:transform 0.15s;text-decoration:none;display:block;}
+.team-card:hover{transform:scale(1.02);}
+.team-card .ic{font-size:34px;}
+.team-card .nm{font-size:18px;font-weight:900;margin-top:4px;}
+.team-card .dsc{font-size:12px;opacity:0.88;margin-top:4px;}
+
+.recent-row{display:flex;gap:10px;align-items:flex-start;padding:10px;border-bottom:1px solid #ecfdf5;font-size:12px;}
+.recent-row:last-child{border-bottom:none;}
+.recent-row .d{font-weight:700;color:#065f46;min-width:90px;}
+.recent-row .t{flex:1;color:#374151;}
+.recent-row .t .tt{font-weight:700;color:#1f2937;}
+.recent-row .t .msg{color:#6b7280;margin-top:2px;}
+.recent-row .t .note{margin-top:4px;padding:4px 8px;background:#f0fdf4;border-radius:4px;color:#047857;font-size:11px;}
+.recent-row .act{display:flex;flex-direction:column;gap:4px;}
+
+.photo-status{display:flex;align-items:center;gap:8px;padding:10px 12px;background:#f0fdf4;border-radius:8px;font-size:13px;margin-bottom:10px;}
+.photo-status.done{background:#dcfce7;color:#15803d;}
+.photo-status.pending{background:#fef3c7;color:#a16207;}
 
 .photo-lightbox{position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px;cursor:zoom-out;}
 .photo-lightbox.show{display:flex;}
 .photo-lightbox img{max-width:95%;max-height:92vh;object-fit:contain;border-radius:6px;box-shadow:0 4px 24px rgba(0,0,0,0.5);}
 .photo-lightbox .close-btn{position:absolute;top:16px;right:20px;background:rgba(255,255,255,0.15);color:#fff;border:none;width:44px;height:44px;border-radius:50%;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
-.photo-lightbox .close-btn:hover{background:rgba(255,255,255,0.3);}
-.photo-lightbox .caption{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);color:#fff;background:rgba(0,0,0,0.6);padding:8px 16px;border-radius:8px;font-size:13px;max-width:80%;text-align:center;}
+
+.thumb{width:54px;height:54px;object-fit:cover;border-radius:6px;border:1px solid #e5e7eb;cursor:pointer;flex-shrink:0;}
 
 @media print{
   .no-print{display:none!important;}
   body{background:#fff;}
-  .page-header{background:#065f46!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
+  .page-header{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
   .card{box-shadow:none!important;border:1px solid #000!important;break-inside:avoid;}
   @page{size:A4 portrait;margin:10mm;}
 }
@@ -65,22 +94,21 @@ td{padding:8px 10px;border-bottom:1px solid #f1f5f9;}
 </head>
 <body>
 
-<div class="page-header">
+<div class="page-header" id="page-header">
   <div class="conn no-print"><span id="conn-dot" class="conn-dot"></span><span id="conn-text">연결 확인 중...</span></div>
-  <div class="icon">🌅</div>
-  <h1>TBM 일지</h1>
-  <div class="sub">Tool Box Meeting · 매일 작업 전 5~10분 · 전원 참석</div>
+  <div class="icon" id="h-icon">🌅</div>
+  <h1 id="h-title">TBM 일지</h1>
+  <div class="sub" id="h-sub">Tool Box Meeting · 매일 작업 전 5~10분 · 전원 참석</div>
 </div>
 
 <div class="photo-lightbox" id="photo-lightbox" onclick="closePhotoLightbox()">
   <button class="close-btn" onclick="event.stopPropagation();closePhotoLightbox()">✕</button>
   <img id="lightbox-img" src="" alt="">
-  <div class="caption" id="lightbox-caption"></div>
 </div>
 
 <div class="container">
 
-  <div id="warn-no-supa" class="warn-banner">
+  <div id="warn-no-supa" class="warn-banner sup">
     ⚠️ <strong>Supabase 미연결.</strong> 대시보드 → 설정에서 Supabase URL/Key를 먼저 입력해주세요.
     <a href="safety_dashboard.html" style="color:#92400e;text-decoration:underline;font-weight:700;">설정하러 가기 →</a>
   </div>
@@ -89,59 +117,114 @@ td{padding:8px 10px;border-bottom:1px solid #f1f5f9;}
     <a href="safety_dashboard.html" class="btn btn-outline btn-sm">📊 메인 대시보드</a>
   </div>
 
-  <div id="tbm-today-theme" class="theme-box"></div>
-
-  <div class="card">
-    <div id="tbm-calendar"></div>
-  </div>
-
-  <div id="tbm-day-form" style="display:none;">
+  <!-- ============ 팀 미선택: 선택 화면 ============ -->
+  <div id="view-select" style="display:none;">
     <div class="card">
-      <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:12px;border-bottom:2px solid #065f46;margin-bottom:12px;">
-        <div>
-          <div style="font-size:18px;font-weight:900;color:#0d1f3c;" id="tbm-day-title">TBM 기록</div>
-        </div>
-        <button class="btn btn-outline btn-sm no-print" onclick="window.print()">🖨️ 인쇄</button>
+      <div class="card-title">👥 팀을 선택하세요</div>
+      <div style="font-size:13px;color:#6b7280;margin-bottom:8px;">
+        각 팀은 전용 링크(QR)로 접근해 본인 팀의 TBM 일지만 작성합니다.
       </div>
-
-      <div class="table-wrap">
-        <table style="font-size:13px;">
-          <thead><tr style="background:#065f46;color:#fff;">
-            <th style="width:35%;padding:10px 12px;color:#fff;">점검사항</th>
-            <th style="width:35%;padding:10px 12px;color:#fff;">내용</th>
-            <th style="width:50px;padding:10px;text-align:center;color:#fff;">점검</th>
-            <th style="width:25%;padding:10px 12px;color:#fff;">비고</th>
-          </tr></thead>
-          <tbody>
-            <tr><td style="font-weight:600;">TBM 실시</td><td>작업 전 안전회의 실시 여부</td><td style="text-align:center;"><input type="checkbox" id="tbm-day-done" style="width:20px;height:20px;accent-color:#16a34a;"></td><td></td></tr>
-            <tr><td style="font-weight:600;">건강상태 확인</td><td>음주·체온·약물 이상 없음</td><td style="text-align:center;"><input type="checkbox" id="tbm-health" style="width:20px;height:20px;accent-color:#16a34a;"></td><td></td></tr>
-            <tr><td style="font-weight:600;">보호구 착용</td><td>안전모·안전화·보안경 등</td><td style="text-align:center;"><input type="checkbox" id="tbm-ppe" style="width:20px;height:20px;accent-color:#16a34a;"></td><td></td></tr>
-            <tr><td style="font-weight:600;">위험요인 공유</td><td>금일 작업 위험요인·대책 공유</td><td style="text-align:center;"><input type="checkbox" id="tbm-risk" style="width:20px;height:20px;accent-color:#16a34a;"></td><td></td></tr>
-            <tr class="no-print"><td style="font-weight:600;">TBM 사진</td><td colspan="2"><input type="file" id="tbm-day-photo" accept="image/*" style="width:100%;padding:4px;border:1px solid #d1d5db;border-radius:6px;font-size:11px;" onchange="uploadTbmPhoto(this)"></td><td id="tbm-day-photo-preview"></td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div style="margin-top:12px;">
-        <div style="font-size:13px;font-weight:700;color:#0d1f3c;margin-bottom:6px;">논의 주제 / 특이사항</div>
-        <textarea id="tbm-day-agenda" placeholder="오늘 TBM에서 논의한 내용 (필요시에만 기재)" style="width:100%;min-height:50px;padding:10px;border:1px solid #d1d5db;border-radius:8px;font-size:13px;font-family:inherit;resize:vertical;"></textarea>
-      </div>
-
-      <div class="no-print" style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px;">
-        <button class="btn btn-success" onclick="saveTbmDay()">💾 TBM 저장</button>
+      <div class="team-select-grid" id="team-select-grid"></div>
+    </div>
+    <div class="card" style="background:#eef4ff;border-color:#c7d2fe;">
+      <div style="font-size:13px;color:#1e3a8a;line-height:1.6;">
+        💡 <strong>관리자:</strong> 통합 현황·캘린더·QR 링크는
+        <a href="safety_dashboard.html" style="color:#1e3a8a;font-weight:700;">📊 메인 대시보드</a>의 TBM 섹션에서 확인할 수 있어요.
       </div>
     </div>
   </div>
 
-  <div class="card">
-    <div class="card-title">📜 TBM 이력</div>
-    <div class="table-wrap"><table>
-      <thead><tr style="background:#065f46;color:#fff;"><th style="color:#fff;">날짜</th><th style="color:#fff;">리더</th><th style="color:#fff;">참석</th><th style="color:#fff;">점검</th><th style="color:#fff;" class="no-print">작업</th></tr></thead>
-      <tbody id="tbm-history-body"></tbody>
-    </table></div>
+  <!-- ============ 팀 선택: 입력 화면 ============ -->
+  <div id="view-input" style="display:none;">
+
+    <!-- 14일 무기재 배너 -->
+    <div id="free-note-banner" class="warn-banner" style="display:none;">
+      💬 <strong>최근 14일간 '자유 기재' 내용이 비어있어요.</strong>
+      오늘 작업하면서 느낀 점이나 건의사항, 특이 상황을 한 줄이라도 남겨주세요.
+    </div>
+
+    <!-- 월 1회 사진 안내 -->
+    <div id="photo-status" class="photo-status pending" style="display:none;"></div>
+
+    <!-- 입력 폼 -->
+    <div class="card">
+      <div class="card-title">📝 오늘의 TBM 기록</div>
+
+      <div class="form-grid three">
+        <label class="field">
+          <span class="lb">📅 날짜</span>
+          <input type="date" id="f-date">
+        </label>
+        <label class="field">
+          <span class="lb">⏰ 시간</span>
+          <input type="text" id="f-time" placeholder="08:40~08:50(10분)">
+        </label>
+        <label class="field">
+          <span class="lb">👤 강사 (관리감독자/파트장/조장)</span>
+          <input type="text" id="f-lecturer" placeholder="이름">
+        </label>
+      </div>
+
+      <div class="form-grid">
+        <label class="field">
+          <span class="lb">👥 참석 / 총원</span>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <input type="number" id="f-attended" placeholder="참석" min="0" style="width:80px;">
+            <span>/</span>
+            <input type="number" id="f-total" placeholder="총원" min="0" style="width:80px;">
+            <span style="font-size:12px;color:#6b7280;">명</span>
+          </div>
+          <span class="hint">휴가자 제외 인원 기재</span>
+        </label>
+      </div>
+
+      <label class="field">
+        <span class="lb">🏷️ TBM 명 (주제 선택)</span>
+        <select id="f-tbm-no" onchange="onTbmSelectChange()">
+          <option value="">— TBM 주제를 선택하세요 —</option>
+        </select>
+      </label>
+
+      <label class="field">
+        <span class="lb">📣 주요 전달 사항 <span style="font-weight:400;color:#6b7280;">(자동 채워짐)</span></span>
+        <div id="f-tbm-message" class="readonly-box">TBM 명을 선택하면 자동으로 표시됩니다.</div>
+      </label>
+
+      <label class="field">
+        <span class="lb">⚠️ 유해위험요인 <span id="f-risk-category-chip"></span></span>
+        <select id="f-risk-idx" onchange="onRiskSelectChange()">
+          <option value="">— 유해위험요인을 선택하세요 —</option>
+        </select>
+      </label>
+
+      <label class="field">
+        <span class="lb">🛡️ 감소 대책 <span style="font-weight:400;color:#6b7280;">(자동 채워짐)</span></span>
+        <div id="f-risk-measure" class="readonly-box">유해위험요인을 선택하면 자동으로 표시됩니다.</div>
+      </label>
+
+      <label class="field">
+        <span class="lb">💬 자유 기재 (건의사항·특이사항·의견)</span>
+        <textarea id="f-free-note" placeholder="작업 중 느낀 점, 건의사항, 특이 상황 등을 자유롭게 남겨주세요. (선택사항)"></textarea>
+        <span class="hint">14일간 기재 내역이 없으면 상단에 안내 배너가 뜹니다.</span>
+      </label>
+
+      <label class="field">
+        <span class="lb">📷 TBM 실시 사진 <span style="font-weight:400;color:#6b7280;">(분기별 1회 이상 권장)</span></span>
+        <input type="file" id="f-photo" accept="image/*">
+        <span class="hint">선택사항 · 이번 달 아직 사진이 없으면 상단에 안내가 뜹니다.</span>
+      </label>
+
+      <button class="btn btn-primary-big" onclick="saveTbmRecord()">✓ 오늘 TBM 기록 저장</button>
+    </div>
+
+    <!-- 최근 기록 -->
+    <div class="card">
+      <div class="card-title">📚 우리 팀 최근 기록 <span id="recent-count" style="font-size:12px;font-weight:400;color:#6b7280;"></span></div>
+      <div id="recent-records"></div>
+    </div>
   </div>
 
-  <div style="text-align:center;color:#6ee7b7;font-size:11px;margin-top:30px;">
+  <div style="text-align:center;color:#86efac;font-size:11px;margin-top:30px;">
     © 신성오토텍 안전환경팀 · TBM 일지
   </div>
 
@@ -149,7 +232,23 @@ td{padding:8px 10px;border-bottom:1px solid #f1f5f9;}
 
 <script>
 // ============================================================
-// SHARED: Supabase 연결
+// TEAM META
+// ============================================================
+const TEAM_META = {
+  injection_day:   {label:'사출팀 (주간)', process:'injection', defaultTime:'08:40~08:50(10분)', icon:'💉', headerGrad:'linear-gradient(135deg,#1e3a8a,#3b82f6)', accent:'#1e40af'},
+  injection_night: {label:'사출팀 (야간)', process:'injection', defaultTime:'20:20~20:30(10분)', icon:'🌙', headerGrad:'linear-gradient(135deg,#3730a3,#6366f1)', accent:'#4338ca'},
+  paint:           {label:'도장팀',        process:'paint',     defaultTime:'08:40~08:50(10분)', icon:'🎨', headerGrad:'linear-gradient(135deg,#7e22ce,#a855f7)', accent:'#7e22ce'},
+  assembly:        {label:'조립팀',        process:'assembly',  defaultTime:'08:40~08:50(10분)', icon:'🔧', headerGrad:'linear-gradient(135deg,#065f46,#10b981)', accent:'#065f46'}
+};
+
+// ============================================================
+// URL PARSE
+// ============================================================
+const urlParams = new URLSearchParams(location.search);
+const teamCode = urlParams.get('team');
+
+// ============================================================
+// SUPABASE LAYER
 // ============================================================
 const DEFAULT_SUPABASE_URL = 'https://onohwrswzaiwbabiusrj.supabase.co';
 const DEFAULT_SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9ub2h3cnN3emFpd2JhYml1c3JqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyMjQ5MTgsImV4cCI6MjA4OTgwMDkxOH0.vK_l0iWBJyZmLwzNfQHob2ejEZGfg8mQ8mV-6-lXaN0';
@@ -167,7 +266,6 @@ const DB = {
   }
 };
 
-// 값이 "비어있다"는 판단: null, 빈 배열, 빈 객체
 function _isEmptySafetyValue(v){
   if(v === null || v === undefined) return true;
   if(Array.isArray(v)) return v.length === 0;
@@ -181,7 +279,6 @@ async function loadFromSupabase(){
     const {data, error} = await supaClient.from('safety_store').select('*');
     if(error) throw error;
     if(data) data.forEach(row => {
-      // 가드: 원격이 비어있고 로컬에 데이터가 있으면 덮어쓰지 않음 (데이터 소실 방지)
       const localRaw = localStorage.getItem('safety_'+row.key);
       if(_isEmptySafetyValue(row.value) && localRaw){
         try{
@@ -200,25 +297,29 @@ async function loadFromSupabase(){
 function initSupabase(url, key){
   try{
     supaClient = supabase.createClient(url, key);
-    document.getElementById('conn-dot').className = 'conn-dot connected';
-    document.getElementById('conn-text').textContent = '실시간 공유 연결됨';
-    document.getElementById('warn-no-supa').classList.remove('show');
-    supaClient.channel('tbm_sync')
+    const dot = document.getElementById('conn-dot');
+    const txt = document.getElementById('conn-text');
+    if(dot) dot.className = 'conn-dot connected';
+    if(txt) txt.textContent = '실시간 공유 연결됨';
+    const warn = document.getElementById('warn-no-supa');
+    if(warn) warn.classList.remove('show');
+    supaClient.channel('tbm_daily_sync')
       .on('postgres_changes', {event:'*', schema:'public', table:'safety_store'}, async () => {
         await loadFromSupabase();
-        renderTbmCalendar(); renderHistories();
-        const form = document.getElementById('tbm-day-form');
-        if(form.style.display==='block' && form.dataset.key){
-          const day = parseInt(form.dataset.key.split('-').pop(), 10);
-          openTbmDay(day);
+        if(teamCode && TEAM_META[teamCode]){
+          renderRecentRecords();
+          checkFreeNoteBanner();
+          checkMonthPhotoStatus();
         }
       })
       .subscribe();
     return true;
   }catch(e){
     console.error('Supabase 연결 실패:', e);
-    document.getElementById('conn-dot').className = 'conn-dot error';
-    document.getElementById('conn-text').textContent = '연결 실패';
+    const dot = document.getElementById('conn-dot');
+    const txt = document.getElementById('conn-text');
+    if(dot) dot.className = 'conn-dot error';
+    if(txt) txt.textContent = '연결 실패';
     return false;
   }
 }
@@ -229,229 +330,245 @@ async function uploadToStorage(file, subfolder){
   const safeName = file.name.replace(/[^a-zA-Z0-9가-힣._-]/g, '_');
   const path = `${subfolder}/${ts}_${safeName}`;
   const {error} = await supaClient.storage.from('safety-files').upload(path, file, {
-    contentType: file.type, upsert: false
+    contentType: file.type || 'application/octet-stream', upsert: false
   });
   if(error) throw error;
   const {data:urlData} = supaClient.storage.from('safety-files').getPublicUrl(path);
-  return {name:file.name, url:urlData.publicUrl, path, mime:file.type, size:file.size, uploadedAt:new Date().toISOString()};
-}
-
-async function deleteFromStorage(path){
-  if(!supaClient || !path) return;
-  try{ await supaClient.storage.from('safety-files').remove([path]); }
-  catch(e){ console.warn('Storage 삭제 실패:', path, e); }
+  return {url:urlData.publicUrl, path};
 }
 
 // ============================================================
-// TBM 테마
+// TBM DAILY CRUD
 // ============================================================
-const tbmThemes = {
-  0:'🌅 일요일 — 주간 안전 점검 사항 공유',
-  1:'⚙️ 월요일 테마: 설비·기계 점검 주간 — 각 기계 안전장치, 사출기, 프레스 이상 유무 집중 점검',
-  2:'⛑️ 화요일 테마: 개인보호구(PPE) 점검 — 안전모·안전화·장갑·보안경 착용 상태 전원 확인',
-  3:'💪 수요일 테마: 건강·피로 관리 — 수면 부족, 음주, 약물 복용 여부 확인 및 주의',
-  4:'✨ 목요일 테마: 환경·정리정돈(5S) — 통로 확보, 폐기물 처리, 작업장 청결 집중 점검',
-  5:'🚨 금요일 테마: 이번 주 아차사고·위험발견 사례 공유 — 무엇을 배웠나?',
-  6:'📋 토요일 — 주간 마무리 안전 점검'
-};
-function renderTBMTheme(){
-  const el = document.getElementById('tbm-today-theme');
-  if(!el) return;
-  const day = new Date().getDay();
-  el.innerHTML = `<strong>📅 오늘의 TBM 테마</strong><br>${tbmThemes[day]}`;
-}
+function getTbmRecords(){ return DB.get('tbm_daily'); }
+async function saveTbmRecordsAll(list){ await DB.set('tbm_daily', list); }
 
-// ============================================================
-// 달력
-// ============================================================
-function renderTbmCalendar(){
-  const el = document.getElementById('tbm-calendar');
-  if(!el) return;
-  const now = new Date();
-  const year = now.getFullYear(), month = now.getMonth(), todayDate = now.getDate();
-  const firstDay = new Date(year, month, 1).getDay();
-  const daysInMonth = new Date(year, month+1, 0).getDate();
-  const dayNames = ['일','월','화','수','목','금','토'];
-  const tbmData = DB.getObj('tbmCalendar');
-  const monthKey = `${year}-${String(month+1).padStart(2,'0')}`;
+async function saveTbmRecord(){
+  if(!teamCode || !TEAM_META[teamCode]){ alert('팀이 지정되지 않았습니다.'); return; }
+  const tbmSel = document.getElementById('f-tbm-no').value;
+  const riskSel = document.getElementById('f-risk-idx').value;
+  if(!tbmSel){ alert('TBM 명을 선택해주세요.'); return; }
+  if(!riskSel){ alert('유해위험요인을 선택해주세요.'); return; }
 
-  let doneCount = 0;
-  for(let d=1; d<=daysInMonth; d++){
-    const key = `${monthKey}-${String(d).padStart(2,'0')}`;
-    if(tbmData[key] && tbmData[key].done) doneCount++;
-  }
+  const meta = TEAM_META[teamCode];
+  const tbmOpt = TBM_OPTIONS[meta.process].find(o => String(o.no) === tbmSel);
+  const riskOpt = RISK_OPTIONS[meta.process][parseInt(riskSel)];
 
-  let html = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-    <span style="font-size:14px;font-weight:700;color:#0d1f3c;">${year}년 ${month+1}월</span>
-    <span style="font-size:12px;color:#6b7280;">실시: <strong style="color:#16a34a;">${doneCount}</strong> / ${daysInMonth}일</span>
-  </div>`;
-  html += '<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;text-align:center;font-size:12px;">';
-  dayNames.forEach((d,i)=> html += `<div style="font-weight:700;color:${i===0?'#dc2626':'#6b7280'};padding:4px 0;">${d}</div>`);
-  for(let i=0; i<firstDay; i++) html += '<div></div>';
-  for(let d=1; d<=daysInMonth; d++){
-    const dow = (firstDay + d - 1) % 7;
-    const key = `${monthKey}-${String(d).padStart(2,'0')}`;
-    const dayData = tbmData[key];
-    const isDone = dayData && dayData.done;
-    const hasPhoto = dayData && (dayData.photoUrl || dayData.photoData);
-    const isToday = d === todayDate;
-    const bg = isDone ? '#dcfce7' : isToday ? '#eef4ff' : '#fff';
-    const border = isToday ? '2px solid #1e5096' : '1px solid #e8edf3';
-    const icon = isDone ? (hasPhoto ? '📸' : '✅') : (d <= todayDate && dow!==0 && dow!==6 ? '⬜' : '');
-    html += `<div onclick="openTbmDay(${d})" style="padding:6px 2px;border-radius:8px;background:${bg};border:${border};cursor:pointer;min-height:44px;position:relative;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform=''">
-      <div style="font-size:12px;font-weight:${isToday?'800':'500'};color:${dow===0?'#dc2626':'#374151'};">${d}</div>
-      <div style="font-size:14px;margin-top:1px;">${icon}</div>
-    </div>`;
-  }
-  html += '</div>';
-  el.innerHTML = html;
-}
-
-function openTbmDay(day){
-  const now = new Date();
-  const monthKey = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
-  const key = `${monthKey}-${String(day).padStart(2,'0')}`;
-  const tbmData = DB.getObj('tbmCalendar');
-  const dayData = tbmData[key] || {};
-
-  document.getElementById('tbm-day-form').style.display = 'block';
-  document.getElementById('tbm-day-title').textContent = `${now.getMonth()+1}월 ${day}일 TBM 기록`;
-  document.getElementById('tbm-day-done').checked = !!dayData.done;
-  document.getElementById('tbm-health').checked = !!dayData.health;
-  document.getElementById('tbm-ppe').checked = !!dayData.ppe;
-  document.getElementById('tbm-risk').checked = !!dayData.risk;
-  document.getElementById('tbm-day-agenda').value = dayData.agenda || '';
-
-  const previewEl = document.getElementById('tbm-day-photo-preview');
-  const photoSrc = dayData.photoUrl || dayData.photoData || '';
-  const photoName = dayData.photoName || 'TBM 사진';
-  if(photoSrc){
-    previewEl.innerHTML = `<img src="${photoSrc}" style="width:140px;height:100px;object-fit:cover;border-radius:8px;border:2px solid #16a34a;cursor:pointer;" onclick="openPhotoLightbox('${photoSrc}','${photoName.replace(/'/g,'&apos;')}')" title="클릭 = 크게 보기">
-      <div style="font-size:11px;color:#16a34a;margin-top:2px;">📎 ${photoName} <button onclick="removeTbmPhoto('${key}')" style="background:none;border:none;color:#dc2626;cursor:pointer;font-size:11px;padding:0 4px;">✕ 삭제</button></div>`;
-  } else {
-    previewEl.innerHTML = '';
-  }
-  document.getElementById('tbm-day-form').dataset.key = key;
-  document.getElementById('tbm-day-form').scrollIntoView({behavior:'smooth', block:'start'});
-}
-
-// ============================================================
-// 사진 (Supabase Storage)
-// ============================================================
-async function uploadTbmPhoto(input){
-  if(!supaClient){ alert('Supabase 미연결. 대시보드 설정에서 먼저 연결해주세요.'); input.value=''; return; }
-  if(!input.files.length) return;
-  const form = document.getElementById('tbm-day-form');
-  const key = form?.dataset.key;
-  if(!key){ alert('먼저 달력에서 날짜를 선택하세요.'); input.value=''; return; }
-  const file = input.files[0];
-  const preview = document.getElementById('tbm-day-photo-preview');
-  preview.innerHTML = '<div style="font-size:11px;color:#10b981;">업로드 중...</div>';
-
-  try{
-    const meta = await uploadToStorage(file, `tbm/${key}`);
-    const tbmData = DB.getObj('tbmCalendar');
-    const cur = tbmData[key] || {};
-    // 이전 사진 있으면 Storage에서 제거
-    if(cur.photoPath) await deleteFromStorage(cur.photoPath);
-    cur.photoUrl = meta.url;
-    cur.photoName = meta.name;
-    cur.photoPath = meta.path;
-    cur.uploadedAt = meta.uploadedAt;
-    // 레거시 base64 필드 제거
-    delete cur.photoData;
-    tbmData[key] = cur;
-    await DB.set('tbmCalendar', tbmData);
-    openTbmDay(parseInt(key.split('-').pop(), 10));
-    renderTbmCalendar();
-  }catch(err){
-    preview.innerHTML = `<div style="font-size:11px;color:#dc2626;">❌ 업로드 실패: ${err.message||err}</div>`;
-  }
-  input.value = '';
-}
-
-async function removeTbmPhoto(key){
-  if(!confirm('이 사진을 삭제하시겠습니까?')) return;
-  const tbmData = DB.getObj('tbmCalendar');
-  const cur = tbmData[key];
-  if(!cur) return;
-  if(cur.photoPath) await deleteFromStorage(cur.photoPath);
-  delete cur.photoUrl; delete cur.photoName; delete cur.photoPath;
-  delete cur.photoData; delete cur.uploadedAt;
-  tbmData[key] = cur;
-  await DB.set('tbmCalendar', tbmData);
-  openTbmDay(parseInt(key.split('-').pop(), 10));
-  renderTbmCalendar();
-}
-
-// ============================================================
-// 저장
-// ============================================================
-async function saveTbmDay(){
-  const form = document.getElementById('tbm-day-form');
-  const key = form.dataset.key;
-  if(!key){ alert('날짜가 선택되지 않았습니다.'); return; }
-  const tbmData = DB.getObj('tbmCalendar');
-  const cur = tbmData[key] || {};
-  tbmData[key] = {
-    ...cur,
-    done: document.getElementById('tbm-day-done').checked,
-    health: document.getElementById('tbm-health').checked,
-    ppe: document.getElementById('tbm-ppe').checked,
-    risk: document.getElementById('tbm-risk').checked,
-    agenda: document.getElementById('tbm-day-agenda').value,
-    savedAt: new Date().toISOString()
+  const record = {
+    id: Date.now(),
+    team: teamCode,
+    teamLabel: meta.label,
+    process: meta.process,
+    date: document.getElementById('f-date').value || new Date().toISOString().split('T')[0],
+    time: document.getElementById('f-time').value || meta.defaultTime,
+    lecturer: document.getElementById('f-lecturer').value.trim(),
+    attended: parseInt(document.getElementById('f-attended').value) || 0,
+    total: parseInt(document.getElementById('f-total').value) || 0,
+    tbmNo: tbmOpt.no,
+    tbmTitle: tbmOpt.title,
+    tbmMessage: tbmOpt.message,
+    riskIdx: parseInt(riskSel),
+    riskCategory: riskOpt.category,
+    riskText: riskOpt.risk,
+    measureText: riskOpt.measure,
+    freeNote: document.getElementById('f-free-note').value.trim(),
+    photoUrl: '',
+    photoPath: '',
+    createdAt: new Date().toISOString()
   };
-  await DB.set('tbmCalendar', tbmData);
 
-  // tbm 이력 (대시보드 recent-tbm · stat-tbm)
-  if(tbmData[key].done){
-    const existing = DB.get('tbm');
-    const checks = [tbmData[key].done, tbmData[key].health, tbmData[key].ppe, tbmData[key].risk, false,false,false,false];
-    const checkedCount = checks.filter(Boolean).length;
-    const filtered = existing.filter(r=>r.date!==key);
-    filtered.unshift({
-      id:Date.now(), date:key, time:'08:00', leader:'', count:0,
-      place:'현장', notes:tbmData[key].agenda,
-      checks, checkedCount, createdAt:new Date().toISOString()
-    });
-    await DB.set('tbm', filtered);
+  // 사진 업로드 (있을 때만)
+  const photoInput = document.getElementById('f-photo');
+  if(photoInput.files && photoInput.files[0]){
+    if(!supaClient){ alert('Supabase 미연결 상태라 사진 업로드가 불가합니다.'); return; }
+    try{
+      const meta2 = await uploadToStorage(photoInput.files[0], `tbm_daily/${teamCode}/${record.date}`);
+      record.photoUrl = meta2.url;
+      record.photoPath = meta2.path;
+    }catch(e){
+      alert('사진 업로드 실패: ' + (e.message||e));
+      return;
+    }
   }
-  alert('✅ TBM 기록 저장!\n\n메인 대시보드에도 실시간 반영됩니다.');
-  renderTbmCalendar();
-  renderHistories();
+
+  const records = getTbmRecords();
+  records.push(record);
+  await saveTbmRecordsAll(records);
+
+  // 폼 리셋 (팀/시간 등은 유지, 입력값만 비움)
+  document.getElementById('f-lecturer').value = '';
+  document.getElementById('f-attended').value = '';
+  document.getElementById('f-total').value = '';
+  document.getElementById('f-tbm-no').value = '';
+  document.getElementById('f-risk-idx').value = '';
+  document.getElementById('f-tbm-message').textContent = 'TBM 명을 선택하면 자동으로 표시됩니다.';
+  document.getElementById('f-risk-measure').textContent = '유해위험요인을 선택하면 자동으로 표시됩니다.';
+  document.getElementById('f-risk-category-chip').innerHTML = '';
+  document.getElementById('f-free-note').value = '';
+  document.getElementById('f-photo').value = '';
+
+  alert('✅ TBM 기록이 저장되었어요!');
+  renderRecentRecords();
+  checkFreeNoteBanner();
+  checkMonthPhotoStatus();
 }
 
-// ============================================================
-// 이력
-// ============================================================
-function renderHistories(){
-  const tbody = document.getElementById('tbm-history-body');
-  if(!tbody) return;
-  const data = DB.get('tbm');
-  tbody.innerHTML = data.length===0
-    ? '<tr><td colspan="5" style="text-align:center;color:#9ca3af;padding:20px;">기록 없음</td></tr>'
-    : data.map(r=>`<tr>
-        <td>${r.date}</td>
-        <td>${r.leader||'-'}</td>
-        <td>${r.count||'-'}${r.count?'명':''}</td>
-        <td>${r.checkedCount||0}/8 <span class="badge ${r.checkedCount>=6?'green':r.checkedCount>=3?'yellow':'red'}">${r.checkedCount>=8?'완료':r.checkedCount>=3?'부분':'미흡'}</span></td>
-        <td class="no-print"><button class="btn btn-outline btn-sm" onclick="deleteTbmRecord(${r.id})">삭제</button></td>
-      </tr>`).join('');
-}
 async function deleteTbmRecord(id){
-  if(!confirm('이 이력을 삭제하시겠습니까?')) return;
-  const arr = DB.get('tbm').filter(r=>r.id!==id);
-  await DB.set('tbm', arr);
-  renderHistories();
+  if(!confirm('이 기록을 삭제할까요?')) return;
+  const records = getTbmRecords();
+  const rec = records.find(r => r.id === id);
+  if(rec && rec.photoPath && supaClient){
+    try{ await supaClient.storage.from('safety-files').remove([rec.photoPath]); }catch(e){ console.warn(e); }
+  }
+  await saveTbmRecordsAll(records.filter(r => r.id !== id));
+  renderRecentRecords();
+  checkFreeNoteBanner();
+  checkMonthPhotoStatus();
 }
 
 // ============================================================
-// Lightbox
+// DROPDOWN HANDLERS
 // ============================================================
-function openPhotoLightbox(src, caption){
+function onTbmSelectChange(){
+  const meta = TEAM_META[teamCode];
+  if(!meta) return;
+  const val = document.getElementById('f-tbm-no').value;
+  const opt = (TBM_OPTIONS[meta.process]||[]).find(o => String(o.no) === val);
+  const box = document.getElementById('f-tbm-message');
+  if(opt){ box.textContent = opt.message; box.style.color = '#065f46'; }
+  else   { box.textContent = 'TBM 명을 선택하면 자동으로 표시됩니다.'; box.style.color = '#9ca3af'; }
+}
+
+function onRiskSelectChange(){
+  const meta = TEAM_META[teamCode];
+  if(!meta) return;
+  const val = document.getElementById('f-risk-idx').value;
+  const chip = document.getElementById('f-risk-category-chip');
+  const box = document.getElementById('f-risk-measure');
+  if(val === ''){
+    chip.innerHTML = '';
+    box.textContent = '유해위험요인을 선택하면 자동으로 표시됩니다.';
+    box.style.color = '#9ca3af';
+    return;
+  }
+  const opt = RISK_OPTIONS[meta.process][parseInt(val)];
+  if(opt){
+    chip.innerHTML = `<span class="cat-chip">${opt.category}</span>`;
+    box.textContent = opt.measure;
+    box.style.color = '#065f46';
+  }
+}
+
+// ============================================================
+// BANNERS
+// ============================================================
+function checkFreeNoteBanner(){
+  const banner = document.getElementById('free-note-banner');
+  if(!banner) return;
+  const records = getTbmRecords().filter(r => r.team === teamCode);
+  const cutoff = new Date(Date.now() - 14*24*60*60*1000);
+  const hasRecentNote = records.some(r => (r.freeNote||'').trim() && new Date(r.date) >= cutoff);
+  banner.style.display = hasRecentNote ? 'none' : 'block';
+}
+
+function checkMonthPhotoStatus(){
+  const box = document.getElementById('photo-status');
+  if(!box) return;
+  const now = new Date();
+  const ym = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+  const records = getTbmRecords().filter(r => r.team === teamCode && r.photoUrl);
+  const hasThisMonth = records.some(r => (r.date||'').startsWith(ym));
+  box.style.display = 'flex';
+  if(hasThisMonth){
+    box.className = 'photo-status done';
+    box.innerHTML = `✅ <strong>이번 달(${ym}) 사진 업로드 완료</strong>`;
+  } else {
+    box.className = 'photo-status pending';
+    box.innerHTML = `📷 <strong>이번 달(${ym}) TBM 사진이 아직 없어요.</strong> 분기 1회 이상 현장 사진 첨부를 권장합니다.`;
+  }
+}
+
+// ============================================================
+// RENDER
+// ============================================================
+function renderTeamSelectView(){
+  const grid = document.getElementById('team-select-grid');
+  grid.innerHTML = Object.keys(TEAM_META).map(code => {
+    const m = TEAM_META[code];
+    return `<a class="team-card" href="?team=${code}" style="background:${m.headerGrad};">
+      <div class="ic">${m.icon}</div>
+      <div class="nm">${m.label}</div>
+      <div class="dsc">${m.defaultTime}</div>
+    </a>`;
+  }).join('');
+}
+
+function populateDropdowns(){
+  const meta = TEAM_META[teamCode];
+  const tbmSel = document.getElementById('f-tbm-no');
+  tbmSel.innerHTML = '<option value="">— TBM 주제를 선택하세요 —</option>' +
+    (TBM_OPTIONS[meta.process]||[]).map(o => `<option value="${o.no}">${o.no}. ${o.title}</option>`).join('');
+
+  // 유해위험요인: 카테고리별 optgroup
+  const riskSel = document.getElementById('f-risk-idx');
+  const list = RISK_OPTIONS[meta.process]||[];
+  const byCat = {};
+  list.forEach((o,i) => {
+    if(!byCat[o.category]) byCat[o.category] = [];
+    byCat[o.category].push({...o, idx:i});
+  });
+  let html = '<option value="">— 유해위험요인을 선택하세요 —</option>';
+  Object.keys(byCat).forEach(cat => {
+    html += `<optgroup label="${cat}">`;
+    byCat[cat].forEach(o => { html += `<option value="${o.idx}">${o.risk.trim()}</option>`; });
+    html += '</optgroup>';
+  });
+  riskSel.innerHTML = html;
+}
+
+function renderRecentRecords(){
+  const box = document.getElementById('recent-records');
+  const cnt = document.getElementById('recent-count');
+  if(!box) return;
+  const all = getTbmRecords().filter(r => r.team === teamCode)
+    .sort((a,b) => new Date(b.date) - new Date(a.date) || b.id - a.id);
+  if(cnt) cnt.textContent = `(총 ${all.length}건, 최신 10개 표시)`;
+  const recent = all.slice(0, 10);
+  if(recent.length === 0){
+    box.innerHTML = '<div style="text-align:center;color:#9ca3af;padding:20px;font-size:12px;">아직 저장된 기록이 없어요.</div>';
+    return;
+  }
+  box.innerHTML = recent.map(r => {
+    const photoEl = r.photoUrl ? `<img class="thumb" src="${r.photoUrl}" onclick="openPhotoLightbox('${r.photoUrl}')">` : '';
+    const note = (r.freeNote||'').trim() ? `<div class="note">💬 ${escapeHtml(r.freeNote)}</div>` : '';
+    return `<div class="recent-row">
+      <div class="d">${r.date}<div style="font-weight:400;font-size:10px;color:#9ca3af;margin-top:2px;">${r.time||''}</div></div>
+      <div class="t">
+        <div class="tt">🏷️ ${escapeHtml(r.tbmTitle||'')} · 강사 ${escapeHtml(r.lecturer||'-')} · ${r.attended||0}/${r.total||0}명</div>
+        <div class="msg">⚠️ ${escapeHtml(r.riskText||'')} <span class="cat-chip" style="margin-left:0;">${escapeHtml(r.riskCategory||'')}</span></div>
+        ${note}
+      </div>
+      ${photoEl}
+      <div class="act no-print">
+        <button class="btn btn-outline btn-sm" onclick="deleteTbmRecord(${r.id})" style="font-size:10px;">삭제</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function escapeHtml(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+function applyTeamHeader(){
+  const meta = TEAM_META[teamCode];
+  document.getElementById('page-header').style.background = meta.headerGrad;
+  document.getElementById('h-icon').textContent = meta.icon;
+  document.getElementById('h-title').textContent = `${meta.label} · TBM 일지`;
+  document.getElementById('h-sub').textContent = `${meta.defaultTime} · 매일 작업 전 실시 · 전원 참석`;
+  document.title = `${meta.label} TBM | 산업안전보건`;
+}
+
+function openPhotoLightbox(src){
   document.getElementById('lightbox-img').src = src;
-  document.getElementById('lightbox-caption').textContent = caption || '';
   document.getElementById('photo-lightbox').classList.add('show');
   document.body.style.overflow = 'hidden';
 }
@@ -459,29 +576,41 @@ function closePhotoLightbox(){
   document.getElementById('photo-lightbox').classList.remove('show');
   document.body.style.overflow = '';
 }
-document.addEventListener('keydown', (e) => { if(e.key === 'Escape') closePhotoLightbox(); });
+document.addEventListener('keydown', e => { if(e.key === 'Escape') closePhotoLightbox(); });
 
 // ============================================================
 // INIT
 // ============================================================
 window.addEventListener('DOMContentLoaded', async () => {
-  const sup = DB.getObj('supabase');
-  const supaUrl = sup.url || DEFAULT_SUPABASE_URL;
-  const supaKey = sup.key || DEFAULT_SUPABASE_KEY;
-  if(supaUrl && supaKey){
-    initSupabase(supaUrl, supaKey);
-    await loadFromSupabase();
-  } else {
-    document.getElementById('conn-dot').className = 'conn-dot error';
-    document.getElementById('conn-text').textContent = 'Supabase 미연결';
-    document.getElementById('warn-no-supa').classList.add('show');
+  initSupabase(DEFAULT_SUPABASE_URL, DEFAULT_SUPABASE_KEY);
+  await loadFromSupabase();
+
+  if(!teamCode || !TEAM_META[teamCode]){
+    document.getElementById('view-select').style.display = 'block';
+    renderTeamSelectView();
+    return;
   }
-  renderTBMTheme();
-  renderTbmCalendar();
-  renderHistories();
-  window.addEventListener('storage', (e) => {
-    if(e.key === 'safety_tbm' || e.key === 'safety_tbmCalendar'){
-      renderTbmCalendar(); renderHistories();
+
+  // 팀별 입력 화면
+  applyTeamHeader();
+  document.getElementById('view-input').style.display = 'block';
+
+  // 기본값 세팅
+  const meta = TEAM_META[teamCode];
+  document.getElementById('f-date').value = new Date().toISOString().split('T')[0];
+  document.getElementById('f-time').value = meta.defaultTime;
+
+  populateDropdowns();
+  renderRecentRecords();
+  checkFreeNoteBanner();
+  checkMonthPhotoStatus();
+
+  // 저장소 실시간 이벤트
+  window.addEventListener('storage', e => {
+    if(e.key === 'safety_tbm_daily'){
+      renderRecentRecords();
+      checkFreeNoteBanner();
+      checkMonthPhotoStatus();
     }
   });
 });
