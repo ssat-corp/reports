@@ -25,14 +25,14 @@ body{font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif
 
 .container{max-width:720px;margin:0 auto;padding:16px 14px 60px;}
 
-.card{background:#fff;border:1px solid #d6d3d1;border-radius:4px;padding:20px 18px;margin-bottom:14px;box-shadow:none;}
-@media(min-width:600px){.card{padding:26px 28px;}}
-.card-title{font-size:16px;font-weight:900;color:#1c1917;margin-bottom:20px;padding-bottom:12px;border-bottom:2px solid #1c1917;display:flex;justify-content:space-between;align-items:center;letter-spacing:-0.02em;}
+.card{background:#fff;border:1px solid #d6d3d1;border-radius:4px;padding:22px 18px;margin-bottom:14px;box-shadow:none;}
+@media(min-width:600px){.card{padding:32px 34px;}}
+.card-title{font-size:22px;font-weight:900;color:#1c1917;margin-bottom:24px;padding:2px 0 14px 16px;border-left:5px solid #1c1917;border-bottom:2px solid #1c1917;display:flex;justify-content:space-between;align-items:center;letter-spacing:-0.025em;line-height:1.25;}
 
-.section-title{font-size:11px;font-weight:800;letter-spacing:0.22em;color:#44403c;padding-bottom:8px;margin:28px 0 16px;border-bottom:1px solid #a8a29e;text-transform:uppercase;display:flex;align-items:baseline;gap:10px;}
-.section-title:first-of-type{margin-top:0;}
-.section-title .roman{display:inline-block;font-size:14px;font-weight:900;color:#1c1917;letter-spacing:0.08em;}
-.section-title .label{letter-spacing:0.22em;color:#57534e;}
+.section-title{font-size:13px;font-weight:800;letter-spacing:0.22em;color:#44403c;padding-bottom:10px;margin:34px 0 20px;border-bottom:1px solid #57534e;text-transform:uppercase;display:flex;align-items:baseline;gap:12px;}
+.section-title:first-of-type{margin-top:4px;}
+.section-title .roman{display:inline-block;font-size:17px;font-weight:900;color:#1c1917;letter-spacing:0.06em;}
+.section-title .label{letter-spacing:0.22em;color:#44403c;}
 
 .btn{display:inline-block;padding:8px 16px;background:#292524;color:#fff;border:none;border-radius:3px;font-size:12px;font-weight:700;cursor:pointer;text-decoration:none;transition:background 0.15s;letter-spacing:0.02em;}
 .btn:hover{background:#1c1917;}
@@ -43,9 +43,9 @@ body{font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif
 .btn-primary-big{padding:16px 32px;font-size:13px;width:100%;font-weight:800;letter-spacing:0.25em;text-transform:uppercase;border-radius:3px;margin-top:8px;}
 
 label.field{display:block;margin-bottom:16px;}
-label.field > .lb{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;color:#a8a29e;margin-bottom:8px;letter-spacing:-0.01em;transition:color 0.2s;}
-label.field > .lb .no{display:inline-flex;align-items:center;justify-content:center;min-width:28px;height:20px;padding:0 6px;background:#fafaf9;border:1px solid #d6d3d1;color:#a8a29e;font-size:10px;font-weight:800;letter-spacing:0.08em;border-radius:2px;transition:all 0.2s;font-feature-settings:"tnum";}
-label.field > .hint{display:block;font-size:11px;color:#a8a29e;margin-top:4px;transition:color 0.2s;}
+label.field > .lb{display:flex;align-items:center;gap:10px;font-size:15px;font-weight:700;color:#a8a29e;margin-bottom:10px;letter-spacing:-0.015em;transition:color 0.2s;}
+label.field > .lb .no{display:inline-flex;align-items:center;justify-content:center;min-width:34px;height:24px;padding:0 8px;background:#fafaf9;border:1px solid #d6d3d1;color:#a8a29e;font-size:11px;font-weight:800;letter-spacing:0.08em;border-radius:3px;transition:all 0.2s;font-feature-settings:"tnum";}
+label.field > .hint{display:block;font-size:12px;color:#a8a29e;margin-top:6px;transition:color 0.2s;}
 label.field.filled > .lb{color:#1c1917;}
 label.field.filled > .lb .no{background:#1c1917;color:#fff;border-color:#1c1917;}
 label.field.filled > .hint{color:#78716c;}
@@ -59,7 +59,7 @@ label.field.filled input, label.field.filled select, label.field.filled textarea
 input:focus, select:focus, textarea:focus{outline:none;border-color:#44403c;color:#1c1917;}
 textarea{resize:vertical;min-height:100px;}
 /* 4가지 필드 세로 분리 배치 — 모바일 우선 */
-label.field{display:block;margin-bottom:18px;padding-bottom:14px;border-bottom:1px dashed #e7e5e4;}
+label.field{display:block;margin-bottom:20px;padding-bottom:16px;border-bottom:1px dashed #e7e5e4;}
 label.field:last-of-type{border-bottom:none;}
 /* 숫자 참석/총원 2개 나란히 */
 .inline-2{display:flex;align-items:center;gap:8px;}
