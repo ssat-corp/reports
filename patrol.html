@@ -56,29 +56,40 @@ input:focus, select:focus, textarea:focus{outline:none;border-color:#292524;colo
 textarea{resize:vertical;min-height:90px;line-height:1.55;}
 
 /* ===== 구역별 체크리스트 ===== */
-.area-card{border:1px solid #d6d3d1;border-radius:4px;margin-bottom:14px;background:#fff;overflow:hidden;}
-.area-header{background:#fafaf9;padding:12px 14px;border-bottom:1px solid #e7e5e4;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;}
+.area-card{border:1px solid #d6d3d1;border-radius:4px;margin-bottom:14px;background:#fff;overflow:hidden;transition:background 0.2s;}
+.area-header{background:#fafaf9;padding:12px 14px;border-bottom:1px solid #e7e5e4;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;cursor:pointer;transition:background 0.15s;}
+.area-header:hover{background:#f0ede6;}
 .area-header .area-name{font-size:15px;font-weight:800;color:#292524;letter-spacing:-0.02em;display:flex;align-items:center;gap:10px;flex:1;}
 .area-header .area-count{font-size:11px;font-weight:700;color:#78716c;padding:2px 8px;background:#fff;border:1px solid #d6d3d1;border-radius:2px;letter-spacing:0.05em;}
+.area-header .toggle-icon{font-size:14px;color:#78716c;transition:transform 0.15s;}
 .area-header .area-actions{display:flex;gap:4px;flex-wrap:wrap;}
-.area-header .mini-btn{background:#fff;border:1px solid #a8a29e;color:#292524;padding:4px 10px;font-size:11px;font-weight:700;border-radius:3px;cursor:pointer;}
+.area-header .mini-btn{background:#fff;border:1px solid #a8a29e;color:#292524;padding:4px 10px;font-size:11px;font-weight:700;border-radius:3px;cursor:pointer;font-family:inherit;}
 .area-header .mini-btn:hover{background:#f5f5f4;}
 .area-header .mini-btn.reset{color:#991b1b;border-color:#c7a4a4;}
+/* 완료/접힘 상태 */
+.area-card.collapsed{background:#fafaf9;}
+.area-card.collapsed .area-header{background:#f0ede6;border-bottom:none;}
+.area-card.collapsed .area-header .area-name::before{content:'완료';display:inline-block;font-size:10px;font-weight:800;letter-spacing:0.12em;color:#fff;background:#44403c;padding:2px 8px;border-radius:2px;margin-right:4px;}
+.area-card.collapsed .area-header .area-count{background:#44403c;color:#fff;border-color:#44403c;}
+.area-card.collapsed .area-header .toggle-icon{transform:rotate(-90deg);}
+.area-card.collapsed .cat-block{display:none;}
+.area-card.has-bad .area-header .area-name::after{content:'불량';display:inline-block;font-size:10px;font-weight:800;letter-spacing:0.12em;color:#fff;background:#991b1b;padding:2px 8px;border-radius:2px;margin-left:6px;}
 
 .cat-block{padding:6px 14px 10px;border-bottom:1px dashed #e7e5e4;}
 .cat-block:last-child{border-bottom:none;}
 .cat-name{font-size:11px;font-weight:800;letter-spacing:0.18em;color:#78716c;padding:10px 0 8px;text-transform:uppercase;}
 
-.check-row{padding:10px 0;border-bottom:1px dotted #e7e5e4;}
+.check-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding:8px 0;border-bottom:1px dotted #e7e5e4;}
 .check-row:last-child{border-bottom:none;}
-.check-row .item-text{font-size:14px;color:#292524;line-height:1.5;margin-bottom:8px;}
-.status-group{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;}
-.status-btn{padding:10px 4px;border:1px solid #d6d3d1;background:#fff;color:#78716c;font-size:13px;font-weight:700;cursor:pointer;border-radius:3px;text-align:center;letter-spacing:0.04em;font-family:inherit;}
+.check-row .item-text{flex:1 1 180px;font-size:13.5px;color:#292524;line-height:1.4;margin-bottom:0;}
+.status-group{flex:0 0 auto;display:grid;grid-template-columns:repeat(2,58px);gap:5px;}
+@media(min-width:600px){.status-group{grid-template-columns:repeat(2,64px);}}
+.status-btn{padding:8px 4px;border:1px solid #d6d3d1;background:#fff;color:#78716c;font-size:12px;font-weight:700;cursor:pointer;border-radius:3px;text-align:center;letter-spacing:0.04em;font-family:inherit;}
 .status-btn:hover{background:#fafaf9;}
 .status-btn.active.ok{background:#44403c;color:#fff;border-color:#44403c;}
 .status-btn.active.bad{background:#991b1b;color:#fff;border-color:#991b1b;}
 .status-btn.active.na{background:#a8a29e;color:#fff;border-color:#a8a29e;}
-.bad-note{width:100%;margin-top:8px;padding:9px 10px;border:1px solid #c7a4a4;border-radius:3px;font-size:14px;resize:vertical;min-height:42px;font-family:inherit;display:none;background:#fdf5f5;color:#991b1b;}
+.bad-note{flex:1 1 100%;width:100%;margin-top:4px;padding:8px 10px;border:1px solid #c7a4a4;border-radius:3px;font-size:13.5px;resize:vertical;min-height:40px;font-family:inherit;display:none;background:#fdf5f5;color:#991b1b;}
 .bad-note.show{display:block;}
 
 /* 지적사항 카드 */
@@ -323,20 +334,20 @@ function renderAreas(){
           <div class="item-text">${escapeHtml(item)}</div>
           <div class="status-group">
             <button type="button" class="status-btn ok" onclick="setStatus('${k}','ok',this)">OK</button>
-            <button type="button" class="status-btn bad" onclick="setStatus('${k}','bad',this)">불량</button>
-            <button type="button" class="status-btn na" onclick="setStatus('${k}','na',this)">N/A</button>
+            <button type="button" class="status-btn bad" onclick="setStatus('${k}','bad',this)">NG</button>
           </div>
           <textarea class="bad-note" placeholder="부적합 사유 및 처리방안" oninput="updateNote('${k}',this)"></textarea>
         </div>`;
       });
       inner += `</div>`;
     });
-    return `<div class="area-card" data-area="${area.code}">
-      <div class="area-header">
-        <div class="area-name">${escapeHtml(area.name)}<span class="area-count">${total}개</span></div>
+    return `<div class="area-card" data-area="${area.code}" data-total="${total}">
+      <div class="area-header" onclick="toggleArea('${area.code}')">
+        <div class="area-name">${escapeHtml(area.name)}<span class="area-count" data-role="count">0/${total}</span></div>
         <div class="area-actions">
-          <button type="button" class="mini-btn" onclick="fillArea('${area.code}','ok')">전체 OK</button>
-          <button type="button" class="mini-btn reset" onclick="fillArea('${area.code}','')">초기화</button>
+          <button type="button" class="mini-btn" onclick="event.stopPropagation();fillArea('${area.code}','ok')">전체 OK</button>
+          <button type="button" class="mini-btn reset" onclick="event.stopPropagation();fillArea('${area.code}','')">초기화</button>
+          <span class="toggle-icon">▾</span>
         </div>
       </div>
       ${inner}
@@ -353,6 +364,7 @@ function setStatus(key, status, btn){
   const note = row.querySelector('.bad-note');
   if(status === 'bad') note.classList.add('show');
   else { note.classList.remove('show'); note.value = ''; state.checks[key].note=''; }
+  updateAreaState(key.split(':')[0]);
 }
 
 function updateNote(key, ta){
@@ -361,6 +373,8 @@ function updateNote(key, ta){
 }
 
 function fillArea(areaCode, status){
+  const card = document.querySelector(`.area-card[data-area="${areaCode}"]`);
+  if(card) delete card.dataset.userOpened; // 자동 접힘 동작하도록 수동 열림 상태 해제
   document.querySelectorAll(`.area-card[data-area="${areaCode}"] .check-row`).forEach(row => {
     const k = row.dataset.key;
     row.querySelectorAll('.status-btn').forEach(b => b.classList.remove('active'));
@@ -376,6 +390,48 @@ function fillArea(areaCode, status){
       delete state.checks[k];
     }
   });
+  updateAreaState(areaCode);
+}
+
+// 구역 상태 업데이트 — 완료 시 자동 접기, 카운트 갱신, 불량 뱃지
+function updateAreaState(areaCode){
+  const areaData = PATROL_DATA.areas.find(a => a.code === areaCode);
+  if(!areaData) return;
+  const card = document.querySelector(`.area-card[data-area="${areaCode}"]`);
+  if(!card) return;
+  const total = areaData.categories.reduce((s,c)=>s+c.items.length, 0);
+  let checked = 0, bads = 0;
+  areaData.categories.forEach(cat => {
+    cat.items.forEach((_, idx) => {
+      const k = ckey(areaCode, cat.name, idx);
+      const s = state.checks[k] && state.checks[k].status;
+      if(s) checked++;
+      if(s === 'bad') bads++;
+    });
+  });
+  const countEl = card.querySelector('[data-role="count"]');
+  if(countEl) countEl.textContent = `${checked}/${total}`;
+  card.classList.toggle('has-bad', bads > 0);
+  // 전부 체크되면 자동 접기 (단 사용자가 수동으로 펼쳐둔 상태면 유지)
+  if(checked === total && !card.dataset.userOpened){
+    card.classList.add('collapsed');
+  } else if(checked < total){
+    card.classList.remove('collapsed');
+    delete card.dataset.userOpened;
+  }
+}
+
+// 헤더 클릭 → 수동 펼침/접힘
+function toggleArea(areaCode){
+  const card = document.querySelector(`.area-card[data-area="${areaCode}"]`);
+  if(!card) return;
+  if(card.classList.contains('collapsed')){
+    card.classList.remove('collapsed');
+    card.dataset.userOpened = '1'; // 수동으로 연 상태 기억
+  } else {
+    card.classList.add('collapsed');
+    delete card.dataset.userOpened;
+  }
 }
 
 // ============================================================
