@@ -24,13 +24,13 @@ body{font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
 
 .container{max-width:720px;margin:0 auto;padding:16px 14px 60px;}
-.container.wide{max-width:1180px;}
+.container.wide{max-width:1320px;}
 /* 팀 선택 뷰 레이아웃 — 모바일 세로, PC 2단 (왼쪽: 팀/안내, 오른쪽: 캘린더) */
 #view-select.select-layout{display:none;}
 #view-select.select-layout.shown{display:block;}
 #view-select.select-layout .col-left, #view-select.select-layout .col-right{min-width:0;}
 @media(min-width:960px){
-  #view-select.select-layout.shown{display:grid;grid-template-columns:minmax(380px,1fr) minmax(480px,1.2fr);gap:16px;align-items:start;}
+  #view-select.select-layout.shown{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start;}
 }
 
 .card{background:#fff;border:1px solid #d6d3d1;border-radius:4px;padding:22px 18px;margin-bottom:14px;box-shadow:none;}
