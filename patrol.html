@@ -9,62 +9,66 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
 *{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;background:#f0f4f9;color:#374151;min-height:100vh;}
+body{font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;background:#f5f5f4;color:#1c1917;min-height:100vh;font-size:13px;}
 
-.page-header{background:linear-gradient(135deg,#0d1f3c,#1e5096);color:#fff;padding:28px 28px 22px;box-shadow:0 2px 12px rgba(0,0,0,0.08);position:relative;}
-.page-header .icon{font-size:38px;margin-bottom:4px;}
-.page-header h1{font-size:22px;font-weight:900;letter-spacing:-0.02em;}
-.page-header .sub{font-size:13px;opacity:0.85;margin-top:2px;}
-.page-header .conn{position:absolute;top:16px;right:20px;font-size:11px;background:rgba(255,255,255,0.15);padding:4px 10px;border-radius:12px;display:flex;align-items:center;gap:6px;}
-.conn-dot{width:7px;height:7px;border-radius:50%;background:#94a3b8;}
-.conn-dot.connected{background:#22c55e;animation:pulse 2s infinite;}
+.page-header{background:#292524;color:#fff;padding:24px 28px 20px;box-shadow:0 1px 0 #1c1917;position:relative;border-bottom:3px solid #1c1917;}
+.page-header .doc-no{display:inline-block;font-size:10px;font-weight:700;letter-spacing:0.18em;padding:2px 10px;border:1px solid rgba(255,255,255,0.3);border-radius:2px;margin-bottom:10px;color:rgba(255,255,255,0.85);}
+.page-header h1{font-size:20px;font-weight:900;letter-spacing:-0.02em;}
+.page-header .sub{font-size:12px;opacity:0.7;margin-top:4px;}
+.page-header .conn{position:absolute;top:16px;right:20px;font-size:11px;background:rgba(255,255,255,0.1);padding:4px 10px;border-radius:4px;display:flex;align-items:center;gap:6px;}
+.conn-dot{width:7px;height:7px;border-radius:50%;background:#78716c;}
+.conn-dot.connected{background:#d6d3d1;animation:pulse 2s infinite;}
 .conn-dot.error{background:#ef4444;}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
 
 .container{max-width:1200px;margin:0 auto;padding:20px 20px 60px;}
 
-.card{background:#fff;border:1px solid #e8edf3;border-radius:12px;padding:18px 20px;margin-bottom:14px;box-shadow:0 1px 3px rgba(0,0,0,0.04);}
-.card-title{font-size:14px;font-weight:800;color:#0d1f3c;margin-bottom:12px;padding-bottom:10px;border-bottom:2px solid #1e5096;}
-.btn{display:inline-block;padding:8px 16px;background:#1e5096;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;text-decoration:none;transition:all 0.15s;}
-.btn:hover{background:#0d1f3c;}
-.btn-outline{background:#fff;color:#1e5096;border:1.5px solid #1e5096;}
-.btn-outline:hover{background:#eff6ff;}
-.btn-success{background:#16a34a;}
-.btn-success:hover{background:#15803d;}
-.btn-sm{padding:6px 12px;font-size:12px;}
+.card{background:#fff;border:1px solid #d6d3d1;border-radius:6px;padding:18px 20px;margin-bottom:14px;box-shadow:none;}
+.card-title{font-size:14px;font-weight:800;color:#1c1917;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid #d6d3d1;letter-spacing:-0.01em;}
+.btn{display:inline-block;padding:7px 14px;background:#292524;color:#fff;border:none;border-radius:4px;font-size:12px;font-weight:700;cursor:pointer;text-decoration:none;transition:background 0.15s;letter-spacing:-0.01em;}
+.btn:hover{background:#1c1917;}
+.btn-outline{background:#fff;color:#44403c;border:1px solid #a8a29e;}
+.btn-outline:hover{background:#f5f5f4;border-color:#78716c;}
+.btn-success{background:#44403c;}
+.btn-success:hover{background:#292524;}
+.btn-sm{padding:5px 10px;font-size:11px;}
 
-.table-wrap{border:1px solid #e8edf3;border-radius:8px;overflow:hidden;overflow-x:auto;}
+.table-wrap{border:1px solid #d6d3d1;border-radius:4px;overflow:hidden;overflow-x:auto;}
 table{width:100%;border-collapse:collapse;font-size:13px;}
-th{background:#f8fafc;padding:8px 10px;text-align:left;font-weight:700;color:#0d1f3c;border-bottom:1px solid #e8edf3;font-size:12px;}
-td{padding:8px 10px;border-bottom:1px solid #f1f5f9;}
+th{background:#292524;padding:8px 10px;text-align:left;font-weight:700;color:#fff;border-right:1px solid #44403c;font-size:11px;letter-spacing:0.01em;}
+th:last-child{border-right:none;}
+td{padding:8px 10px;border-bottom:1px solid #e7e5e4;border-right:1px solid #e7e5e4;}
+td:last-child{border-right:none;}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr:nth-child(even) td{background:#fafaf9;}
 
-.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;}
-.badge.green{background:#dcfce7;color:#15803d;}
-.badge.yellow{background:#fef3c7;color:#a16207;}
-.badge.red{background:#fef2f2;color:#b91c1c;}
-.badge.blue{background:#dbeafe;color:#1e5096;}
-.badge.gray{background:#f1f5f9;color:#64748b;}
+.badge{display:inline-block;padding:2px 8px;border-radius:3px;font-size:10px;font-weight:700;border:1px solid transparent;}
+.badge.green{background:#f0f0ee;color:#44403c;border-color:#d6d3d1;}
+.badge.yellow{background:#fefce8;color:#713f12;border-color:#e4dcc5;}
+.badge.red{background:#fef2f2;color:#991b1b;border-color:#e7d3d3;}
+.badge.blue{background:#f0f0ee;color:#44403c;border-color:#d6d3d1;}
+.badge.gray{background:#f5f5f4;color:#57534e;border-color:#d6d3d1;}
 
-.filter-bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px;background:#f8fafc;padding:10px 14px;border-radius:10px;}
+.filter-bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px;background:#fafaf9;border:1px solid #e7e5e4;padding:10px 14px;border-radius:4px;}
 .pf-site{transition:all 0.15s;}
 
-.warn-banner{background:#fffbeb;border:1px solid #fbbf24;border-left:4px solid #f59e0b;border-radius:8px;padding:12px 16px;font-size:13px;color:#92400e;margin-bottom:14px;display:none;}
+.warn-banner{background:#fefce8;border:1px solid #e4dcc5;border-left:3px solid #a16207;border-radius:4px;padding:10px 14px;font-size:12px;color:#713f12;margin-bottom:14px;display:none;}
 .warn-banner.show{display:block;}
 
-.photo-lightbox{position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px;cursor:zoom-out;}
+.photo-lightbox{position:fixed;inset:0;background:rgba(28,25,23,0.9);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px;cursor:zoom-out;}
 .photo-lightbox.show{display:flex;}
-.photo-lightbox img{max-width:95%;max-height:92vh;object-fit:contain;border-radius:6px;box-shadow:0 4px 24px rgba(0,0,0,0.5);}
-.photo-lightbox .close-btn{position:absolute;top:16px;right:20px;background:rgba(255,255,255,0.15);color:#fff;border:none;width:44px;height:44px;border-radius:50%;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.photo-lightbox img{max-width:95%;max-height:92vh;object-fit:contain;border-radius:4px;box-shadow:0 4px 24px rgba(0,0,0,0.5);}
+.photo-lightbox .close-btn{position:absolute;top:16px;right:20px;background:rgba(255,255,255,0.15);color:#fff;border:none;width:40px;height:40px;border-radius:50%;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
 .photo-lightbox .close-btn:hover{background:rgba(255,255,255,0.3);}
-.photo-lightbox .caption{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);color:#fff;background:rgba(0,0,0,0.6);padding:8px 16px;border-radius:8px;font-size:13px;max-width:80%;text-align:center;}
+.photo-lightbox .caption{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);color:#fff;background:rgba(0,0,0,0.6);padding:8px 16px;border-radius:4px;font-size:13px;max-width:80%;text-align:center;}
 
 @media print{
   .no-print{display:none!important;}
   body{background:#fff;}
-  .page-header{background:#0d1f3c!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
+  .page-header{background:#292524!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
   .card{box-shadow:none!important;border:1px solid #000!important;break-inside:avoid;}
-  #patrol-check-table thead tr{background:#0d1f3c!important;color:#fff!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
-  #patrol-check-table tr[style*="f1f5f9"] td{background:#e8edf3!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
+  #patrol-check-table thead tr{background:#292524!important;color:#fff!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
+  #patrol-check-table tr[style*="f1f5f9"] td{background:#e7e5e4!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
   @page{size:A4 portrait;margin:10mm;}
 }
 </style>
@@ -73,7 +77,7 @@ td{padding:8px 10px;border-bottom:1px solid #f1f5f9;}
 
 <div class="page-header">
   <div class="conn no-print"><span id="conn-dot" class="conn-dot"></span><span id="conn-text">연결 확인 중...</span></div>
-  <div class="icon">🔍</div>
+  <div class="doc-no">PTR-FORM</div>
   <h1>현장 패트롤 점검</h1>
   <div class="sub">담당자 · 주간 순회점검 · 사업장별 체크리스트</div>
 </div>
@@ -87,19 +91,17 @@ td{padding:8px 10px;border-bottom:1px solid #f1f5f9;}
 <div class="container">
 
   <div id="warn-no-supa" class="warn-banner">
-    ⚠️ <strong>Supabase 미연결.</strong> 대시보드 → 설정에서 Supabase URL/Key를 먼저 입력해주세요.
-    <a href="safety_dashboard.html" style="color:#92400e;text-decoration:underline;font-weight:700;">설정하러 가기 →</a>
+    <strong>※ 실시간 공유 연결 실패.</strong> 관리자에게 문의해주세요.
   </div>
 
   <div class="no-print" style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;">
-    <a href="patrol_print.html" target="_blank" class="btn btn-sm">🖨️ 통합 인쇄용 체크리스트</a>
-    <a href="safety_dashboard.html" class="btn btn-outline btn-sm">📊 메인 대시보드</a>
+    <a href="patrol_print.html" target="_blank" class="btn btn-sm">통합 인쇄용 체크리스트</a>
   </div>
 
   <div class="filter-bar no-print">
-    <span style="font-size:13px;font-weight:700;color:#0d1f3c;">🏭 사업장 선택:</span>
-    <button class="pf-site btn btn-sm" onclick="setPatrolFilter('suwon',this)" style="background:#1e5096;color:#fff;">📍 수원 (사출·조립)</button>
-    <button class="pf-site btn btn-outline btn-sm" onclick="setPatrolFilter('hwaseong',this)">📍 화성 (도색·화학)</button>
+    <span style="font-size:11px;font-weight:800;letter-spacing:0.15em;color:#57534e;text-transform:uppercase;">사업장 선택</span>
+    <button class="pf-site btn btn-sm" onclick="setPatrolFilter('suwon',this)" style="background:#292524;color:#fff;">수원 · 사출·조립</button>
+    <button class="pf-site btn btn-outline btn-sm" onclick="setPatrolFilter('hwaseong',this)">화성 · 도색·화학</button>
   </div>
 
   <div class="card">
@@ -108,13 +110,13 @@ td{padding:8px 10px;border-bottom:1px solid #f1f5f9;}
 
   <div id="patrol-checklist-form" style="display:none;">
     <div class="card">
-      <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:12px;border-bottom:2px solid #0d1f3c;margin-bottom:12px;flex-wrap:wrap;gap:10px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:12px;border-bottom:2px solid #1c1917;margin-bottom:12px;flex-wrap:wrap;gap:10px;">
         <div>
-          <div style="font-size:18px;font-weight:900;color:#0d1f3c;" id="patrol-form-title">현장 패트롤 점검표</div>
+          <div style="font-size:18px;font-weight:900;color:#1c1917;" id="patrol-form-title">현장 패트롤 점검표</div>
           <div style="font-size:12px;color:#6b7280;margin-top:2px;" id="patrol-form-date"></div>
         </div>
         <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
-          <button class="btn btn-outline btn-sm no-print" onclick="window.print()">🖨️ 이 점검표 인쇄</button>
+          <button class="btn btn-outline btn-sm no-print" onclick="window.print()">이 점검표 인쇄</button>
           <div style="text-align:right;font-size:11px;color:#6b7280;">
             <div>점검자: <input type="text" id="p-inspector" placeholder="이름" style="border:none;border-bottom:1px solid #d1d5db;width:80px;font-size:11px;padding:2px 4px;"></div>
             <div style="margin-top:4px;">날씨:
@@ -128,7 +130,7 @@ td{padding:8px 10px;border-bottom:1px solid #f1f5f9;}
 
       <div class="table-wrap">
         <table id="patrol-check-table" style="font-size:13px;">
-          <thead><tr style="background:#0d1f3c;color:#fff;">
+          <thead><tr style="background:#1c1917;color:#fff;">
             <th style="width:30%;padding:10px 12px;color:#fff;">점검사항</th>
             <th style="width:40%;padding:10px 12px;color:#fff;">점검내용</th>
             <th style="width:50px;padding:10px;text-align:center;color:#fff;">점검</th>
@@ -138,13 +140,13 @@ td{padding:8px 10px;border-bottom:1px solid #f1f5f9;}
         </table>
       </div>
 
-      <div style="margin-top:16px;padding-top:12px;border-top:2px solid #e8edf3;">
-        <div style="font-size:13px;font-weight:700;color:#0d1f3c;margin-bottom:8px;">조치 사항</div>
+      <div style="margin-top:16px;padding-top:12px;border-top:2px solid #d6d3d1;">
+        <div style="font-size:13px;font-weight:700;color:#1c1917;margin-bottom:8px;">조치 사항</div>
         <textarea id="p-issues" placeholder="특이사항, 불량/개선 필요 사항, 조치 완료 사항 기재" style="width:100%;min-height:60px;padding:10px;border:1px solid #d1d5db;border-radius:8px;font-size:13px;font-family:inherit;resize:vertical;"></textarea>
       </div>
 
-      <div style="margin-top:12px;padding-top:12px;border-top:2px solid #e8edf3;" class="no-print">
-        <div style="font-size:13px;font-weight:700;color:#0d1f3c;margin-bottom:8px;">📸 현장 사진 <span style="font-size:11px;font-weight:400;color:#6b7280;">(여러 장 · Supabase Storage 공개 URL)</span></div>
+      <div style="margin-top:12px;padding-top:12px;border-top:2px solid #d6d3d1;" class="no-print">
+        <div style="font-size:11px;font-weight:800;letter-spacing:0.15em;color:#57534e;margin-bottom:8px;text-transform:uppercase;">현장 사진 <span style="font-size:10px;font-weight:500;color:#a8a29e;letter-spacing:normal;text-transform:none;">(여러 장 · Storage 공개 URL)</span></div>
         <input type="file" id="p-photos" accept="image/*" multiple onchange="addPatrolPhotos(this)" style="width:100%;padding:4px;border:1px solid #d1d5db;border-radius:6px;font-size:12px;">
         <div id="p-photos-preview" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;"></div>
       </div>
@@ -163,7 +165,7 @@ td{padding:8px 10px;border-bottom:1px solid #f1f5f9;}
     </table></div>
   </div>
 
-  <div style="text-align:center;color:#94a3b8;font-size:11px;margin-top:30px;">
+  <div style="text-align:center;color:#a8a29e;font-size:11px;margin-top:30px;">
     © 신성오토텍 안전환경팀 · 현장 패트롤 점검
   </div>
 
@@ -390,9 +392,9 @@ function setPatrolFilter(val, btn){
   patrolSiteFilter = val;
   document.querySelectorAll('.pf-site').forEach(b=>{
     b.classList.add('btn-outline');
-    b.style.background='#fff'; b.style.color='#1e5096';
+    b.style.background='#fff'; b.style.color='#292524';
   });
-  if(btn){ btn.style.background='#1e5096'; btn.style.color='#fff'; btn.classList.remove('btn-outline'); }
+  if(btn){ btn.style.background='#292524'; btn.style.color='#fff'; btn.classList.remove('btn-outline'); }
   const form = document.getElementById('patrol-checklist-form');
   if(form.style.display === 'block' && form.dataset.key){
     const day = parseInt(form.dataset.key.split('-').pop(), 10);
@@ -424,8 +426,8 @@ function renderPatrolCalendar(){
   }
 
   let html = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-    <span style="font-size:14px;font-weight:700;color:#0d1f3c;">${year}년 ${month+1}월 패트롤</span>
-    <span style="font-size:12px;color:#6b7280;">실시: <strong style="color:#1e5096;">${doneCount}</strong>회</span>
+    <span style="font-size:14px;font-weight:700;color:#1c1917;">${year}년 ${month+1}월 패트롤</span>
+    <span style="font-size:12px;color:#6b7280;">실시: <strong style="color:#292524;">${doneCount}</strong>회</span>
   </div>`;
   html += '<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;text-align:center;font-size:12px;">';
   dayNames.forEach((d,i)=> html += `<div style="font-weight:700;color:${i===0?'#dc2626':'#6b7280'};padding:4px 0;">${d}</div>`);
@@ -436,8 +438,8 @@ function renderPatrolCalendar(){
     const dayData = patrolData[key];
     const isDone = dayData && dayData.done;
     const isToday = d === todayDate;
-    const bg = isDone ? '#dcfce7' : isToday ? '#eef4ff' : '#fff';
-    const border = isToday ? '2px solid #1e5096' : '1px solid #e8edf3';
+    const bg = isDone ? '#e7e5e4' : isToday ? '#f5f5f4' : '#fff';
+    const border = isToday ? '2px solid #292524' : '1px solid #d6d3d1';
     const icon = isDone ? '✅' : '';
     html += `<div onclick="openPatrolDay(${d})" style="padding:6px 2px;border-radius:8px;background:${bg};border:${border};cursor:pointer;min-height:44px;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform=''">
       <div style="font-size:12px;font-weight:${isToday?'800':'500'};color:${dow===0?'#dc2626':'#374151'};">${d}</div>
@@ -469,15 +471,15 @@ function openPatrolDay(day){
   filtered.forEach(zone=>{
     const icon = zone.name.match(/^(\S+)/)?.[1]||'';
     const label = zone.name.replace(/^(\S+)\s*/,'');
-    rows += `<tr style="background:#f1f5f9;"><td colspan="4" style="padding:8px 12px;font-weight:800;font-size:13px;color:#0d1f3c;">${icon} ${label}</td></tr>`;
+    rows += `<tr style="background:#f5f5f4;"><td colspan="4" style="padding:8px 12px;font-weight:800;font-size:13px;color:#1c1917;">${icon} ${label}</td></tr>`;
     zone.items.forEach((item,i)=>{
       const itemKey = `${zone.id}_${i}`;
       const checked = saved[itemKey] ? 'checked' : '';
       const memo = saved[`${itemKey}_memo`] || '';
       rows += `<tr>
-        <td style="padding:6px 12px;font-size:12px;color:#374151;border-bottom:1px solid #f5f7fa;" colspan="2">${item}</td>
-        <td style="text-align:center;border-bottom:1px solid #f5f7fa;"><input type="checkbox" ${checked} data-key="${itemKey}" style="width:18px;height:18px;accent-color:#1e5096;"></td>
-        <td style="border-bottom:1px solid #f5f7fa;"><input type="text" value="${memo.replace(/"/g,'&quot;')}" data-memo="${itemKey}" placeholder="" style="width:100%;border:none;font-size:11px;padding:4px;color:#6b7280;"></td>
+        <td style="padding:6px 12px;font-size:12px;color:#374151;border-bottom:1px solid #e7e5e4;" colspan="2">${item}</td>
+        <td style="text-align:center;border-bottom:1px solid #e7e5e4;"><input type="checkbox" ${checked} data-key="${itemKey}" style="width:18px;height:18px;accent-color:#292524;"></td>
+        <td style="border-bottom:1px solid #e7e5e4;"><input type="text" value="${memo.replace(/"/g,'&quot;')}" data-memo="${itemKey}" placeholder="" style="width:100%;border:none;font-size:11px;padding:4px;color:#6b7280;"></td>
       </tr>`;
     });
   });
@@ -550,7 +552,7 @@ async function addPatrolPhotos(input){
   for(let i = 0; i < files.length; i++){
     const file = files[i];
     const placeholder = document.createElement('div');
-    placeholder.style.cssText = 'width:100px;height:100px;border:2px dashed #d1d5db;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:10px;color:#1e5096;text-align:center;padding:4px;';
+    placeholder.style.cssText = 'width:100px;height:100px;border:2px dashed #d1d5db;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:10px;color:#292524;text-align:center;padding:4px;';
     placeholder.textContent = `업로드 중... ${i+1}/${files.length}`;
     previewEl.appendChild(placeholder);
 
@@ -581,7 +583,7 @@ function renderPatrolPhotosPreview(key){
     const src = p.url || p.data || '';
     const name = (p.name || '사진').replace(/'/g,'&apos;');
     return `<div style="position:relative;">
-      <img src="${src}" style="width:100px;height:100px;object-fit:cover;border-radius:8px;border:2px solid #16a34a;cursor:pointer;" onclick="openPhotoLightbox('${src}','${name}')" title="클릭 = 크게 보기">
+      <img src="${src}" style="width:100px;height:100px;object-fit:cover;border-radius:4px;border:1px solid #d6d3d1;cursor:pointer;" onclick="openPhotoLightbox('${src}','${name}')" title="클릭 = 크게 보기">
       <button onclick="removePatrolPhoto('${key}',${i})" style="position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;background:#dc2626;color:#fff;border:none;cursor:pointer;font-size:11px;line-height:1;">✕</button>
     </div>`;
   }).join('');

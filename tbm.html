@@ -10,83 +10,112 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
 *{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;background:#f0fdf4;color:#374151;min-height:100vh;}
+body{font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;background:#f5f5f4;color:#1c1917;min-height:100vh;font-size:13px;}
 
-.page-header{color:#fff;padding:28px 28px 22px;box-shadow:0 2px 12px rgba(0,0,0,0.08);position:relative;background:linear-gradient(135deg,#065f46,#10b981);}
-.page-header .icon{font-size:38px;margin-bottom:4px;}
-.page-header h1{font-size:22px;font-weight:900;letter-spacing:-0.02em;}
-.page-header .sub{font-size:13px;opacity:0.9;margin-top:4px;}
-.page-header .conn{position:absolute;top:16px;right:20px;font-size:11px;background:rgba(255,255,255,0.18);padding:4px 10px;border-radius:12px;display:flex;align-items:center;gap:6px;}
-.conn-dot{width:7px;height:7px;border-radius:50%;background:#94a3b8;}
-.conn-dot.connected{background:#86efac;animation:pulse 2s infinite;}
+.page-header{color:#fff;padding:20px 18px 18px;box-shadow:0 1px 0 #1c1917;position:relative;background:#292524;border-bottom:3px solid #1c1917;}
+@media(min-width:600px){.page-header{padding:24px 28px 20px;}}
+.page-header .doc-no{display:inline-block;font-size:10px;font-weight:700;letter-spacing:0.18em;padding:2px 10px;border:1px solid rgba(255,255,255,0.3);border-radius:2px;margin-bottom:10px;color:rgba(255,255,255,0.85);}
+.page-header h1{font-size:20px;font-weight:900;letter-spacing:-0.02em;}
+.page-header .sub{font-size:12px;opacity:0.7;margin-top:4px;}
+.page-header .conn{position:absolute;top:16px;right:20px;font-size:11px;background:rgba(255,255,255,0.1);padding:4px 10px;border-radius:4px;display:flex;align-items:center;gap:6px;}
+.conn-dot{width:7px;height:7px;border-radius:50%;background:#78716c;}
+.conn-dot.connected{background:#d6d3d1;animation:pulse 2s infinite;}
 .conn-dot.error{background:#ef4444;}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
 
-.container{max-width:900px;margin:0 auto;padding:20px 20px 60px;}
+.container{max-width:720px;margin:0 auto;padding:16px 14px 60px;}
 
-.card{background:#fff;border:1px solid #d1fae5;border-radius:12px;padding:18px 20px;margin-bottom:14px;box-shadow:0 1px 3px rgba(0,0,0,0.04);}
-.card-title{font-size:14px;font-weight:800;color:#065f46;margin-bottom:12px;padding-bottom:10px;border-bottom:2px solid #10b981;display:flex;justify-content:space-between;align-items:center;}
+.card{background:#fff;border:1px solid #d6d3d1;border-radius:4px;padding:20px 18px;margin-bottom:14px;box-shadow:none;}
+@media(min-width:600px){.card{padding:26px 28px;}}
+.card-title{font-size:16px;font-weight:900;color:#1c1917;margin-bottom:20px;padding-bottom:12px;border-bottom:2px solid #1c1917;display:flex;justify-content:space-between;align-items:center;letter-spacing:-0.02em;}
 
-.btn{display:inline-block;padding:9px 18px;background:#10b981;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;transition:all 0.15s;}
-.btn:hover{background:#065f46;}
-.btn-outline{background:#fff;color:#10b981;border:1.5px solid #10b981;}
-.btn-outline:hover{background:#ecfdf5;}
-.btn-sm{padding:6px 12px;font-size:12px;}
-.btn-lg{padding:14px 28px;font-size:15px;}
-.btn-primary-big{padding:16px 32px;font-size:16px;width:100%;font-weight:800;}
+.section-title{font-size:11px;font-weight:800;letter-spacing:0.22em;color:#44403c;padding-bottom:8px;margin:28px 0 16px;border-bottom:1px solid #a8a29e;text-transform:uppercase;display:flex;align-items:baseline;gap:10px;}
+.section-title:first-of-type{margin-top:0;}
+.section-title .roman{display:inline-block;font-size:14px;font-weight:900;color:#1c1917;letter-spacing:0.08em;}
+.section-title .label{letter-spacing:0.22em;color:#57534e;}
 
-label.field{display:block;margin-bottom:14px;}
-label.field > .lb{display:block;font-size:12px;font-weight:700;color:#065f46;margin-bottom:6px;}
-label.field > .hint{display:block;font-size:11px;color:#6b7280;margin-top:4px;}
-input[type="text"], input[type="date"], input[type="number"], select, textarea{
-  width:100%;border:1.5px solid #d1fae5;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;
-  transition:border-color 0.15s;
+.btn{display:inline-block;padding:8px 16px;background:#292524;color:#fff;border:none;border-radius:3px;font-size:12px;font-weight:700;cursor:pointer;text-decoration:none;transition:background 0.15s;letter-spacing:0.02em;}
+.btn:hover{background:#1c1917;}
+.btn-outline{background:#fff;color:#44403c;border:1px solid #a8a29e;}
+.btn-outline:hover{background:#f5f5f4;border-color:#78716c;}
+.btn-sm{padding:5px 10px;font-size:11px;}
+.btn-lg{padding:12px 24px;font-size:14px;}
+.btn-primary-big{padding:16px 32px;font-size:13px;width:100%;font-weight:800;letter-spacing:0.25em;text-transform:uppercase;border-radius:3px;margin-top:8px;}
+
+label.field{display:block;margin-bottom:16px;}
+label.field > .lb{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;color:#a8a29e;margin-bottom:8px;letter-spacing:-0.01em;transition:color 0.2s;}
+label.field > .lb .no{display:inline-flex;align-items:center;justify-content:center;min-width:28px;height:20px;padding:0 6px;background:#fafaf9;border:1px solid #d6d3d1;color:#a8a29e;font-size:10px;font-weight:800;letter-spacing:0.08em;border-radius:2px;transition:all 0.2s;font-feature-settings:"tnum";}
+label.field > .hint{display:block;font-size:11px;color:#a8a29e;margin-top:4px;transition:color 0.2s;}
+label.field.filled > .lb{color:#1c1917;}
+label.field.filled > .lb .no{background:#1c1917;color:#fff;border-color:#1c1917;}
+label.field.filled > .hint{color:#78716c;}
+input[type="text"], input[type="date"], input[type="time"], input[type="number"], select, textarea{
+  width:100%;border:1px solid #d6d3d1;border-radius:4px;padding:12px 14px;font-size:16px;font-family:inherit;
+  background:#fff;color:#a8a29e;transition:color 0.2s, border-color 0.15s;
+  -webkit-appearance:none;
 }
-input:focus, select:focus, textarea:focus{outline:none;border-color:#10b981;}
-textarea{resize:vertical;min-height:80px;}
-.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;}
-.form-grid.three{grid-template-columns:repeat(3,1fr);}
-@media(max-width:600px){.form-grid, .form-grid.three{grid-template-columns:1fr;}}
+input[type="date"], input[type="time"]{-webkit-appearance:listbox;}
+label.field.filled input, label.field.filled select, label.field.filled textarea{color:#1c1917;border-color:#a8a29e;}
+input:focus, select:focus, textarea:focus{outline:none;border-color:#44403c;color:#1c1917;}
+textarea{resize:vertical;min-height:100px;}
+/* 4가지 필드 세로 분리 배치 — 모바일 우선 */
+label.field{display:block;margin-bottom:18px;padding-bottom:14px;border-bottom:1px dashed #e7e5e4;}
+label.field:last-of-type{border-bottom:none;}
+/* 숫자 참석/총원 2개 나란히 */
+.inline-2{display:flex;align-items:center;gap:8px;}
+.inline-2 input{flex:0 0 100px;}
+.inline-2 .sep{color:#a8a29e;font-weight:700;}
+.inline-2 .unit{color:#78716c;font-size:13px;}
 
-.readonly-box{background:#ecfdf5;border:1px dashed #10b981;border-radius:8px;padding:10px 12px;font-size:13px;color:#065f46;min-height:42px;line-height:1.6;white-space:pre-wrap;}
-.cat-chip{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:8px;background:#fee2e2;color:#991b1b;margin-left:4px;}
+.readonly-box{background:#fafaf9;border:1px dashed #d6d3d1;border-radius:4px;padding:12px 14px;font-size:16px;color:#a8a29e;min-height:46px;line-height:1.55;white-space:pre-wrap;transition:color 0.2s, border-color 0.2s, background 0.2s;font-family:inherit;}
+label.field.filled .readonly-box{color:#1c1917;border-color:#a8a29e;border-style:solid;background:#fff;}
+.cat-chip{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:3px;background:#e7e5e4;color:#44403c;margin-left:4px;border:1px solid #d6d3d1;}
 
-.warn-banner{background:#fffbeb;border:1px solid #fbbf24;border-left:4px solid #f59e0b;border-radius:8px;padding:14px 16px;font-size:13px;color:#92400e;margin-bottom:14px;line-height:1.6;}
+.warn-banner{background:#fefce8;border:1px solid #e4dcc5;border-left:3px solid #a16207;border-radius:4px;padding:10px 14px;font-size:12px;color:#713f12;margin-bottom:14px;line-height:1.6;}
 .warn-banner.sup{display:none;}
 .warn-banner.sup.show{display:block;}
 
-.team-select-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:12px;}
-@media(max-width:600px){.team-select-grid{grid-template-columns:1fr;}}
-.team-card{border-radius:14px;padding:22px 20px;color:#fff;cursor:pointer;transition:transform 0.15s;text-decoration:none;display:block;}
-.team-card:hover{transform:scale(1.02);}
-.team-card .ic{font-size:34px;}
-.team-card .nm{font-size:18px;font-weight:900;margin-top:4px;}
-.team-card .dsc{font-size:12px;opacity:0.88;margin-top:4px;}
+.hint-warn{display:none;margin-top:8px;padding:8px 12px;font-size:11px;color:#713f12;background:#fefce8;border:1px solid #e4dcc5;border-left:3px solid #a16207;border-radius:3px;line-height:1.55;font-weight:500;}
+.hint-warn.show{display:block;}
 
-.recent-row{display:flex;gap:10px;align-items:flex-start;padding:10px;border-bottom:1px solid #ecfdf5;font-size:12px;}
+/* 플레이스홀더 통일 — 빈 필드는 옅은 회색, 채움 필드는 진한색 (.filled) */
+input::placeholder, textarea::placeholder{color:#a8a29e;opacity:1;}
+label.field.filled input::placeholder, label.field.filled textarea::placeholder{color:#a8a29e;}
+
+.team-select-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;}
+@media(max-width:600px){.team-select-grid{grid-template-columns:1fr;}}
+.team-card{border-radius:6px;padding:20px 18px;color:#fff;cursor:pointer;transition:background 0.15s;text-decoration:none;display:block;background:#292524;border:1px solid #1c1917;position:relative;}
+.team-card:hover{background:#1c1917;}
+.team-card .num{font-size:11px;font-weight:700;letter-spacing:0.2em;opacity:0.55;}
+.team-card .nm{font-size:17px;font-weight:900;margin-top:6px;letter-spacing:-0.02em;}
+.team-card .dsc{font-size:11px;opacity:0.7;margin-top:4px;font-weight:500;}
+.team-card .arrow{position:absolute;top:18px;right:18px;font-size:16px;opacity:0.5;font-weight:300;}
+
+.recent-row{display:flex;gap:10px;align-items:flex-start;padding:10px;border-bottom:1px solid #e7e5e4;font-size:12px;}
 .recent-row:last-child{border-bottom:none;}
-.recent-row .d{font-weight:700;color:#065f46;min-width:90px;}
-.recent-row .t{flex:1;color:#374151;}
-.recent-row .t .tt{font-weight:700;color:#1f2937;}
-.recent-row .t .msg{color:#6b7280;margin-top:2px;}
-.recent-row .t .note{margin-top:4px;padding:4px 8px;background:#f0fdf4;border-radius:4px;color:#047857;font-size:11px;}
+.recent-row .d{font-weight:700;color:#1c1917;min-width:90px;}
+.recent-row .t{flex:1;color:#44403c;}
+.recent-row .t .tt{font-weight:700;color:#1c1917;}
+.recent-row .t .msg{color:#78716c;margin-top:2px;}
+.recent-row .t .note{margin-top:4px;padding:6px 10px;background:#fafaf9;border:1px solid #e7e5e4;border-radius:3px;color:#44403c;font-size:11px;}
+.recent-row .t .note .note-label{display:inline-block;font-size:9px;font-weight:800;letter-spacing:0.12em;color:#78716c;padding:1px 6px;border:1px solid #d6d3d1;background:#fff;border-radius:2px;margin-right:4px;}
 .recent-row .act{display:flex;flex-direction:column;gap:4px;}
 
-.photo-status{display:flex;align-items:center;gap:8px;padding:10px 12px;background:#f0fdf4;border-radius:8px;font-size:13px;margin-bottom:10px;}
-.photo-status.done{background:#dcfce7;color:#15803d;}
-.photo-status.pending{background:#fef3c7;color:#a16207;}
+.photo-status{display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:4px;font-size:12px;margin-bottom:10px;border:1px solid transparent;}
+.photo-status.done{background:#fafaf9;color:#44403c;border-color:#d6d3d1;}
+.photo-status.pending{background:#fefce8;color:#713f12;border-color:#e4dcc5;}
 
-.photo-lightbox{position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px;cursor:zoom-out;}
+.photo-lightbox{position:fixed;inset:0;background:rgba(28,25,23,0.9);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px;cursor:zoom-out;}
 .photo-lightbox.show{display:flex;}
-.photo-lightbox img{max-width:95%;max-height:92vh;object-fit:contain;border-radius:6px;box-shadow:0 4px 24px rgba(0,0,0,0.5);}
-.photo-lightbox .close-btn{position:absolute;top:16px;right:20px;background:rgba(255,255,255,0.15);color:#fff;border:none;width:44px;height:44px;border-radius:50%;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.photo-lightbox img{max-width:95%;max-height:92vh;object-fit:contain;border-radius:4px;box-shadow:0 4px 24px rgba(0,0,0,0.5);}
+.photo-lightbox .close-btn{position:absolute;top:16px;right:20px;background:rgba(255,255,255,0.15);color:#fff;border:none;width:40px;height:40px;border-radius:50%;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
 
-.thumb{width:54px;height:54px;object-fit:cover;border-radius:6px;border:1px solid #e5e7eb;cursor:pointer;flex-shrink:0;}
+.thumb{width:54px;height:54px;object-fit:cover;border-radius:4px;border:1px solid #d6d3d1;cursor:pointer;flex-shrink:0;}
 
 @media print{
   .no-print{display:none!important;}
   body{background:#fff;}
-  .page-header{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
+  .page-header{background:#292524!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
   .card{box-shadow:none!important;border:1px solid #000!important;break-inside:avoid;}
   @page{size:A4 portrait;margin:10mm;}
 }
@@ -96,9 +125,9 @@ textarea{resize:vertical;min-height:80px;}
 
 <div class="page-header" id="page-header">
   <div class="conn no-print"><span id="conn-dot" class="conn-dot"></span><span id="conn-text">연결 확인 중...</span></div>
-  <div class="icon" id="h-icon">🌅</div>
-  <h1 id="h-title">TBM 일지</h1>
-  <div class="sub" id="h-sub">Tool Box Meeting · 매일 작업 전 5~10분 · 전원 참석</div>
+  <div class="doc-no" id="h-code">TBM-FORM</div>
+  <h1 id="h-title">TBM 일지 (Tool Box Meeting)</h1>
+  <div class="sub" id="h-sub">매일 작업 전 5~10분 · 전원 참석</div>
 </div>
 
 <div class="photo-lightbox" id="photo-lightbox" onclick="closePhotoLightbox()">
@@ -109,27 +138,21 @@ textarea{resize:vertical;min-height:80px;}
 <div class="container">
 
   <div id="warn-no-supa" class="warn-banner sup">
-    ⚠️ <strong>Supabase 미연결.</strong> 대시보드 → 설정에서 Supabase URL/Key를 먼저 입력해주세요.
-    <a href="safety_dashboard.html" style="color:#92400e;text-decoration:underline;font-weight:700;">설정하러 가기 →</a>
-  </div>
-
-  <div class="no-print" style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;">
-    <a href="safety_dashboard.html" class="btn btn-outline btn-sm">📊 메인 대시보드</a>
+    <strong>※ 실시간 공유 연결 실패.</strong> 관리자에게 문의해주세요.
   </div>
 
   <!-- ============ 팀 미선택: 선택 화면 ============ -->
   <div id="view-select" style="display:none;">
     <div class="card">
-      <div class="card-title">👥 팀을 선택하세요</div>
+      <div class="card-title">팀 선택</div>
       <div style="font-size:13px;color:#6b7280;margin-bottom:8px;">
         각 팀은 전용 링크(QR)로 접근해 본인 팀의 TBM 일지만 작성합니다.
       </div>
       <div class="team-select-grid" id="team-select-grid"></div>
     </div>
-    <div class="card" style="background:#eef4ff;border-color:#c7d2fe;">
-      <div style="font-size:13px;color:#1e3a8a;line-height:1.6;">
-        💡 <strong>관리자:</strong> 통합 현황·캘린더·QR 링크는
-        <a href="safety_dashboard.html" style="color:#1e3a8a;font-weight:700;">📊 메인 대시보드</a>의 TBM 섹션에서 확인할 수 있어요.
+    <div class="card" style="background:#fafaf9;">
+      <div style="font-size:12px;color:#44403c;line-height:1.6;">
+        <strong>안내</strong> &nbsp;—&nbsp; 각 팀의 담당자는 위 카드를 눌러 해당 팀 전용 일지 페이지로 이동하거나, 관리자가 제공한 QR 코드를 통해 접속합니다.
       </div>
     </div>
   </div>
@@ -137,94 +160,86 @@ textarea{resize:vertical;min-height:80px;}
   <!-- ============ 팀 선택: 입력 화면 ============ -->
   <div id="view-input" style="display:none;">
 
-    <!-- 14일 무기재 배너 -->
-    <div id="free-note-banner" class="warn-banner" style="display:none;">
-      💬 <strong>최근 14일간 '자유 기재' 내용이 비어있어요.</strong>
-      오늘 작업하면서 느낀 점이나 건의사항, 특이 상황을 한 줄이라도 남겨주세요.
-    </div>
-
-    <!-- 월 1회 사진 안내 -->
-    <div id="photo-status" class="photo-status pending" style="display:none;"></div>
-
     <!-- 입력 폼 -->
     <div class="card">
-      <div class="card-title">📝 오늘의 TBM 기록</div>
+      <div class="card-title">일일 TBM 기록</div>
 
-      <div class="form-grid three">
-        <label class="field">
-          <span class="lb">📅 날짜</span>
-          <input type="date" id="f-date">
-        </label>
-        <label class="field">
-          <span class="lb">⏰ 시간</span>
-          <input type="text" id="f-time" placeholder="08:40~08:50(10분)">
-        </label>
-        <label class="field">
-          <span class="lb">👤 강사 (관리감독자/파트장/조장)</span>
-          <input type="text" id="f-lecturer" placeholder="이름">
-        </label>
-      </div>
-
-      <div class="form-grid">
-        <label class="field">
-          <span class="lb">👥 참석 / 총원</span>
-          <div style="display:flex;align-items:center;gap:6px;">
-            <input type="number" id="f-attended" placeholder="참석" min="0" style="width:80px;">
-            <span>/</span>
-            <input type="number" id="f-total" placeholder="총원" min="0" style="width:80px;">
-            <span style="font-size:12px;color:#6b7280;">명</span>
-          </div>
-          <span class="hint">휴가자 제외 인원 기재</span>
-        </label>
-      </div>
+      <div class="section-title"><span class="roman">I.</span><span class="label">기본 정보</span></div>
 
       <label class="field">
-        <span class="lb">🏷️ TBM 명 (주제 선택)</span>
+        <span class="lb"><span class="no">01</span> 날짜</span>
+        <input type="date" id="f-date">
+      </label>
+      <label class="field">
+        <span class="lb"><span class="no">02</span> 시간</span>
+        <input type="time" id="f-time">
+      </label>
+      <label class="field">
+        <span class="lb"><span class="no">03</span> 담당자</span>
+        <input type="text" id="f-lecturer" placeholder="이름">
+        <span class="hint">관리감독자 · 파트장 · 조장</span>
+      </label>
+      <label class="field">
+        <span class="lb"><span class="no">04</span> 참석 / 총원</span>
+        <div class="inline-2">
+          <input type="number" id="f-attended" placeholder="참석" min="0">
+          <span class="sep">/</span>
+          <input type="number" id="f-total" placeholder="총원" min="0">
+          <span class="unit">명</span>
+        </div>
+        <span class="hint">휴가자 제외 인원 기재</span>
+      </label>
+
+      <div class="section-title"><span class="roman">II.</span><span class="label">안전 수칙 · 위험요인</span></div>
+
+      <label class="field" id="lbl-tbm">
+        <span class="lb"><span class="no">05</span> TBM 명</span>
         <select id="f-tbm-no" onchange="onTbmSelectChange()">
-          <option value="">— TBM 주제를 선택하세요 —</option>
+          <option value=""></option>
         </select>
       </label>
 
-      <label class="field">
-        <span class="lb">📣 주요 전달 사항 <span style="font-weight:400;color:#6b7280;">(자동 채워짐)</span></span>
-        <div id="f-tbm-message" class="readonly-box">TBM 명을 선택하면 자동으로 표시됩니다.</div>
+      <label class="field" id="lbl-tbm-msg">
+        <span class="lb"><span class="no">06</span> 주요 전달 사항</span>
+        <div id="f-tbm-message" class="readonly-box"></div>
       </label>
 
-      <label class="field">
-        <span class="lb">⚠️ 유해위험요인 <span id="f-risk-category-chip"></span></span>
+      <label class="field" id="lbl-risk">
+        <span class="lb"><span class="no">07</span> 유해위험요인 <span id="f-risk-category-chip"></span></span>
         <select id="f-risk-idx" onchange="onRiskSelectChange()">
-          <option value="">— 유해위험요인을 선택하세요 —</option>
+          <option value=""></option>
         </select>
       </label>
 
-      <label class="field">
-        <span class="lb">🛡️ 감소 대책 <span style="font-weight:400;color:#6b7280;">(자동 채워짐)</span></span>
-        <div id="f-risk-measure" class="readonly-box">유해위험요인을 선택하면 자동으로 표시됩니다.</div>
+      <label class="field" id="lbl-risk-measure">
+        <span class="lb"><span class="no">08</span> 감소 대책</span>
+        <div id="f-risk-measure" class="readonly-box"></div>
       </label>
 
-      <label class="field">
-        <span class="lb">💬 자유 기재 (건의사항·특이사항·의견)</span>
-        <textarea id="f-free-note" placeholder="작업 중 느낀 점, 건의사항, 특이 상황 등을 자유롭게 남겨주세요. (선택사항)"></textarea>
-        <span class="hint">14일간 기재 내역이 없으면 상단에 안내 배너가 뜹니다.</span>
+      <div class="section-title"><span class="roman">III.</span><span class="label">현장 기록</span></div>
+
+      <label class="field" id="lbl-free">
+        <span class="lb"><span class="no">09</span> 자유 기재 (건의사항 · 특이사항 · 의견)</span>
+        <textarea id="f-free-note" placeholder="작업 중 느낀 점 · 건의사항 · 특이 상황 · 주기적 요청사항 — 한 줄이라도 자유롭게 남겨주세요"></textarea>
       </label>
 
-      <label class="field">
-        <span class="lb">📷 TBM 실시 사진 <span style="font-weight:400;color:#6b7280;">(분기별 1회 이상 권장)</span></span>
+      <label class="field" id="lbl-photo">
+        <span class="lb"><span class="no">10</span> TBM 실시 사진</span>
         <input type="file" id="f-photo" accept="image/*">
-        <span class="hint">선택사항 · 이번 달 아직 사진이 없으면 상단에 안내가 뜹니다.</span>
+        <div class="hint-warn" id="photo-hint"></div>
       </label>
 
-      <button class="btn btn-primary-big" onclick="saveTbmRecord()">✓ 오늘 TBM 기록 저장</button>
+      <button class="btn btn-primary-big" onclick="saveTbmRecord()">오늘 TBM 기록 저장</button>
     </div>
 
     <!-- 최근 기록 -->
     <div class="card">
-      <div class="card-title">📚 우리 팀 최근 기록 <span id="recent-count" style="font-size:12px;font-weight:400;color:#6b7280;"></span></div>
+      <div class="card-title">우리 팀 최근 기록 <span id="recent-count" style="font-size:12px;font-weight:400;color:#78716c;"></span></div>
       <div id="recent-records"></div>
     </div>
   </div>
 
-  <div style="text-align:center;color:#86efac;font-size:11px;margin-top:30px;">
+  <div style="text-align:center;color:#a8a29e;font-size:11px;margin-top:30px;">
     © 신성오토텍 안전환경팀 · TBM 일지
   </div>
 
@@ -235,10 +250,10 @@ textarea{resize:vertical;min-height:80px;}
 // TEAM META
 // ============================================================
 const TEAM_META = {
-  injection_day:   {label:'사출팀 (주간)', process:'injection', defaultTime:'08:40~08:50(10분)', icon:'💉', headerGrad:'linear-gradient(135deg,#1e3a8a,#3b82f6)', accent:'#1e40af'},
-  injection_night: {label:'사출팀 (야간)', process:'injection', defaultTime:'20:20~20:30(10분)', icon:'🌙', headerGrad:'linear-gradient(135deg,#3730a3,#6366f1)', accent:'#4338ca'},
-  paint:           {label:'도장팀',        process:'paint',     defaultTime:'08:40~08:50(10분)', icon:'🎨', headerGrad:'linear-gradient(135deg,#7e22ce,#a855f7)', accent:'#7e22ce'},
-  assembly:        {label:'조립팀',        process:'assembly',  defaultTime:'08:40~08:50(10분)', icon:'🔧', headerGrad:'linear-gradient(135deg,#065f46,#10b981)', accent:'#065f46'}
+  injection_day:   {label:'사출팀 (주간)', process:'injection', defaultTime:'08:40~08:50(10분)', code:'TBM-A1', num:'01'},
+  injection_night: {label:'사출팀 (야간)', process:'injection', defaultTime:'20:20~20:30(10분)', code:'TBM-A2', num:'02'},
+  paint:           {label:'도장팀',        process:'paint',     defaultTime:'08:40~08:50(10분)', code:'TBM-B',  num:'03'},
+  assembly:        {label:'조립팀',        process:'assembly',  defaultTime:'08:40~08:50(10분)', code:'TBM-C',  num:'04'}
 };
 
 // ============================================================
@@ -435,8 +450,17 @@ function onTbmSelectChange(){
   const val = document.getElementById('f-tbm-no').value;
   const opt = (TBM_OPTIONS[meta.process]||[]).find(o => String(o.no) === val);
   const box = document.getElementById('f-tbm-message');
-  if(opt){ box.textContent = opt.message; box.style.color = '#065f46'; }
-  else   { box.textContent = 'TBM 명을 선택하면 자동으로 표시됩니다.'; box.style.color = '#9ca3af'; }
+  const lblMsg = document.getElementById('lbl-tbm-msg');
+  const lblTbm = document.getElementById('lbl-tbm');
+  if(opt){
+    box.textContent = opt.message;
+    lblMsg.classList.add('filled');
+    lblTbm.classList.add('filled');
+  } else {
+    box.textContent = '';
+    lblMsg.classList.remove('filled');
+    lblTbm.classList.remove('filled');
+  }
 }
 
 function onRiskSelectChange(){
@@ -445,46 +469,70 @@ function onRiskSelectChange(){
   const val = document.getElementById('f-risk-idx').value;
   const chip = document.getElementById('f-risk-category-chip');
   const box = document.getElementById('f-risk-measure');
+  const lblMeasure = document.getElementById('lbl-risk-measure');
+  const lblRisk = document.getElementById('lbl-risk');
   if(val === ''){
     chip.innerHTML = '';
-    box.textContent = '유해위험요인을 선택하면 자동으로 표시됩니다.';
-    box.style.color = '#9ca3af';
+    box.textContent = '';
+    lblMeasure.classList.remove('filled');
+    lblRisk.classList.remove('filled');
     return;
   }
   const opt = RISK_OPTIONS[meta.process][parseInt(val)];
   if(opt){
     chip.innerHTML = `<span class="cat-chip">${opt.category}</span>`;
     box.textContent = opt.measure;
-    box.style.color = '#065f46';
+    lblMeasure.classList.add('filled');
+    lblRisk.classList.add('filled');
   }
+}
+
+// 입력 필드에 값이 있으면 label.field에 .filled 클래스 부여 (옅은 회색 → 진한 색)
+function setupFieldFilled(){
+  document.querySelectorAll('label.field').forEach(label => {
+    const ctrl = label.querySelector('input, select, textarea');
+    if(!ctrl) return; // readonly-box만 있는 라벨은 onTbm/onRisk Change에서 따로 처리
+    const update = () => {
+      let filled = false;
+      if(ctrl.tagName === 'INPUT' && ctrl.type === 'file'){
+        filled = ctrl.files && ctrl.files.length > 0;
+      } else {
+        filled = (ctrl.value || '').trim() !== '';
+      }
+      label.classList.toggle('filled', filled);
+    };
+    ctrl.addEventListener('input', update);
+    ctrl.addEventListener('change', update);
+    update();
+  });
 }
 
 // ============================================================
 // BANNERS
 // ============================================================
 function checkFreeNoteBanner(){
-  const banner = document.getElementById('free-note-banner');
-  if(!banner) return;
+  // 14일 무기재 시 textarea placeholder 강조 (옅은 주황 테두리)
+  const ta = document.getElementById('f-free-note');
+  if(!ta) return;
   const records = getTbmRecords().filter(r => r.team === teamCode);
   const cutoff = new Date(Date.now() - 14*24*60*60*1000);
   const hasRecentNote = records.some(r => (r.freeNote||'').trim() && new Date(r.date) >= cutoff);
-  banner.style.display = hasRecentNote ? 'none' : 'block';
+  ta.classList.toggle('need-input', !hasRecentNote);
 }
 
 function checkMonthPhotoStatus(){
-  const box = document.getElementById('photo-status');
-  if(!box) return;
+  const hint = document.getElementById('photo-hint');
+  if(!hint) return;
   const now = new Date();
   const ym = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
   const records = getTbmRecords().filter(r => r.team === teamCode && r.photoUrl);
   const hasThisMonth = records.some(r => (r.date||'').startsWith(ym));
-  box.style.display = 'flex';
   if(hasThisMonth){
-    box.className = 'photo-status done';
-    box.innerHTML = `✅ <strong>이번 달(${ym}) 사진 업로드 완료</strong>`;
+    hint.classList.remove('show');
+    hint.innerHTML = '';
   } else {
-    box.className = 'photo-status pending';
-    box.innerHTML = `📷 <strong>이번 달(${ym}) TBM 사진이 아직 없어요.</strong> 분기 1회 이상 현장 사진 첨부를 권장합니다.`;
+    hint.innerHTML = `※ 이번 달(${ym}) TBM 실시 사진이 아직 없습니다. 분기 1회 이상 현장 사진 첨부를 권장합니다.`;
+    hint.classList.add('show');
   }
 }
 
@@ -495,10 +543,11 @@ function renderTeamSelectView(){
   const grid = document.getElementById('team-select-grid');
   grid.innerHTML = Object.keys(TEAM_META).map(code => {
     const m = TEAM_META[code];
-    return `<a class="team-card" href="?team=${code}" style="background:${m.headerGrad};">
-      <div class="ic">${m.icon}</div>
+    return `<a class="team-card" href="?team=${code}">
+      <div class="num">${m.num} · ${m.code}</div>
       <div class="nm">${m.label}</div>
       <div class="dsc">${m.defaultTime}</div>
+      <div class="arrow">→</div>
     </a>`;
   }).join('');
 }
@@ -540,12 +589,17 @@ function renderRecentRecords(){
   }
   box.innerHTML = recent.map(r => {
     const photoEl = r.photoUrl ? `<img class="thumb" src="${r.photoUrl}" onclick="openPhotoLightbox('${r.photoUrl}')">` : '';
-    const note = (r.freeNote||'').trim() ? `<div class="note">💬 ${escapeHtml(r.freeNote)}</div>` : '';
+    const note = (r.freeNote||'').trim() ? `<div class="note"><span class="note-label">비고</span> ${escapeHtml(r.freeNote)}</div>` : '';
+    let createdStr = '';
+    if(r.createdAt){
+      const c = new Date(r.createdAt);
+      createdStr = `${c.getFullYear()}-${String(c.getMonth()+1).padStart(2,'0')}-${String(c.getDate()).padStart(2,'0')} ${String(c.getHours()).padStart(2,'0')}:${String(c.getMinutes()).padStart(2,'0')}`;
+    }
     return `<div class="recent-row">
-      <div class="d">${r.date}<div style="font-weight:400;font-size:10px;color:#9ca3af;margin-top:2px;">${r.time||''}</div></div>
+      <div class="d">${r.date}<div style="font-weight:400;font-size:10px;color:#a8a29e;margin-top:2px;">${r.time||''}</div>${createdStr?`<div class="rec-created" title="실제 기록 시각">rec. ${createdStr}</div>`:''}</div>
       <div class="t">
-        <div class="tt">🏷️ ${escapeHtml(r.tbmTitle||'')} · 강사 ${escapeHtml(r.lecturer||'-')} · ${r.attended||0}/${r.total||0}명</div>
-        <div class="msg">⚠️ ${escapeHtml(r.riskText||'')} <span class="cat-chip" style="margin-left:0;">${escapeHtml(r.riskCategory||'')}</span></div>
+        <div class="tt">${escapeHtml(r.tbmTitle||'')} · 강사 ${escapeHtml(r.lecturer||'-')} · ${r.attended||0}/${r.total||0}명</div>
+        <div class="msg"><span class="cat-chip" style="margin-left:0;">${escapeHtml(r.riskCategory||'')}</span> ${escapeHtml(r.riskText||'')}</div>
         ${note}
       </div>
       ${photoEl}
@@ -560,8 +614,7 @@ function escapeHtml(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;',
 
 function applyTeamHeader(){
   const meta = TEAM_META[teamCode];
-  document.getElementById('page-header').style.background = meta.headerGrad;
-  document.getElementById('h-icon').textContent = meta.icon;
+  document.getElementById('h-code').textContent = meta.code;
   document.getElementById('h-title').textContent = `${meta.label} · TBM 일지`;
   document.getElementById('h-sub').textContent = `${meta.defaultTime} · 매일 작업 전 실시 · 전원 참석`;
   document.title = `${meta.label} TBM | 산업안전보건`;
@@ -595,12 +648,14 @@ window.addEventListener('DOMContentLoaded', async () => {
   applyTeamHeader();
   document.getElementById('view-input').style.display = 'block';
 
-  // 기본값 세팅
+  // 기본값 세팅 — 현재 날짜·시각 (사용자가 수동으로 다른 날짜/시각으로 수정 가능)
   const meta = TEAM_META[teamCode];
-  document.getElementById('f-date').value = new Date().toISOString().split('T')[0];
-  document.getElementById('f-time').value = meta.defaultTime;
+  const now = new Date();
+  document.getElementById('f-date').value = now.toISOString().split('T')[0];
+  document.getElementById('f-time').value = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
 
   populateDropdowns();
+  setupFieldFilled();
   renderRecentRecords();
   checkFreeNoteBanner();
   checkMonthPhotoStatus();
