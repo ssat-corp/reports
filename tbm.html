@@ -86,12 +86,12 @@ label.field.filled input::placeholder, label.field.filled textarea::placeholder{
 
 .team-select-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;}
 @media(max-width:600px){.team-select-grid{grid-template-columns:1fr;}}
-.team-card{border-radius:6px;padding:20px 18px;color:#fff;cursor:pointer;transition:background 0.15s;text-decoration:none;display:block;background:#292524;border:1px solid #1c1917;position:relative;}
+.team-card{border-radius:6px;padding:28px 24px;color:#fff;cursor:pointer;transition:background 0.15s;text-decoration:none;display:block;background:#292524;border:1px solid #1c1917;position:relative;}
 .team-card:hover{background:#1c1917;}
-.team-card .num{font-size:11px;font-weight:700;letter-spacing:0.2em;opacity:0.55;}
-.team-card .nm{font-size:17px;font-weight:900;margin-top:6px;letter-spacing:-0.02em;}
-.team-card .dsc{font-size:11px;opacity:0.7;margin-top:4px;font-weight:500;}
-.team-card .arrow{position:absolute;top:18px;right:18px;font-size:16px;opacity:0.5;font-weight:300;}
+.team-card .num{font-size:14px;font-weight:700;letter-spacing:0.22em;opacity:0.6;}
+.team-card .nm{font-size:26px;font-weight:900;margin-top:10px;letter-spacing:-0.025em;line-height:1.2;}
+.team-card .dsc{font-size:14px;opacity:0.75;margin-top:8px;font-weight:500;}
+.team-card .arrow{position:absolute;top:24px;right:22px;font-size:22px;opacity:0.5;font-weight:300;}
 
 .recent-row{display:flex;gap:10px;align-items:flex-start;padding:10px;border-bottom:1px solid #e7e5e4;font-size:12px;}
 .recent-row:last-child{border-bottom:none;}
@@ -147,13 +147,13 @@ label.field.filled input::placeholder, label.field.filled textarea::placeholder{
   <div id="view-select" style="display:none;">
     <div class="card">
       <div class="card-title">팀 선택</div>
-      <div style="font-size:13px;color:#6b7280;margin-bottom:8px;">
+      <div style="font-size:16px;color:#57534e;margin-bottom:16px;line-height:1.6;">
         각 팀은 전용 링크(QR)로 접근해 본인 팀의 TBM 일지만 작성합니다.
       </div>
       <div class="team-select-grid" id="team-select-grid"></div>
     </div>
     <div class="card" style="background:#fafaf9;">
-      <div style="font-size:12px;color:#44403c;line-height:1.6;">
+      <div style="font-size:14px;color:#44403c;line-height:1.7;">
         <strong>안내</strong> &nbsp;—&nbsp; 각 팀의 담당자는 위 카드를 눌러 해당 팀 전용 일지 페이지로 이동하거나, 관리자가 제공한 QR 코드를 통해 접속합니다.
       </div>
     </div>
