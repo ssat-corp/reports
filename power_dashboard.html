@@ -201,6 +201,7 @@
     border-radius: var(--radius-sm); font-size: 13px; font-weight: 500;
   }
 
+  .table-toolbar { display: flex; justify-content: flex-end; margin-bottom: 12px; }
   .table-card { background: #fff; border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
   .table-wrap { overflow-x: auto; }
   table { width: 100%; font-size: 13px; border-collapse: collapse; }
@@ -359,9 +360,7 @@
   </div>
 
   <div id="table" class="section">
-    <div class="year-bar">
-      <span class="year-label">연도</span>
-      <div id="tableYearTabs"></div>
+    <div class="table-toolbar">
       <a class="source-btn" href="https://docs.google.com/spreadsheets/d/1jfoUk56Mr7H28GzKjdLKZO9keSGSeaM-p87_kyqVQ14/edit?gid=632389656#gid=632389656" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zM7 10h5v2H7zm0 4h5v2H7zm6-4h4v2h-4zm0 4h4v2h-4z"/></svg>
         원본 데이터 입력
@@ -475,7 +474,7 @@ function showStatusBanner(source) {
 }
 
 let data = {};
-let dashYear = 2026, tableYear = 2026;
+let dashYear = 2026;
 let compareMode = false;
 let charts = {};
 
@@ -656,6 +655,7 @@ function setDashYear(y) {
   buildYearTabs('dashYearTabs', dashYear, 'setDashYear');
   syncCompareUI();
   updateMetrics(); updateCharts();
+  updateTable();
 }
 
 function syncCompareUI() {
@@ -678,12 +678,6 @@ function toggleCompare() {
   updateMetrics();
   updateCharts();
 }
-function setTableYear(y) {
-  tableYear = y;
-  buildYearTabs('tableYearTabs', tableYear, 'setTableYear');
-  updateTable();
-}
-
 function showTab(name) {
   const tabs = ['dashboard','table'];
   document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', tabs[i] === name));
@@ -692,11 +686,11 @@ function showTab(name) {
   const onDash = name === 'dashboard';
   document.getElementById('compareBtn').style.display = onDash ? '' : 'none';
   if (onDash) { updateMetrics(); setTimeout(updateCharts, 50); }
-  if (name === 'table') { buildYearTabs('tableYearTabs', tableYear, 'setTableYear'); updateTable(); }
+  if (name === 'table') { updateTable(); }
 }
 
 function updateTable() {
-  const rows = (data[tableYear] || []).map(calcRow);
+  const rows = (data[dashYear] || []).map(calcRow);
   if (!rows.length) { document.getElementById('tableArea').innerHTML = '<p class="empty-msg">데이터 없음</p>'; return; }
   let html = `<table><thead><tr><th>월</th><th>매출액 (백만원)</th><th>전기세 (원)</th><th>전력비율</th><th>사용전력 (kWh)</th><th>태양광 (kWh)</th><th>재생에너지비율</th></tr></thead><tbody>`;
   rows.forEach(r => {
@@ -715,7 +709,7 @@ function updateTable() {
   const years = Object.keys(data).map(Number).filter(y => !isNaN(y)).sort();
   if (years.length) {
     const latest = years[years.length - 1];
-    dashYear = latest; tableYear = latest;
+    dashYear = latest;
   }
   buildYearTabs('dashYearTabs', dashYear, 'setDashYear');
   syncCompareUI();
