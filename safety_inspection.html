@@ -13,18 +13,6 @@
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;background:#f5f5f4;color:#1c1917;font-size:14px;}
 
-/* 비번 게이트 오버레이 */
-#gate{position:fixed;inset:0;background:#0d1f3c;display:flex;align-items:center;justify-content:center;z-index:9999;}
-#gate.hidden{display:none;}
-.gate-card{background:#fff;padding:36px 40px;border-radius:8px;width:340px;max-width:90%;text-align:center;box-shadow:0 12px 40px rgba(0,0,0,0.3);}
-.gate-card h1{font-size:18px;color:#0d1f3c;margin-bottom:6px;font-weight:900;}
-.gate-card .sub{font-size:12px;color:#64748b;margin-bottom:24px;}
-.gate-card input{width:100%;padding:12px 14px;border:1.5px solid #cbd5e1;border-radius:6px;font-size:16px;font-family:inherit;text-align:center;letter-spacing:0.04em;}
-.gate-card input:focus{outline:none;border-color:#1a3a6e;}
-.gate-card button{margin-top:14px;width:100%;padding:12px;background:#1a3a6e;color:#fff;border:none;border-radius:6px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;}
-.gate-card button:hover{background:#0d1f3c;}
-.gate-err{color:#dc2626;font-size:12px;margin-top:10px;height:14px;}
-
 /* HEADER */
 .page-header{background:#0d1f3c;color:#fff;padding:24px 28px;border-bottom:3px solid #1a3a6e;position:relative;}
 .page-header .doc-no{display:inline-block;font-size:10px;font-weight:700;letter-spacing:0.18em;padding:2px 10px;border:1px solid rgba(255,255,255,0.3);border-radius:2px;margin-bottom:10px;color:rgba(255,255,255,0.85);}
@@ -106,17 +94,6 @@ table.insp tbody tr.site-divider td{background:#1a3a6e !important;color:#fff;fon
 </head>
 <body>
 
-<!-- 비번 게이트 -->
-<div id="gate">
-  <div class="gate-card">
-    <h1>안전검사 (위험기계)</h1>
-    <div class="sub">민감 자료 — 사내 관리자 전용</div>
-    <input type="password" id="gate-pw" placeholder="비밀번호" autocomplete="off">
-    <button id="gate-btn" type="button">접속</button>
-    <div class="gate-err" id="gate-err"></div>
-  </div>
-</div>
-
 <div class="page-header">
   <span class="doc-no">SI-FORM</span>
   <h1>안전검사 (위험기계) 점검 현황</h1>
@@ -167,31 +144,6 @@ table.insp tbody tr.site-divider td{background:#1a3a6e !important;color:#fff;fon
 <div class="toast" id="toast"></div>
 
 <script>
-// ============================================================
-// 비밀번호 게이트
-// ============================================================
-const PASSWORD = '김은진';
-function checkGate(){
-  if(sessionStorage.getItem('insp_unlocked') === '1'){
-    document.getElementById('gate').classList.add('hidden');
-    return true;
-  }
-  return false;
-}
-function tryUnlock(){
-  const pw = document.getElementById('gate-pw').value;
-  if(pw === PASSWORD){
-    sessionStorage.setItem('insp_unlocked', '1');
-    document.getElementById('gate').classList.add('hidden');
-    init();
-  } else {
-    document.getElementById('gate-err').textContent = '비밀번호가 다릅니다';
-    document.getElementById('gate-pw').select();
-  }
-}
-document.getElementById('gate-btn').addEventListener('click', tryUnlock);
-document.getElementById('gate-pw').addEventListener('keydown', e => { if(e.key === 'Enter') tryUnlock(); });
-
 // ============================================================
 // 데이터 + Supabase
 // ============================================================
@@ -402,13 +354,7 @@ async function init(){
   render();
 }
 
-window.addEventListener('DOMContentLoaded', () => {
-  if(checkGate()){
-    init();
-  } else {
-    setTimeout(() => document.getElementById('gate-pw').focus(), 50);
-  }
-});
+window.addEventListener('DOMContentLoaded', init);
 </script>
 </body>
 </html>
