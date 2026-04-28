@@ -3641,7 +3641,7 @@ const esgData = [
   {cat:'안전',name:'특별안전교육',target:'크레인/화학물질/압력용기/유해화학물질',eval:'16시간 교육이수',basis:'교육이수증',cycle:'-',manager:'각 취급자',agency:'대한산업안전협회',plan:[0,0,0,1,0,0,0,0,0,0,0,0],done:[0,0,0,0,0,0,0,0,0,0,0,0],cost:'-'},
   {cat:'안전',name:'안전보건교육(정기)',target:'정기교육',eval:'매 반기 12시간 안전교육',basis:'교육이수증',cycle:'반기 12시간',manager:'전체',agency:'',plan:[0,1,0,0,0,1,0,0,0,0,0,0],done:[0,0,0,0,0,0,0,0,0,0,0,0],cost:'-'},
   {cat:'안전',name:'안전보건교육(채용시)',target:'채용시',eval:'채용시 8시간 안전교육',basis:'교육일지',cycle:'8시간',manager:'김민수 외',agency:'.',plan:[1,0,0,0,0,0,0,0,0,0,0,0],done:[1,0,0,0,0,0,0,0,0,0,0,0],cost:'-'},
-  {cat:'안전',name:'안전검사(위험기계)',target:'사출기/크레인/리프트/압력용기/컨베이어/로봇',eval:'안전검사',basis:'안전검사결과통지서',cycle:'해당시',manager:'임정인',agency:'한국안전기술협회',plan:[0,1,0,0,0,0,1,0,0,1,1,0],done:[0,1,0,0,0,0,0,0,0,0,0,0],cost:'2,368,000원'},
+  {cat:'안전',name:'안전검사(위험기계)',target:'사출기/크레인/리프트/압력용기/컨베이어/로봇',eval:'안전검사',basis:'안전검사결과통지서',cycle:'해당시',manager:'임정인',agency:'한국안전기술협회',plan:[0,1,0,0,0,0,1,0,0,1,1,0],done:[0,1,0,0,0,0,0,0,0,0,0,0],cost:'2,368,000원',link:'safety_inspection.html'},
   {cat:'안전',name:'안전관리(사업장)',target:'전공정',eval:'정기안전점검',basis:'정기안전점검보고서',cycle:'월2회',manager:'박동수(외부)',agency:'대한산업안전협회',plan:[1,1,1,1,1,1,1,1,1,1,1,1],done:[1,1,1,0,0,0,0,0,0,0,0,0],cost:'6,000,000원'},
   {cat:'안전',name:'위험성평가(정기)',target:'사업장내 위험성평가',eval:'위험성평가 및 조치',basis:'위험성평가서',cycle:'년1회',manager:'임정인',agency:'',plan:[0,0,1,0,0,0,0,0,0,0,0,0],done:[0,0,0,0,0,0,0,0,0,0,0,0],cost:'-'},
   {cat:'안전',name:'산업안전보건위원회',target:'산업안전보건회의/전부서',eval:'회의록',basis:'회의록',cycle:'년4회',manager:'각 담당자',agency:'',plan:[0,0,1,0,0,1,0,1,1,0,0,0],done:[0,0,1,0,0,0,0,0,0,0,0,0],cost:'-'},
@@ -3804,7 +3804,7 @@ function renderESGPlan(containerId){
     tableHtml += `<tr>
       <td style="text-align:center;">${num}</td>
       ${isFiltered?'':`<td style="text-align:center;"><span style="display:inline-block;padding:2px 6px;border-radius:8px;font-size:10px;font-weight:700;white-space:nowrap;background:${esgCatColors[item.cat]}22;color:${esgCatColors[item.cat]};">${item.cat}</span></td>`}
-      <td style="font-weight:600;">${item.name}${item.custom?` <button onclick="removeCustomESGItem(${globalIdx})" style="background:none;border:none;color:#dc2626;cursor:pointer;font-size:11px;padding:0 2px;" title="사용자 추가 항목 삭제">🗑</button>`:''}${item.agency?`<div style="font-size:10px;color:#6b7280;font-weight:400;margin-top:2px;">${item.agency}</div>`:''}</td>
+      <td style="font-weight:600;">${item.link?`<a href="${item.link}" style="color:#1a3a6e;text-decoration:none;border-bottom:1.5px dotted #1a3a6e;" title="별도 페이지 열기">${item.name} ↗</a>`:item.name}${item.custom?` <button onclick="removeCustomESGItem(${globalIdx})" style="background:none;border:none;color:#dc2626;cursor:pointer;font-size:11px;padding:0 2px;" title="사용자 추가 항목 삭제">🗑</button>`:''}${item.agency?`<div style="font-size:10px;color:#6b7280;font-weight:400;margin-top:2px;">${item.agency}</div>`:''}</td>
       <td>${item.target}</td>
       <td>${item.eval}${item.basis?`<div style="font-size:10px;color:#9ca3af;margin-top:2px;">${item.basis}</div>`:''}</td>
       <td style="text-align:center;white-space:nowrap;">${item.cycle}</td>

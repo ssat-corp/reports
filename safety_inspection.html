@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>안전검사 (위험기계) | 산업안전보건</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="safety_inspection_data.js?v=20260428"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;background:#f5f5f4;color:#1c1917;font-size:14px;}
+
+/* 비번 게이트 오버레이 */
+#gate{position:fixed;inset:0;background:#0d1f3c;display:flex;align-items:center;justify-content:center;z-index:9999;}
+#gate.hidden{display:none;}
+.gate-card{background:#fff;padding:36px 40px;border-radius:8px;width:340px;max-width:90%;text-align:center;box-shadow:0 12px 40px rgba(0,0,0,0.3);}
+.gate-card h1{font-size:18px;color:#0d1f3c;margin-bottom:6px;font-weight:900;}
+.gate-card .sub{font-size:12px;color:#64748b;margin-bottom:24px;}
+.gate-card input{width:100%;padding:12px 14px;border:1.5px solid #cbd5e1;border-radius:6px;font-size:16px;font-family:inherit;text-align:center;letter-spacing:0.04em;}
+.gate-card input:focus{outline:none;border-color:#1a3a6e;}
+.gate-card button{margin-top:14px;width:100%;padding:12px;background:#1a3a6e;color:#fff;border:none;border-radius:6px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;}
+.gate-card button:hover{background:#0d1f3c;}
+.gate-err{color:#dc2626;font-size:12px;margin-top:10px;height:14px;}
+
+/* HEADER */
+.page-header{background:#0d1f3c;color:#fff;padding:24px 28px;border-bottom:3px solid #1a3a6e;position:relative;}
+.page-header .doc-no{display:inline-block;font-size:10px;font-weight:700;letter-spacing:0.18em;padding:2px 10px;border:1px solid rgba(255,255,255,0.3);border-radius:2px;margin-bottom:10px;color:rgba(255,255,255,0.85);}
+.page-header h1{font-size:22px;font-weight:900;letter-spacing:-0.02em;}
+.page-header .sub{font-size:12px;opacity:0.7;margin-top:4px;}
+.page-header .conn{position:absolute;top:18px;right:24px;font-size:11px;background:rgba(255,255,255,0.1);padding:5px 12px;border-radius:4px;display:flex;align-items:center;gap:6px;}
+.conn-dot{width:7px;height:7px;border-radius:50%;background:#64748b;}
+.conn-dot.connected{background:#86efac;animation:pulse 2s infinite;}
+.conn-dot.error{background:#ef4444;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
+.back-link{position:absolute;top:18px;right:170px;font-size:11px;color:#fff;text-decoration:none;background:rgba(255,255,255,0.08);padding:5px 12px;border-radius:4px;border:1px solid rgba(255,255,255,0.15);}
+.back-link:hover{background:rgba(255,255,255,0.15);}
+
+.container{max-width:100%;margin:0 auto;padding:18px 18px 60px;overflow-x:auto;}
+
+/* 컨트롤 바 */
+.controls{background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:14px 18px;margin-bottom:16px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;}
+.controls label{font-size:12px;font-weight:700;color:#64748b;display:flex;align-items:center;gap:6px;}
+.controls select{padding:6px 10px;border:1px solid #cbd5e1;border-radius:4px;font-size:13px;font-family:inherit;}
+.tabs{display:flex;flex-wrap:wrap;gap:4px;}
+.tab{padding:7px 14px;font-size:12px;font-weight:700;background:#fff;border:1px solid #cbd5e1;border-radius:4px;cursor:pointer;color:#64748b;font-family:inherit;}
+.tab:hover{background:#f8fafc;}
+.tab.active{background:#0d1f3c;color:#fff;border-color:#0d1f3c;}
+.btn{display:inline-block;padding:8px 14px;background:#1a3a6e;color:#fff;border:none;border-radius:4px;font-size:12px;font-weight:700;cursor:pointer;text-decoration:none;font-family:inherit;}
+.btn:hover{background:#0d1f3c;}
+.btn-outline{background:#fff;color:#1a3a6e;border:1px solid #1a3a6e;}
+.btn-outline:hover{background:#f8fafc;}
+.btn-success{background:#059669;}
+.btn-success:hover{background:#047857;}
+.status-text{font-size:11px;color:#64748b;margin-left:auto;font-weight:600;}
+
+/* 메인 표 */
+.tbl-wrap{background:#fff;border:1px solid #e5e7eb;border-radius:8px;overflow-x:auto;overflow-y:visible;}
+table.insp{width:100%;min-width:1100px;border-collapse:collapse;font-size:12px;}
+table.insp th, table.insp td{border:1px solid #e5e7eb;padding:6px 8px;text-align:center;vertical-align:middle;}
+table.insp thead th{background:#0d1f3c;color:#fff;font-weight:700;font-size:11px;letter-spacing:0.02em;position:sticky;top:0;z-index:10;}
+table.insp thead th.col-month{width:42px;font-size:10px;}
+table.insp tbody td.site{background:#f1f5f9;font-weight:700;color:#0d1f3c;font-size:11px;}
+table.insp tbody td.asset{font-weight:700;color:#0d1f3c;white-space:nowrap;}
+table.insp tbody td.text-l{text-align:left;}
+table.insp tbody td.month{cursor:pointer;font-weight:800;letter-spacing:0.02em;user-select:none;transition:background 0.12s;width:42px;}
+table.insp tbody td.month:hover{background:#eff6ff;}
+table.insp tbody td.month.done{background:#dcfce7;color:#166534;}
+table.insp tbody td.month.done:hover{background:#bbf7d0;}
+table.insp tbody td.due-warn{background:#fef3c7;color:#78350f;font-weight:700;}
+table.insp tbody td.due-overdue{background:#fee2e2;color:#991b1b;font-weight:700;}
+table.insp tbody tr.site-divider td{background:#1a3a6e !important;color:#fff;font-weight:800;text-align:left;padding:7px 14px;font-size:12px;letter-spacing:0.04em;}
+
+/* 상태 뱃지 */
+.save-status{display:inline-block;font-size:11px;font-weight:700;padding:3px 10px;border-radius:12px;}
+.save-status.saved{background:#dcfce7;color:#166534;}
+.save-status.saving{background:#fef3c7;color:#78350f;}
+.save-status.error{background:#fee2e2;color:#991b1b;}
+
+/* 푸터 안내 */
+.legend{margin-top:14px;padding:14px 18px;background:#fff;border:1px solid #e5e7eb;border-radius:8px;font-size:12px;line-height:1.7;color:#475569;}
+.legend strong{color:#0d1f3c;}
+.legend-row{display:flex;flex-wrap:wrap;gap:14px;margin-top:6px;}
+.legend-chip{display:inline-flex;align-items:center;gap:6px;font-size:11px;}
+.legend-chip .swatch{width:14px;height:14px;border-radius:3px;border:1px solid #cbd5e1;}
+.legend-chip .swatch.done{background:#dcfce7;}
+.legend-chip .swatch.warn{background:#fef3c7;}
+.legend-chip .swatch.overdue{background:#fee2e2;}
+
+/* 토스트 */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);background:#0d1f3c;color:#fff;padding:12px 24px;border-radius:6px;font-size:13px;font-weight:600;opacity:0;transition:all 0.3s;z-index:2000;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.toast.error{background:#dc2626;}
+.toast.success{background:#059669;}
+
+@media(max-width:600px){
+  .container{padding:12px;}
+  .page-header{padding:18px 14px;}
+  .page-header h1{font-size:18px;}
+  .back-link{position:static;display:inline-block;margin-bottom:8px;}
+  .page-header .conn{position:static;display:inline-flex;margin-bottom:8px;}
+}
+</style>
+</head>
+<body>
+
+<!-- 비번 게이트 -->
+<div id="gate">
+  <div class="gate-card">
+    <h1>안전검사 (위험기계)</h1>
+    <div class="sub">민감 자료 — 사내 관리자 전용</div>
+    <input type="password" id="gate-pw" placeholder="비밀번호" autocomplete="off">
+    <button id="gate-btn" type="button">접속</button>
+    <div class="gate-err" id="gate-err"></div>
+  </div>
+</div>
+
+<div class="page-header">
+  <span class="doc-no">SI-FORM</span>
+  <h1>안전검사 (위험기계) 점검 현황</h1>
+  <div class="sub">사출기·압력용기·천장주행크레인 정기 안전검사 트래킹 (산업안전보건법 제36조)</div>
+  <a class="back-link" href="safety_dashboard.html">← 대시보드</a>
+  <div class="conn"><div class="conn-dot" id="conn-dot"></div><span id="conn-text">연결 중...</span></div>
+</div>
+
+<div class="container">
+
+  <div class="controls">
+    <label>연도
+      <div class="tabs" id="year-tabs"></div>
+    </label>
+    <label>공장
+      <select id="filter-site">
+        <option value="all">전체</option>
+        <option value="본사">본사</option>
+        <option value="화성공장">화성공장</option>
+      </select>
+    </label>
+    <button class="btn btn-outline" id="btn-copy">📋 매트릭스 복사 (TSV)</button>
+    <span class="save-status saved" id="save-status">☁ 클라우드 동기화됨</span>
+    <span class="status-text" id="row-count">-</span>
+  </div>
+
+  <div class="tbl-wrap">
+    <table class="insp" id="insp-table"></table>
+  </div>
+
+  <div class="legend">
+    <strong>※ 안전검사 (산업안전보건법 제36조)</strong><br>
+    검사품목: 사출기, 압력용기, 천장주행크레인<br>
+    검사주기: 최초 설치 후 3년에 1회, 그 후 2년 주기로 1회 검사<br>
+    <div class="legend-row">
+      <span class="legend-chip"><span class="swatch done"></span>완료 (검사 완료된 월)</span>
+      <span class="legend-chip"><span class="swatch warn"></span>예정월 (1개월 이내 마감)</span>
+      <span class="legend-chip"><span class="swatch overdue"></span>마감 지남 (즉시 조치)</span>
+    </div>
+    <div style="margin-top:8px;font-size:11px;color:#94a3b8;">
+      클릭으로 완료/취소 토글 · 클라우드 자동 저장 · 다른 기기와 실시간 공유<br>
+      [매트릭스 복사] 버튼으로 현재 연도 12개월 데이터를 TSV로 클립보드에 복사 → 엑셀에 붙여넣기 가능 (자산번호 순서 동일)
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ============================================================
+// 비밀번호 게이트
+// ============================================================
+const PASSWORD = '김은진';
+function checkGate(){
+  if(sessionStorage.getItem('insp_unlocked') === '1'){
+    document.getElementById('gate').classList.add('hidden');
+    return true;
+  }
+  return false;
+}
+function tryUnlock(){
+  const pw = document.getElementById('gate-pw').value;
+  if(pw === PASSWORD){
+    sessionStorage.setItem('insp_unlocked', '1');
+    document.getElementById('gate').classList.add('hidden');
+    init();
+  } else {
+    document.getElementById('gate-err').textContent = '비밀번호가 다릅니다';
+    document.getElementById('gate-pw').select();
+  }
+}
+document.getElementById('gate-btn').addEventListener('click', tryUnlock);
+document.getElementById('gate-pw').addEventListener('keydown', e => { if(e.key === 'Enter') tryUnlock(); });
+
+// ============================================================
+// 데이터 + Supabase
+// ============================================================
+const DEFAULT_SUPABASE_URL = 'https://onohwrswzaiwbabiusrj.supabase.co';
+const DEFAULT_SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9ub2h3cnN3emFpd2JhYml1c3JqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyMjQ5MTgsImV4cCI6MjA4OTgwMDkxOH0.vK_l0iWBJyZmLwzNfQHob2ejEZGfg8mQ8mV-6-lXaN0';
+let supaClient = null;
+
+const DB = {
+  getObj(key){ try{return JSON.parse(localStorage.getItem('safety_'+key))||null;}catch{return null;} },
+  async set(key, val){
+    localStorage.setItem('safety_'+key, JSON.stringify(val));
+    if(!supaClient) return;
+    try{ await supaClient.from('safety_store').upsert({key, value:val}, {onConflict:'key'}); }
+    catch(e){ console.error('Supabase upsert 실패:', key, e); }
+  }
+};
+async function loadFromSupabase(){
+  if(!supaClient) return;
+  try{
+    const {data, error} = await supaClient.from('safety_store').select('*').eq('key','safetyInspection');
+    if(error) throw error;
+    if(data && data.length){
+      localStorage.setItem('safety_safetyInspection', JSON.stringify(data[0].value));
+    }
+  }catch(e){ console.error('supaLoad:', e); }
+}
+function initSupabase(){
+  try{
+    supaClient = supabase.createClient(DEFAULT_SUPABASE_URL, DEFAULT_SUPABASE_KEY);
+    document.getElementById('conn-dot').className = 'conn-dot connected';
+    document.getElementById('conn-text').textContent = '실시간 공유 연결됨';
+    supaClient.channel('insp_sync')
+      .on('postgres_changes', {event:'*', schema:'public', table:'safety_store', filter:'key=eq.safetyInspection'}, async () => {
+        await loadFromSupabase(); render();
+      }).subscribe();
+  }catch(e){
+    document.getElementById('conn-dot').className = 'conn-dot error';
+    document.getElementById('conn-text').textContent = '연결 실패';
+  }
+}
+
+// ============================================================
+// 상태 + 렌더링
+// ============================================================
+let currentYear = 2026;
+let currentSite = 'all';
+let _saveSeq = 0;
+
+// machines 데이터: 우선 cloud, 없으면 INSP_INIT 사용
+function getMachines(){
+  const cloud = DB.getObj('safetyInspection');
+  if(cloud && cloud.machines && cloud.machines.length) return cloud.machines;
+  return INSP_INIT.machines;
+}
+
+function setSaveStatus(state, txt){
+  const el = document.getElementById('save-status');
+  el.className = 'save-status ' + state;
+  el.textContent = txt;
+}
+async function autoCloudSave(machines){
+  const seq = ++_saveSeq;
+  setSaveStatus('saving', '☁ 저장 중...');
+  try{
+    await DB.set('safetyInspection', {machines, years: INSP_INIT.years, updated:new Date().toISOString()});
+    if(seq === _saveSeq) setSaveStatus('saved', '☁ 클라우드 동기화됨');
+  }catch(e){
+    if(seq === _saveSeq) setSaveStatus('error', '⚠ 저장 실패');
+  }
+}
+
+function renderYearTabs(){
+  const wrap = document.getElementById('year-tabs');
+  wrap.innerHTML = INSP_INIT.years.map(y =>
+    `<button class="tab${y===currentYear?' active':''}" data-year="${y}">${y}</button>`
+  ).join('');
+  wrap.querySelectorAll('.tab').forEach(t => {
+    t.addEventListener('click', () => {
+      currentYear = parseInt(t.dataset.year, 10);
+      renderYearTabs();
+      render();
+    });
+  });
+}
+
+function todayISO(){ return new Date().toISOString().slice(0,10); }
+function dueClass(machine){
+  if(!machine.next_due) return '';
+  const today = new Date(); today.setHours(0,0,0,0);
+  const due = new Date(machine.next_due);
+  const diff = Math.round((due - today)/86400000);
+  if(diff < 0) return 'due-overdue';
+  if(diff <= 30) return 'due-warn';
+  return '';
+}
+
+function render(){
+  const machines = getMachines();
+  let filtered = machines;
+  if(currentSite !== 'all') filtered = filtered.filter(m => m.site === currentSite);
+
+  // 헤더
+  let html = `<thead><tr>
+    <th style="min-width:60px;">공장</th>
+    <th style="min-width:80px;">자산번호</th>
+    <th style="min-width:60px;">용량</th>
+    <th style="min-width:90px;">관리번호</th>
+    <th style="min-width:180px;">유효기간</th>
+    <th style="min-width:60px;">검사주기</th>
+    <th style="min-width:100px;">검사예정일</th>`;
+  for(let m=1; m<=12; m++) html += `<th class="col-month">${m}월</th>`;
+  html += `</tr></thead><tbody>`;
+
+  let lastSite = null;
+  filtered.forEach((m, idx) => {
+    if(m.site !== lastSite){
+      html += `<tr class="site-divider"><td colspan="${7+12}">${m.site} (${filtered.filter(x=>x.site===m.site).length}대)</td></tr>`;
+      lastSite = m.site;
+    }
+    const validity = (m.valid_start && m.valid_end) ? `${m.valid_start} ~ ${m.valid_end}` : (m.valid_end || '-');
+    const dueCls = dueClass(m);
+    html += `<tr data-idx="${machines.indexOf(m)}">
+      <td class="site">${m.site}</td>
+      <td class="asset">${m.asset_no}</td>
+      <td>${m.capacity}</td>
+      <td>${m.mgmt_no}</td>
+      <td class="text-l">${validity}</td>
+      <td>${m.cycle ? m.cycle+'년' : '-'}</td>
+      <td class="${dueCls}">${m.next_due || '-'}</td>`;
+    for(let mo=1; mo<=12; mo++){
+      const key = `${currentYear}-${String(mo).padStart(2,'0')}`;
+      const val = m.matrix[key] || '';
+      const done = val ? ' done' : '';
+      html += `<td class="month${done}" data-key="${key}">${done?'완료':''}</td>`;
+    }
+    html += `</tr>`;
+  });
+  html += `</tbody>`;
+  document.getElementById('insp-table').innerHTML = html;
+
+  // 셀 클릭 핸들러 (월 토글)
+  document.querySelectorAll('#insp-table td.month').forEach(td => {
+    td.addEventListener('click', async () => {
+      const tr = td.closest('tr');
+      const idx = parseInt(tr.dataset.idx, 10);
+      const key = td.dataset.key;
+      const machines = getMachines();
+      if(!machines[idx]) return;
+      const cur = machines[idx].matrix[key] || '';
+      if(cur === '완료'){
+        delete machines[idx].matrix[key];
+        td.classList.remove('done');
+        td.textContent = '';
+      } else {
+        machines[idx].matrix[key] = '완료';
+        td.classList.add('done');
+        td.textContent = '완료';
+      }
+      await autoCloudSave(machines);
+    });
+  });
+
+  document.getElementById('row-count').textContent = `${filtered.length}대 표시 중 (${currentYear}년)`;
+}
+
+// ============================================================
+// 매트릭스 TSV 복사 (현재 연도 51행 × 12열)
+// ============================================================
+function copyMatrixTSV(){
+  const machines = getMachines();
+  const lines = machines.map(m => {
+    const row = [];
+    for(let mo=1; mo<=12; mo++){
+      const key = `${currentYear}-${String(mo).padStart(2,'0')}`;
+      row.push(m.matrix[key] || '');
+    }
+    return row.join('\t');
+  });
+  const tsv = lines.join('\n');
+  navigator.clipboard.writeText(tsv).then(() => {
+    showToast(`${currentYear}년 매트릭스 복사됨 (${machines.length}행 × 12열)`, 'success');
+  }, err => {
+    showToast('복사 실패: '+err, 'error');
+  });
+}
+function showToast(msg, kind){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (kind ? ' '+kind : '');
+  setTimeout(() => t.classList.remove('show'), 2400);
+}
+
+// ============================================================
+// INIT
+// ============================================================
+async function init(){
+  document.getElementById('filter-site').addEventListener('change', e => {
+    currentSite = e.target.value;
+    render();
+  });
+  document.getElementById('btn-copy').addEventListener('click', copyMatrixTSV);
+
+  renderYearTabs();
+  render();
+
+  initSupabase();
+  await loadFromSupabase();
+  render();
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  if(checkGate()){
+    init();
+  } else {
+    setTimeout(() => document.getElementById('gate-pw').focus(), 50);
+  }
+});
+</script>
+</body>
+</html>

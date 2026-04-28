@@ -1,0 +1,7 @@
+User-agent: *
+# 산업안전보건 시스템 — 사내 관리자 전용 페이지 색인 차단
+Disallow: /safety_inspection.html
+Disallow: /safety_dashboard.html
+Disallow: /safety_manager.html
+Disallow: /supervisor_check.html
+Disallow: /supervisor_report.html
