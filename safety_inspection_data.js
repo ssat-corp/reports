@@ -1,4 +1,4 @@
-/* 안전검사 — 완료(파랑)/예정(노랑) 구분 + 메모 + 매각/폐기 플래그 */
+/* 안전검사 - 2026년부터 2028년까지 추적, 이전 연도 제거 */
 const INSP_INIT = {
   "machines": [
     {
@@ -46,24 +46,7 @@ const INSP_INIT = {
       "next_due": "2027-10-06",
       "remark_short": "",
       "disposed": false,
-      "matrix": {
-        "2019-10": {
-          "status": "예정",
-          "memo": ""
-        },
-        "2021-10": {
-          "status": "완료",
-          "memo": ""
-        },
-        "2023-10": {
-          "status": "완료",
-          "memo": ""
-        },
-        "2025-10": {
-          "status": "완료",
-          "memo": ""
-        }
-      }
+      "matrix": {}
     },
     {
       "site": "본사",
@@ -77,24 +60,7 @@ const INSP_INIT = {
       "next_due": "2027-10-06",
       "remark_short": "",
       "disposed": false,
-      "matrix": {
-        "2019-10": {
-          "status": "예정",
-          "memo": ""
-        },
-        "2021-10": {
-          "status": "완료",
-          "memo": ""
-        },
-        "2023-10": {
-          "status": "완료",
-          "memo": ""
-        },
-        "2025-10": {
-          "status": "완료",
-          "memo": ""
-        }
-      }
+      "matrix": {}
     },
     {
       "site": "본사",
@@ -109,10 +75,6 @@ const INSP_INIT = {
       "remark_short": "",
       "disposed": false,
       "matrix": {
-        "2024-03": {
-          "status": "완료",
-          "memo": ""
-        },
         "2026-02": {
           "status": "완료",
           "memo": ""
@@ -136,18 +98,6 @@ const INSP_INIT = {
       "remark_short": "",
       "disposed": false,
       "matrix": {
-        "2018-07": {
-          "status": "예정",
-          "memo": ""
-        },
-        "2022-07": {
-          "status": "완료",
-          "memo": ""
-        },
-        "2024-07": {
-          "status": "완료",
-          "memo": ""
-        },
         "2026-07": {
           "status": "예정",
           "memo": ""
@@ -167,18 +117,6 @@ const INSP_INIT = {
       "remark_short": "",
       "disposed": false,
       "matrix": {
-        "2018-07": {
-          "status": "예정",
-          "memo": ""
-        },
-        "2022-07": {
-          "status": "완료",
-          "memo": ""
-        },
-        "2024-07": {
-          "status": "완료",
-          "memo": ""
-        },
         "2026-07": {
           "status": "예정",
           "memo": ""
@@ -198,18 +136,6 @@ const INSP_INIT = {
       "remark_short": "",
       "disposed": false,
       "matrix": {
-        "2018-07": {
-          "status": "예정",
-          "memo": ""
-        },
-        "2022-07": {
-          "status": "완료",
-          "memo": ""
-        },
-        "2024-07": {
-          "status": "완료",
-          "memo": ""
-        },
         "2026-07": {
           "status": "예정",
           "memo": ""
@@ -229,18 +155,6 @@ const INSP_INIT = {
       "remark_short": "",
       "disposed": false,
       "matrix": {
-        "2018-07": {
-          "status": "예정",
-          "memo": ""
-        },
-        "2022-07": {
-          "status": "완료",
-          "memo": ""
-        },
-        "2024-07": {
-          "status": "완료",
-          "memo": ""
-        },
         "2026-07": {
           "status": "예정",
           "memo": ""
@@ -259,24 +173,7 @@ const INSP_INIT = {
       "next_due": "2027-10-06",
       "remark_short": "",
       "disposed": false,
-      "matrix": {
-        "2019-10": {
-          "status": "예정",
-          "memo": ""
-        },
-        "2021-10": {
-          "status": "완료",
-          "memo": ""
-        },
-        "2023-10": {
-          "status": "완료",
-          "memo": ""
-        },
-        "2025-10": {
-          "status": "완료",
-          "memo": ""
-        }
-      }
+      "matrix": {}
     },
     {
       "site": "본사",
@@ -290,24 +187,7 @@ const INSP_INIT = {
       "next_due": "2027-10-06",
       "remark_short": "",
       "disposed": false,
-      "matrix": {
-        "2019-10": {
-          "status": "예정",
-          "memo": ""
-        },
-        "2021-10": {
-          "status": "완료",
-          "memo": ""
-        },
-        "2023-10": {
-          "status": "완료",
-          "memo": ""
-        },
-        "2025-10": {
-          "status": "완료",
-          "memo": ""
-        }
-      }
+      "matrix": {}
     },
     {
       "site": "본사",
@@ -322,10 +202,6 @@ const INSP_INIT = {
       "remark_short": "",
       "disposed": false,
       "matrix": {
-        "2024-10": {
-          "status": "완료",
-          "memo": ""
-        },
         "2026-10": {
           "status": "예정",
           "memo": ""
@@ -345,18 +221,6 @@ const INSP_INIT = {
       "remark_short": "",
       "disposed": false,
       "matrix": {
-        "2019-10": {
-          "status": "예정",
-          "memo": ""
-        },
-        "2022-07": {
-          "status": "완료",
-          "memo": ""
-        },
-        "2024-07": {
-          "status": "완료",
-          "memo": ""
-        },
         "2026-07": {
           "status": "예정",
           "memo": ""
@@ -390,18 +254,6 @@ const INSP_INIT = {
       "remark_short": "",
       "disposed": false,
       "matrix": {
-        "2018-08": {
-          "status": "예정",
-          "memo": ""
-        },
-        "2022-07": {
-          "status": "완료",
-          "memo": ""
-        },
-        "2024-07": {
-          "status": "완료",
-          "memo": ""
-        },
         "2026-07": {
           "status": "예정",
           "memo": ""
@@ -420,24 +272,7 @@ const INSP_INIT = {
       "next_due": "2027-10-06",
       "remark_short": "",
       "disposed": false,
-      "matrix": {
-        "2019-10": {
-          "status": "예정",
-          "memo": ""
-        },
-        "2021-10": {
-          "status": "완료",
-          "memo": ""
-        },
-        "2023-10": {
-          "status": "완료",
-          "memo": ""
-        },
-        "2025-10": {
-          "status": "완료",
-          "memo": ""
-        }
-      }
+      "matrix": {}
     },
     {
       "site": "본사",
@@ -451,28 +286,7 @@ const INSP_INIT = {
       "next_due": "2027-10-06",
       "remark_short": "",
       "disposed": false,
-      "matrix": {
-        "2018-06": {
-          "status": "예정",
-          "memo": ""
-        },
-        "2019-10": {
-          "status": "예정",
-          "memo": ""
-        },
-        "2021-10": {
-          "status": "완료",
-          "memo": ""
-        },
-        "2023-10": {
-          "status": "완료",
-          "memo": ""
-        },
-        "2025-10": {
-          "status": "완료",
-          "memo": ""
-        }
-      }
+      "matrix": {}
     },
     {
       "site": "본사",
@@ -487,10 +301,6 @@ const INSP_INIT = {
       "remark_short": "",
       "disposed": false,
       "matrix": {
-        "2024-10": {
-          "status": "완료",
-          "memo": ""
-        },
         "2026-10": {
           "status": "예정",
           "memo": ""
@@ -528,16 +338,7 @@ const INSP_INIT = {
       "next_due": "2027-10-06",
       "remark_short": "",
       "disposed": false,
-      "matrix": {
-        "2025-10": {
-          "status": "완료",
-          "memo": ""
-        },
-        "2025-11": {
-          "status": "예정",
-          "memo": ""
-        }
-      }
+      "matrix": {}
     },
     {
       "site": "본사",
@@ -552,18 +353,6 @@ const INSP_INIT = {
       "remark_short": "",
       "disposed": false,
       "matrix": {
-        "2018-07": {
-          "status": "예정",
-          "memo": ""
-        },
-        "2022-07": {
-          "status": "완료",
-          "memo": ""
-        },
-        "2024-07": {
-          "status": "완료",
-          "memo": ""
-        },
         "2026-07": {
           "status": "예정",
           "memo": ""
@@ -583,14 +372,6 @@ const INSP_INIT = {
       "remark_short": "",
       "disposed": false,
       "matrix": {
-        "2022-03": {
-          "status": "완료",
-          "memo": ""
-        },
-        "2024-03": {
-          "status": "완료",
-          "memo": ""
-        },
         "2026-02": {
           "status": "완료",
           "memo": ""
@@ -614,14 +395,6 @@ const INSP_INIT = {
       "remark_short": "",
       "disposed": false,
       "matrix": {
-        "2022-03": {
-          "status": "완료",
-          "memo": ""
-        },
-        "2024-03": {
-          "status": "완료",
-          "memo": ""
-        },
         "2026-02": {
           "status": "완료",
           "memo": ""
@@ -645,18 +418,6 @@ const INSP_INIT = {
       "remark_short": "",
       "disposed": false,
       "matrix": {
-        "2018-07": {
-          "status": "예정",
-          "memo": ""
-        },
-        "2022-07": {
-          "status": "완료",
-          "memo": ""
-        },
-        "2024-07": {
-          "status": "완료",
-          "memo": ""
-        },
         "2026-07": {
           "status": "예정",
           "memo": ""
@@ -675,60 +436,7 @@ const INSP_INIT = {
       "next_due": "",
       "remark_short": "매각(2021.03)",
       "disposed": true,
-      "matrix": {
-        "2018-07": {
-          "status": "예정",
-          "memo": ""
-        },
-        "2021-01": {
-          "status": "예정",
-          "memo": ""
-        },
-        "2021-02": {
-          "status": "예정",
-          "memo": ""
-        },
-        "2021-03": {
-          "status": "예정",
-          "memo": ""
-        },
-        "2021-04": {
-          "status": "예정",
-          "memo": ""
-        },
-        "2021-05": {
-          "status": "예정",
-          "memo": ""
-        },
-        "2021-06": {
-          "status": "예정",
-          "memo": ""
-        },
-        "2021-07": {
-          "status": "예정",
-          "memo": ""
-        },
-        "2021-08": {
-          "status": "예정",
-          "memo": ""
-        },
-        "2021-09": {
-          "status": "예정",
-          "memo": ""
-        },
-        "2021-10": {
-          "status": "예정",
-          "memo": ""
-        },
-        "2021-11": {
-          "status": "예정",
-          "memo": ""
-        },
-        "2021-12": {
-          "status": "예정",
-          "memo": ""
-        }
-      }
+      "matrix": {}
     },
     {
       "site": "본사",
@@ -743,22 +451,6 @@ const INSP_INIT = {
       "remark_short": "",
       "disposed": false,
       "matrix": {
-        "2018-11": {
-          "status": "예정",
-          "memo": ""
-        },
-        "2022-11": {
-          "status": "완료",
-          "memo": ""
-        },
-        "2024-11": {
-          "status": "예정",
-          "memo": ""
-        },
-        "2024-12": {
-          "status": "완료",
-          "memo": ""
-        },
         "2026-11": {
           "status": "예정",
           "memo": ""
@@ -778,22 +470,6 @@ const INSP_INIT = {
       "remark_short": "",
       "disposed": false,
       "matrix": {
-        "2018-11": {
-          "status": "예정",
-          "memo": ""
-        },
-        "2022-11": {
-          "status": "완료",
-          "memo": ""
-        },
-        "2024-11": {
-          "status": "예정",
-          "memo": ""
-        },
-        "2024-12": {
-          "status": "완료",
-          "memo": ""
-        },
         "2026-11": {
           "status": "예정",
           "memo": ""
@@ -812,24 +488,7 @@ const INSP_INIT = {
       "next_due": "2027-10-06",
       "remark_short": "",
       "disposed": false,
-      "matrix": {
-        "2019-10": {
-          "status": "예정",
-          "memo": ""
-        },
-        "2021-10": {
-          "status": "완료",
-          "memo": ""
-        },
-        "2023-10": {
-          "status": "완료",
-          "memo": ""
-        },
-        "2025-10": {
-          "status": "완료",
-          "memo": ""
-        }
-      }
+      "matrix": {}
     },
     {
       "site": "본사",
@@ -844,18 +503,6 @@ const INSP_INIT = {
       "remark_short": "",
       "disposed": false,
       "matrix": {
-        "2022-11": {
-          "status": "완료",
-          "memo": ""
-        },
-        "2024-11": {
-          "status": "예정",
-          "memo": ""
-        },
-        "2024-12": {
-          "status": "완료",
-          "memo": ""
-        },
         "2026-11": {
           "status": "예정",
           "memo": ""
@@ -875,22 +522,6 @@ const INSP_INIT = {
       "remark_short": "",
       "disposed": false,
       "matrix": {
-        "2018-12": {
-          "status": "예정",
-          "memo": ""
-        },
-        "2022-11": {
-          "status": "완료",
-          "memo": ""
-        },
-        "2024-11": {
-          "status": "예정",
-          "memo": ""
-        },
-        "2024-12": {
-          "status": "완료",
-          "memo": ""
-        },
         "2026-11": {
           "status": "예정",
           "memo": ""
@@ -909,24 +540,7 @@ const INSP_INIT = {
       "next_due": "2027-10-06",
       "remark_short": "",
       "disposed": false,
-      "matrix": {
-        "2019-10": {
-          "status": "예정",
-          "memo": ""
-        },
-        "2021-10": {
-          "status": "완료",
-          "memo": ""
-        },
-        "2023-10": {
-          "status": "완료",
-          "memo": ""
-        },
-        "2025-10": {
-          "status": "완료",
-          "memo": ""
-        }
-      }
+      "matrix": {}
     },
     {
       "site": "본사",
@@ -940,12 +554,7 @@ const INSP_INIT = {
       "next_due": "",
       "remark_short": "비대상",
       "disposed": false,
-      "matrix": {
-        "2021-10": {
-          "status": "완료",
-          "memo": ""
-        }
-      }
+      "matrix": {}
     },
     {
       "site": "본사",
@@ -960,14 +569,6 @@ const INSP_INIT = {
       "remark_short": "정기검사",
       "disposed": false,
       "matrix": {
-        "2019-10": {
-          "status": "예정",
-          "memo": ""
-        },
-        "2023-03": {
-          "status": "완료",
-          "memo": ""
-        },
         "2026-03": {
           "status": "예정",
           "memo": ""
@@ -986,20 +587,7 @@ const INSP_INIT = {
       "next_due": "2029-01-12",
       "remark_short": "정기검사",
       "disposed": false,
-      "matrix": {
-        "2019-10": {
-          "status": "예정",
-          "memo": ""
-        },
-        "2021-01": {
-          "status": "완료",
-          "memo": ""
-        },
-        "2025-01": {
-          "status": "완료",
-          "memo": ""
-        }
-      }
+      "matrix": {}
     },
     {
       "site": "본사",
@@ -1027,12 +615,7 @@ const INSP_INIT = {
       "next_due": "2028-03-11",
       "remark_short": "정기검사",
       "disposed": false,
-      "matrix": {
-        "2024-03": {
-          "status": "완료",
-          "memo": ""
-        }
-      }
+      "matrix": {}
     },
     {
       "site": "화성공장",
@@ -1046,12 +629,7 @@ const INSP_INIT = {
       "next_due": "",
       "remark_short": "매각(2024.08)",
       "disposed": true,
-      "matrix": {
-        "2021-07": {
-          "status": "예정",
-          "memo": ""
-        }
-      }
+      "matrix": {}
     },
     {
       "site": "화성공장",
@@ -1065,12 +643,7 @@ const INSP_INIT = {
       "next_due": "",
       "remark_short": "매각(2024.08)",
       "disposed": true,
-      "matrix": {
-        "2022-07": {
-          "status": "완료",
-          "memo": ""
-        }
-      }
+      "matrix": {}
     },
     {
       "site": "화성공장",
@@ -1084,24 +657,7 @@ const INSP_INIT = {
       "next_due": "2027-08-31",
       "remark_short": "",
       "disposed": false,
-      "matrix": {
-        "2019-08": {
-          "status": "예정",
-          "memo": ""
-        },
-        "2021-08": {
-          "status": "완료",
-          "memo": ""
-        },
-        "2023-08": {
-          "status": "완료",
-          "memo": ""
-        },
-        "2025-08": {
-          "status": "완료",
-          "memo": ""
-        }
-      }
+      "matrix": {}
     },
     {
       "site": "화성공장",
@@ -1116,14 +672,6 @@ const INSP_INIT = {
       "remark_short": "",
       "disposed": false,
       "matrix": {
-        "2022-07": {
-          "status": "완료",
-          "memo": ""
-        },
-        "2024-07": {
-          "status": "완료",
-          "memo": ""
-        },
         "2026-07": {
           "status": "예정",
           "memo": ""
@@ -1143,14 +691,6 @@ const INSP_INIT = {
       "remark_short": "",
       "disposed": false,
       "matrix": {
-        "2022-07": {
-          "status": "완료",
-          "memo": ""
-        },
-        "2024-07": {
-          "status": "완료",
-          "memo": ""
-        },
         "2026-07": {
           "status": "예정",
           "memo": ""
@@ -1170,14 +710,6 @@ const INSP_INIT = {
       "remark_short": "",
       "disposed": false,
       "matrix": {
-        "2022-07": {
-          "status": "완료",
-          "memo": ""
-        },
-        "2024-07": {
-          "status": "완료",
-          "memo": ""
-        },
         "2026-07": {
           "status": "예정",
           "memo": ""
@@ -1197,14 +729,6 @@ const INSP_INIT = {
       "remark_short": "",
       "disposed": false,
       "matrix": {
-        "2022-07": {
-          "status": "완료",
-          "memo": ""
-        },
-        "2024-07": {
-          "status": "완료",
-          "memo": ""
-        },
         "2026-07": {
           "status": "예정",
           "memo": ""
@@ -1224,14 +748,6 @@ const INSP_INIT = {
       "remark_short": "",
       "disposed": false,
       "matrix": {
-        "2022-07": {
-          "status": "완료",
-          "memo": ""
-        },
-        "2024-07": {
-          "status": "완료",
-          "memo": ""
-        },
         "2026-07": {
           "status": "예정",
           "memo": ""
@@ -1251,14 +767,6 @@ const INSP_INIT = {
       "remark_short": "",
       "disposed": false,
       "matrix": {
-        "2022-07": {
-          "status": "완료",
-          "memo": ""
-        },
-        "2024-07": {
-          "status": "완료",
-          "memo": ""
-        },
         "2026-07": {
           "status": "예정",
           "memo": ""
@@ -1278,14 +786,6 @@ const INSP_INIT = {
       "remark_short": "",
       "disposed": false,
       "matrix": {
-        "2022-07": {
-          "status": "완료",
-          "memo": ""
-        },
-        "2024-07": {
-          "status": "완료",
-          "memo": ""
-        },
         "2026-07": {
           "status": "예정",
           "memo": ""
@@ -1305,14 +805,6 @@ const INSP_INIT = {
       "remark_short": "",
       "disposed": false,
       "matrix": {
-        "2024-11": {
-          "status": "예정",
-          "memo": ""
-        },
-        "2024-12": {
-          "status": "완료",
-          "memo": ""
-        },
         "2026-12": {
           "status": "예정",
           "memo": ""
@@ -1332,14 +824,6 @@ const INSP_INIT = {
       "remark_short": "",
       "disposed": false,
       "matrix": {
-        "2024-11": {
-          "status": "예정",
-          "memo": ""
-        },
-        "2024-12": {
-          "status": "완료",
-          "memo": ""
-        },
         "2026-12": {
           "status": "예정",
           "memo": ""
@@ -1359,14 +843,6 @@ const INSP_INIT = {
       "remark_short": "",
       "disposed": false,
       "matrix": {
-        "2024-11": {
-          "status": "예정",
-          "memo": ""
-        },
-        "2024-12": {
-          "status": "완료",
-          "memo": ""
-        },
         "2026-12": {
           "status": "예정",
           "memo": ""
@@ -1385,16 +861,7 @@ const INSP_INIT = {
       "next_due": "2028-12-29",
       "remark_short": "신규",
       "disposed": false,
-      "matrix": {
-        "2024-11": {
-          "status": "예정",
-          "memo": ""
-        },
-        "2024-12": {
-          "status": "완료",
-          "memo": ""
-        }
-      }
+      "matrix": {}
     },
     {
       "site": "화성공장",
@@ -1408,34 +875,12 @@ const INSP_INIT = {
       "next_due": "2025-10-26",
       "remark_short": "정기검사",
       "disposed": false,
-      "matrix": {
-        "2019-10": {
-          "status": "예정",
-          "memo": ""
-        },
-        "2022-10": {
-          "status": "완료",
-          "memo": ""
-        },
-        "2022-11": {
-          "status": "예정",
-          "memo": ""
-        },
-        "2025-10": {
-          "status": "완료",
-          "memo": ""
-        }
-      }
+      "matrix": {}
     }
   ],
   "years": [
-    2018,
-    2019,
-    2021,
-    2022,
-    2023,
-    2024,
-    2025,
-    2026
+    2026,
+    2027,
+    2028
   ]
 };
