@@ -73,7 +73,7 @@ const SAFETY_TASKS = [
     content:'1. 안전지킴이방을 통한 아차사고 접수\n2. 아차사고 개선자료 작성 → 위험성평가에 반영',
     document:'아차사고개선', requirement:'-',
     assignedTo:['박재걸 전무','박제성 부장'] },
-  { id:6,  group:'안전', name:'아차사고 통계', vendor:'자체시행', period:'1회/년', periodCode:'yearly', dueMonth:12,
+  { id:6,  group:'안전', name:'아차사고 통계', vendor:'자체시행', period:'1회/년', periodCode:'yearly', dueMonth:1,
     content:'1년간 접수된 아차사고 개선자료에 대한 통계표 작성',
     document:'아차사고통계', requirement:'-',
     assignedTo:['박재걸 전무','박제성 부장'] },
@@ -105,8 +105,8 @@ const SAFETY_TASKS = [
     content:'근골격계유해요인조사 후 결과서 작성 및 보관',
     document:'근골격계유해요인조사표, 통계표', requirement:'-',
     assignedTo:['박재걸 전무','박제성 부장'] },
-  { id:14, group:'안전', name:'보호구 지급', vendor:'자체시행', period:'1회/격월', periodCode:'bimonthly',
-    content:'격월 단위로 각 공정별 보호구 지급 및 대장 작성',
+  { id:14, group:'안전', name:'보호구 지급', vendor:'자체시행', period:'1회/격월', periodCode:'bimonthlyOdd',
+    content:'격월 단위로 각 공정별 보호구 지급 및 대장 작성 (1·3·5·7·9·11월)',
     document:'보호구지급대장', requirement:'-',
     assignedTo:['박제성 부장','김민수 부장','양춘향 과장','임문호 이사'] },
   { id:15, group:'안전', name:'산업안전보건위원회', vendor:'자체시행', period:'1회/월', periodCode:'monthly',
@@ -121,7 +121,7 @@ const SAFETY_TASKS = [
     content:'MSDS자료 확인 및 갱신 여부에 따라 자료 취합, 해당 공정 배포',
     document:'화학물질통합리스트', requirement:'-',
     assignedTo:['박제성 부장','양춘향 과장'] },
-  { id:18, group:'안전', name:'화학물질통계', vendor:'자체시행', period:'1회/2년', periodCode:'biennial',
+  { id:18, group:'안전', name:'화학물질통계', vendor:'자체시행', period:'1회/2년', periodCode:'biennial', dueMonth:1,
     content:'화학물질통계조사표 작성 제출 (본사: 비대상, 화성공장: 대상)',
     document:'화학물질통계조사표', requirement:'-',
     assignedTo:['양춘향 과장','임문호 이사'] },
@@ -155,8 +155,8 @@ const SAFETY_TASKS = [
     content:'협의체 정기 회의록 작성',
     document:'협의체 정기 회의록', requirement:'대표이사 서명',
     assignedTo:['박재걸 전무','박제성 부장','협의체'] },
-  { id:26, group:'안전-도급', name:'보호구 지급 (도급)', vendor:'자체시행', period:'1회/격월', periodCode:'bimonthly',
-    content:'격월 단위로 각 공정별 보호구 지급 대장 복사본 수취 보관',
+  { id:26, group:'안전-도급', name:'보호구 지급 (도급)', vendor:'자체시행', period:'1회/격월', periodCode:'bimonthlyOdd',
+    content:'격월 단위로 각 공정별 보호구 지급 대장 복사본 수취 보관 (1·3·5·7·9·11월)',
     document:'보호구지급대장', requirement:'대표이사 서명',
     assignedTo:['박재걸 전무','박제성 부장'] },
   { id:27, group:'안전-도급', name:'합동 안전·보건 점검', vendor:'자체시행', period:'1회/분기', periodCode:'quarterly',
@@ -256,6 +256,9 @@ function calcNextDue(task, lastDoneISO){
         return ymd(endOf(Y, M)); }
     case 'bimonthly': // 1회/격월 → 짝수월 말일 (2,4,6,8,10,12)
       { let m = M; if(m % 2 !== 0) m += 1; if(m > 12){ return ymd(endOf(Y+1, 2)); }
+        return ymd(endOf(Y, m)); }
+    case 'bimonthlyOdd': // 1회/격월 → 홀수월 말일 (1,3,5,7,9,11)
+      { let m = M; if(m % 2 === 0) m += 1; if(m > 12){ return ymd(endOf(Y+1, 1)); }
         return ymd(endOf(Y, m)); }
     case 'quarterly': // 1회/분기 → 3,6,9,12월 말일
       { const qm = [3,6,9,12].find(m=>m>=M);

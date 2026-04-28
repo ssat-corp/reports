@@ -803,6 +803,7 @@ function isRoutineTask(t){
 function isDueInMonth(t, year, month){
   switch(t.periodCode){
     case 'bimonthly':  return month % 2 === 0;
+    case 'bimonthlyOdd': return month % 2 === 1;
     case 'quarterly':  return [3,6,9,12].includes(month);
     case 'semiannual': return [6,12].includes(month);
     case 'biannual':   return (t.dueMonths || [4,10]).includes(month);
