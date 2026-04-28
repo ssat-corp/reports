@@ -148,6 +148,20 @@ body{font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif
 .pd-actions{display:flex;gap:8px;flex-wrap:wrap;}
 .pd-empty{padding:30px 20px;text-align:center;color:#94a3b8;font-size:13px;line-height:1.7;}
 
+/* 관리감독자 9개 항목 한 줄 그리드 (컬럼 정렬) */
+.sv-table{display:grid;grid-template-columns:auto auto auto 1fr;gap:0 12px;padding:6px 18px 14px;align-items:center;}
+.sv-table > span{padding:11px 0;border-bottom:1px solid #f1f5f9;}
+.sv-table > span:nth-last-child(-n+4){border-bottom:none;}
+.sv-badge{font-size:10px;font-weight:800;padding:2px 8px;border-radius:3px;letter-spacing:0.04em;background:#dbeafe;color:#1e40af;align-self:center;justify-self:start;}
+.sv-name{font-size:14px;font-weight:800;color:#0d1f3c;letter-spacing:-0.01em;white-space:nowrap;}
+.sv-sep{color:#cbd5e1;font-weight:300;}
+.sv-desc{font-size:13px;color:#334155;line-height:1.55;font-weight:500;}
+@media(max-width:700px){
+  .sv-table{grid-template-columns:auto 1fr;gap:0 10px;}
+  .sv-table .sv-sep{display:none;}
+  .sv-table > span{padding:8px 0;}
+}
+
 /* LINK CARDS (감독자 일일·월간) */
 .link-card-blue, .link-card-red{display:block;padding:16px 18px;background:#fff;border:1px solid #e5e7eb;border-left:4px solid #1a3a6e;border-radius:6px;text-decoration:none;color:#1c1917;transition:all 0.15s;}
 .link-card-blue:hover{background:#eff6ff;border-left-color:#0d1f3c;transform:translateY(-2px);box-shadow:0 4px 12px rgba(13,31,60,0.12);}
@@ -671,14 +685,14 @@ function renderPersonDetail(){
     stats = `총 ${tasks.length}건` + (overdue ? ` · 지연 ${overdue}` : '') + (dueSoon ? ` · 임박 ${dueSoon}` : '');
   }
 
-  const renderer = isSupervisor ? renderSupervisorTask : renderPersonTask;
+  const tasksHtml = isSupervisor ? renderSupervisorTaskTable(tasks) : tasks.map(renderPersonTask).join('');
   panel.innerHTML = `
     <div class="pd-header">
       <div class="pd-name">${selectedPerson}</div>
       <div class="pd-role">${meta.role || ''}</div>
       <div class="pd-stats">${stats}</div>
     </div>
-    ${tasks.map(renderer).join('')}
+    ${tasksHtml}
   `;
 
   // 안전보건관리담당자 업무는 펼침 가능, 관리감독자 책임 항목은 항상 펼쳐진 상태
@@ -692,18 +706,14 @@ function renderPersonDetail(){
   }
 }
 
-function renderSupervisorTask(t){
-  return `
-    <div class="pd-task expanded" data-tid="${t.id}">
-      <div class="pd-task-head" style="cursor:default;">
-        <span class="pd-task-group" style="background:#dbeafe;color:#1e40af;">관리감독자</span>
-        <span class="pd-task-name">${t.name}</span>
-      </div>
-      <div class="pd-task-body">
-        <div class="pd-content">${t.content}</div>
-      </div>
-    </div>
-  `;
+function renderSupervisorTaskTable(tasks){
+  const rows = tasks.map(t => `
+    <span class="sv-badge">관리감독자</span>
+    <span class="sv-name">${t.name}</span>
+    <span class="sv-sep">—</span>
+    <span class="sv-desc">${t.content}</span>
+  `).join('');
+  return `<div class="sv-table">${rows}</div>`;
 }
 
 function renderPersonTask(t){
