@@ -7,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <title>안전검사 (위험기계) | 산업안전보건</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-<script src="safety_inspection_data.js?v=20260428"></script>
+<script src="safety_inspection_data.js?v=20260428b"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
 *{margin:0;padding:0;box-sizing:border-box;}
@@ -198,11 +198,18 @@ let currentYear = 2026;
 let currentSite = 'all';
 let _saveSeq = 0;
 
-// machines 데이터: 우선 cloud, 없으면 INSP_INIT 사용
+// machines 데이터: INSP_INIT의 메타(설비명/용량/유효기간 등)는 항상 마스터,
+//                 cloud에서 매트릭스만 가져와 머지 (eqp_name 누락 같은 구조 변경에 안전)
 function getMachines(){
   const cloud = DB.getObj('safetyInspection');
-  if(cloud && cloud.machines && cloud.machines.length) return cloud.machines;
-  return INSP_INIT.machines;
+  const cloudMachines = (cloud && cloud.machines) ? cloud.machines : [];
+  return INSP_INIT.machines.map(initM => {
+    const cloudM = cloudMachines.find(c => c.asset_no === initM.asset_no && c.site === initM.site);
+    return {
+      ...initM,
+      matrix: cloudM && cloudM.matrix ? {...initM.matrix, ...cloudM.matrix} : (initM.matrix || {})
+    };
+  });
 }
 
 function setSaveStatus(state, txt){
