@@ -133,7 +133,7 @@ const SAFETY_TASKS = [
     content:'년 초 안전보건 선포식 진행 (관리감독자 임명, 시상 등)',
     document:'각 임명서 등', requirement:'-',
     assignedTo:['대표이사','박재걸 전무'] },
-  { id:21, group:'안전', name:'업무평가', vendor:'자체시행', period:'1회/년', periodCode:'yearly', dueMonth:12,
+  { id:21, group:'안전', name:'업무평가', vendor:'자체시행', period:'1회/년', periodCode:'yearly', dueMonth:11,
     content:'안전보건관리책임자, 관리감독자 업무 평가',
     document:'각 업무평가서', requirement:'-',
     assignedTo:['박재걸 전무','박제성 부장'] },
@@ -260,28 +260,28 @@ function calcNextDue(task, lastDoneISO){
     case 'bimonthlyOdd': // 1회/격월 → 홀수월 말일 (1,3,5,7,9,11)
       { let m = M; if(m % 2 === 0) m += 1; if(m > 12){ return ymd(endOf(Y+1, 1)); }
         return ymd(endOf(Y, m)); }
-    case 'quarterly': // 1회/분기 → 3,6,9,12월 말일
-      { const qm = [3,6,9,12].find(m=>m>=M);
+    case 'quarterly': // 1회/분기 → 3,6,9,11월 말일 (12→11 12월 부담 회피)
+      { const qm = [3,6,9,11].find(m=>m>=M);
         if(qm) return ymd(endOf(Y, qm));
         return ymd(endOf(Y+1, 3)); }
-    case 'semiannual': // 1회/반기 → 6,12월 말일
-      { return ymd(endOf(Y, M<=6 ? 6 : 12)); }
+    case 'semiannual': // 1회/반기 → 6,11월 말일 (12→11)
+      { return ymd(endOf(Y, M<=6 ? 6 : 11)); }
     case 'biannual': // 2회/년 (위험성평가: 4,10월)
       { const ms = task.dueMonths || [4,10];
         const next = ms.find(m=>m>=M) || (ms[0]+12);
         const yy = next>12 ? Y+1 : Y;
         const mm = next>12 ? next-12 : next;
         return ymd(endOf(yy, mm)); }
-    case 'yearly': // 1회/년 (특정월 있으면 그 달, 없으면 12월)
-      { const dm = task.dueMonth || 12;
+    case 'yearly': // 1회/년 (특정월 있으면 그 달, 없으면 11월)
+      { const dm = task.dueMonth || 11;
         if(M <= dm) return ymd(endOf(Y, dm));
         return ymd(endOf(Y+1, dm)); }
     case 'biennial': // 1회/2년
-      { if(!last) return ymd(endOf(Y, 12));
+      { if(!last) return ymd(endOf(Y, 11));
         const d = new Date(last); d.setFullYear(d.getFullYear()+2);
         return ymd(d); }
     case 'triennial': // 1회/3년
-      { if(!last) return ymd(endOf(Y, 12));
+      { if(!last) return ymd(endOf(Y, 11));
         const d = new Date(last); d.setFullYear(d.getFullYear()+3);
         return ymd(d); }
     case 'everyOtherDay': // 격일
