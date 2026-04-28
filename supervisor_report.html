@@ -22,7 +22,7 @@ body{font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
 .back-link{position:absolute;top:18px;right:170px;font-size:11px;color:#fff;text-decoration:none;background:rgba(255,255,255,0.08);padding:5px 12px;border-radius:4px;border:1px solid rgba(255,255,255,0.15);}
 
-.container{max-width:1080px;margin:0 auto;padding:18px 18px 60px;}
+.container{max-width:1280px;margin:0 auto;padding:18px 18px 60px;}
 
 .controls-card{background:#fff;border:1px solid #e5e7eb;border-radius:6px;padding:14px 18px;margin-bottom:16px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;}
 .controls-card label{font-size:12px;font-weight:700;color:#475569;display:flex;flex-direction:column;gap:4px;}
@@ -85,14 +85,12 @@ body{font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif
 .rpt-matrix thead th{background:#0d1f3c;color:#fff;font-weight:700;font-size:7pt;height:5mm;}
 .rpt-matrix th.col-cat{width:10mm;}
 .rpt-matrix th.col-item{width:auto;}
-.rpt-matrix th.col-day{width:5mm;}
-.rpt-matrix th.col-tot{width:13mm;}
+.rpt-matrix th.col-day{width:5.5mm;}
 .rpt-matrix tbody td.cat{background:#1a3a6e;color:#fff;font-weight:800;writing-mode:vertical-rl;text-orientation:mixed;font-size:8pt;}
 .rpt-matrix tbody td.item-label{background:#f8fafc;text-align:left;padding:2px 4px;font-size:7.5pt;line-height:1.3;color:#1c1917;font-weight:500;}
 .rpt-matrix tbody td.day-o{background:#dcfce7;color:#166534;font-weight:800;}
 .rpt-matrix tbody td.day-x{background:#fee2e2;color:#991b1b;font-weight:800;}
 .rpt-matrix tbody td.day-empty{color:#cbd5e1;}
-.rpt-matrix tbody td.tot{background:#fafbfc;font-size:7.5pt;font-weight:700;}
 
 /* 미이행 사항 표 */
 .rpt-x-table, .rpt-notes-table{width:100%;border-collapse:collapse;font-size:9pt;}
@@ -131,13 +129,11 @@ body{font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif
   .rpt-section h3{font-size:9pt;padding:3px 8px;margin-bottom:1.5mm;}
   .rpt-matrix{font-size:6.5pt;}
   .rpt-matrix thead th{font-size:6.5pt;height:4mm;}
-  .rpt-matrix th.col-day{width:4.8mm;}
+  .rpt-matrix th.col-day{width:5.3mm;}
   .rpt-matrix th.col-cat{width:9.5mm;}
-  .rpt-matrix th.col-tot{width:12mm;}
   .rpt-matrix tbody td{padding:1px 0.5px;}
   .rpt-matrix tbody td.cat{font-size:7pt;}
   .rpt-matrix tbody td.item-label{padding:1.5px 3px;font-size:6.8pt;line-height:1.25;}
-  .rpt-matrix tbody td.tot{font-size:6.5pt;}
   .rpt-footer{margin-top:3mm;padding-top:2mm;font-size:7pt;line-height:1.4;}
   /* 미이행/특이사항 페이지는 데이터 있을 때만 새 페이지로 */
   .rpt-page-2{page-break-before:always;}
@@ -347,11 +343,11 @@ function render(){
   $('meta-site').textContent = leader.site;
   $('print-date').textContent = new Date().toISOString().slice(0,10);
 
-  // 매트릭스 + 통계
+  // 매트릭스 (원본 xlsx 양식과 동일: 분류 / 항목 / 1~말일)
   let totalO=0, totalX=0, totalEmpty=0;
   let head = '<thead><tr><th class="col-cat">분류</th><th class="col-item">점검 항목</th>';
   for(let d=1; d<=days; d++) head += `<th class="col-day">${d}</th>`;
-  head += '<th class="col-tot">합계</th></tr></thead>';
+  head += '</tr></thead>';
   let body = '<tbody>';
   let counter = 0;
   CHECKLIST.forEach((g, gi) => {
@@ -362,18 +358,17 @@ function render(){
         row += `<td class="cat" rowspan="${g.items.length}">${g.roman}. ${g.cat}</td>`;
       }
       row += `<td class="item-label">${counter}. ${q}</td>`;
-      let oCount=0, xCount=0;
       for(let d=1; d<=days; d++){
         const date = `${Y}-${pad(M)}-${pad(d)}`;
         const rec = all[`${date}__${leader.name}`];
         const v = rec && rec.items ? (rec.items[counter] || '') : '';
         const cls = v === 'O' ? 'day-o' : (v === 'X' ? 'day-x' : 'day-empty');
         row += `<td class="${cls}">${v || '·'}</td>`;
-        if(v === 'O'){ oCount++; totalO++; }
-        else if(v === 'X'){ xCount++; totalX++; }
+        if(v === 'O') totalO++;
+        else if(v === 'X') totalX++;
         else totalEmpty++;
       }
-      row += `<td class="tot">O ${oCount} / X ${xCount}</td></tr>`;
+      row += '</tr>';
       body += row;
     });
   });
