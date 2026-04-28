@@ -1,10 +1,11 @@
-/* 안전검사(위험기계) 초기 데이터 — 민감 컬럼(설비명/모델/업체/제작연월/안전검사번호/비고) 제외
+/* 안전검사(위험기계) 초기 데이터 — 민감 컬럼(모델/업체/제작연월/안전검사번호/비고) 제외
    엑셀 EHS연간계획표.xls 안전검사(2026) 시트에서 자동 추출 */
 const INSP_INIT = {
   "machines": [
     {
       "site": "본사",
       "asset_no": "기계-78",
+      "eqp_name": "사출기",
       "capacity": "330T",
       "mgmt_no": "1호기",
       "valid_start": "2020-07-27",
@@ -16,6 +17,7 @@ const INSP_INIT = {
     {
       "site": "본사",
       "asset_no": "기계-160",
+      "eqp_name": "사출기",
       "capacity": "900T",
       "mgmt_no": "1호기",
       "valid_start": "2026-02-12",
@@ -27,6 +29,7 @@ const INSP_INIT = {
     {
       "site": "본사",
       "asset_no": "기계-109-01",
+      "eqp_name": "사출기",
       "capacity": "330T",
       "mgmt_no": "2호기",
       "valid_start": "2025-10-07",
@@ -40,6 +43,7 @@ const INSP_INIT = {
     {
       "site": "본사",
       "asset_no": "기계-114",
+      "eqp_name": "사출기",
       "capacity": "330T",
       "mgmt_no": "3호기",
       "valid_start": "2025-10-07",
@@ -53,6 +57,7 @@ const INSP_INIT = {
     {
       "site": "본사",
       "asset_no": "기계-152",
+      "eqp_name": "사출기",
       "capacity": "450T",
       "mgmt_no": "5호기",
       "valid_start": "2026-02-12",
@@ -64,6 +69,7 @@ const INSP_INIT = {
     {
       "site": "본사",
       "asset_no": "기계-44",
+      "eqp_name": "사출기",
       "capacity": "60T",
       "mgmt_no": "6호기(12호기)",
       "valid_start": "2024-07-27",
@@ -77,6 +83,7 @@ const INSP_INIT = {
     {
       "site": "본사",
       "asset_no": "기계-10",
+      "eqp_name": "사출기",
       "capacity": "60T",
       "mgmt_no": "7호기(10호기)",
       "valid_start": "2024-07-27",
@@ -90,6 +97,7 @@ const INSP_INIT = {
     {
       "site": "본사",
       "asset_no": "기계-9",
+      "eqp_name": "사출기",
       "capacity": "60T",
       "mgmt_no": "8호기(9호기)",
       "valid_start": "2024-07-27",
@@ -103,6 +111,7 @@ const INSP_INIT = {
     {
       "site": "본사",
       "asset_no": "기계-8",
+      "eqp_name": "사출기",
       "capacity": "80T",
       "mgmt_no": "9호기(6호기)",
       "valid_start": "2024-07-27",
@@ -116,6 +125,7 @@ const INSP_INIT = {
     {
       "site": "본사",
       "asset_no": "기계-109-04",
+      "eqp_name": "사출기",
       "capacity": "80T",
       "mgmt_no": "10호기(7호기)",
       "valid_start": "2025-10-07",
@@ -129,6 +139,7 @@ const INSP_INIT = {
     {
       "site": "본사",
       "asset_no": "기계-109-04",
+      "eqp_name": "사출기",
       "capacity": "80T",
       "mgmt_no": "11호기(8호기)",
       "valid_start": "2025-10-07",
@@ -142,6 +153,7 @@ const INSP_INIT = {
     {
       "site": "본사",
       "asset_no": "기계-172",
+      "eqp_name": "사출기",
       "capacity": "80T",
       "mgmt_no": "12호기",
       "valid_start": "2024-10-15",
@@ -153,6 +165,7 @@ const INSP_INIT = {
     {
       "site": "본사",
       "asset_no": "기계-11",
+      "eqp_name": "사출기",
       "capacity": "100T",
       "mgmt_no": "13호기(15호기)",
       "valid_start": "2024-07-27",
@@ -166,6 +179,7 @@ const INSP_INIT = {
     {
       "site": "본사",
       "asset_no": "기계-176",
+      "eqp_name": "사출기",
       "capacity": "110T",
       "mgmt_no": "14호기",
       "valid_start": "",
@@ -177,6 +191,7 @@ const INSP_INIT = {
     {
       "site": "본사",
       "asset_no": "기계-2",
+      "eqp_name": "사출기",
       "capacity": "150T",
       "mgmt_no": "15호기(16호기)",
       "valid_start": "2024-07-27",
@@ -190,6 +205,7 @@ const INSP_INIT = {
     {
       "site": "본사",
       "asset_no": "기계-109-02",
+      "eqp_name": "사출기",
       "capacity": "150T",
       "mgmt_no": "16호기(13호기)",
       "valid_start": "2025-10-07",
@@ -203,6 +219,7 @@ const INSP_INIT = {
     {
       "site": "본사",
       "asset_no": "기계-109-03",
+      "eqp_name": "사출기",
       "capacity": "150T",
       "mgmt_no": "17호기(14호기)",
       "valid_start": "2025-10-07",
@@ -216,6 +233,7 @@ const INSP_INIT = {
     {
       "site": "본사",
       "asset_no": "기계-171",
+      "eqp_name": "사출기",
       "capacity": "170T",
       "mgmt_no": "18호기",
       "valid_start": "2024-10-15",
@@ -227,6 +245,7 @@ const INSP_INIT = {
     {
       "site": "본사",
       "asset_no": "기계-173",
+      "eqp_name": "사출기",
       "capacity": "280T",
       "mgmt_no": "19호기",
       "valid_start": "2024-06-13",
@@ -238,6 +257,7 @@ const INSP_INIT = {
     {
       "site": "본사",
       "asset_no": "기계-166",
+      "eqp_name": "사출기",
       "capacity": "250T",
       "mgmt_no": "20호기(17호기)",
       "valid_start": "2025-10-07",
@@ -249,6 +269,7 @@ const INSP_INIT = {
     {
       "site": "본사",
       "asset_no": "기계-6",
+      "eqp_name": "사출기",
       "capacity": "250T",
       "mgmt_no": "21호기(18호기)",
       "valid_start": "2024-07-27",
@@ -262,6 +283,7 @@ const INSP_INIT = {
     {
       "site": "본사",
       "asset_no": "기계-124",
+      "eqp_name": "사출기",
       "capacity": "250T",
       "mgmt_no": "22호기(19호기)",
       "valid_start": "2026-02-12",
@@ -275,6 +297,7 @@ const INSP_INIT = {
     {
       "site": "본사",
       "asset_no": "기계-124",
+      "eqp_name": "사출기",
       "capacity": "250T",
       "mgmt_no": "23호기(20호기)",
       "valid_start": "2026-02-12",
@@ -288,6 +311,7 @@ const INSP_INIT = {
     {
       "site": "본사",
       "asset_no": "기계-43",
+      "eqp_name": "사출기",
       "capacity": "60T",
       "mgmt_no": "24호기(11호기)",
       "valid_start": "2024-07-27",
@@ -301,6 +325,7 @@ const INSP_INIT = {
     {
       "site": "본사",
       "asset_no": "기계-7",
+      "eqp_name": "사출기",
       "capacity": "120T",
       "mgmt_no": "13호기",
       "valid_start": "2020-07-27",
@@ -312,6 +337,7 @@ const INSP_INIT = {
     {
       "site": "본사",
       "asset_no": "미등록",
+      "eqp_name": "천장주행크레인",
       "capacity": "5T",
       "mgmt_no": "C-1",
       "valid_start": "2024-11-16",
@@ -325,6 +351,7 @@ const INSP_INIT = {
     {
       "site": "본사",
       "asset_no": "미등록",
+      "eqp_name": "천장주행크레인",
       "capacity": "5T",
       "mgmt_no": "C-2",
       "valid_start": "2024-11-16",
@@ -338,6 +365,7 @@ const INSP_INIT = {
     {
       "site": "본사",
       "asset_no": "미등록",
+      "eqp_name": "천장주행크레인",
       "capacity": "3T",
       "mgmt_no": "C-3",
       "valid_start": "2025-10-07",
@@ -351,6 +379,7 @@ const INSP_INIT = {
     {
       "site": "본사",
       "asset_no": "시설장치-41",
+      "eqp_name": "리프트",
       "capacity": "2T",
       "mgmt_no": "L-1",
       "valid_start": "2024-11-16",
@@ -364,6 +393,7 @@ const INSP_INIT = {
     {
       "site": "본사",
       "asset_no": "시설장치-41",
+      "eqp_name": "리프트",
       "capacity": "2T",
       "mgmt_no": "L-2",
       "valid_start": "2024-11-16",
@@ -377,6 +407,7 @@ const INSP_INIT = {
     {
       "site": "본사",
       "asset_no": "미등록",
+      "eqp_name": "압력용기",
       "capacity": "1.0㎥",
       "mgmt_no": "E-1",
       "valid_start": "2025-10-07",
@@ -390,6 +421,7 @@ const INSP_INIT = {
     {
       "site": "본사",
       "asset_no": "미등록",
+      "eqp_name": "압력용기",
       "capacity": "0.0037㎥",
       "mgmt_no": "",
       "valid_start": "",
@@ -403,6 +435,7 @@ const INSP_INIT = {
     {
       "site": "본사",
       "asset_no": "미등록",
+      "eqp_name": "변전기",
       "capacity": "",
       "mgmt_no": "",
       "valid_start": "2023-05-18",
@@ -414,6 +447,7 @@ const INSP_INIT = {
     {
       "site": "본사",
       "asset_no": "건물-4 일부",
+      "eqp_name": "태양광",
       "capacity": "3kw",
       "mgmt_no": "",
       "valid_start": "2025-01-15",
@@ -427,6 +461,7 @@ const INSP_INIT = {
     {
       "site": "본사",
       "asset_no": "시설장치-63",
+      "eqp_name": "태양광",
       "capacity": "115kw",
       "mgmt_no": "",
       "valid_start": "2024-11-15",
@@ -438,6 +473,7 @@ const INSP_INIT = {
     {
       "site": "본사",
       "asset_no": "한국가스E.N.G",
+      "eqp_name": "정압기",
       "capacity": "",
       "mgmt_no": "",
       "valid_start": "2024-03-12",
@@ -449,6 +485,7 @@ const INSP_INIT = {
     {
       "site": "화성공장",
       "asset_no": "기계-136",
+      "eqp_name": "사출기",
       "capacity": "150T",
       "mgmt_no": "21호기",
       "valid_start": "",
@@ -462,6 +499,7 @@ const INSP_INIT = {
     {
       "site": "화성공장",
       "asset_no": "기계-99",
+      "eqp_name": "사출기",
       "capacity": "150T",
       "mgmt_no": "22호기(13호기)",
       "valid_start": "2022-07-27",
@@ -475,6 +513,7 @@ const INSP_INIT = {
     {
       "site": "화성공장",
       "asset_no": "기계-90",
+      "eqp_name": "천장주행크레인",
       "capacity": "2.8T",
       "mgmt_no": "C-1",
       "valid_start": "2025-09-01",
@@ -488,6 +527,7 @@ const INSP_INIT = {
     {
       "site": "화성공장",
       "asset_no": "미등록",
+      "eqp_name": "압력용기",
       "capacity": "1.0㎥",
       "mgmt_no": "E-1",
       "valid_start": "2024-07-27",
@@ -501,6 +541,7 @@ const INSP_INIT = {
     {
       "site": "화성공장",
       "asset_no": "미등록",
+      "eqp_name": "압력용기",
       "capacity": "1.0㎥",
       "mgmt_no": "E-2",
       "valid_start": "2024-07-27",
@@ -514,6 +555,7 @@ const INSP_INIT = {
     {
       "site": "화성공장",
       "asset_no": "미등록",
+      "eqp_name": "압력용기",
       "capacity": "0.5㎥",
       "mgmt_no": "E-3",
       "valid_start": "2024-07-27",
@@ -527,6 +569,7 @@ const INSP_INIT = {
     {
       "site": "화성공장",
       "asset_no": "미등록",
+      "eqp_name": "압력용기",
       "capacity": "0.05㎥",
       "mgmt_no": "V-D-1",
       "valid_start": "2024-07-27",
@@ -540,6 +583,7 @@ const INSP_INIT = {
     {
       "site": "화성공장",
       "asset_no": "미등록",
+      "eqp_name": "압력용기",
       "capacity": "0.05㎥",
       "mgmt_no": "V-D-2",
       "valid_start": "2024-07-27",
@@ -553,6 +597,7 @@ const INSP_INIT = {
     {
       "site": "화성공장",
       "asset_no": "미등록",
+      "eqp_name": "압력용기",
       "capacity": "0.08㎥",
       "mgmt_no": "E-D-1",
       "valid_start": "2024-07-27",
@@ -566,6 +611,7 @@ const INSP_INIT = {
     {
       "site": "화성공장",
       "asset_no": "미등록",
+      "eqp_name": "압력용기",
       "capacity": "0.08㎥",
       "mgmt_no": "E-D-2",
       "valid_start": "2024-07-27",
@@ -579,6 +625,7 @@ const INSP_INIT = {
     {
       "site": "화성공장",
       "asset_no": "미등록",
+      "eqp_name": "리프트",
       "capacity": "0.4Ton",
       "mgmt_no": "D-1",
       "valid_start": "2024-12-05",
@@ -590,6 +637,7 @@ const INSP_INIT = {
     {
       "site": "화성공장",
       "asset_no": "미등록",
+      "eqp_name": "리프트",
       "capacity": "0.4Ton",
       "mgmt_no": "D-2",
       "valid_start": "2024-12-05",
@@ -601,6 +649,7 @@ const INSP_INIT = {
     {
       "site": "화성공장",
       "asset_no": "미등록",
+      "eqp_name": "컨베이어",
       "capacity": "119m",
       "mgmt_no": "L-1",
       "valid_start": "2024-12-05",
@@ -612,6 +661,7 @@ const INSP_INIT = {
     {
       "site": "화성공장",
       "asset_no": "미등록",
+      "eqp_name": "산업용로봇",
       "capacity": "",
       "mgmt_no": "",
       "valid_start": "2025-12-30",
@@ -623,6 +673,7 @@ const INSP_INIT = {
     {
       "site": "화성공장",
       "asset_no": "미등록",
+      "eqp_name": "변전기",
       "capacity": "",
       "mgmt_no": "",
       "valid_start": "2022-10-27",
