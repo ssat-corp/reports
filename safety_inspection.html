@@ -7,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <title>안전검사 (위험기계) | 산업안전보건</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-<script src="safety_inspection_data.js?v=20260428i"></script>
+<script src="safety_inspection_data.js?v=20260428j"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
 *{margin:0;padding:0;box-sizing:border-box;}
@@ -438,30 +438,35 @@ function openCellPopover(td, idx, key){
   pop.style.top = top + 'px';
   pop.classList.remove('hidden');
 
+  // 즉시 반영 헬퍼: localStorage 동기 업데이트 → render → 백그라운드 클라우드 동기화
+  function applyAndSave(ms){
+    const payload = {machines: ms, years: INSP_INIT.years, updated: new Date().toISOString()};
+    localStorage.setItem('safety_safetyInspection', JSON.stringify(payload)); // 즉시 (sync)
+    pop.classList.add('hidden');
+    render(); // localStorage 갱신된 상태로 즉시 화면 그림
+    autoCloudSave(ms); // 백그라운드 - Supabase 업로드 (await 안 함)
+  }
+
   // 상태 버튼 클릭 → 즉시 적용 + 저장 + 닫기
   pop.querySelectorAll('.pop-row button').forEach(b => {
-    b.addEventListener('click', async ev => {
+    b.addEventListener('click', ev => {
       ev.stopPropagation();
       ev.preventDefault();
       const newStatus = b.dataset.set;
       const memo = pop.querySelector('#pop-memo').value.trim();
       const ms = getMachines();
       setCellData(ms[idx], key, newStatus, memo);
-      pop.classList.add('hidden');
-      render();
-      await autoCloudSave(ms);
+      applyAndSave(ms);
     });
   });
   // 닫기 / 메모만 저장
   pop.querySelector('.close').addEventListener('click', () => pop.classList.add('hidden'));
-  pop.querySelector('.save-memo').addEventListener('click', async () => {
+  pop.querySelector('.save-memo').addEventListener('click', () => {
     const memo = pop.querySelector('#pop-memo').value.trim();
     const ms = getMachines();
     const cur = getCellData(ms[idx], key);
     setCellData(ms[idx], key, cur.status, memo);
-    pop.classList.add('hidden');
-    render();
-    await autoCloudSave(ms);
+    applyAndSave(ms);
   });
 }
 
