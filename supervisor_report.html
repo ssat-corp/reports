@@ -39,7 +39,7 @@ body{font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif
   width:297mm;
   min-height:210mm;
   margin:0 auto 10px;
-  padding:7mm 8mm;
+  padding:5mm 5mm;
   border:1px solid #d6d3d1;
   box-shadow:0 4px 18px rgba(0,0,0,0.08);
   font-size:10pt;
@@ -53,14 +53,14 @@ body{font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif
 .rpt-system{font-size:9pt;font-weight:700;color:#475569;text-align:right;letter-spacing:0.05em;}
 
 /* 메타 표 (왼쪽) + 결재란 (오른쪽) */
-.rpt-info-row{display:grid;grid-template-columns:1fr 75mm;gap:6mm;margin-bottom:6mm;}
+.rpt-info-row{display:grid;grid-template-columns:1fr 66mm;gap:4mm;margin-bottom:5mm;}
 .rpt-meta-table{width:100%;border-collapse:collapse;font-size:9.5pt;}
-.rpt-meta-table th, .rpt-meta-table td{border:1px solid #475569;padding:5px 9px;text-align:left;}
-.rpt-meta-table th{background:#e2e8f0;font-weight:700;color:#0d1f3c;width:24mm;font-size:9pt;}
+.rpt-meta-table th, .rpt-meta-table td{border:1px solid #475569;padding:4px 8px;text-align:left;}
+.rpt-meta-table th{background:#e2e8f0;font-weight:700;color:#0d1f3c;width:22mm;font-size:9pt;}
 
-.rpt-approval{width:100%;border-collapse:collapse;font-size:8.5pt;}
-.rpt-approval th{background:#0d1f3c;color:#fff;padding:4px 6px;border:1px solid #0d1f3c;font-weight:700;letter-spacing:0.04em;}
-.rpt-approval td.sig{height:18mm;border:1px solid #475569;background:#fafbfc;text-align:center;vertical-align:bottom;font-size:8pt;color:#94a3b8;padding:2px 4px 4px;}
+.rpt-approval{width:100%;border-collapse:collapse;font-size:8pt;table-layout:fixed;}
+.rpt-approval th{background:#0d1f3c;color:#fff;padding:3px 4px;border:1px solid #0d1f3c;font-weight:700;letter-spacing:0;line-height:1.3;}
+.rpt-approval td.sig{height:16mm;border:1px solid #475569;background:#fafbfc;text-align:center;vertical-align:bottom;font-size:7.5pt;color:#94a3b8;padding:2px 4px 4px;}
 .rpt-approval td.sig::after{content:'(서명)';font-size:7pt;color:#cbd5e1;}
 
 /* 통계 요약 */
@@ -83,10 +83,10 @@ body{font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif
 .rpt-matrix{width:100%;border-collapse:collapse;font-size:7.5pt;table-layout:fixed;}
 .rpt-matrix th, .rpt-matrix td{border:0.5px solid #475569;padding:1.5px 1px;text-align:center;}
 .rpt-matrix thead th{background:#0d1f3c;color:#fff;font-weight:700;font-size:7pt;height:5mm;}
-.rpt-matrix th.col-cat{width:14mm;}
+.rpt-matrix th.col-cat{width:10mm;}
 .rpt-matrix th.col-item{width:auto;}
-.rpt-matrix th.col-day{width:5.5mm;}
-.rpt-matrix th.col-tot{width:14mm;}
+.rpt-matrix th.col-day{width:5mm;}
+.rpt-matrix th.col-tot{width:13mm;}
 .rpt-matrix tbody td.cat{background:#1a3a6e;color:#fff;font-weight:800;writing-mode:vertical-rl;text-orientation:mixed;font-size:8pt;}
 .rpt-matrix tbody td.item-label{background:#f8fafc;text-align:left;padding:2px 4px;font-size:7.5pt;line-height:1.3;color:#1c1917;font-weight:500;}
 .rpt-matrix tbody td.day-o{background:#dcfce7;color:#166534;font-weight:800;}
@@ -122,16 +122,18 @@ body{font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif
   .rpt-header{margin-bottom:3mm;}
   .rpt-title-row{margin-bottom:2mm;padding-bottom:2mm;}
   .rpt-title{font-size:14pt;}
-  .rpt-info-row{grid-template-columns:1fr 70mm;gap:4mm;margin-bottom:3mm;}
-  .rpt-meta-table th, .rpt-meta-table td{padding:3px 7px;font-size:8.5pt;}
-  .rpt-approval td.sig{height:12mm;}
+  .rpt-info-row{grid-template-columns:1fr 64mm;gap:3mm;margin-bottom:3mm;}
+  .rpt-meta-table th, .rpt-meta-table td{padding:3px 6px;font-size:8.5pt;}
+  .rpt-approval{font-size:7.5pt;}
+  .rpt-approval th{padding:3px 3px;}
+  .rpt-approval td.sig{height:11mm;}
   .rpt-section{page-break-inside:avoid;margin-bottom:3mm;}
   .rpt-section h3{font-size:9pt;padding:3px 8px;margin-bottom:1.5mm;}
   .rpt-matrix{font-size:6.5pt;}
   .rpt-matrix thead th{font-size:6.5pt;height:4mm;}
-  .rpt-matrix th.col-day{width:5.3mm;}
-  .rpt-matrix th.col-cat{width:11mm;}
-  .rpt-matrix th.col-tot{width:13mm;}
+  .rpt-matrix th.col-day{width:4.8mm;}
+  .rpt-matrix th.col-cat{width:9.5mm;}
+  .rpt-matrix th.col-tot{width:12mm;}
   .rpt-matrix tbody td{padding:1px 0.5px;}
   .rpt-matrix tbody td.cat{font-size:7pt;}
   .rpt-matrix tbody td.item-label{padding:1.5px 3px;font-size:6.8pt;line-height:1.25;}
@@ -190,7 +192,7 @@ body{font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif
         </table>
         <table class="rpt-approval">
           <thead>
-            <tr><th>담당<br>점검자</th><th>검토<br>안전보건관리담당자</th><th>승인<br>안전보건관리책임자</th></tr>
+            <tr><th>점검<br>관리감독자</th><th>검토<br>안전보건담당자</th><th>승인<br>대표이사</th></tr>
           </thead>
           <tbody>
             <tr>
