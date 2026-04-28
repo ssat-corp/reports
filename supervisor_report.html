@@ -33,18 +33,19 @@ body{font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif
 .btn-print:hover{background:#991b1b;}
 .btn-outline{background:#fff;color:#1a3a6e;border:1px solid #1a3a6e;}
 
-/* ===== 보고서 본문 (A4 출력 양식) ===== */
+/* ===== 보고서 본문 (A4 가로 출력 양식) ===== */
 .report-page{
   background:#fff;
-  width:210mm;
-  min-height:297mm;
-  margin:0 auto;
-  padding:14mm 14mm 14mm;
+  width:297mm;
+  min-height:210mm;
+  margin:0 auto 10px;
+  padding:7mm 8mm;
   border:1px solid #d6d3d1;
   box-shadow:0 4px 18px rgba(0,0,0,0.08);
   font-size:10pt;
   color:#1c1917;
 }
+.container{overflow-x:auto;}
 .rpt-header{margin-bottom:8mm;}
 .rpt-title-row{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:6mm;border-bottom:2.5px solid #0d1f3c;padding-bottom:4mm;}
 .rpt-company{font-size:11pt;font-weight:700;color:#475569;letter-spacing:0.05em;}
@@ -108,20 +109,36 @@ body{font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);background:#0d1f3c;color:#fff;padding:12px 24px;border-radius:6px;font-size:13px;font-weight:600;opacity:0;transition:all 0.3s;z-index:2000;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
-/* ===== 인쇄 (PDF) 전용 ===== */
+/* ===== 인쇄 (PDF) 전용 — 1페이지 가로 무여백 압축 ===== */
 @media print {
-  @page{size:A4 landscape;margin:8mm;}
-  body{background:#fff;}
+  @page{size:A4 landscape;margin:5mm;}
+  body{background:#fff;font-size:9pt;}
   .no-print, .page-header, .controls-card, .toast{display:none !important;}
-  .container{max-width:none;padding:0;}
+  .container{max-width:none;padding:0;overflow:visible;}
   .report-page{
     width:auto;min-height:auto;margin:0;padding:0;
-    border:none;box-shadow:none;
+    border:none;box-shadow:none;font-size:9pt;
   }
-  .rpt-section{page-break-inside:avoid;}
+  .rpt-header{margin-bottom:3mm;}
+  .rpt-title-row{margin-bottom:2mm;padding-bottom:2mm;}
+  .rpt-title{font-size:14pt;}
+  .rpt-info-row{grid-template-columns:1fr 70mm;gap:4mm;margin-bottom:3mm;}
+  .rpt-meta-table th, .rpt-meta-table td{padding:3px 7px;font-size:8.5pt;}
+  .rpt-approval td.sig{height:12mm;}
+  .rpt-section{page-break-inside:avoid;margin-bottom:3mm;}
+  .rpt-section h3{font-size:9pt;padding:3px 8px;margin-bottom:1.5mm;}
+  .rpt-matrix{font-size:6.5pt;}
+  .rpt-matrix thead th{font-size:6.5pt;height:4mm;}
+  .rpt-matrix th.col-day{width:5.3mm;}
+  .rpt-matrix th.col-cat{width:11mm;}
+  .rpt-matrix th.col-tot{width:13mm;}
+  .rpt-matrix tbody td{padding:1px 0.5px;}
   .rpt-matrix tbody td.cat{font-size:7pt;}
-  .rpt-matrix{font-size:7pt;}
-  .rpt-approval td.sig{height:14mm;}
+  .rpt-matrix tbody td.item-label{padding:1.5px 3px;font-size:6.8pt;line-height:1.25;}
+  .rpt-matrix tbody td.tot{font-size:6.5pt;}
+  .rpt-footer{margin-top:3mm;padding-top:2mm;font-size:7pt;line-height:1.4;}
+  /* 미이행/특이사항 페이지는 데이터 있을 때만 새 페이지로 */
+  .rpt-page-2{page-break-before:always;}
 }
 </style>
 </head>
@@ -156,23 +173,19 @@ body{font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif
     <div class="rpt-header">
       <div class="rpt-title-row">
         <div class="rpt-company">신성오토텍(주)</div>
-        <div class="rpt-title">관리감독자 자체점검표 (월간)</div>
-        <div class="rpt-system">ISO 45001 · IATF 16949</div>
+        <div class="rpt-title" id="rpt-title">관리감독자 자체점검표</div>
+        <div style="width:1px;"></div>
       </div>
 
       <div class="rpt-info-row">
         <table class="rpt-meta-table">
           <tr>
-            <th>문서번호</th><td id="meta-docno">-</td>
-            <th>점검월</th><td id="meta-month">-</td>
-          </tr>
-          <tr>
             <th>관리감독자</th><td id="meta-leader">-</td>
-            <th>부서·공정</th><td id="meta-dept">-</td>
+            <th>점검년도</th><td id="meta-year">-</td>
           </tr>
           <tr>
+            <th>부서·공정</th><td id="meta-dept">-</td>
             <th>사업장</th><td id="meta-site">-</td>
-            <th>점검 영역</th><td>5분류 25항목 (위험성평가 결과 반영)</td>
           </tr>
         </table>
         <table class="rpt-approval">
@@ -190,14 +203,6 @@ body{font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif
       </div>
     </div>
 
-    <!-- 통계 -->
-    <div class="rpt-stats">
-      <div class="rpt-stat ok"><div class="lbl">이행 (O)</div><div class="val" id="stat-o">0</div><div class="sub">건</div></div>
-      <div class="rpt-stat alert"><div class="lbl">미이행 (X)</div><div class="val" id="stat-x">0</div><div class="sub">건 (시정 필요)</div></div>
-      <div class="rpt-stat"><div class="lbl">미응답</div><div class="val" id="stat-empty">0</div><div class="sub">건</div></div>
-      <div class="rpt-stat"><div class="lbl">이행률</div><div class="val" id="stat-rate">-</div><div class="sub">%</div></div>
-    </div>
-
     <!-- 매트릭스 -->
     <div class="rpt-section">
       <h3>1. 일자별 점검 결과 (5분류 × 25항목 × 일자)</h3>
@@ -206,19 +211,7 @@ body{font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif
       </div>
     </div>
 
-    <!-- 미이행 요약 -->
-    <div class="rpt-section">
-      <h3>2. 미이행(X) 항목 일자별 요약 및 시정조치</h3>
-      <div id="x-summary"></div>
-    </div>
-
-    <!-- 특이사항 -->
-    <div class="rpt-section">
-      <h3>3. 특이사항 및 조치 내용 (일자별)</h3>
-      <div id="notes-summary"></div>
-    </div>
-
-    <!-- 푸터 (법적 안내) -->
+    <!-- 푸터 (법적 안내) - 1페이지 끝 -->
     <div class="rpt-footer">
       <div><strong>※ 법적 안내</strong></div>
       <div>· 본 보고서는 산업안전보건법령에 따른 <strong>관리감독자 자체점검 기록</strong>이며, 작성일로부터 <strong>3년간 보존</strong>해야 합니다.</div>
@@ -227,6 +220,18 @@ body{font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif
       <div style="margin-top:1mm;color:#94a3b8;">발행: 신성오토텍(주) 안전보건관리시스템 · 출력일: <span id="print-date">-</span></div>
     </div>
 
+  </div>
+
+  <!-- 2페이지 (미이행/특이사항 — 데이터 있을 때만) -->
+  <div class="report-page rpt-page-2" id="report-content-2" style="display:none;">
+    <div class="rpt-section">
+      <h3>2. 미이행(X) 항목 일자별 요약 및 시정조치</h3>
+      <div id="x-summary"></div>
+    </div>
+    <div class="rpt-section">
+      <h3>3. 특이사항 및 조치 내용 (일자별)</h3>
+      <div id="notes-summary"></div>
+    </div>
   </div>
 
 </div>
@@ -332,10 +337,10 @@ function render(){
   const leader = LEADERS[lcode];
   const all = DB.getObj('safetyMgrDaily');
 
-  // 메타
-  $('meta-docno').textContent = `SCK-RPT-${Y}${pad(M)}-${leader.code}`;
-  $('meta-month').textContent = `${Y}년 ${M}월 (${days}일)`;
+  // 제목에 월 표시 + 메타
+  $('rpt-title').textContent = `관리감독자 자체점검표 (${M}월)`;
   $('meta-leader').textContent = leader.name;
+  $('meta-year').textContent = `${Y}년`;
   $('meta-dept').textContent = leader.dept;
   $('meta-site').textContent = leader.site;
   $('print-date').textContent = new Date().toISOString().slice(0,10);
@@ -373,13 +378,9 @@ function render(){
   body += '</tbody>';
   $('matrix-table').innerHTML = head + body;
 
-  // 통계 (미응답 = 25항목 × 일수 - O - X)
-  $('stat-o').textContent = totalO;
-  $('stat-x').textContent = totalX;
-  $('stat-empty').textContent = totalEmpty;
+  // 헤더 상태 표시용 (화면 컨트롤 영역)
   const responded = totalO + totalX;
   const rate = responded > 0 ? Math.round(totalO / responded * 100) : 0;
-  $('stat-rate').textContent = rate;
 
   // 미이행 요약
   const xItems = [];
@@ -434,8 +435,12 @@ function render(){
     $('notes-summary').innerHTML = nt;
   }
 
+  // 2페이지 표시 여부 (미이행 또는 특이사항 있을 때만)
+  const hasPage2 = xItems.length > 0 || notesByDate.length > 0;
+  $('report-content-2').style.display = hasPage2 ? 'block' : 'none';
+
   // 상태 표시
-  $('rpt-status').textContent = `${leader.name} · ${ym} — 응답 ${responded}건 (이행률 ${rate}%)`;
+  $('rpt-status').textContent = `${leader.name} · ${ym} — 응답 ${responded}건 (이행률 ${rate}%)` + (hasPage2 ? ' · 2페이지 출력' : ' · 1페이지');
 }
 
 // ============================================================
