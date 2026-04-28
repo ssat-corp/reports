@@ -7,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <title>안전검사 (위험기계) | 산업안전보건</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-<script src="safety_inspection_data.js?v=20260428d"></script>
+<script src="safety_inspection_data.js?v=20260428e"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
 *{margin:0;padding:0;box-sizing:border-box;}
@@ -54,10 +54,29 @@ table.insp tbody td.month{min-width:38px;}
 table.insp tbody td.site{background:#f1f5f9;font-weight:700;color:#0d1f3c;font-size:11px;}
 table.insp tbody td.asset{font-weight:700;color:#0d1f3c;white-space:nowrap;}
 table.insp tbody td.text-l{text-align:left;}
-table.insp tbody td.month{cursor:pointer;font-weight:800;letter-spacing:0.02em;user-select:none;transition:background 0.12s;width:42px;}
+table.insp tbody td.month{cursor:pointer;font-weight:800;letter-spacing:0.02em;user-select:none;transition:background 0.12s;width:42px;position:relative;}
 table.insp tbody td.month:hover{background:#eff6ff;}
-table.insp tbody td.month.done{background:#dcfce7;color:#166534;}
-table.insp tbody td.month.done:hover{background:#bbf7d0;}
+table.insp tbody td.month.done{background:#dbeafe;color:#1e40af;}
+table.insp tbody td.month.done:hover{background:#bfdbfe;}
+table.insp tbody td.month.planned{background:#fef9c3;color:#854d0e;}
+table.insp tbody td.month.planned:hover{background:#fde68a;}
+table.insp tbody td.month .memo-dot{position:absolute;top:1px;right:2px;width:6px;height:6px;background:#dc2626;border-radius:50%;display:none;}
+table.insp tbody td.month.has-memo .memo-dot{display:block;}
+
+/* 셀 메모/상태 팝오버 */
+.cell-popover{position:fixed;background:#fff;border:1px solid #cbd5e1;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,0.15);padding:14px 16px;width:300px;z-index:5000;font-size:12px;}
+.cell-popover.hidden{display:none;}
+.cell-popover h4{font-size:12px;color:#0d1f3c;margin-bottom:10px;font-weight:800;}
+.cell-popover .pop-row{display:flex;gap:6px;margin-bottom:10px;}
+.cell-popover .pop-row button{flex:1;padding:8px;font-size:12px;font-weight:700;border:1px solid #cbd5e1;background:#fff;border-radius:5px;cursor:pointer;font-family:inherit;}
+.cell-popover .pop-row button.set-done{background:#dbeafe;color:#1e40af;border-color:#93c5fd;}
+.cell-popover .pop-row button.set-planned{background:#fef9c3;color:#854d0e;border-color:#fde047;}
+.cell-popover .pop-row button.set-clear{color:#991b1b;border-color:#fca5a5;}
+.cell-popover textarea{width:100%;min-height:60px;border:1px solid #cbd5e1;border-radius:5px;padding:8px;font-size:12px;font-family:inherit;resize:vertical;}
+.cell-popover .pop-actions{display:flex;justify-content:flex-end;gap:6px;margin-top:8px;}
+.cell-popover .pop-actions button{padding:6px 12px;font-size:11px;font-weight:700;border:none;border-radius:4px;cursor:pointer;font-family:inherit;}
+.cell-popover .pop-actions .save{background:#1a3a6e;color:#fff;}
+.cell-popover .pop-actions .close{background:#e5e7eb;color:#475569;}
 table.insp tbody td.due-warn{background:#fef3c7;color:#78350f;font-weight:700;}
 table.insp tbody td.due-overdue{background:#fee2e2;color:#991b1b;font-weight:700;}
 table.insp tbody tr.site-divider td{background:#1a3a6e !important;color:#fff;font-weight:800;text-align:left;padding:7px 14px;font-size:12px;letter-spacing:0.04em;}
@@ -137,13 +156,14 @@ table.insp tbody tr.site-divider td{background:#1a3a6e !important;color:#fff;fon
     검사품목: 사출기, 압력용기, 천장주행크레인<br>
     검사주기: 최초 설치 후 3년에 1회, 그 후 2년 주기로 1회 검사<br>
     <div class="legend-row">
-      <span class="legend-chip"><span class="swatch done"></span>완료 (검사 완료된 월)</span>
-      <span class="legend-chip"><span class="swatch warn"></span>예정월 (1개월 이내 마감)</span>
-      <span class="legend-chip"><span class="swatch overdue"></span>마감 지남 (즉시 조치)</span>
+      <span class="legend-chip"><span class="swatch" style="background:#dbeafe;"></span>완료 (파랑)</span>
+      <span class="legend-chip"><span class="swatch" style="background:#fef9c3;"></span>예정 (노랑)</span>
+      <span class="legend-chip"><span class="swatch warn"></span>검사예정일 1개월 이내</span>
+      <span class="legend-chip"><span class="swatch overdue"></span>검사예정일 지남</span>
     </div>
     <div style="margin-top:8px;font-size:11px;color:#94a3b8;">
-      클릭으로 완료/취소 토글 · 클라우드 자동 저장 · 다른 기기와 실시간 공유<br>
-      [매트릭스 복사] 버튼으로 현재 연도 12개월 데이터를 TSV로 클립보드에 복사 → 엑셀에 붙여넣기 가능 (자산번호 순서 동일)
+      셀 클릭으로 [완료/예정/취소] 변경 + 월별 메모 작성 · 빨간 점 = 메모 있음 · 클라우드 자동 저장 · 실시간 공유<br>
+      [매트릭스 복사] 버튼: 현재 연도 12개월 데이터를 TSV로 클립보드 → 엑셀 붙여넣기 가능 (자산번호 순서 동일)
     </div>
   </div>
 
@@ -262,6 +282,18 @@ function updateYearBanner(){
 }
 
 function todayISO(){ return new Date().toISOString().slice(0,10); }
+
+// 매트릭스 셀 데이터 정규화 (string/object 모두 지원)
+function getCellData(machine, key){
+  const v = machine.matrix[key];
+  if(!v) return { status:'', memo:'' };
+  if(typeof v === 'string') return { status:v, memo:'' };
+  return { status:v.status||'', memo:v.memo||'' };
+}
+function setCellData(machine, key, status, memo){
+  if(!status && !memo){ delete machine.matrix[key]; return; }
+  machine.matrix[key] = { status, memo: memo||'' };
+}
 function dueClass(dueDate){
   if(!dueDate) return '';
   const today = new Date(); today.setHours(0,0,0,0);
@@ -297,21 +329,31 @@ function render(){
       lastSite = m.site;
     }
     const validity = (m.valid_start && m.valid_end) ? `${m.valid_start} ~ ${m.valid_end}` : (m.valid_end || '-');
-    const dueCls = dueClass(m.next_due);
-    html += `<tr data-idx="${machines.indexOf(m)}">
+    const dueCls = m.disposed ? '' : dueClass(m.next_due);
+    const dueText = m.disposed
+      ? `<span style="background:#e5e7eb;color:#94a3b8;padding:2px 6px;border-radius:3px;font-size:10px;font-weight:700;" title="${m.remark_short||'매각/폐기'}">매각·폐기</span>`
+      : (m.next_due || '-');
+    const rowStyle = m.disposed ? 'background:#fafbfc;color:#94a3b8;' : '';
+    html += `<tr data-idx="${machines.indexOf(m)}" style="${rowStyle}">
       <td class="site">${m.site}</td>
       <td class="asset">${m.asset_no}</td>
       <td>${m.eqp_name||'-'}</td>
       <td>${m.capacity}</td>
       <td>${m.mgmt_no}</td>
-      <td class="text-l">${validity}</td>
+      <td class="text-l">${m.disposed ? '<span style="color:#94a3b8;">'+validity+'</span>' : validity}</td>
       <td>${m.cycle ? m.cycle+'년' : '-'}</td>
-      <td class="${dueCls}">${m.next_due || '-'}</td>`;
+      <td class="${dueCls}">${dueText}</td>`;
     for(let mo=1; mo<=12; mo++){
       const key = `${currentYear}-${String(mo).padStart(2,'0')}`;
-      const val = m.matrix[key] || '';
-      const done = val ? ' done' : '';
-      html += `<td class="month${done}" data-key="${key}" title="${currentYear}년 ${mo}월 — 클릭으로 완료/취소">${done?'완료':''}</td>`;
+      const cell = getCellData(m, key);
+      const cls = cell.status === '완료' ? ' done' : (cell.status === '예정' ? ' planned' : '');
+      const memoCls = cell.memo ? ' has-memo' : '';
+      const label = cell.status === '완료' ? '완료' : (cell.status === '예정' ? '예정' : '');
+      const titleParts = [`${currentYear}년 ${mo}월`];
+      if(cell.status) titleParts.push(cell.status);
+      if(cell.memo) titleParts.push('메모: '+cell.memo);
+      titleParts.push('클릭: 상태/메모 변경');
+      html += `<td class="month${cls}${memoCls}" data-key="${key}" title="${titleParts.join(' · ')}">${label}<span class="memo-dot"></span></td>`;
     }
     html += `</tr>`;
   });
@@ -321,11 +363,11 @@ function render(){
   document.getElementById('row-count').textContent = `${filtered.length}대 표시 중 (${currentYear}년)`;
 }
 
-// 매트릭스 셀 클릭 → 완료/취소 토글 (이벤트 위임으로 1회만 바인딩)
+// 매트릭스 셀 클릭 → 팝오버: 완료/예정/취소 + 메모 입력
 function bindCellClicks(){
   const tbl = document.getElementById('insp-table');
   if(tbl._clickBound) return;
-  tbl.addEventListener('click', async e => {
+  tbl.addEventListener('click', e => {
     const td = e.target.closest('td.month');
     if(!td) return;
     const tr = td.closest('tr');
@@ -333,18 +375,73 @@ function bindCellClicks(){
     const idx = parseInt(tr.dataset.idx, 10);
     if(isNaN(idx)) return;
     const key = td.dataset.key;
-    const machines = getMachines();
-    if(!machines[idx]) return;
-    const cur = machines[idx].matrix[key] || '';
-    if(cur === '완료'){
-      delete machines[idx].matrix[key];
-    } else {
-      machines[idx].matrix[key] = '완료';
-    }
-    await autoCloudSave(machines);
-    render(); // 유효기간 자동 재계산 위해 전체 재렌더
+    openCellPopover(td, idx, key);
   });
   tbl._clickBound = true;
+
+  // 외부 클릭으로 팝오버 닫기
+  document.addEventListener('click', e => {
+    const pop = document.getElementById('cell-popover');
+    if(pop && !pop.contains(e.target) && !e.target.closest('td.month')){
+      pop.classList.add('hidden');
+    }
+  });
+}
+
+function openCellPopover(td, idx, key){
+  let pop = document.getElementById('cell-popover');
+  if(!pop){
+    pop = document.createElement('div');
+    pop.id = 'cell-popover';
+    pop.className = 'cell-popover hidden';
+    document.body.appendChild(pop);
+  }
+  const machines = getMachines();
+  const m = machines[idx];
+  const cell = getCellData(m, key);
+  const [y, mo] = key.split('-').map(Number);
+  pop.innerHTML = `
+    <h4>${m.asset_no} (${m.mgmt_no || '-'}) — ${y}년 ${mo}월</h4>
+    <div class="pop-row">
+      <button type="button" class="set-done${cell.status==='완료'?' active':''}" data-set="완료">✓ 완료</button>
+      <button type="button" class="set-planned${cell.status==='예정'?' active':''}" data-set="예정">📅 예정</button>
+      <button type="button" class="set-clear" data-set="">✕ 취소</button>
+    </div>
+    <textarea id="pop-memo" placeholder="메모 (점검자, 특이사항 등)">${cell.memo || ''}</textarea>
+    <div class="pop-actions">
+      <button type="button" class="close">닫기</button>
+      <button type="button" class="save">저장</button>
+    </div>
+  `;
+  // 위치
+  const rect = td.getBoundingClientRect();
+  const popW = 300;
+  const left = Math.min(rect.left + rect.width/2 - popW/2, window.innerWidth - popW - 16);
+  const top = rect.bottom + 6;
+  pop.style.left = Math.max(8, left) + 'px';
+  pop.style.top = top + 'px';
+  pop.classList.remove('hidden');
+
+  // 핸들러
+  let pendingStatus = cell.status;
+  pop.querySelectorAll('.pop-row button').forEach(b => {
+    b.addEventListener('click', ev => {
+      ev.stopPropagation();
+      pendingStatus = b.dataset.set;
+      // 시각 피드백
+      pop.querySelectorAll('.pop-row button').forEach(x => x.style.outline = '');
+      b.style.outline = '2px solid #0d1f3c';
+    });
+  });
+  pop.querySelector('.close').addEventListener('click', () => pop.classList.add('hidden'));
+  pop.querySelector('.save').addEventListener('click', async () => {
+    const memo = pop.querySelector('#pop-memo').value.trim();
+    const ms = getMachines();
+    setCellData(ms[idx], key, pendingStatus, memo);
+    await autoCloudSave(ms);
+    pop.classList.add('hidden');
+    render();
+  });
 }
 
 // ============================================================
