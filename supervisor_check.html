@@ -583,17 +583,28 @@ window.addEventListener('DOMContentLoaded', async () => {
     _notesDebounce = setTimeout(() => autoCloudSave('☁ 특이사항 동기화됨'), 800);
   });
 
-  // 감독자 결정: URL → localStorage → 선택화면
+  // 감독자 결정 우선순위:
+  //  ?select=1  → 선택화면 강제 (저장된 값 무시·삭제) — 4박스 메뉴에서 진입
+  //  ?leader=X  → 해당 감독자 (QR/직접 링크)
+  //  localStorage 저장값 → 같은 기기에서 재방문 시 바로 폼
+  //  없으면     → 선택화면
   const urlParams = new URLSearchParams(location.search);
+  const forceSelect = urlParams.get('select') === '1';
   const urlLeader = urlParams.get('leader');
   const savedLeader = localStorage.getItem('supervisor_leader');
-  const leaderCode = urlLeader || savedLeader;
-  if(leaderCode && LEADERS[leaderCode]){
-    currentLeader = LEADERS[leaderCode];
-    localStorage.setItem('supervisor_leader', leaderCode);
-    showFormView();
-  } else {
+
+  if(forceSelect){
+    localStorage.removeItem('supervisor_leader');
     showSelectView();
+  } else {
+    const leaderCode = urlLeader || savedLeader;
+    if(leaderCode && LEADERS[leaderCode]){
+      currentLeader = LEADERS[leaderCode];
+      localStorage.setItem('supervisor_leader', leaderCode);
+      showFormView();
+    } else {
+      showSelectView();
+    }
   }
 
   // Supabase 연결 후 동기화
