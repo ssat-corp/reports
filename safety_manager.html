@@ -644,18 +644,7 @@ function renderPersonDetail(){
   panel.style.display = 'block';
   const meta = ORG_PEOPLE[selectedPerson] || {};
   const tasks = tasksByPerson(selectedPerson);
-
-  // 관리감독자 빠른 링크 (일일점검 + 월간 보고서)
-  const SUPERVISOR_CODE = {'김민수 부장':'kim', '양춘향 과장':'yang', '임문호 이사':'lim'};
-  const lcode = SUPERVISOR_CODE[selectedPerson];
-  const isSupervisor = !!lcode;
-  const supervisorLinks = lcode ? `
-    <div style="padding:14px 18px;background:#fffbeb;border-bottom:1px solid #fde68a;display:flex;gap:8px;flex-wrap:wrap;">
-      <a href="supervisor_check.html?leader=${lcode}" class="btn btn-sm" style="background:#1a3a6e;">✅ 일일점검 입력 페이지</a>
-      <a href="supervisor_report.html?leader=${lcode}" class="btn btn-sm" style="background:#dc2626;">📄 월간 점검 보고서 (PDF)</a>
-      <span style="font-size:11px;color:#78350f;align-self:center;margin-left:auto;font-weight:600;">↑ 별도 페이지로 이동</span>
-    </div>
-  ` : '';
+  const isSupervisor = ['김민수 부장','양춘향 과장','임문호 이사'].includes(selectedPerson);
 
   if(tasks.length === 0){
     panel.innerHTML = `
@@ -663,7 +652,6 @@ function renderPersonDetail(){
         <div class="pd-name">${selectedPerson}</div>
         <div class="pd-role">${meta.role || ''}</div>
       </div>
-      ${supervisorLinks}
       <div class="pd-empty">이 인물에게 직접 매칭된 정형 업무 없음.</div>
     `;
     return;
@@ -690,7 +678,6 @@ function renderPersonDetail(){
       <div class="pd-role">${meta.role || ''}</div>
       <div class="pd-stats">${stats}</div>
     </div>
-    ${supervisorLinks}
     ${tasks.map(renderer).join('')}
   `;
 
