@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>관리감독자 일일점검표 | 산업안전보건</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scrollbar-gutter:stable;}
+body{font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;background:#f5f5f4;color:#292524;min-height:100vh;font-size:14px;}
+
+.page-header{color:#fff;padding:20px 18px 18px;background:#44403c;position:relative;border-bottom:3px solid #292524;}
+@media(min-width:600px){.page-header{padding:24px 28px 20px;}}
+.page-header .doc-no{display:inline-block;font-size:10px;font-weight:700;letter-spacing:0.18em;padding:2px 10px;border:1px solid rgba(255,255,255,0.3);border-radius:2px;margin-bottom:10px;color:rgba(255,255,255,0.85);}
+.page-header h1{font-size:20px;font-weight:900;letter-spacing:-0.02em;}
+.page-header .sub{font-size:12px;opacity:0.7;margin-top:4px;}
+.page-header .conn{position:absolute;top:16px;right:18px;font-size:11px;background:rgba(255,255,255,0.1);padding:4px 10px;border-radius:4px;display:flex;align-items:center;gap:6px;}
+.conn-dot{width:7px;height:7px;border-radius:50%;background:#78716c;}
+.conn-dot.connected{background:#d6d3d1;animation:pulse 2s infinite;}
+.conn-dot.error{background:#ef4444;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
+
+.container{max-width:760px;margin:0 auto;padding:16px 14px 80px;}
+
+/* 감독자 선택 화면 */
+#view-select, #view-form{display:none;}
+#view-select.shown, #view-form.shown{display:block;}
+.leader-grid{display:grid;grid-template-columns:1fr;gap:12px;margin-top:10px;}
+@media(min-width:640px){.leader-grid{grid-template-columns:1fr 1fr 1fr;}}
+.leader-card{display:block;padding:22px 20px;text-decoration:none;background:#fff;border:1px solid #d6d3d1;border-left:4px solid #44403c;border-radius:4px;color:#292524;transition:all 0.15s;cursor:pointer;}
+.leader-card:hover{background:#fafaf9;border-left-color:#292524;border-color:#78716c;}
+.leader-card .lc-code{font-size:11px;font-weight:800;letter-spacing:0.22em;color:#78716c;}
+.leader-card .lc-name{font-size:22px;font-weight:900;margin-top:6px;letter-spacing:-0.025em;color:#292524;}
+.leader-card .lc-sub{font-size:13px;color:#78716c;margin-top:4px;font-weight:600;}
+.leader-card .lc-stats{margin-top:14px;padding-top:12px;border-top:1px dashed #e7e5e4;display:flex;justify-content:space-between;align-items:center;}
+.leader-card .lc-stats .pill{font-size:11px;font-weight:800;padding:3px 10px;border-radius:2px;letter-spacing:0.05em;background:#e8e6e1;color:#44403c;border:1px solid #d6d3d1;}
+.leader-card .lc-stats .last{font-size:11px;color:#a8a29e;}
+
+/* 카드 */
+.card{background:#fff;border:1px solid #d6d3d1;border-radius:4px;padding:22px 18px;margin-bottom:14px;box-shadow:none;}
+@media(min-width:600px){.card{padding:26px 28px;}}
+.card-title{font-size:20px;font-weight:900;color:#292524;margin-bottom:18px;padding:2px 0 12px 14px;border-left:5px solid #292524;border-bottom:2px solid #292524;letter-spacing:-0.025em;line-height:1.25;}
+.section-title{font-size:13px;font-weight:800;letter-spacing:0.22em;color:#292524;padding:10px 14px;margin:24px 0 14px;background:#e8e6e1;border-left:4px solid #292524;border-bottom:1px solid #a8a29e;text-transform:uppercase;display:flex;align-items:baseline;gap:12px;}
+.section-title .roman{display:inline-block;font-size:16px;font-weight:900;color:#292524;letter-spacing:0.06em;}
+
+.btn{display:inline-block;padding:8px 14px;background:#44403c;color:#fff;border:none;border-radius:3px;font-size:12px;font-weight:700;cursor:pointer;text-decoration:none;font-family:inherit;letter-spacing:0.02em;}
+.btn:hover{background:#292524;}
+.btn-outline{background:#fff;color:#44403c;border:1px solid #a8a29e;}
+.btn-outline:hover{background:#f5f5f4;border-color:#78716c;}
+.btn-sm{padding:5px 10px;font-size:11px;}
+.btn-primary-big{padding:18px 24px;font-size:14px;width:100%;font-weight:800;letter-spacing:0.25em;text-transform:uppercase;margin-top:10px;}
+
+/* 메타 정보 (날짜/감독자) */
+.meta-bar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;padding:12px 14px;background:#e8e6e1;border:1px solid #d6d3d1;border-radius:4px;margin-bottom:14px;}
+.meta-bar .meta-name{font-size:18px;font-weight:900;color:#292524;letter-spacing:-0.02em;}
+.meta-bar .meta-tag{font-size:11px;font-weight:800;color:#fff;background:#44403c;padding:3px 8px;border-radius:2px;letter-spacing:0.06em;}
+.meta-bar input[type="date"]{padding:8px 12px;border:1px solid #a8a29e;background:#fff;font-size:15px;font-family:inherit;border-radius:3px;color:#292524;font-weight:700;}
+.meta-bar .change-btn{margin-left:auto;font-size:11px;color:#78716c;background:transparent;border:1px solid #d6d3d1;padding:4px 10px;border-radius:3px;cursor:pointer;font-family:inherit;}
+.meta-bar .change-btn:hover{background:#fff;color:#44403c;}
+
+/* 그룹별 영역 */
+.area-card{border:1px solid #d6d3d1;border-radius:4px;margin-bottom:14px;background:#fff;overflow:hidden;}
+.area-header{background:#fafaf9;padding:14px 16px;border-bottom:1px solid #e7e5e4;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;cursor:pointer;}
+.area-header:hover{background:#f0ede6;}
+.area-header .area-name{font-size:16px;font-weight:800;color:#292524;letter-spacing:-0.015em;display:flex;align-items:center;gap:10px;flex:1;}
+.area-header .area-name .roman{display:inline-flex;align-items:center;justify-content:center;min-width:28px;height:24px;padding:0 6px;background:#292524;color:#fff;font-size:11px;font-weight:800;letter-spacing:0.04em;border-radius:2px;}
+.area-header .area-count{font-size:11px;font-weight:700;color:#78716c;padding:3px 10px;background:#fff;border:1px solid #d6d3d1;border-radius:2px;letter-spacing:0.05em;}
+.area-header .toggle-icon{font-size:14px;color:#78716c;transition:transform 0.15s;}
+.area-card.done .area-header{background:#f0ede6;}
+.area-card.done .area-name::before{content:'완료';display:inline-block;font-size:10px;font-weight:800;letter-spacing:0.12em;color:#fff;background:#44403c;padding:2px 8px;border-radius:2px;margin-right:4px;}
+.area-card.done .area-count{background:#44403c;color:#fff;border-color:#44403c;}
+.area-card.has-x .area-name::after{content:'미이행';display:inline-block;font-size:10px;font-weight:800;letter-spacing:0.12em;color:#fff;background:#991b1b;padding:2px 8px;border-radius:2px;margin-left:6px;}
+.area-card.collapsed .item-list{display:none;}
+.area-card.collapsed .toggle-icon{transform:rotate(-90deg);}
+
+.item-list{padding:6px 0;}
+.item-row{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px dotted #e7e5e4;}
+.item-row:last-child{border-bottom:none;}
+.item-row .num{display:inline-flex;align-items:center;justify-content:center;min-width:36px;height:24px;padding:0 8px;background:#fafaf9;border:1px solid #d6d3d1;color:#a8a29e;font-size:11px;font-weight:800;letter-spacing:0.06em;border-radius:2px;flex-shrink:0;}
+.item-row.filled .num{background:#292524;color:#fff;border-color:#292524;}
+.item-row .q{flex:1;min-width:200px;font-size:15px;color:#a8a29e;line-height:1.5;}
+.item-row.filled .q{color:#292524;font-weight:500;}
+.item-row .ox{display:flex;gap:6px;flex-shrink:0;margin-left:auto;}
+.ox-btn{padding:10px 18px;font-size:14px;font-weight:800;border:1.5px solid #a8a29e;background:#fff;color:#78716c;border-radius:3px;cursor:pointer;font-family:inherit;min-width:54px;transition:all 0.12s;}
+.ox-btn:hover{background:#f5f5f4;border-color:#44403c;color:#292524;}
+.ox-btn.sel-o{background:#44403c;color:#fff;border-color:#44403c;}
+.ox-btn.sel-x{background:#991b1b;color:#fff;border-color:#991b1b;}
+@media(max-width:480px){
+  .item-row{padding:12px 14px;}
+  .item-row .q{font-size:14px;min-width:100%;}
+  .item-row .ox{margin-left:0;width:100%;justify-content:flex-end;}
+  .ox-btn{min-width:60px;padding:9px 18px;font-size:14px;}
+}
+
+/* 특이사항 */
+textarea{
+  width:100%;border:1px solid #d6d3d1;border-radius:4px;padding:13px 14px;font-size:16px;font-family:inherit;
+  background:#fff;color:#292524;resize:vertical;min-height:90px;line-height:1.55;-webkit-appearance:none;
+}
+textarea:focus{outline:none;border-color:#292524;}
+textarea::placeholder{color:#a8a29e;}
+
+/* 진행 표시 */
+.progress-wrap{position:sticky;top:0;z-index:50;background:#f5f5f4;padding:8px 0 4px;margin:0 -2px 12px;border-bottom:1px solid #d6d3d1;}
+.progress-info{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:0 4px 6px;font-size:12px;color:#44403c;font-weight:700;}
+.progress-bar{height:8px;background:#d6d3d1;border-radius:2px;overflow:hidden;}
+.progress-fill{height:100%;background:#44403c;transition:width 0.3s;}
+
+/* 이력 */
+.history-table{width:100%;border-collapse:collapse;font-size:13px;}
+.history-table th, .history-table td{border-bottom:1px solid #e7e5e4;padding:9px 8px;text-align:left;vertical-align:middle;}
+.history-table thead th{background:#e8e6e1;color:#292524;font-weight:800;font-size:11px;letter-spacing:0.06em;}
+.history-table tbody tr{cursor:pointer;}
+.history-table tbody tr:hover{background:#fafaf9;}
+.history-table .pill{font-size:10px;font-weight:800;padding:2px 7px;border-radius:2px;display:inline-block;letter-spacing:0.04em;}
+.history-table .pill.ok{background:#e8e6e1;color:#44403c;}
+.history-table .pill.warn{background:#fef3c7;color:#78350f;}
+.history-table .pill.bad{background:#fee2e2;color:#991b1b;}
+.history-table .pill.empty{background:#f5f5f4;color:#a8a29e;}
+.history-empty{padding:30px 20px;text-align:center;color:#a8a29e;font-size:12px;border:1.5px dashed #d6d3d1;border-radius:4px;}
+
+/* 토스트 */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);background:#292524;color:#fff;padding:13px 26px;border-radius:4px;font-size:13px;font-weight:700;letter-spacing:0.04em;opacity:0;transition:all 0.3s;z-index:2000;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.toast.error{background:#991b1b;}
+.toast.success{background:#44403c;}
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <span class="doc-no">SCK-FORM</span>
+  <h1>관리감독자 일일점검표</h1>
+  <div class="sub">작업 전 / 작업 중 / 작업 후 25개 항목 일일 점검</div>
+  <div class="conn"><div class="conn-dot" id="conn-dot"></div><span id="conn-text">연결 중...</span></div>
+</div>
+
+<div class="container">
+
+  <!-- VIEW 1: 감독자 선택 -->
+  <div id="view-select">
+    <div class="card">
+      <div class="card-title">관리감독자 선택</div>
+      <p style="font-size:13px;color:#78716c;margin-bottom:18px;">담당하시는 영역을 선택하세요. 선택은 이 기기에 저장됩니다.</p>
+      <div class="leader-grid" id="leader-grid"></div>
+    </div>
+  </div>
+
+  <!-- VIEW 2: 점검 폼 -->
+  <div id="view-form">
+
+    <div class="card">
+      <div class="meta-bar">
+        <span class="meta-tag">관리감독자</span>
+        <span class="meta-name" id="meta-name">-</span>
+        <input type="date" id="check-date">
+        <button class="change-btn" id="btn-change-leader">변경</button>
+      </div>
+
+      <div class="progress-wrap">
+        <div class="progress-info">
+          <span id="progress-text">0 / 25 응답</span>
+          <span id="progress-stats">O 0 · X 0</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%;"></div></div>
+      </div>
+
+      <div id="check-content"></div>
+
+      <div class="section-title"><span class="roman">VI.</span> 특이사항 및 조치사항</div>
+      <textarea id="notes" rows="3" placeholder="특이사항, 미이행 사유, 조치 내용 등 자유 기재"></textarea>
+
+      <button class="btn btn-primary-big" id="btn-save" type="button">저장</button>
+      <p style="font-size:11px;color:#a8a29e;text-align:center;margin-top:8px;">저장하면 안전보건관리자 페이지의 월별 매트릭스에 자동 반영됩니다.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">최근 14일 이력</div>
+      <div id="history-content"></div>
+    </div>
+
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ============================================================
+// 데이터
+// ============================================================
+const LEADERS = {
+  kim:  { code:'kim',  name:'김민수 부장', area:'사출 (본사)' },
+  yang: { code:'yang', name:'양춘향 과장', area:'도장 (화성공장)' },
+  lim:  { code:'lim',  name:'임문호 이사', area:'조립 (화성공장)' }
+};
+
+const CHECKLIST = [
+  { roman:'I.',   group:'작업 전 조치 및 TBM', items:[
+    '당일 작업 구간의 유해·위험요인을 사전에 파악하고 대책을 수립했는가?',
+    'TBM 시 작업자들에게 당일 위험 포인트와 안전 수칙을 구체적으로 전파했는가?',
+    '신규 작업자 또는 특별관리대상 근로자에 대한 별도 교육 및 배치를 확인했는가?',
+    '작업자들의 상태(음주, 피로도 등)를 대면으로 확인했는가?',
+    '작업 시작 전 기계·기구의 방호장치(비상정지, 덮개 등) 기능 점검을 마쳤는가?'
+  ]},
+  { roman:'II.',  group:'보호구 및 안전시설', items:[
+    '작업별 특성에 맞는 보호구(안전화, 방진마스크 등)를 지급했는가?',
+    '근로자가 보호구를 올바르게 착용하고 있으며, 기능 상실된 보호구는 없는가?',
+    '추락 방지용 안전난간, 작업발판, 설비의 견고함을 확인했는가?',
+    '위험 구역에 대한 안전보건 표지가 적정하게 부착되고 가독성이 확보되었는가?',
+    '비상시 활용할 구급용구 및 소방설비(소화기 등)의 위치와 상태를 점검했는가?'
+  ]},
+  { roman:'III.', group:'작업 중 실시간 감독', items:[
+    '근로자가 승인된 표준작업지침서(SOP) 및 안전 수칙을 준수하고 있는가?',
+    '고위험 작업(화기, 밀폐, 고소 등) 시 작업허가서 내용이 준수되는가?',
+    "정비·수리 시 에너지 차단장치(LOTO)와 '점검 중' 표지판이 설치되었는가?",
+    '지게차, 크레인 등 양중/하역 기계와 근로자의 충돌 방지 조치가 되어있는가?',
+    '작업 중 예상치 못한 위험 발견 시 즉시 작업 중지 및 대피를 유도할 준비가 됐는가?'
+  ]},
+  { roman:'IV.',  group:'위험성평가 및 참여', items:[
+    '현장 근로자가 제안한 안전 개선 사항이나 아차사고 보고를 수렴했는가?',
+    '수시/정기 위험성평가 결과로 도출된 감소 대책이 현장에 적용되었는가?',
+    '유해화학물질 취급 시 MSDS(물질안전보건자료)가 현장에 비치 및 숙지되었는가?',
+    '기계·설비의 노후화나 오작동 등 추가적인 위험 요인을 발굴했는가?',
+    '안전보건 교육(정기, 특별 등) 이수 여부를 확인하고 미이수자 조치를 했는가?'
+  ]},
+  { roman:'V.',   group:'현장 환경 및 정리', items:[
+    '통로와 계단에 적재물이 없어 근로자의 안전한 통행이 확보되었는가?',
+    '바닥에 기름, 물기, 전선 등이 방치되어 전도(넘어짐) 위험은 없는가?',
+    '작업장 내 조명 밝기가 충분하며 환기 설비가 정상 작동하는가?',
+    '폐기물 및 위험물 보관소의 분리 배출과 보관 상태가 규정에 맞는가?',
+    '비상구 및 탈출로에 장애물이 없으며 상시 개방 가능한 상태인가?'
+  ]}
+];
+
+const TOTAL_ITEMS = 25;
+
+// ============================================================
+// SUPABASE / DB (대시보드와 동일 키 공간)
+// ============================================================
+const DEFAULT_SUPABASE_URL = 'https://onohwrswzaiwbabiusrj.supabase.co';
+const DEFAULT_SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9ub2h3cnN3emFpd2JhYml1c3JqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyMjQ5MTgsImV4cCI6MjA4OTgwMDkxOH0.vK_l0iWBJyZmLwzNfQHob2ejEZGfg8mQ8mV-6-lXaN0';
+let supaClient = null;
+
+const DB = {
+  getObj(key){ try{return JSON.parse(localStorage.getItem('safety_'+key))||{};}catch{return {};} },
+  async set(key, val){
+    localStorage.setItem('safety_'+key, JSON.stringify(val));
+    if(!supaClient) return;
+    try{ await supaClient.from('safety_store').upsert({key, value:val}, {onConflict:'key'}); }
+    catch(e){ console.error('Supabase upsert 실패:', key, e); }
+  }
+};
+function _isEmpty(v){
+  if(v===null||v===undefined) return true;
+  if(Array.isArray(v)) return v.length===0;
+  if(typeof v==='object') return Object.keys(v).length===0;
+  return false;
+}
+async function loadFromSupabase(){
+  if(!supaClient) return;
+  try{
+    const {data, error} = await supaClient.from('safety_store').select('*').eq('key','safetyMgrDaily');
+    if(error) throw error;
+    if(data) data.forEach(row => {
+      const localRaw = localStorage.getItem('safety_'+row.key);
+      if(_isEmpty(row.value) && localRaw){
+        try{ const lv = JSON.parse(localRaw); if(!_isEmpty(lv)) return; }catch(e){}
+      }
+      localStorage.setItem('safety_'+row.key, JSON.stringify(row.value));
+    });
+  }catch(e){ console.error('supaLoad:', e); }
+}
+function initSupabase(){
+  try{
+    supaClient = supabase.createClient(DEFAULT_SUPABASE_URL, DEFAULT_SUPABASE_KEY);
+    document.getElementById('conn-dot').className = 'conn-dot connected';
+    document.getElementById('conn-text').textContent = '실시간 공유 연결됨';
+    supaClient.channel('supervisor_check_sync')
+      .on('postgres_changes', {event:'*', schema:'public', table:'safety_store', filter:'key=eq.safetyMgrDaily'}, async () => {
+        await loadFromSupabase(); rerenderForm(); renderHistory();
+      }).subscribe();
+  }catch(e){
+    document.getElementById('conn-dot').className = 'conn-dot error';
+    document.getElementById('conn-text').textContent = '연결 실패';
+  }
+}
+
+// ============================================================
+// 헬퍼
+// ============================================================
+function $(id){ return document.getElementById(id); }
+function ymd(d){ const y=d.getFullYear(), m=d.getMonth()+1, dd=d.getDate(); return `${y}-${String(m).padStart(2,'0')}-${String(dd).padStart(2,'0')}`; }
+function todayISO(){ return ymd(new Date()); }
+function showToast(msg, kind){
+  const t = $('toast'); t.textContent = msg;
+  t.className = 'toast show' + (kind ? ' '+kind : '');
+  setTimeout(()=>{ t.classList.remove('show'); }, 2400);
+}
+function dataKey(date, leaderName){ return `${date}__${leaderName}`; }
+function getRecord(date, leaderName){
+  const all = DB.getObj('safetyMgrDaily');
+  return all[dataKey(date, leaderName)] || {items:{}, notes:''};
+}
+
+// ============================================================
+// 상태
+// ============================================================
+let currentLeader = null;  // {code, name, area}
+
+function selectLeader(code){
+  if(!LEADERS[code]) return;
+  currentLeader = LEADERS[code];
+  localStorage.setItem('supervisor_leader', code);
+  // URL 갱신
+  const u = new URL(location.href); u.searchParams.set('leader', code); history.replaceState({}, '', u);
+  showFormView();
+}
+function changeLeader(){
+  currentLeader = null;
+  localStorage.removeItem('supervisor_leader');
+  const u = new URL(location.href); u.searchParams.delete('leader'); history.replaceState({}, '', u);
+  showSelectView();
+}
+
+function showSelectView(){
+  $('view-select').classList.add('shown');
+  $('view-form').classList.remove('shown');
+  renderLeaderCards();
+}
+function showFormView(){
+  $('view-select').classList.remove('shown');
+  $('view-form').classList.add('shown');
+  $('meta-name').textContent = `${currentLeader.name} · ${currentLeader.area}`;
+  if(!$('check-date').value) $('check-date').value = todayISO();
+  renderForm();
+  renderHistory();
+}
+
+// ============================================================
+// 감독자 선택 카드
+// ============================================================
+function renderLeaderCards(){
+  const all = DB.getObj('safetyMgrDaily');
+  const today = todayISO();
+  const cards = Object.values(LEADERS).map(L => {
+    const todayRec = all[dataKey(today, L.name)];
+    const todayCount = todayRec ? Object.keys(todayRec.items||{}).length : 0;
+    const lastDate = Object.keys(all).filter(k => k.endsWith('__'+L.name)).map(k => k.split('__')[0]).sort().pop();
+    return `<a class="leader-card" data-leader="${L.code}">
+      <div class="lc-code">${L.code.toUpperCase()}</div>
+      <div class="lc-name">${L.name}</div>
+      <div class="lc-sub">${L.area}</div>
+      <div class="lc-stats">
+        <span class="pill">오늘 ${todayCount}/${TOTAL_ITEMS}</span>
+        <span class="last">${lastDate ? '마지막 입력 '+lastDate : '입력 이력 없음'}</span>
+      </div>
+    </a>`;
+  }).join('');
+  $('leader-grid').innerHTML = cards;
+  $('leader-grid').querySelectorAll('.leader-card').forEach(el => {
+    el.addEventListener('click', () => selectLeader(el.dataset.leader));
+  });
+}
+
+// ============================================================
+// 점검 폼 렌더
+// ============================================================
+function renderForm(){
+  const date = $('check-date').value;
+  const rec = getRecord(date, currentLeader.name);
+  let counter = 0;
+  const html = CHECKLIST.map((g, gi) => {
+    const groupItems = g.items.map((q, qi) => {
+      counter++;
+      const cur = rec.items[counter] || '';
+      const filled = cur ? ' filled' : '';
+      return `<div class="item-row${filled}" data-idx="${counter}">
+        <span class="num">${String(counter).padStart(2,'0')}</span>
+        <span class="q">${q}</span>
+        <span class="ox">
+          <button type="button" class="ox-btn ${cur==='O'?'sel-o':''}" data-val="O">O</button>
+          <button type="button" class="ox-btn ${cur==='X'?'sel-x':''}" data-val="X">X</button>
+        </span>
+      </div>`;
+    }).join('');
+    // 그룹 상태 계산
+    const startIdx = gi*5+1, endIdx = gi*5+5;
+    let groupO=0, groupX=0;
+    for(let i=startIdx; i<=endIdx; i++){ if(rec.items[i]==='O') groupO++; else if(rec.items[i]==='X') groupX++; }
+    const isDone = (groupO+groupX)===5 && groupX===0;
+    const hasX = groupX>0;
+    const collapsed = isDone ? ' collapsed' : '';
+    const klass = (isDone ? 'done' : '') + (hasX ? ' has-x' : '') + collapsed;
+    return `<div class="area-card ${klass}" data-group="${gi}">
+      <div class="area-header">
+        <div class="area-name"><span class="roman">${g.roman}</span> ${g.group}</div>
+        <span class="area-count">${groupO+groupX}/5</span>
+        <span class="toggle-icon">▼</span>
+      </div>
+      <div class="item-list">${groupItems}</div>
+    </div>`;
+  }).join('');
+  $('check-content').innerHTML = html;
+  $('notes').value = rec.notes || '';
+
+  // 이벤트 바인딩
+  $('check-content').querySelectorAll('.area-header').forEach(h => {
+    h.addEventListener('click', (e) => {
+      if(e.target.closest('.ox-btn')) return;
+      h.parentElement.classList.toggle('collapsed');
+    });
+  });
+  $('check-content').querySelectorAll('.ox-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const row = btn.closest('.item-row');
+      const idx = parseInt(row.dataset.idx, 10);
+      const val = btn.dataset.val;
+      setOX(idx, val);
+    });
+  });
+
+  updateProgress();
+}
+
+function setOX(idx, val){
+  const date = $('check-date').value;
+  const all = DB.getObj('safetyMgrDaily');
+  const k = dataKey(date, currentLeader.name);
+  if(!all[k]) all[k] = {items:{}, notes:''};
+  if(all[k].items[idx] === val) delete all[k].items[idx];
+  else all[k].items[idx] = val;
+  // 임시 저장 (저장 버튼 누르기 전엔 localStorage만)
+  localStorage.setItem('safety_safetyMgrDaily', JSON.stringify(all));
+  renderForm();
+}
+
+function updateProgress(){
+  const date = $('check-date').value;
+  const rec = getRecord(date, currentLeader.name);
+  const items = rec.items || {};
+  const o = Object.values(items).filter(v=>v==='O').length;
+  const x = Object.values(items).filter(v=>v==='X').length;
+  const total = o + x;
+  $('progress-text').textContent = `${total} / ${TOTAL_ITEMS} 응답`;
+  $('progress-stats').textContent = `O ${o} · X ${x}`;
+  $('progress-fill').style.width = (total/TOTAL_ITEMS*100) + '%';
+}
+
+function rerenderForm(){
+  if(currentLeader) renderForm();
+}
+
+async function saveForm(){
+  const date = $('check-date').value;
+  if(!date){ showToast('날짜를 선택하세요', 'error'); return; }
+  const all = DB.getObj('safetyMgrDaily');
+  const k = dataKey(date, currentLeader.name);
+  if(!all[k]) all[k] = {items:{}, notes:''};
+  all[k].notes = $('notes').value;
+  await DB.set('safetyMgrDaily', all);
+  showToast('저장되었습니다', 'success');
+  renderHistory();
+}
+
+// ============================================================
+// 최근 14일 이력
+// ============================================================
+function renderHistory(){
+  const all = DB.getObj('safetyMgrDaily');
+  const today = new Date(); today.setHours(0,0,0,0);
+  const rows = [];
+  for(let i=0; i<14; i++){
+    const d = new Date(today); d.setDate(d.getDate()-i);
+    const date = ymd(d);
+    const rec = all[dataKey(date, currentLeader.name)];
+    const items = rec ? rec.items || {} : {};
+    const o = Object.values(items).filter(v=>v==='O').length;
+    const x = Object.values(items).filter(v=>v==='X').length;
+    const total = o + x;
+    const notes = rec ? (rec.notes||'') : '';
+    rows.push({date, o, x, total, notes, hasData: total>0 || notes});
+  }
+  const validRows = rows.filter(r => r.hasData);
+  if(validRows.length === 0){
+    $('history-content').innerHTML = '<div class="history-empty">최근 14일간 입력 이력이 없습니다.</div>';
+    return;
+  }
+  const trs = rows.map(r => {
+    if(!r.hasData) return `<tr style="color:#cbd5e1;">
+      <td>${r.date}</td><td><span class="pill empty">미입력</span></td>
+      <td>-</td><td>-</td><td>-</td><td>-</td>
+    </tr>`;
+    let stPill = 'ok', stLbl = '완료';
+    if(r.x > 0){ stPill='bad'; stLbl='미이행 ' + r.x; }
+    else if(r.total < TOTAL_ITEMS){ stPill='warn'; stLbl='진행중'; }
+    return `<tr data-date="${r.date}">
+      <td>${r.date}</td>
+      <td><span class="pill ${stPill}">${stLbl}</span></td>
+      <td><strong>${r.total}/${TOTAL_ITEMS}</strong></td>
+      <td>${r.o}</td>
+      <td>${r.x}</td>
+      <td style="color:#78716c;font-size:11px;">${(r.notes||'').slice(0,40)}${r.notes.length>40?'…':''}</td>
+    </tr>`;
+  }).join('');
+  $('history-content').innerHTML = `<table class="history-table">
+    <thead><tr><th>날짜</th><th>상태</th><th>응답</th><th>O</th><th>X</th><th>특이사항</th></tr></thead>
+    <tbody>${trs}</tbody>
+  </table>`;
+  $('history-content').querySelectorAll('tbody tr[data-date]').forEach(tr => {
+    tr.addEventListener('click', () => {
+      $('check-date').value = tr.dataset.date;
+      renderForm();
+      window.scrollTo({top:0, behavior:'smooth'});
+    });
+  });
+}
+
+// ============================================================
+// INIT
+// ============================================================
+window.addEventListener('DOMContentLoaded', async () => {
+  // 이벤트
+  $('btn-save').addEventListener('click', saveForm);
+  $('btn-change-leader').addEventListener('click', changeLeader);
+  $('check-date').addEventListener('change', () => { renderForm(); });
+  $('notes').addEventListener('input', () => {
+    if(!currentLeader) return;
+    const date = $('check-date').value;
+    const all = DB.getObj('safetyMgrDaily');
+    const k = dataKey(date, currentLeader.name);
+    if(!all[k]) all[k] = {items:{}, notes:''};
+    all[k].notes = $('notes').value;
+    localStorage.setItem('safety_safetyMgrDaily', JSON.stringify(all));
+  });
+
+  // 감독자 결정: URL → localStorage → 선택화면
+  const urlParams = new URLSearchParams(location.search);
+  const urlLeader = urlParams.get('leader');
+  const savedLeader = localStorage.getItem('supervisor_leader');
+  const leaderCode = urlLeader || savedLeader;
+  if(leaderCode && LEADERS[leaderCode]){
+    currentLeader = LEADERS[leaderCode];
+    localStorage.setItem('supervisor_leader', leaderCode);
+    showFormView();
+  } else {
+    showSelectView();
+  }
+
+  // Supabase 연결 후 동기화
+  initSupabase();
+  await loadFromSupabase();
+  if(currentLeader){ renderForm(); renderHistory(); }
+  else { renderLeaderCards(); }
+});
+</script>
+</body>
+</html>

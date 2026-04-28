@@ -87,6 +87,7 @@ table.guide td.url{font-family:'Consolas','Monaco',monospace;font-size:11px;colo
     <a href="tbm.html">📋 TBM</a>
     <a href="issues.html">⚠️ 지적사항</a>
     <a href="safety_manager.html">👤 안전보건관리자</a>
+    <a href="supervisor_check.html">✅ 관리감독자 일일점검</a>
   </div>
 </div>
 
@@ -98,6 +99,7 @@ table.guide td.url{font-family:'Consolas','Monaco',monospace;font-size:11px;colo
       <li><a href="#overview">전체 구조 한눈에</a></li>
       <li><a href="#patrol">패트롤 (환경운영점검) 운영법</a></li>
       <li><a href="#tbm">TBM (작업 전 회의) 운영법</a></li>
+      <li><a href="#supervisor">관리감독자 일일점검 운영법</a></li>
       <li><a href="#mgr">안전보건관리자 페이지 운영법</a></li>
       <li><a href="#dashboard">관리자 대시보드 운영법</a></li>
       <li><a href="#email">이메일 알림 설정 (Google Apps Script)</a></li>
@@ -227,6 +229,56 @@ table.guide td.url{font-family:'Consolas','Monaco',monospace;font-size:11px;colo
 
     <h3>주기</h3>
     <p><strong>매 작업일 1회</strong> (휴무일 제외). 미입력 시 다음날 대시보드에서 누락 표시됨.</p>
+  </div>
+
+  <!-- ========================================================== -->
+  <div class="section" id="supervisor">
+    <h2><span class="num">3.5</span> 관리감독자 일일점검 운영법</h2>
+    <div class="subtitle">담당자: 김민수 부장(사출) · 양춘향 과장(도장) · 임문호 이사(조립) — 매일 25개 항목 O/X 점검</div>
+
+    <h3>왜 별도 페이지인가</h3>
+    <p>관리감독자는 본인 영역만 매일 점검하면 됨. 33개 업무·조직도·알림 등이 섞인 안전보건관리자 페이지(<code>safety_manager.html</code>)는 너무 무거움. 그래서 패트롤·TBM처럼 <strong>본인 점검만 할 수 있는 전용 페이지(<code>supervisor_check.html</code>)</strong>를 별도로 두었습니다.</p>
+
+    <h3>운영 흐름</h3>
+    <div class="flow">
+      <div class="flow-step">
+        <span class="fs-num">STEP 1</span>
+        <div class="fs-title">QR 스캔 / 링크 접속</div>
+        <div class="fs-desc">본인 링크(?leader=kim/yang/lim) 또는 첫 화면에서 본인 카드 클릭. 한 번 선택하면 기기에 저장</div>
+      </div>
+      <div class="flow-step">
+        <span class="fs-num">STEP 2</span>
+        <div class="fs-title">5개 영역 × 5항목 = 25개 O/X</div>
+        <div class="fs-desc">상단 진행률 바 + 영역별 자동 접힘 (모두 O면 자동 정리)</div>
+      </div>
+      <div class="flow-step">
+        <span class="fs-num">STEP 3</span>
+        <div class="fs-title">특이사항 입력 + 저장</div>
+        <div class="fs-desc">미이행(X) 사유, 조치 내용 자유 기재 → [저장] 버튼</div>
+      </div>
+      <div class="flow-step">
+        <span class="fs-num">STEP 4</span>
+        <div class="fs-title">최근 14일 이력 확인</div>
+        <div class="fs-desc">하단 표에서 본인 입력 이력. 행 클릭 시 해당 날짜로 점프하여 수정 가능</div>
+      </div>
+      <div class="flow-step">
+        <span class="fs-num">STEP 5</span>
+        <div class="fs-title">관리자가 월별 매트릭스로 통합 확인</div>
+        <div class="fs-desc">박재걸/박제성이 safety_manager.html [월별 누적 매트릭스]에서 5×31 그리드로 한달치 점검 (실시간 동기화)</div>
+      </div>
+    </div>
+
+    <h3>주기</h3>
+    <p><strong>매 작업일 1회</strong>. 휴무·휴가 시 입력 불요. 14일간 누락되면 누적 매트릭스에 빈 칸으로 표시.</p>
+
+    <h3>데이터</h3>
+    <p>저장 키: <code>safetyMgrDaily</code><br>
+    형식: <code>{ '2026-04-28__김민수 부장': { items: {1:'O', 2:'X', ...}, notes: '...' }, ... }</code><br>
+    같은 키를 <code>safety_manager.html</code>의 월별 매트릭스가 읽어와서 통합 표시. 따로 동기화 작업 불필요.</p>
+
+    <div class="callout info">
+      <strong>QR 분리 운영:</strong> 각 감독자 휴대폰 카메라로 본인 QR만 스캔하도록 게시. 다른 감독자 데이터는 안 보이고, 본인 14일 이력만 표시됩니다. 박재걸/박제성(관리자)는 <code>safety_manager.html</code>에서 셋 다 통합 조회.
+    </div>
   </div>
 
   <!-- ========================================================== -->
@@ -425,6 +477,21 @@ table.guide td.url{font-family:'Consolas','Monaco',monospace;font-size:11px;colo
         <div class="qc-name">⚠️ 지적사항 등록</div>
         <div class="qc-who">전 직원 (현장에서)</div>
         <div class="qc-url">https://ssat-corp.github.io/reports/issues.html</div>
+      </div>
+      <div class="qr-card" style="border-left:4px solid #44403c;">
+        <div class="qc-name">✅ 관리감독자 일일점검 — 김민수</div>
+        <div class="qc-who">사출 (본사)</div>
+        <div class="qc-url">https://ssat-corp.github.io/reports/supervisor_check.html?leader=kim</div>
+      </div>
+      <div class="qr-card" style="border-left:4px solid #44403c;">
+        <div class="qc-name">✅ 관리감독자 일일점검 — 양춘향</div>
+        <div class="qc-who">도장 (화성공장)</div>
+        <div class="qc-url">https://ssat-corp.github.io/reports/supervisor_check.html?leader=yang</div>
+      </div>
+      <div class="qr-card" style="border-left:4px solid #44403c;">
+        <div class="qc-name">✅ 관리감독자 일일점검 — 임문호</div>
+        <div class="qc-who">조립 (화성공장)</div>
+        <div class="qc-url">https://ssat-corp.github.io/reports/supervisor_check.html?leader=lim</div>
       </div>
     </div>
 
