@@ -7,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <title>안전검사 (위험기계) | 산업안전보건</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-<script src="safety_inspection_data.js?v=20260428h"></script>
+<script src="safety_inspection_data.js?v=20260428i"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
 *{margin:0;padding:0;box-sizing:border-box;}
@@ -413,17 +413,20 @@ function openCellPopover(td, idx, key){
   const m = machines[idx];
   const cell = getCellData(m, key);
   const [y, mo] = key.split('-').map(Number);
+  // 현재 선택된 상태 강조
+  const curBadge = cell.status ? `<span style="background:${cell.status==='완료'?'#dbeafe':'#fef9c3'};color:${cell.status==='완료'?'#1e40af':'#854d0e'};padding:2px 8px;border-radius:3px;font-size:10px;font-weight:800;margin-left:6px;">현재: ${cell.status}</span>` : '';
   pop.innerHTML = `
-    <h4>${m.asset_no} (${m.mgmt_no || '-'}) — ${y}년 ${mo}월</h4>
+    <h4>${m.asset_no} (${m.mgmt_no || '-'}) — ${y}년 ${mo}월${curBadge}</h4>
+    <div style="font-size:10px;color:#64748b;margin-bottom:8px;">▼ 버튼 클릭 시 즉시 저장</div>
     <div class="pop-row">
-      <button type="button" class="set-done${cell.status==='완료'?' active':''}" data-set="완료">✓ 완료</button>
-      <button type="button" class="set-planned${cell.status==='예정'?' active':''}" data-set="예정">📅 예정</button>
+      <button type="button" class="set-done" data-set="완료">✓ 완료</button>
+      <button type="button" class="set-planned" data-set="예정">📅 예정</button>
       <button type="button" class="set-clear" data-set="">✕ 취소</button>
     </div>
     <textarea id="pop-memo" placeholder="메모 (점검자, 특이사항 등)">${cell.memo || ''}</textarea>
     <div class="pop-actions">
       <button type="button" class="close">닫기</button>
-      <button type="button" class="save">저장</button>
+      <button type="button" class="save-memo">메모만 저장</button>
     </div>
   `;
   // 위치
@@ -435,25 +438,30 @@ function openCellPopover(td, idx, key){
   pop.style.top = top + 'px';
   pop.classList.remove('hidden');
 
-  // 핸들러
-  let pendingStatus = cell.status;
+  // 상태 버튼 클릭 → 즉시 적용 + 저장 + 닫기
   pop.querySelectorAll('.pop-row button').forEach(b => {
-    b.addEventListener('click', ev => {
+    b.addEventListener('click', async ev => {
       ev.stopPropagation();
-      pendingStatus = b.dataset.set;
-      // 시각 피드백
-      pop.querySelectorAll('.pop-row button').forEach(x => x.style.outline = '');
-      b.style.outline = '2px solid #0d1f3c';
+      ev.preventDefault();
+      const newStatus = b.dataset.set;
+      const memo = pop.querySelector('#pop-memo').value.trim();
+      const ms = getMachines();
+      setCellData(ms[idx], key, newStatus, memo);
+      pop.classList.add('hidden');
+      render();
+      await autoCloudSave(ms);
     });
   });
+  // 닫기 / 메모만 저장
   pop.querySelector('.close').addEventListener('click', () => pop.classList.add('hidden'));
-  pop.querySelector('.save').addEventListener('click', async () => {
+  pop.querySelector('.save-memo').addEventListener('click', async () => {
     const memo = pop.querySelector('#pop-memo').value.trim();
     const ms = getMachines();
-    setCellData(ms[idx], key, pendingStatus, memo);
-    await autoCloudSave(ms);
+    const cur = getCellData(ms[idx], key);
+    setCellData(ms[idx], key, cur.status, memo);
     pop.classList.add('hidden');
     render();
+    await autoCloudSave(ms);
   });
 }
 
