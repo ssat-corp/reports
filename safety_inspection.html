@@ -45,11 +45,12 @@ body{font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif
 .status-text{font-size:11px;color:#64748b;margin-left:auto;font-weight:600;}
 
 /* 메인 표 */
-.tbl-wrap{background:#fff;border:1px solid #e5e7eb;border-radius:8px;overflow-x:auto;overflow-y:visible;}
-table.insp{width:100%;min-width:1100px;border-collapse:collapse;font-size:12px;}
-table.insp th, table.insp td{border:1px solid #e5e7eb;padding:6px 8px;text-align:center;vertical-align:middle;}
+.tbl-wrap{background:#fff;border:1px solid #e5e7eb;border-radius:0 0 8px 8px;overflow-x:auto;overflow-y:visible;}
+table.insp{width:100%;min-width:1180px;border-collapse:collapse;font-size:12px;}
+table.insp th, table.insp td{border:1px solid #e5e7eb;padding:5px 6px;text-align:center;vertical-align:middle;}
 table.insp thead th{background:#0d1f3c;color:#fff;font-weight:700;font-size:11px;letter-spacing:0.02em;position:sticky;top:0;z-index:10;}
-table.insp thead th.col-month{width:42px;font-size:10px;}
+table.insp thead th.col-month{width:38px;font-size:10px;background:#1e5096;}
+table.insp tbody td.month{min-width:38px;}
 table.insp tbody td.site{background:#f1f5f9;font-weight:700;color:#0d1f3c;font-size:11px;}
 table.insp tbody td.asset{font-weight:700;color:#0d1f3c;white-space:nowrap;}
 table.insp tbody td.text-l{text-align:left;}
@@ -120,6 +121,11 @@ table.insp tbody tr.site-divider td{background:#1a3a6e !important;color:#fff;fon
     <span class="status-text" id="row-count">-</span>
   </div>
 
+  <div id="year-banner" style="background:linear-gradient(90deg,#0d1f3c,#1a3a6e);color:#fff;padding:14px 20px;border-radius:8px 8px 0 0;display:flex;align-items:center;gap:12px;font-weight:900;letter-spacing:-0.02em;">
+    <span style="font-size:11px;font-weight:700;opacity:0.7;letter-spacing:0.12em;text-transform:uppercase;">현재 표시 연도</span>
+    <span id="year-banner-num" style="font-size:24px;color:#fbbf24;">2018년</span>
+    <span style="font-size:11px;opacity:0.7;font-weight:600;">→ 우측 12개월 매트릭스에 결과 표시됨 (가로 스크롤)</span>
+  </div>
   <div class="tbl-wrap">
     <table class="insp" id="insp-table"></table>
   </div>
@@ -225,8 +231,21 @@ function renderYearTabs(){
       currentYear = parseInt(t.dataset.year, 10);
       renderYearTabs();
       render();
+      updateYearBanner();
+      // 매트릭스 영역으로 자동 스크롤
+      const tw = document.querySelector('.tbl-wrap');
+      if(tw) tw.scrollTo({left: tw.scrollWidth, behavior:'smooth'});
+      // 배너 깜빡임 피드백
+      const banner = document.getElementById('year-banner');
+      banner.style.transition = 'box-shadow 0.4s';
+      banner.style.boxShadow = '0 0 0 4px #fbbf24';
+      setTimeout(() => { banner.style.boxShadow = ''; }, 600);
     });
   });
+}
+function updateYearBanner(){
+  const el = document.getElementById('year-banner-num');
+  if(el) el.textContent = currentYear + '년';
 }
 
 function todayISO(){ return new Date().toISOString().slice(0,10); }
@@ -346,7 +365,10 @@ async function init(){
   });
   document.getElementById('btn-copy').addEventListener('click', copyMatrixTSV);
 
+  // 디폴트 현재 연도 (2026)
+  currentYear = 2026;
   renderYearTabs();
+  updateYearBanner();
   render();
 
   initSupabase();
