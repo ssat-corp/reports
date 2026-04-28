@@ -489,55 +489,7 @@ table.matrix tbody td.empty{color:#cbd5e1;}
     </p>
   </div>
 
-  <!-- 6. 관리감독자 일일 점검 — 별도 페이지 안내 -->
-  <div class="card">
-    <div class="card-title"><span class="icon">✅</span> 관리감독자 일일 점검 <span class="badge">감독자 직접 입력 페이지 (별도)</span></div>
-    <p style="font-size:13px;color:#475569;line-height:1.7;margin-bottom:14px;">
-      관리감독자(김민수/양춘향/임문호)는 <strong>본인 전용 페이지</strong>에서 매일 25항목 O/X 입력. 같은 데이터(<code>safetyMgrDaily</code> 키)가 아래 월간 보고서에 자동 누적되어 결재용 PDF로 출력 가능.
-    </p>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;">
-      <a href="supervisor_check.html?leader=kim" class="link-card-blue">
-        <div class="lcb-name">김민수 부장</div>
-        <div class="lcb-sub">사출 · 본사</div>
-        <div class="lcb-action">→ 일일 점검 입력</div>
-      </a>
-      <a href="supervisor_check.html?leader=yang" class="link-card-blue">
-        <div class="lcb-name">양춘향 과장</div>
-        <div class="lcb-sub">도장 · 화성공장</div>
-        <div class="lcb-action">→ 일일 점검 입력</div>
-      </a>
-      <a href="supervisor_check.html?leader=lim" class="link-card-blue">
-        <div class="lcb-name">임문호 이사</div>
-        <div class="lcb-sub">조립 · 화성공장</div>
-        <div class="lcb-action">→ 일일 점검 입력</div>
-      </a>
-    </div>
-  </div>
-
-  <!-- 6. 월간 점검 보고서 (PDF 출력) -->
-  <div class="card">
-    <div class="card-title"><span class="icon">📄</span> 월간 점검 보고서 (PDF 출력) <span class="badge">결재용 · 산안법 자체점검 기록</span></div>
-    <p style="font-size:13px;color:#475569;line-height:1.7;margin-bottom:14px;">
-      매일 입력된 데이터를 월별·감독자별로 누적 → A4 결재 양식으로 출력. 담당/검토/승인 3단 결재란 + 미이행 사항 + 특이사항 자동 정리. <strong>3년 보존 의무.</strong>
-    </p>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;">
-      <a href="supervisor_report.html?leader=kim" class="link-card-red">
-        <div class="lcb-name">김민수 부장</div>
-        <div class="lcb-sub">사출 · 월간 보고서</div>
-        <div class="lcb-action">→ 보고서 보기·인쇄</div>
-      </a>
-      <a href="supervisor_report.html?leader=yang" class="link-card-red">
-        <div class="lcb-name">양춘향 과장</div>
-        <div class="lcb-sub">도장 · 월간 보고서</div>
-        <div class="lcb-action">→ 보고서 보기·인쇄</div>
-      </a>
-      <a href="supervisor_report.html?leader=lim" class="link-card-red">
-        <div class="lcb-name">임문호 이사</div>
-        <div class="lcb-sub">조립 · 월간 보고서</div>
-        <div class="lcb-action">→ 보고서 보기·인쇄</div>
-      </a>
-    </div>
-  </div>
+  <!-- (관리감독자 일일점검·월간 보고서는 4박스 [관리감독자 일지 체크] → supervisor_check.html → 본인 페이지에서 월간 보고서 진입 가능. 중복 카드 제거됨) -->
 
 </div>
 
