@@ -241,6 +241,25 @@ table.matrix tbody td.o{background:#dcfce7;color:#166534;font-weight:800;}
 table.matrix tbody td.x{background:#fee2e2;color:#991b1b;font-weight:800;}
 table.matrix tbody td.empty{color:#cbd5e1;}
 
+/* TOP 4-BOX QUICK MENU */
+.top-menu-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+@media(max-width:900px){.top-menu-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:540px){.top-menu-grid{grid-template-columns:1fr;}}
+.top-menu-card{display:flex;flex-direction:column;align-items:flex-start;gap:6px;padding:18px 20px;background:#fff;border:1.5px solid #e5e7eb;border-radius:8px;text-decoration:none;color:#1c1917;transition:all 0.18s;cursor:pointer;}
+.top-menu-card:hover{transform:translateY(-3px);box-shadow:0 8px 22px rgba(13,31,60,0.12);border-color:#1a3a6e;}
+.top-menu-card .tm-icon{font-size:30px;line-height:1;}
+.top-menu-card .tm-name{font-size:16px;font-weight:900;color:#0d1f3c;letter-spacing:-0.01em;}
+.top-menu-card .tm-sub{font-size:11px;color:#64748b;line-height:1.5;}
+.top-menu-card .tm-action{margin-top:auto;font-size:11px;font-weight:700;color:#1a3a6e;letter-spacing:0.04em;padding-top:6px;border-top:1px dashed #e5e7eb;width:100%;}
+.top-menu-card.patrol{border-left:5px solid #16a34a;}
+.top-menu-card.patrol .tm-action{color:#16a34a;}
+.top-menu-card.issues{border-left:5px solid #dc2626;}
+.top-menu-card.issues .tm-action{color:#dc2626;}
+.top-menu-card.tbm{border-left:5px solid #6366f1;}
+.top-menu-card.tbm .tm-action{color:#6366f1;}
+.top-menu-card.svck{border-left:5px solid #f59e0b;}
+.top-menu-card.svck .tm-action{color:#f59e0b;}
+
 /* TOAST */
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);background:#0d1f3c;color:#fff;padding:12px 24px;border-radius:6px;font-size:13px;font-weight:600;opacity:0;transition:all 0.3s;z-index:2000;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
@@ -269,6 +288,37 @@ table.matrix tbody td.empty{color:#cbd5e1;}
 </div>
 
 <div class="container">
+
+  <!-- 0. 빠른 진입 4박스 -->
+  <div class="card">
+    <div class="card-title"><span class="icon">⚡</span> 바로가기 <span class="badge">현장 입력 페이지 4종</span></div>
+    <div class="top-menu-grid">
+      <a class="top-menu-card patrol" href="patrol.html">
+        <div class="tm-icon">🔍</div>
+        <div class="tm-name">패트롤 점검</div>
+        <div class="tm-sub">환경운영점검 · 월 2회<br>박제성 / 임문호</div>
+        <div class="tm-action">→ 입력 페이지 열기</div>
+      </a>
+      <a class="top-menu-card issues" href="issues.html">
+        <div class="tm-icon">⚠️</div>
+        <div class="tm-name">지적사항 관리</div>
+        <div class="tm-sub">현장 지적사항 등록·조치<br>전 직원</div>
+        <div class="tm-action">→ 입력 페이지 열기</div>
+      </a>
+      <a class="top-menu-card tbm" href="tbm.html">
+        <div class="tm-icon">📋</div>
+        <div class="tm-name">TBM 일지</div>
+        <div class="tm-sub">매일 작업 전 5분<br>김민수 / 양춘향 / 임문호</div>
+        <div class="tm-action">→ 팀별 입력 열기</div>
+      </a>
+      <a class="top-menu-card svck" href="supervisor_check.html">
+        <div class="tm-icon">✅</div>
+        <div class="tm-name">관리감독자 일지 체크</div>
+        <div class="tm-sub">매일 25항목 자체점검<br>관리감독자 3명</div>
+        <div class="tm-action">→ 일일점검 입력</div>
+      </a>
+    </div>
+  </div>
 
   <!-- 1. 안전보건 관리 조직도 (visual) -->
   <div class="card">

@@ -105,9 +105,13 @@ textarea::placeholder{color:#a8a29e;}
 
 /* 진행 표시 */
 .progress-wrap{position:sticky;top:0;z-index:50;background:#f5f5f4;padding:8px 0 4px;margin:0 -2px 12px;border-bottom:1px solid #d6d3d1;}
-.progress-info{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:0 4px 6px;font-size:12px;color:#44403c;font-weight:700;}
+.progress-info{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:0 4px 6px;font-size:12px;color:#44403c;font-weight:700;flex-wrap:wrap;}
 .progress-bar{height:8px;background:#d6d3d1;border-radius:2px;overflow:hidden;}
 .progress-fill{height:100%;background:#44403c;transition:width 0.3s;}
+.save-status{display:inline-block;font-size:11px;font-weight:700;padding:3px 10px;border-radius:12px;letter-spacing:0.02em;margin-left:auto;}
+.save-status.saved{background:#dcfce7;color:#166534;}
+.save-status.saving{background:#fef3c7;color:#78350f;}
+.save-status.error{background:#fee2e2;color:#991b1b;}
 
 /* 이력 */
 .history-table{width:100%;border-collapse:collapse;font-size:13px;}
@@ -164,6 +168,7 @@ textarea::placeholder{color:#a8a29e;}
         <div class="progress-info">
           <span id="progress-text">0 / 25 응답</span>
           <span id="progress-stats">O 0 · X 0</span>
+          <span class="save-status saved" id="save-status">☁ 클라우드 동기화됨</span>
         </div>
         <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%;"></div></div>
       </div>
@@ -435,16 +440,37 @@ function renderForm(){
   updateProgress();
 }
 
-function setOX(idx, val){
+let _saveSeq = 0;
+async function autoCloudSave(label){
+  const seq = ++_saveSeq;
+  setSaveStatus('saving', '☁ 저장 중...');
+  try{
+    const all = DB.getObj('safetyMgrDaily');
+    await DB.set('safetyMgrDaily', all);
+    if(seq === _saveSeq) setSaveStatus('saved', label || '☁ 클라우드 동기화됨');
+  }catch(e){
+    if(seq === _saveSeq) setSaveStatus('error', '⚠ 저장 실패 — [저장] 버튼 클릭');
+  }
+}
+function setSaveStatus(state, txt){
+  const el = $('save-status');
+  if(!el) return;
+  el.className = 'save-status ' + state;
+  el.textContent = txt;
+}
+
+async function setOX(idx, val){
   const date = $('check-date').value;
   const all = DB.getObj('safetyMgrDaily');
   const k = dataKey(date, currentLeader.name);
   if(!all[k]) all[k] = {items:{}, notes:''};
   if(all[k].items[idx] === val) delete all[k].items[idx];
   else all[k].items[idx] = val;
-  // 임시 저장 (저장 버튼 누르기 전엔 localStorage만)
+  // 즉시 로컬 반영 (UI 빠르게)
   localStorage.setItem('safety_safetyMgrDaily', JSON.stringify(all));
   renderForm();
+  // 클라우드 자동 저장 (모든 기기 즉시 공유)
+  autoCloudSave();
 }
 
 function updateProgress(){
@@ -470,9 +496,16 @@ async function saveForm(){
   const k = dataKey(date, currentLeader.name);
   if(!all[k]) all[k] = {items:{}, notes:''};
   all[k].notes = $('notes').value;
-  await DB.set('safetyMgrDaily', all);
-  showToast('저장되었습니다', 'success');
-  renderHistory();
+  setSaveStatus('saving', '☁ 강제 저장 중...');
+  try{
+    await DB.set('safetyMgrDaily', all);
+    setSaveStatus('saved', '☁ 강제 저장 완료');
+    showToast('저장되었습니다', 'success');
+    renderHistory();
+  }catch(e){
+    setSaveStatus('error', '⚠ 저장 실패');
+    showToast('저장 실패: '+e.message, 'error');
+  }
 }
 
 // ============================================================
@@ -536,6 +569,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   $('btn-save').addEventListener('click', saveForm);
   $('btn-change-leader').addEventListener('click', changeLeader);
   $('check-date').addEventListener('change', () => { renderForm(); });
+  let _notesDebounce = null;
   $('notes').addEventListener('input', () => {
     if(!currentLeader) return;
     const date = $('check-date').value;
@@ -544,6 +578,9 @@ window.addEventListener('DOMContentLoaded', async () => {
     if(!all[k]) all[k] = {items:{}, notes:''};
     all[k].notes = $('notes').value;
     localStorage.setItem('safety_safetyMgrDaily', JSON.stringify(all));
+    setSaveStatus('saving', '☁ 입력 중...');
+    clearTimeout(_notesDebounce);
+    _notesDebounce = setTimeout(() => autoCloudSave('☁ 특이사항 동기화됨'), 800);
   });
 
   // 감독자 결정: URL → localStorage → 선택화면
