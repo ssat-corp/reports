@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>관리감독자 월간 점검 보고서</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;background:#f5f5f4;color:#1c1917;font-size:14px;}
+
+/* Header (no-print) */
+.page-header{background:#0d1f3c;color:#fff;padding:20px 28px;position:relative;border-bottom:3px solid #1a3a6e;}
+.page-header .doc-no{display:inline-block;font-size:10px;font-weight:700;letter-spacing:0.18em;padding:2px 10px;border:1px solid rgba(255,255,255,0.3);border-radius:2px;margin-bottom:8px;color:rgba(255,255,255,0.85);}
+.page-header h1{font-size:22px;font-weight:900;letter-spacing:-0.02em;}
+.page-header .sub{font-size:12px;opacity:0.7;margin-top:4px;}
+.page-header .conn{position:absolute;top:18px;right:24px;font-size:11px;background:rgba(255,255,255,0.1);padding:5px 12px;border-radius:4px;display:flex;align-items:center;gap:6px;}
+.conn-dot{width:7px;height:7px;border-radius:50%;background:#78716c;}
+.conn-dot.connected{background:#86efac;animation:pulse 2s infinite;}
+.conn-dot.error{background:#ef4444;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
+.back-link{position:absolute;top:18px;right:170px;font-size:11px;color:#fff;text-decoration:none;background:rgba(255,255,255,0.08);padding:5px 12px;border-radius:4px;border:1px solid rgba(255,255,255,0.15);}
+
+.container{max-width:1080px;margin:0 auto;padding:18px 18px 60px;}
+
+.controls-card{background:#fff;border:1px solid #e5e7eb;border-radius:6px;padding:14px 18px;margin-bottom:16px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;}
+.controls-card label{font-size:12px;font-weight:700;color:#475569;display:flex;flex-direction:column;gap:4px;}
+.controls-card input[type="month"], .controls-card select{padding:7px 11px;border:1px solid #cbd5e1;border-radius:4px;font-size:13px;font-family:inherit;}
+.btn{display:inline-block;padding:9px 16px;background:#1a3a6e;color:#fff;border:none;border-radius:4px;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;font-family:inherit;}
+.btn:hover{background:#0d1f3c;}
+.btn-print{background:#dc2626;}
+.btn-print:hover{background:#991b1b;}
+.btn-outline{background:#fff;color:#1a3a6e;border:1px solid #1a3a6e;}
+
+/* ===== 보고서 본문 (A4 출력 양식) ===== */
+.report-page{
+  background:#fff;
+  width:210mm;
+  min-height:297mm;
+  margin:0 auto;
+  padding:14mm 14mm 14mm;
+  border:1px solid #d6d3d1;
+  box-shadow:0 4px 18px rgba(0,0,0,0.08);
+  font-size:10pt;
+  color:#1c1917;
+}
+.rpt-header{margin-bottom:8mm;}
+.rpt-title-row{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:6mm;border-bottom:2.5px solid #0d1f3c;padding-bottom:4mm;}
+.rpt-company{font-size:11pt;font-weight:700;color:#475569;letter-spacing:0.05em;}
+.rpt-title{font-size:18pt;font-weight:900;color:#0d1f3c;letter-spacing:-0.02em;text-align:center;flex:1;}
+.rpt-system{font-size:9pt;font-weight:700;color:#475569;text-align:right;letter-spacing:0.05em;}
+
+/* 메타 표 (왼쪽) + 결재란 (오른쪽) */
+.rpt-info-row{display:grid;grid-template-columns:1fr 75mm;gap:6mm;margin-bottom:6mm;}
+.rpt-meta-table{width:100%;border-collapse:collapse;font-size:9.5pt;}
+.rpt-meta-table th, .rpt-meta-table td{border:1px solid #475569;padding:5px 9px;text-align:left;}
+.rpt-meta-table th{background:#e2e8f0;font-weight:700;color:#0d1f3c;width:24mm;font-size:9pt;}
+
+.rpt-approval{width:100%;border-collapse:collapse;font-size:8.5pt;}
+.rpt-approval th{background:#0d1f3c;color:#fff;padding:4px 6px;border:1px solid #0d1f3c;font-weight:700;letter-spacing:0.04em;}
+.rpt-approval td.sig{height:18mm;border:1px solid #475569;background:#fafbfc;text-align:center;vertical-align:bottom;font-size:8pt;color:#94a3b8;padding:2px 4px 4px;}
+.rpt-approval td.sig::after{content:'(서명)';font-size:7pt;color:#cbd5e1;}
+
+/* 통계 요약 */
+.rpt-stats{display:grid;grid-template-columns:repeat(4, 1fr);gap:3mm;margin-bottom:6mm;}
+.rpt-stat{background:#f8fafc;border:1px solid #cbd5e1;border-left:3px solid #0d1f3c;border-radius:2px;padding:5px 9px;}
+.rpt-stat .lbl{font-size:8pt;color:#64748b;font-weight:700;letter-spacing:0.04em;}
+.rpt-stat .val{font-size:14pt;font-weight:900;color:#0d1f3c;line-height:1.1;margin-top:1mm;}
+.rpt-stat .sub{font-size:7.5pt;color:#94a3b8;}
+.rpt-stat.alert{border-left-color:#dc2626;}
+.rpt-stat.alert .val{color:#b91c1c;}
+.rpt-stat.ok{border-left-color:#10b981;}
+.rpt-stat.ok .val{color:#047857;}
+
+/* 섹션 타이틀 */
+.rpt-section{margin-bottom:6mm;}
+.rpt-section h3{font-size:10pt;font-weight:800;color:#0d1f3c;background:#0d1f3c;color:#fff;padding:4px 10px;letter-spacing:-0.01em;margin-bottom:2mm;border-radius:1px;}
+
+/* 매트릭스 */
+.rpt-matrix-wrap{overflow-x:auto;}
+.rpt-matrix{width:100%;border-collapse:collapse;font-size:7.5pt;table-layout:fixed;}
+.rpt-matrix th, .rpt-matrix td{border:0.5px solid #475569;padding:1.5px 1px;text-align:center;}
+.rpt-matrix thead th{background:#0d1f3c;color:#fff;font-weight:700;font-size:7pt;height:5mm;}
+.rpt-matrix th.col-cat{width:14mm;}
+.rpt-matrix th.col-item{width:auto;}
+.rpt-matrix th.col-day{width:5.5mm;}
+.rpt-matrix th.col-tot{width:14mm;}
+.rpt-matrix tbody td.cat{background:#1a3a6e;color:#fff;font-weight:800;writing-mode:vertical-rl;text-orientation:mixed;font-size:8pt;}
+.rpt-matrix tbody td.item-label{background:#f8fafc;text-align:left;padding:2px 4px;font-size:7.5pt;line-height:1.3;color:#1c1917;font-weight:500;}
+.rpt-matrix tbody td.day-o{background:#dcfce7;color:#166534;font-weight:800;}
+.rpt-matrix tbody td.day-x{background:#fee2e2;color:#991b1b;font-weight:800;}
+.rpt-matrix tbody td.day-empty{color:#cbd5e1;}
+.rpt-matrix tbody td.tot{background:#fafbfc;font-size:7.5pt;font-weight:700;}
+
+/* 미이행 사항 표 */
+.rpt-x-table, .rpt-notes-table{width:100%;border-collapse:collapse;font-size:9pt;}
+.rpt-x-table th, .rpt-x-table td, .rpt-notes-table th, .rpt-notes-table td{border:0.5px solid #475569;padding:4px 8px;text-align:left;}
+.rpt-x-table thead th, .rpt-notes-table thead th{background:#fef2f2;color:#991b1b;font-weight:700;font-size:8.5pt;}
+.rpt-notes-table thead th{background:#fffbeb;color:#78350f;}
+.rpt-empty-row{padding:6mm;text-align:center;color:#94a3b8;font-size:9pt;font-style:italic;background:#fafbfc;border:1px dashed #cbd5e1;border-radius:2px;}
+
+/* 푸터 (보존 안내) */
+.rpt-footer{margin-top:8mm;padding-top:4mm;border-top:1px solid #cbd5e1;font-size:8pt;color:#475569;line-height:1.6;}
+.rpt-footer strong{color:#0d1f3c;}
+
+/* 화면용 토스트 */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);background:#0d1f3c;color:#fff;padding:12px 24px;border-radius:6px;font-size:13px;font-weight:600;opacity:0;transition:all 0.3s;z-index:2000;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* ===== 인쇄 (PDF) 전용 ===== */
+@media print {
+  @page{size:A4 landscape;margin:8mm;}
+  body{background:#fff;}
+  .no-print, .page-header, .controls-card, .toast{display:none !important;}
+  .container{max-width:none;padding:0;}
+  .report-page{
+    width:auto;min-height:auto;margin:0;padding:0;
+    border:none;box-shadow:none;
+  }
+  .rpt-section{page-break-inside:avoid;}
+  .rpt-matrix tbody td.cat{font-size:7pt;}
+  .rpt-matrix{font-size:7pt;}
+  .rpt-approval td.sig{height:14mm;}
+}
+</style>
+</head>
+<body>
+
+<div class="page-header no-print">
+  <span class="doc-no">SCK-RPT</span>
+  <h1>관리감독자 월간 점검 보고서</h1>
+  <div class="sub">월별 누적 · 결재용 PDF 출력 · 산안법 자체점검 기록</div>
+  <a class="back-link" href="safety_manager.html">← 안전보건관리자</a>
+  <div class="conn"><div class="conn-dot" id="conn-dot"></div><span id="conn-text">연결 중...</span></div>
+</div>
+
+<div class="container">
+
+  <div class="controls-card no-print">
+    <label>점검월 <input type="month" id="rpt-month"></label>
+    <label>관리감독자
+      <select id="rpt-leader">
+        <option value="kim">김민수 부장 (사출)</option>
+        <option value="yang">양춘향 과장 (도장)</option>
+        <option value="lim">임문호 이사 (조립)</option>
+      </select>
+    </label>
+    <button class="btn btn-print" id="btn-print">📄 PDF 인쇄 (Ctrl+P)</button>
+    <span style="font-size:11px;color:#64748b;margin-left:auto;" id="rpt-status">-</span>
+  </div>
+
+  <!-- ============ 보고서 본문 (A4) ============ -->
+  <div class="report-page" id="report-content">
+
+    <div class="rpt-header">
+      <div class="rpt-title-row">
+        <div class="rpt-company">신성오토텍(주)</div>
+        <div class="rpt-title">관리감독자 자체점검표 (월간)</div>
+        <div class="rpt-system">ISO 45001 · IATF 16949</div>
+      </div>
+
+      <div class="rpt-info-row">
+        <table class="rpt-meta-table">
+          <tr>
+            <th>문서번호</th><td id="meta-docno">-</td>
+            <th>점검월</th><td id="meta-month">-</td>
+          </tr>
+          <tr>
+            <th>관리감독자</th><td id="meta-leader">-</td>
+            <th>부서·공정</th><td id="meta-dept">-</td>
+          </tr>
+          <tr>
+            <th>사업장</th><td id="meta-site">-</td>
+            <th>점검 영역</th><td>5분류 25항목 (위험성평가 결과 반영)</td>
+          </tr>
+        </table>
+        <table class="rpt-approval">
+          <thead>
+            <tr><th>담당<br>점검자</th><th>검토<br>안전보건관리담당자</th><th>승인<br>안전보건관리책임자</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="sig"></td>
+              <td class="sig"></td>
+              <td class="sig"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 통계 -->
+    <div class="rpt-stats">
+      <div class="rpt-stat ok"><div class="lbl">이행 (O)</div><div class="val" id="stat-o">0</div><div class="sub">건</div></div>
+      <div class="rpt-stat alert"><div class="lbl">미이행 (X)</div><div class="val" id="stat-x">0</div><div class="sub">건 (시정 필요)</div></div>
+      <div class="rpt-stat"><div class="lbl">미응답</div><div class="val" id="stat-empty">0</div><div class="sub">건</div></div>
+      <div class="rpt-stat"><div class="lbl">이행률</div><div class="val" id="stat-rate">-</div><div class="sub">%</div></div>
+    </div>
+
+    <!-- 매트릭스 -->
+    <div class="rpt-section">
+      <h3>1. 일자별 점검 결과 (5분류 × 25항목 × 일자)</h3>
+      <div class="rpt-matrix-wrap">
+        <table class="rpt-matrix" id="matrix-table"></table>
+      </div>
+    </div>
+
+    <!-- 미이행 요약 -->
+    <div class="rpt-section">
+      <h3>2. 미이행(X) 항목 일자별 요약 및 시정조치</h3>
+      <div id="x-summary"></div>
+    </div>
+
+    <!-- 특이사항 -->
+    <div class="rpt-section">
+      <h3>3. 특이사항 및 조치 내용 (일자별)</h3>
+      <div id="notes-summary"></div>
+    </div>
+
+    <!-- 푸터 (법적 안내) -->
+    <div class="rpt-footer">
+      <div><strong>※ 법적 안내</strong></div>
+      <div>· 본 보고서는 산업안전보건법령에 따른 <strong>관리감독자 자체점검 기록</strong>이며, 작성일로부터 <strong>3년간 보존</strong>해야 합니다.</div>
+      <div>· 미이행(X) 사항은 위험성평가 결과 및 시정조치 계획서에 반영되어야 하며, 산업재해 발생 시 노동부 조사 자료로 활용됩니다.</div>
+      <div>· 모든 결재란은 <strong>자필 서명 또는 전자서명</strong>으로 완료되어야 효력을 가집니다. (디지털 입력 → 월말 출력 → 결재 → 보관 순)</div>
+      <div style="margin-top:1mm;color:#94a3b8;">발행: 신성오토텍(주) 안전보건관리시스템 · 출력일: <span id="print-date">-</span></div>
+    </div>
+
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ============================================================
+// 데이터
+// ============================================================
+const LEADERS = {
+  kim:  { code:'KIM',  name:'김민수 부장', dept:'사출 공정', site:'본사' },
+  yang: { code:'YANG', name:'양춘향 과장', dept:'도장 공정', site:'화성공장' },
+  lim:  { code:'LIM',  name:'임문호 이사', dept:'조립 공정', site:'화성공장' }
+};
+
+const CHECKLIST = [
+  { roman:'I', cat:'작업 전 조치 및 TBM', items:[
+    '당일 작업 구간의 유해·위험요인을 사전에 파악하고 대책을 수립했는가?',
+    'TBM 시 작업자들에게 당일 위험 포인트와 안전 수칙을 구체적으로 전파했는가?',
+    '신규 작업자 또는 특별관리대상 근로자에 대한 별도 교육 및 배치를 확인했는가?',
+    '작업자들의 상태(음주, 피로도 등)를 대면으로 확인했는가?',
+    '작업 시작 전 기계·기구의 방호장치(비상정지, 덮개 등) 기능 점검을 마쳤는가?'
+  ]},
+  { roman:'II', cat:'보호구 및 안전시설', items:[
+    '작업별 특성에 맞는 보호구(안전화, 방진마스크 등)를 지급했는가?',
+    '근로자가 보호구를 올바르게 착용하고 있으며, 기능 상실된 보호구는 없는가?',
+    '추락 방지용 안전난간, 작업발판, 설비의 견고함을 확인했는가?',
+    '위험 구역에 대한 안전보건 표지가 적정하게 부착되고 가독성이 확보되었는가?',
+    '비상시 활용할 구급용구 및 소방설비(소화기 등)의 위치와 상태를 점검했는가?'
+  ]},
+  { roman:'III', cat:'작업 중 실시간 감독', items:[
+    '근로자가 승인된 표준작업지침서(SOP) 및 안전 수칙을 준수하고 있는가?',
+    '고위험 작업(화기, 밀폐, 고소 등) 시 작업허가서 내용이 준수되는가?',
+    "정비·수리 시 에너지 차단장치(LOTO)와 '점검 중' 표지판이 설치되었는가?",
+    '지게차, 크레인 등 양중/하역 기계와 근로자의 충돌 방지 조치가 되어있는가?',
+    '작업 중 예상치 못한 위험 발견 시 즉시 작업 중지 및 대피를 유도할 준비가 됐는가?'
+  ]},
+  { roman:'IV', cat:'위험성평가 및 참여', items:[
+    '현장 근로자가 제안한 안전 개선 사항이나 아차사고 보고를 수렴했는가?',
+    '수시/정기 위험성평가 결과로 도출된 감소 대책이 현장에 적용되었는가?',
+    '유해화학물질 취급 시 MSDS(물질안전보건자료)가 현장에 비치 및 숙지되었는가?',
+    '기계·설비의 노후화나 오작동 등 추가적인 위험 요인을 발굴했는가?',
+    '안전보건 교육(정기, 특별 등) 이수 여부를 확인하고 미이수자 조치를 했는가?'
+  ]},
+  { roman:'V', cat:'현장 환경 및 정리', items:[
+    '통로와 계단에 적재물이 없어 근로자의 안전한 통행이 확보되었는가?',
+    '바닥에 기름, 물기, 전선 등이 방치되어 전도(넘어짐) 위험은 없는가?',
+    '작업장 내 조명 밝기가 충분하며 환기 설비가 정상 작동하는가?',
+    '폐기물 및 위험물 보관소의 분리 배출과 보관 상태가 규정에 맞는가?',
+    '비상구 및 탈출로에 장애물이 없으며 상시 개방 가능한 상태인가?'
+  ]}
+];
+
+// ============================================================
+// SUPABASE
+// ============================================================
+const DEFAULT_SUPABASE_URL = 'https://onohwrswzaiwbabiusrj.supabase.co';
+const DEFAULT_SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9ub2h3cnN3emFpd2JhYml1c3JqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyMjQ5MTgsImV4cCI6MjA4OTgwMDkxOH0.vK_l0iWBJyZmLwzNfQHob2ejEZGfg8mQ8mV-6-lXaN0';
+let supaClient = null;
+
+const DB = {
+  getObj(key){ try{return JSON.parse(localStorage.getItem('safety_'+key))||{};}catch{return {};} }
+};
+async function loadFromSupabase(){
+  if(!supaClient) return;
+  try{
+    const {data, error} = await supaClient.from('safety_store').select('*').eq('key','safetyMgrDaily');
+    if(error) throw error;
+    if(data) data.forEach(row => localStorage.setItem('safety_'+row.key, JSON.stringify(row.value)));
+  }catch(e){ console.error('supaLoad:', e); }
+}
+function initSupabase(){
+  try{
+    supaClient = supabase.createClient(DEFAULT_SUPABASE_URL, DEFAULT_SUPABASE_KEY);
+    document.getElementById('conn-dot').className = 'conn-dot connected';
+    document.getElementById('conn-text').textContent = '실시간 공유 연결됨';
+    supaClient.channel('rpt_sync')
+      .on('postgres_changes', {event:'*', schema:'public', table:'safety_store', filter:'key=eq.safetyMgrDaily'}, async () => {
+        await loadFromSupabase(); render();
+      }).subscribe();
+  }catch(e){
+    document.getElementById('conn-dot').className = 'conn-dot error';
+    document.getElementById('conn-text').textContent = '연결 실패';
+  }
+}
+
+// ============================================================
+// 헬퍼
+// ============================================================
+function $(id){ return document.getElementById(id); }
+function pad(n, w=2){ return String(n).padStart(w, '0'); }
+
+// ============================================================
+// 렌더링
+// ============================================================
+function render(){
+  const ym = $('rpt-month').value;
+  const lcode = $('rpt-leader').value;
+  if(!ym || !lcode){ return; }
+  const [Y, M] = ym.split('-').map(Number);
+  const days = new Date(Y, M, 0).getDate();
+  const leader = LEADERS[lcode];
+  const all = DB.getObj('safetyMgrDaily');
+
+  // 메타
+  $('meta-docno').textContent = `SCK-RPT-${Y}${pad(M)}-${leader.code}`;
+  $('meta-month').textContent = `${Y}년 ${M}월 (${days}일)`;
+  $('meta-leader').textContent = leader.name;
+  $('meta-dept').textContent = leader.dept;
+  $('meta-site').textContent = leader.site;
+  $('print-date').textContent = new Date().toISOString().slice(0,10);
+
+  // 매트릭스 + 통계
+  let totalO=0, totalX=0, totalEmpty=0;
+  let head = '<thead><tr><th class="col-cat">분류</th><th class="col-item">점검 항목</th>';
+  for(let d=1; d<=days; d++) head += `<th class="col-day">${d}</th>`;
+  head += '<th class="col-tot">합계</th></tr></thead>';
+  let body = '<tbody>';
+  let counter = 0;
+  CHECKLIST.forEach((g, gi) => {
+    g.items.forEach((q, qi) => {
+      counter++;
+      let row = '<tr>';
+      if(qi === 0){
+        row += `<td class="cat" rowspan="${g.items.length}">${g.roman}. ${g.cat}</td>`;
+      }
+      row += `<td class="item-label">${counter}. ${q}</td>`;
+      let oCount=0, xCount=0;
+      for(let d=1; d<=days; d++){
+        const date = `${Y}-${pad(M)}-${pad(d)}`;
+        const rec = all[`${date}__${leader.name}`];
+        const v = rec && rec.items ? (rec.items[counter] || '') : '';
+        const cls = v === 'O' ? 'day-o' : (v === 'X' ? 'day-x' : 'day-empty');
+        row += `<td class="${cls}">${v || '·'}</td>`;
+        if(v === 'O'){ oCount++; totalO++; }
+        else if(v === 'X'){ xCount++; totalX++; }
+        else totalEmpty++;
+      }
+      row += `<td class="tot">O ${oCount} / X ${xCount}</td></tr>`;
+      body += row;
+    });
+  });
+  body += '</tbody>';
+  $('matrix-table').innerHTML = head + body;
+
+  // 통계 (미응답 = 25항목 × 일수 - O - X)
+  $('stat-o').textContent = totalO;
+  $('stat-x').textContent = totalX;
+  $('stat-empty').textContent = totalEmpty;
+  const responded = totalO + totalX;
+  const rate = responded > 0 ? Math.round(totalO / responded * 100) : 0;
+  $('stat-rate').textContent = rate;
+
+  // 미이행 요약
+  const xItems = [];
+  for(let d=1; d<=days; d++){
+    const date = `${Y}-${pad(M)}-${pad(d)}`;
+    const rec = all[`${date}__${leader.name}`];
+    if(!rec || !rec.items) continue;
+    let cnt = 0;
+    Object.entries(rec.items).forEach(([idx, v]) => {
+      if(v !== 'X') return;
+      // 항목 텍스트 찾기
+      const i = parseInt(idx, 10);
+      let cIdx = 0; let cat='', q='';
+      outer: for(const g of CHECKLIST){
+        for(const item of g.items){
+          cIdx++;
+          if(cIdx === i){ cat = g.cat; q = item; break outer; }
+        }
+      }
+      xItems.push({date, idx:i, cat, q, notes:rec.notes||''});
+      cnt++;
+    });
+  }
+  if(xItems.length === 0){
+    $('x-summary').innerHTML = '<div class="rpt-empty-row">해당월 미이행(X) 항목 없음.</div>';
+  } else {
+    let xt = '<table class="rpt-x-table"><thead><tr><th style="width:18mm;">일자</th><th style="width:14mm;">항목번호</th><th style="width:32mm;">분류</th><th>점검 항목</th><th>특이사항/조치</th></tr></thead><tbody>';
+    xItems.forEach(x => {
+      xt += `<tr><td>${x.date}</td><td>#${pad(x.idx)}</td><td>${x.cat}</td><td>${x.q}</td><td>${x.notes||'-'}</td></tr>`;
+    });
+    xt += '</tbody></table>';
+    $('x-summary').innerHTML = xt;
+  }
+
+  // 특이사항 (notes만 있는 일자 모음, X와 별개로)
+  const notesByDate = [];
+  for(let d=1; d<=days; d++){
+    const date = `${Y}-${pad(M)}-${pad(d)}`;
+    const rec = all[`${date}__${leader.name}`];
+    if(rec && rec.notes && rec.notes.trim()){
+      notesByDate.push({date, notes:rec.notes});
+    }
+  }
+  if(notesByDate.length === 0){
+    $('notes-summary').innerHTML = '<div class="rpt-empty-row">해당월 특이사항 기록 없음.</div>';
+  } else {
+    let nt = '<table class="rpt-notes-table"><thead><tr><th style="width:24mm;">일자</th><th>특이사항 및 조치 내용</th></tr></thead><tbody>';
+    notesByDate.forEach(n => {
+      nt += `<tr><td>${n.date}</td><td>${n.notes.replace(/\n/g, '<br>')}</td></tr>`;
+    });
+    nt += '</tbody></table>';
+    $('notes-summary').innerHTML = nt;
+  }
+
+  // 상태 표시
+  $('rpt-status').textContent = `${leader.name} · ${ym} — 응답 ${responded}건 (이행률 ${rate}%)`;
+}
+
+// ============================================================
+// INIT
+// ============================================================
+window.addEventListener('DOMContentLoaded', async () => {
+  // 이번달
+  const now = new Date();
+  $('rpt-month').value = `${now.getFullYear()}-${pad(now.getMonth()+1)}`;
+  // URL 파라미터로 leader 받기 (?leader=kim)
+  const urlParams = new URLSearchParams(location.search);
+  const ul = urlParams.get('leader');
+  if(ul && LEADERS[ul]) $('rpt-leader').value = ul;
+  const um = urlParams.get('month');
+  if(um) $('rpt-month').value = um;
+
+  $('rpt-month').addEventListener('change', render);
+  $('rpt-leader').addEventListener('change', render);
+  $('btn-print').addEventListener('click', () => window.print());
+
+  render();
+
+  initSupabase();
+  await loadFromSupabase();
+  render();
+});
+</script>
+</body>
+</html>

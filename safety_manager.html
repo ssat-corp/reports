@@ -148,6 +148,48 @@ body{font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif
 .pd-actions{display:flex;gap:8px;flex-wrap:wrap;}
 .pd-empty{padding:30px 20px;text-align:center;color:#94a3b8;font-size:13px;line-height:1.7;}
 
+/* LINK CARDS (감독자 일일·월간) */
+.link-card-blue, .link-card-red{display:block;padding:16px 18px;background:#fff;border:1px solid #e5e7eb;border-left:4px solid #1a3a6e;border-radius:6px;text-decoration:none;color:#1c1917;transition:all 0.15s;}
+.link-card-blue:hover{background:#eff6ff;border-left-color:#0d1f3c;transform:translateY(-2px);box-shadow:0 4px 12px rgba(13,31,60,0.12);}
+.link-card-red{border-left-color:#dc2626;}
+.link-card-red:hover{background:#fef2f2;border-left-color:#991b1b;transform:translateY(-2px);box-shadow:0 4px 12px rgba(220,38,38,0.12);}
+.link-card-blue .lcb-name, .link-card-red .lcb-name{font-size:16px;font-weight:900;color:#0d1f3c;letter-spacing:-0.01em;}
+.link-card-red .lcb-name{color:#991b1b;}
+.link-card-blue .lcb-sub, .link-card-red .lcb-sub{font-size:11px;color:#64748b;margin-top:3px;}
+.link-card-blue .lcb-action, .link-card-red .lcb-action{font-size:12px;font-weight:700;color:#1a3a6e;margin-top:8px;letter-spacing:0.02em;}
+.link-card-red .lcb-action{color:#dc2626;}
+
+/* CALENDAR */
+.cal-tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;}
+.cal-tab{padding:8px 18px;font-size:13px;font-weight:700;background:#fff;border:1px solid #cbd5e1;border-radius:4px;cursor:pointer;color:#475569;font-family:inherit;}
+.cal-tab:hover{background:#f8fafc;}
+.cal-tab.active{background:#0d1f3c;color:#fff;border-color:#0d1f3c;}
+.cal-routine{background:#f8fafc;border:1px solid #e5e7eb;border-radius:6px;padding:12px 14px;margin-bottom:14px;}
+.cal-routine-title{font-size:11px;font-weight:800;color:#475569;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:8px;}
+.cal-routine-list{display:flex;flex-wrap:wrap;gap:6px;}
+.cal-chip{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;background:#fff;border:1px solid #cbd5e1;border-radius:12px;font-size:11px;font-weight:600;color:#1c1917;cursor:pointer;}
+.cal-chip:hover{background:#eff6ff;border-color:#1a3a6e;}
+.cal-chip.monthly{border-color:#1a3a6e;color:#1a3a6e;}
+.cal-chip.daily{border-color:#475569;color:#475569;}
+.cal-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+@media(max-width:900px){.cal-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:540px){.cal-grid{grid-template-columns:1fr;}}
+.cal-month{background:#fff;border:1px solid #e5e7eb;border-radius:6px;padding:12px;min-height:130px;}
+.cal-month.empty{background:#fafafa;}
+.cal-month-head{font-size:13px;font-weight:800;color:#0d1f3c;padding-bottom:8px;border-bottom:1.5px solid #0d1f3c;margin-bottom:8px;display:flex;justify-content:space-between;align-items:baseline;}
+.cal-month-head .month-num{font-size:17px;}
+.cal-month-head .month-count{font-size:11px;color:#64748b;font-weight:600;}
+.cal-task{display:flex;align-items:center;gap:6px;padding:4px 0;font-size:12px;line-height:1.4;cursor:pointer;border-bottom:1px dotted #f1f5f9;}
+.cal-task:last-child{border-bottom:none;}
+.cal-task:hover{background:#f8fafc;}
+.cal-task .group-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.cal-task .group-dot.안전{background:#1e40af;}
+.cal-task .group-dot.안전-도급{background:#6366f1;}
+.cal-task .group-dot.보건{background:#10b981;}
+.cal-task .name{flex:1;color:#1c1917;font-weight:600;}
+.cal-task .period{font-size:9px;color:#94a3b8;padding:1px 5px;background:#f1f5f9;border-radius:2px;font-weight:700;letter-spacing:0.04em;}
+.cal-month-empty{padding:14px;text-align:center;color:#cbd5e1;font-size:11px;font-style:italic;}
+
 /* TASK CARDS GRID */
 .filter-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;}
 .filter-btn{padding:6px 12px;font-size:12px;font-weight:700;background:#fff;border:1px solid #cbd5e1;border-radius:4px;cursor:pointer;color:#475569;font-family:inherit;}
@@ -376,50 +418,74 @@ table.matrix tbody td.empty{color:#cbd5e1;}
     <div class="task-grid" id="task-grid"></div>
   </div>
 
-  <!-- 5. 관리감독자 일일 체크리스트 -->
+  <!-- 5. 연간 업무 캘린더 (2026·2027·2028) -->
   <div class="card">
-    <div class="card-title"><span class="icon">✅</span> 관리감독자 일일 체크리스트</div>
-    <div class="daily-toolbar">
-      <label>날짜
-        <input type="date" id="daily-date">
-      </label>
-      <label>관리감독자
-        <select id="daily-leader">
-          <option value="">선택</option>
-          <option value="김민수 부장">김민수 부장 (사출)</option>
-          <option value="양춘향 과장">양춘향 과장 (도장)</option>
-          <option value="임문호 이사">임문호 이사 (조립)</option>
-        </select>
-      </label>
-      <button class="btn btn-sm btn-outline" id="btn-allO" type="button">모두 O</button>
-      <button class="btn btn-sm btn-success" id="btn-save-daily">저장</button>
-      <span style="font-size:11px;color:#64748b;margin-left:auto;" id="daily-status">-</span>
+    <div class="card-title"><span class="icon">📅</span> 연간 업무 캘린더 (월별) <span class="badge">3개년 · 주기 기반 자동 배치</span></div>
+    <div class="cal-tabs">
+      <button class="cal-tab active" data-year="2026">2026</button>
+      <button class="cal-tab" data-year="2027">2027</button>
+      <button class="cal-tab" data-year="2028">2028</button>
     </div>
-    <div id="daily-content"></div>
-    <label style="display:block;margin-top:12px;font-size:12px;font-weight:700;color:#475569;">특이사항 및 조치사항
-      <textarea id="daily-notes" rows="3" style="width:100%;margin-top:6px;padding:8px;border:1px solid #cbd5e1;border-radius:4px;font-family:inherit;font-size:13px;" placeholder="당일 특이사항이나 조치사항 기재..."></textarea>
-    </label>
+
+    <div class="cal-routine">
+      <div class="cal-routine-title">매월·정례 업무 (캘린더와 별개로 매월 진행)</div>
+      <div class="cal-routine-list" id="cal-routine-list"></div>
+    </div>
+
+    <div class="cal-grid" id="cal-grid"></div>
+
+    <p style="margin-top:12px;font-size:11px;color:#94a3b8;line-height:1.6;">
+      ※ <strong>해당시·발생시·수시</strong> 업무(특별교육·산업재해·법규개정·안전검사·아차사고 등)는 캘린더에 표시되지 않습니다 (이벤트 발생 시 처리). · 2년/3년 주기는 2026 기준 베이스라인으로 계산.
+    </p>
   </div>
 
-  <!-- 6. 월별 누적 매트릭스 -->
+  <!-- 6. 관리감독자 일일 점검 — 별도 페이지 안내 -->
   <div class="card">
-    <div class="card-title"><span class="icon">📅</span> 월별 누적 (5×31 매트릭스)</div>
-    <div class="daily-toolbar">
-      <label>월
-        <input type="month" id="matrix-month">
-      </label>
-      <label>관리감독자
-        <select id="matrix-leader">
-          <option value="">전체</option>
-          <option value="김민수 부장">김민수 부장</option>
-          <option value="양춘향 과장">양춘향 과장</option>
-          <option value="임문호 이사">임문호 이사</option>
-        </select>
-      </label>
-      <span style="font-size:11px;color:#64748b;margin-left:auto;" id="matrix-status">-</span>
+    <div class="card-title"><span class="icon">✅</span> 관리감독자 일일 점검 <span class="badge">감독자 직접 입력 페이지 (별도)</span></div>
+    <p style="font-size:13px;color:#475569;line-height:1.7;margin-bottom:14px;">
+      관리감독자(김민수/양춘향/임문호)는 <strong>본인 전용 페이지</strong>에서 매일 25항목 O/X 입력. 같은 데이터(<code>safetyMgrDaily</code> 키)가 아래 월간 보고서에 자동 누적되어 결재용 PDF로 출력 가능.
+    </p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;">
+      <a href="supervisor_check.html?leader=kim" class="link-card-blue">
+        <div class="lcb-name">김민수 부장</div>
+        <div class="lcb-sub">사출 · 본사</div>
+        <div class="lcb-action">→ 일일 점검 입력</div>
+      </a>
+      <a href="supervisor_check.html?leader=yang" class="link-card-blue">
+        <div class="lcb-name">양춘향 과장</div>
+        <div class="lcb-sub">도장 · 화성공장</div>
+        <div class="lcb-action">→ 일일 점검 입력</div>
+      </a>
+      <a href="supervisor_check.html?leader=lim" class="link-card-blue">
+        <div class="lcb-name">임문호 이사</div>
+        <div class="lcb-sub">조립 · 화성공장</div>
+        <div class="lcb-action">→ 일일 점검 입력</div>
+      </a>
     </div>
-    <div class="matrix-wrap">
-      <table class="matrix" id="matrix-table"></table>
+  </div>
+
+  <!-- 6. 월간 점검 보고서 (PDF 출력) -->
+  <div class="card">
+    <div class="card-title"><span class="icon">📄</span> 월간 점검 보고서 (PDF 출력) <span class="badge">결재용 · 산안법 자체점검 기록</span></div>
+    <p style="font-size:13px;color:#475569;line-height:1.7;margin-bottom:14px;">
+      매일 입력된 데이터를 월별·감독자별로 누적 → A4 결재 양식으로 출력. 담당/검토/승인 3단 결재란 + 미이행 사항 + 특이사항 자동 정리. <strong>3년 보존 의무.</strong>
+    </p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;">
+      <a href="supervisor_report.html?leader=kim" class="link-card-red">
+        <div class="lcb-name">김민수 부장</div>
+        <div class="lcb-sub">사출 · 월간 보고서</div>
+        <div class="lcb-action">→ 보고서 보기·인쇄</div>
+      </a>
+      <a href="supervisor_report.html?leader=yang" class="link-card-red">
+        <div class="lcb-name">양춘향 과장</div>
+        <div class="lcb-sub">도장 · 월간 보고서</div>
+        <div class="lcb-action">→ 보고서 보기·인쇄</div>
+      </a>
+      <a href="supervisor_report.html?leader=lim" class="link-card-red">
+        <div class="lcb-name">임문호 이사</div>
+        <div class="lcb-sub">조립 · 월간 보고서</div>
+        <div class="lcb-action">→ 보고서 보기·인쇄</div>
+      </a>
     </div>
   </div>
 
@@ -591,13 +657,25 @@ function renderPersonDetail(){
     else if(st.state==='due-soon') dueSoon++;
   });
 
+  // 관리감독자인 경우 빠른 링크 (일일점검 + 월간보고서)
+  const SUPERVISOR_CODE = {'김민수 부장':'kim', '양춘향 과장':'yang', '임문호 이사':'lim'};
+  const lcode = SUPERVISOR_CODE[selectedPerson];
+  const supervisorLinks = lcode ? `
+    <div style="padding:14px 18px;background:#fffbeb;border-bottom:1px solid #fde68a;display:flex;gap:8px;flex-wrap:wrap;">
+      <a href="supervisor_check.html?leader=${lcode}" class="btn btn-sm" style="background:#1a3a6e;">✅ 일일점검 입력 페이지</a>
+      <a href="supervisor_report.html?leader=${lcode}" class="btn btn-sm" style="background:#dc2626;">📄 월간 점검 보고서 (PDF)</a>
+      <span style="font-size:11px;color:#78350f;align-self:center;margin-left:auto;font-weight:600;">↑ 별도 페이지로 이동</span>
+    </div>
+  ` : '';
+
   if(tasks.length === 0){
     panel.innerHTML = `
       <div class="pd-header">
         <div class="pd-name">${selectedPerson}</div>
         <div class="pd-role">${meta.role || ''}</div>
       </div>
-      <div class="pd-empty">이 인물에게 직접 매칭된 정형 업무 없음.<br>전 근로자/관리감독자 일상 점검은 아래 [관리감독자 일일 체크리스트] 참조.</div>
+      ${supervisorLinks}
+      <div class="pd-empty">이 인물에게 직접 매칭된 정형 업무 없음.<br>${lcode ? '위 버튼에서 일일 점검·월간 보고서 접근.' : '전 근로자/관리감독자 일상 점검은 일일 점검 페이지 참조.'}</div>
     `;
     return;
   }
@@ -609,6 +687,7 @@ function renderPersonDetail(){
       <div class="pd-role">${meta.role || ''}</div>
       <div class="pd-stats">${stats}</div>
     </div>
+    ${supervisorLinks}
     ${tasks.map(t => renderPersonTask(t)).join('')}
   `;
 
@@ -715,141 +794,61 @@ async function markDone(tid){
 }
 
 // ============================================================
-// 5. 일일 체크리스트
+// 일일점검 / 월별 매트릭스는 별도 페이지로 이동:
+//   supervisor_check.html   — 감독자 일일 입력 (별창)
+//   supervisor_report.html  — 월간 결재용 PDF 출력
 // ============================================================
-function renderDailyChecklist(){
-  const date = $('daily-date').value;
-  const leader = $('daily-leader').value;
-  const all = DB.getObj('safetyMgrDaily');
-  const key = `${date}__${leader}`;
-  const rec = (date && leader) ? (all[key] || {items:{}, notes:''}) : {items:{}, notes:''};
 
+// ============================================================
+// 5. 연간 캘린더 (2026·2027·2028)
+// ============================================================
+function isRoutineTask(t){
+  return ['monthly', 'biweekly', 'everyOtherDay'].includes(t.periodCode);
+}
+function isDueInMonth(t, year, month){
+  switch(t.periodCode){
+    case 'bimonthly':  return month % 2 === 0;
+    case 'quarterly':  return [3,6,9,12].includes(month);
+    case 'semiannual': return [6,12].includes(month);
+    case 'biannual':   return (t.dueMonths || [4,10]).includes(month);
+    case 'yearly':     return month === (t.dueMonth || 12);
+    case 'biennial':   return ((year - 2026) % 2 === 0) && month === (t.dueMonth || 12);
+    case 'triennial':  return ((year - 2026) % 3 === 0) && month === (t.dueMonth || 12);
+    default: return false;
+  }
+}
+function renderCalendar(){
+  const activeTab = document.querySelector('.cal-tab.active');
+  if(!activeTab) return;
+  const year = parseInt(activeTab.dataset.year, 10);
+
+  // 정례 업무 (매월 / 격일)
+  const routineTasks = SAFETY_TASKS.filter(isRoutineTask);
+  $('cal-routine-list').innerHTML = routineTasks.map(t => {
+    const cls = t.periodCode === 'everyOtherDay' ? 'daily' : 'monthly';
+    return `<span class="cal-chip ${cls}" onclick="scrollToTaskCard(${t.id})" title="${t.content.split('\n')[0]}">[${t.group}] ${t.name} · ${t.period}</span>`;
+  }).join('');
+
+  // 12개월 그리드
   let html = '';
-  let counter = 0;
-  DAILY_CHECKLIST.forEach(g => {
-    html += `<div class="daily-group">
-      <div class="daily-group-head">${g.group}</div>`;
-    g.items.forEach(q => {
-      counter++;
-      const cur = rec.items[counter] || '';
-      html += `<div class="daily-item">
-        <span class="num">${String(counter).padStart(2,'0')}</span>
-        <span class="q">${q}</span>
-        <span class="ox">
-          <button type="button" class="ox-btn ${cur==='O'?'sel-o':''}" onclick="setOX(${counter},'O')">O</button>
-          <button type="button" class="ox-btn ${cur==='X'?'sel-x':''}" onclick="setOX(${counter},'X')">X</button>
-        </span>
-      </div>`;
-    });
-    html += `</div>`;
-  });
-  $('daily-content').innerHTML = html;
-  $('daily-notes').value = rec.notes || '';
-  updateDailyStatus();
-}
-function setOX(idx, val){
-  const date = $('daily-date').value;
-  const leader = $('daily-leader').value;
-  if(!date || !leader){ showToast('날짜와 관리감독자를 먼저 선택', 'error'); return; }
-  const all = DB.getObj('safetyMgrDaily');
-  const key = `${date}__${leader}`;
-  if(!all[key]) all[key] = {items:{}, notes:''};
-  if(all[key].items[idx] === val) delete all[key].items[idx];
-  else all[key].items[idx] = val;
-  // 임시 저장(저장 버튼 누르기 전엔 localStorage만)
-  localStorage.setItem('safety_safetyMgrDaily', JSON.stringify(all));
-  renderDailyChecklist();
-}
-function updateDailyStatus(){
-  const date = $('daily-date').value;
-  const leader = $('daily-leader').value;
-  if(!date || !leader){ $('daily-status').textContent = '날짜·감독자 선택 필요'; return; }
-  const all = DB.getObj('safetyMgrDaily');
-  const rec = all[`${date}__${leader}`] || {items:{}};
-  const total = 25;
-  const done = Object.keys(rec.items).length;
-  $('daily-status').textContent = `${date} · ${leader} — ${done}/${total} 응답 (${Math.round(done/total*100)}%)`;
-}
-async function saveDaily(){
-  const date = $('daily-date').value;
-  const leader = $('daily-leader').value;
-  if(!date || !leader){ showToast('날짜와 관리감독자를 먼저 선택', 'error'); return; }
-  const all = DB.getObj('safetyMgrDaily');
-  const key = `${date}__${leader}`;
-  if(!all[key]) all[key] = {items:{}, notes:''};
-  all[key].notes = $('daily-notes').value;
-  await DB.set('safetyMgrDaily', all);
-  showToast('저장됨', 'success');
-  renderMatrix();
-}
-function setAllO(){
-  const date = $('daily-date').value;
-  const leader = $('daily-leader').value;
-  if(!date || !leader){ showToast('날짜와 관리감독자를 먼저 선택', 'error'); return; }
-  const all = DB.getObj('safetyMgrDaily');
-  const key = `${date}__${leader}`;
-  if(!all[key]) all[key] = {items:{}, notes:''};
-  for(let i=1; i<=25; i++) all[key].items[i] = 'O';
-  localStorage.setItem('safety_safetyMgrDaily', JSON.stringify(all));
-  renderDailyChecklist();
-}
-
-// ============================================================
-// 6. 월별 매트릭스 (5×31 그리드, 항목별 일자별 O/X)
-// ============================================================
-function renderMatrix(){
-  const ym = $('matrix-month').value; // YYYY-MM
-  const leader = $('matrix-leader').value;
-  if(!ym){ $('matrix-table').innerHTML = ''; return; }
-  const [Y, M] = ym.split('-').map(Number);
-  const days = new Date(Y, M, 0).getDate();
-  const all = DB.getObj('safetyMgrDaily');
-
-  // 헤더
-  let head = '<thead><tr><th style="min-width:50px;">분류</th><th style="min-width:280px;">점검 항목</th>';
-  for(let d=1; d<=days; d++) head += `<th>${d}</th>`;
-  head += '<th>합계</th></tr></thead>';
-
-  let body = '<tbody>';
-  let counter = 0;
-  let totalO = 0, totalX = 0, totalEmpty = 0;
-  DAILY_CHECKLIST.forEach((g, gi) => {
-    g.items.forEach((q, qi) => {
-      counter++;
-      let row = `<tr>`;
-      if(qi === 0){
-        row += `<td class="group-cell" rowspan="${g.items.length}">${g.group.replace(/^\d+\.\s*/, '')}</td>`;
+  for(let m = 1; m <= 12; m++){
+    const tasks = SAFETY_TASKS.filter(t => isDueInMonth(t, year, m));
+    const empty = tasks.length === 0;
+    html += `<div class="cal-month${empty ? ' empty' : ''}">
+      <div class="cal-month-head">
+        <span class="month-num">${m}월</span>
+        <span class="month-count">${tasks.length}건</span>
+      </div>
+      ${empty ? '<div class="cal-month-empty">예정 없음</div>' :
+        tasks.map(t => `<div class="cal-task" onclick="scrollToTaskCard(${t.id})" title="${t.content.split('\n')[0]}">
+          <span class="group-dot ${t.group}"></span>
+          <span class="name">${t.name}</span>
+          <span class="period">${t.period}</span>
+        </div>`).join('')
       }
-      row += `<td class="label">${counter}. ${q}</td>`;
-      let oCount=0, xCount=0;
-      for(let d=1; d<=days; d++){
-        const date = `${Y}-${String(M).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-        // leader가 비어있으면 그날 어떤 감독자라도 응답한게 있으면 표시 (우선순위: O > X)
-        let val = '';
-        if(leader){
-          const rec = all[`${date}__${leader}`];
-          val = rec && rec.items ? (rec.items[counter] || '') : '';
-        } else {
-          ['김민수 부장','양춘향 과장','임문호 이사'].forEach(L => {
-            const rec = all[`${date}__${L}`];
-            const v = rec && rec.items ? (rec.items[counter] || '') : '';
-            if(v === 'O' && val !== 'O') val = 'O';
-            else if(v === 'X' && !val) val = 'X';
-          });
-        }
-        const cls = val === 'O' ? 'o' : (val === 'X' ? 'x' : 'empty');
-        row += `<td class="${cls}">${val || '·'}</td>`;
-        if(val === 'O') oCount++;
-        else if(val === 'X') xCount++;
-      }
-      row += `<td><strong style="color:#059669;">O ${oCount}</strong> / <strong style="color:#dc2626;">X ${xCount}</strong></td></tr>`;
-      body += row;
-      totalO += oCount; totalX += xCount; totalEmpty += (days - oCount - xCount);
-    });
-  });
-  body += '</tbody>';
-  $('matrix-table').innerHTML = head + body;
-  $('matrix-status').textContent = `이행 O ${totalO} · 미이행 X ${totalX} · 미응답 ${totalEmpty}`;
+    </div>`;
+  }
+  $('cal-grid').innerHTML = html;
 }
 
 // ============================================================
@@ -920,15 +919,9 @@ function rerenderAll(){
   renderAlerts();
   renderTaskGrid();
   if(selectedPerson) renderPersonDetail();
-  renderMatrix();
-  updateDailyStatus();
 }
 
 window.addEventListener('DOMContentLoaded', async () => {
-  // 초기 날짜 세팅
-  $('daily-date').value = todayISO();
-  $('matrix-month').value = todayISO().slice(0,7);
-
   // 필터 버튼
   document.querySelectorAll('#task-filters .filter-btn').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -939,41 +932,30 @@ window.addEventListener('DOMContentLoaded', async () => {
     });
   });
 
-  // 일일 체크리스트 컨트롤
-  $('daily-date').addEventListener('change', renderDailyChecklist);
-  $('daily-leader').addEventListener('change', renderDailyChecklist);
-  $('btn-allO').addEventListener('click', setAllO);
-  $('btn-save-daily').addEventListener('click', saveDaily);
-  $('daily-notes').addEventListener('input', () => {
-    // 메모 임시 반영
-    const date = $('daily-date').value, leader = $('daily-leader').value;
-    if(!date || !leader) return;
-    const all = DB.getObj('safetyMgrDaily');
-    const key = `${date}__${leader}`;
-    if(!all[key]) all[key] = {items:{}, notes:''};
-    all[key].notes = $('daily-notes').value;
-    localStorage.setItem('safety_safetyMgrDaily', JSON.stringify(all));
-  });
-
-  // 매트릭스
-  $('matrix-month').addEventListener('change', renderMatrix);
-  $('matrix-leader').addEventListener('change', renderMatrix);
-
   // 이메일
   $('btn-send-mail').addEventListener('click', sendNotificationEmail);
 
   // 조직도 박스 클릭 핸들러 바인딩 (정적 HTML이라 1회만)
   bindOrgChartClicks();
 
+  // 캘린더 연도 탭
+  document.querySelectorAll('.cal-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.cal-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      renderCalendar();
+    });
+  });
+
   // 초기 렌더 (로컬 데이터로)
   rerenderAll();
-  renderDailyChecklist();
+  renderCalendar();
 
   // 슈퍼베이스 연결 후 동기화
   initSupabase();
   await loadFromSupabase();
   rerenderAll();
-  renderDailyChecklist();
+  renderCalendar();
 });
 </script>
 </body>
