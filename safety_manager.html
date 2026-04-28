@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>안전보건관리자 | 산업안전보건</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="safety_manager_data.js?v=20260428"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;background:#f5f5f4;color:#1c1917;font-size:14px;}
+
+/* HEADER */
+.page-header{background:#0d1f3c;color:#fff;padding:24px 32px;border-bottom:3px solid #1a3a6e;position:relative;}
+.page-header .doc-no{display:inline-block;font-size:10px;font-weight:700;letter-spacing:0.18em;padding:2px 10px;border:1px solid rgba(255,255,255,0.3);border-radius:2px;margin-bottom:10px;color:rgba(255,255,255,0.85);}
+.page-header h1{font-size:22px;font-weight:900;letter-spacing:-0.02em;}
+.page-header .sub{font-size:12px;opacity:0.7;margin-top:4px;}
+.page-header .conn{position:absolute;top:18px;right:24px;font-size:11px;background:rgba(255,255,255,0.1);padding:5px 12px;border-radius:4px;display:flex;align-items:center;gap:6px;}
+.conn-dot{width:7px;height:7px;border-radius:50%;background:#78716c;}
+.conn-dot.connected{background:#86efac;animation:pulse 2s infinite;}
+.conn-dot.error{background:#ef4444;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
+.back-link{position:absolute;top:18px;right:170px;font-size:11px;color:#fff;text-decoration:none;background:rgba(255,255,255,0.08);padding:5px 12px;border-radius:4px;border:1px solid rgba(255,255,255,0.15);}
+.back-link:hover{background:rgba(255,255,255,0.15);}
+
+.container{max-width:1280px;margin:0 auto;padding:20px 24px 60px;}
+
+/* CARDS / SECTIONS */
+.card{background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:22px 24px;margin-bottom:18px;}
+.card-title{font-size:17px;font-weight:800;color:#0d1f3c;margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid #0d1f3c;letter-spacing:-0.02em;display:flex;align-items:center;gap:10px;}
+.card-title .icon{font-size:18px;}
+.card-title .badge{font-size:10px;font-weight:700;padding:3px 8px;background:#f1f5f9;color:#475569;border-radius:3px;letter-spacing:0.04em;margin-left:auto;}
+
+/* SUMMARY (top) */
+.summary-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(150px, 1fr));gap:12px;}
+.sum-stat{padding:14px 16px;background:linear-gradient(135deg,#fff,#f8fafc);border:1px solid #e5e7eb;border-radius:6px;border-left:4px solid #1a3a6e;}
+.sum-stat .lbl{font-size:11px;color:#64748b;font-weight:600;letter-spacing:0.04em;}
+.sum-stat .val{font-size:26px;font-weight:900;color:#0d1f3c;margin-top:4px;line-height:1;}
+.sum-stat .sub{font-size:11px;color:#94a3b8;margin-top:4px;}
+.sum-stat.alert{border-left-color:#dc2626;background:linear-gradient(135deg,#fef2f2,#fff);}
+.sum-stat.alert .val{color:#b91c1c;}
+.sum-stat.warn{border-left-color:#f59e0b;background:linear-gradient(135deg,#fffbeb,#fff);}
+.sum-stat.warn .val{color:#b45309;}
+.sum-stat.ok{border-left-color:#10b981;}
+.sum-stat.ok .val{color:#047857;}
+
+/* ALERTS */
+.alert-list{display:grid;gap:8px;}
+.alert-row{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:6px;border:1px solid #e5e7eb;background:#fff;}
+.alert-row.overdue{background:#fef2f2;border-color:#fecaca;}
+.alert-row.due-soon{background:#fffbeb;border-color:#fde68a;}
+.alert-row .pill{font-size:10px;font-weight:800;padding:3px 8px;border-radius:3px;letter-spacing:0.05em;white-space:nowrap;}
+.alert-row.overdue .pill{background:#dc2626;color:#fff;}
+.alert-row.due-soon .pill{background:#f59e0b;color:#fff;}
+.alert-row .name{font-weight:700;color:#0d1f3c;flex:1;font-size:13px;}
+.alert-row .meta{font-size:11px;color:#64748b;}
+.alert-row .due{font-size:11px;color:#475569;font-weight:600;margin-left:8px;}
+.alert-empty{padding:18px;text-align:center;color:#94a3b8;font-size:12px;border:1.5px dashed #e2e8f0;border-radius:6px;}
+
+.btn{display:inline-block;padding:8px 14px;background:#1a3a6e;color:#fff;border:none;border-radius:4px;font-size:12px;font-weight:700;cursor:pointer;text-decoration:none;font-family:inherit;letter-spacing:0.02em;}
+.btn:hover{background:#0d1f3c;}
+.btn-outline{background:#fff;color:#1a3a6e;border:1px solid #1a3a6e;}
+.btn-outline:hover{background:#f8fafc;}
+.btn-sm{padding:5px 10px;font-size:11px;}
+.btn-danger{background:#dc2626;}
+.btn-danger:hover{background:#991b1b;}
+.btn-success{background:#059669;}
+.btn-success:hover{background:#047857;}
+
+/* ORG TREE */
+.org-layout{display:grid;grid-template-columns:380px 1fr;gap:18px;}
+@media(max-width:900px){.org-layout{grid-template-columns:1fr;}}
+.org-tree{background:#fafafa;border:1px solid #e5e7eb;border-radius:6px;padding:16px;}
+.org-node{display:block;padding:10px 12px;margin-bottom:6px;background:#fff;border:1px solid #e5e7eb;border-left:4px solid #1a3a6e;border-radius:4px;cursor:pointer;transition:all 0.15s;text-decoration:none;color:#1c1917;}
+.org-node:hover{background:#eff6ff;border-left-color:#0d1f3c;transform:translateX(2px);}
+.org-node.active{background:#0d1f3c;color:#fff;border-left-color:#fbbf24;}
+.org-node.active .org-node-sub{color:#cbd5e1;}
+.org-node .org-node-name{font-size:14px;font-weight:800;letter-spacing:-0.01em;}
+.org-node .org-node-sub{font-size:11px;color:#64748b;margin-top:2px;}
+.org-node.external{border-left-color:#94a3b8;background:#f8fafc;}
+.org-node.external .org-node-name{color:#475569;}
+.org-node.external.active{background:#475569;color:#fff;}
+.org-node.lvl-1{margin-left:14px;}
+.org-node.lvl-2{margin-left:28px;}
+.org-node.lvl-3{margin-left:42px;}
+.org-tree-title{font-size:11px;font-weight:800;color:#475569;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px;}
+
+.role-detail{padding:0;}
+.role-detail-empty{padding:60px 20px;text-align:center;color:#94a3b8;font-size:13px;}
+.role-header{padding:14px 16px;background:#0d1f3c;color:#fff;border-radius:6px 6px 0 0;display:flex;align-items:center;gap:12px;}
+.role-header .name{font-size:18px;font-weight:900;}
+.role-header .role{font-size:11px;color:#cbd5e1;background:rgba(255,255,255,0.08);padding:3px 8px;border-radius:3px;}
+.role-task-list{border:1px solid #e5e7eb;border-top:none;border-radius:0 0 6px 6px;overflow:hidden;}
+.role-task{padding:11px 16px;border-bottom:1px solid #f1f5f9;display:flex;align-items:center;gap:12px;font-size:13px;cursor:pointer;}
+.role-task:last-child{border-bottom:none;}
+.role-task:hover{background:#f8fafc;}
+.role-task .group{font-size:10px;font-weight:800;padding:2px 7px;border-radius:3px;letter-spacing:0.04em;}
+.role-task .group.안전{background:#dbeafe;color:#1e40af;}
+.role-task .group.안전-도급{background:#e0e7ff;color:#3730a3;}
+.role-task .group.보건{background:#dcfce7;color:#166534;}
+.role-task .name{font-weight:700;flex:1;color:#0d1f3c;}
+.role-task .period{font-size:11px;color:#64748b;font-weight:600;}
+.role-task .status-dot{width:8px;height:8px;border-radius:50%;background:#cbd5e1;}
+.role-task .status-dot.overdue{background:#dc2626;}
+.role-task .status-dot.due-soon{background:#f59e0b;}
+.role-task .status-dot.ok{background:#10b981;}
+
+/* TASK CARDS GRID */
+.filter-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;}
+.filter-btn{padding:6px 12px;font-size:12px;font-weight:700;background:#fff;border:1px solid #cbd5e1;border-radius:4px;cursor:pointer;color:#475569;font-family:inherit;}
+.filter-btn:hover{background:#f8fafc;}
+.filter-btn.active{background:#0d1f3c;color:#fff;border-color:#0d1f3c;}
+.task-grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(320px, 1fr));gap:12px;}
+.task-card{background:#fff;border:1px solid #e5e7eb;border-left:4px solid #1a3a6e;border-radius:6px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;}
+.task-card.안전-도급{border-left-color:#6366f1;}
+.task-card.보건{border-left-color:#10b981;}
+.task-card .tc-head{display:flex;align-items:flex-start;gap:8px;justify-content:space-between;}
+.task-card .tc-name{font-size:14px;font-weight:800;color:#0d1f3c;letter-spacing:-0.01em;}
+.task-card .tc-status{font-size:10px;font-weight:800;padding:2px 7px;border-radius:3px;white-space:nowrap;}
+.task-card .tc-status.overdue{background:#dc2626;color:#fff;}
+.task-card .tc-status.due-soon{background:#f59e0b;color:#fff;}
+.task-card .tc-status.ok{background:#10b981;color:#fff;}
+.task-card .tc-status.na{background:#cbd5e1;color:#1c1917;}
+.task-card .tc-meta{display:flex;flex-wrap:wrap;gap:6px;font-size:11px;color:#475569;}
+.task-card .tc-meta .chip{background:#f1f5f9;padding:2px 7px;border-radius:3px;font-weight:600;}
+.task-card .tc-content{font-size:12px;color:#334155;line-height:1.55;white-space:pre-line;background:#fafbfc;padding:8px 10px;border-radius:4px;border-left:2px solid #cbd5e1;max-height:120px;overflow:auto;}
+.task-card .tc-doc{font-size:11px;color:#64748b;}
+.task-card .tc-doc strong{color:#0d1f3c;font-weight:700;}
+.task-card .tc-actions{display:flex;gap:6px;margin-top:auto;padding-top:8px;border-top:1px dashed #e5e7eb;}
+.task-card .tc-actions .last-done{font-size:11px;color:#94a3b8;flex:1;align-self:center;}
+
+/* DAILY CHECKLIST */
+.daily-toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:14px;padding:12px;background:#f8fafc;border:1px solid #e5e7eb;border-radius:6px;}
+.daily-toolbar label{font-size:12px;font-weight:700;color:#475569;}
+.daily-toolbar input[type="date"], .daily-toolbar select{padding:6px 10px;border:1px solid #cbd5e1;border-radius:4px;font-size:13px;font-family:inherit;}
+.daily-group{margin-bottom:18px;border:1px solid #e5e7eb;border-radius:6px;overflow:hidden;}
+.daily-group-head{padding:10px 14px;background:#0d1f3c;color:#fff;font-size:13px;font-weight:800;letter-spacing:-0.01em;}
+.daily-item{padding:10px 14px;border-bottom:1px solid #f1f5f9;display:flex;align-items:center;gap:12px;}
+.daily-item:last-child{border-bottom:none;}
+.daily-item .num{font-size:11px;font-weight:800;color:#94a3b8;min-width:24px;}
+.daily-item .q{flex:1;font-size:13px;color:#1c1917;line-height:1.5;}
+.daily-item .ox{display:flex;gap:4px;}
+.ox-btn{padding:6px 14px;font-size:12px;font-weight:800;border:1px solid #cbd5e1;background:#fff;color:#64748b;border-radius:4px;cursor:pointer;font-family:inherit;}
+.ox-btn:hover{background:#f8fafc;}
+.ox-btn.sel-o{background:#10b981;color:#fff;border-color:#10b981;}
+.ox-btn.sel-x{background:#dc2626;color:#fff;border-color:#dc2626;}
+
+/* MONTHLY MATRIX */
+.matrix-wrap{overflow-x:auto;}
+table.matrix{width:100%;min-width:980px;border-collapse:collapse;font-size:11px;}
+table.matrix th, table.matrix td{border:1px solid #e5e7eb;padding:5px 4px;text-align:center;}
+table.matrix thead th{background:#0d1f3c;color:#fff;font-weight:700;font-size:10px;}
+table.matrix tbody td.label{text-align:left;background:#f8fafc;font-weight:600;color:#1c1917;padding:5px 8px;font-size:11px;min-width:280px;}
+table.matrix tbody td.group-cell{background:#1a3a6e;color:#fff;font-weight:800;writing-mode:vertical-rl;text-orientation:mixed;font-size:11px;}
+table.matrix tbody td.o{background:#dcfce7;color:#166534;font-weight:800;}
+table.matrix tbody td.x{background:#fee2e2;color:#991b1b;font-weight:800;}
+table.matrix tbody td.empty{color:#cbd5e1;}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);background:#0d1f3c;color:#fff;padding:12px 24px;border-radius:6px;font-size:13px;font-weight:600;opacity:0;transition:all 0.3s;z-index:2000;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.toast.error{background:#dc2626;}
+.toast.success{background:#059669;}
+
+/* RESPONSIVE */
+@media(max-width:600px){
+  .container{padding:14px;}
+  .page-header{padding:18px 16px;}
+  .page-header h1{font-size:18px;}
+  .back-link{position:static;display:inline-block;margin-bottom:8px;}
+  .page-header .conn{position:static;display:inline-flex;margin-bottom:8px;margin-right:8px;}
+  .card{padding:16px;}
+}
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <span class="doc-no">SHM-FORM</span>
+  <h1>안전보건관리자 업무 가이드</h1>
+  <div class="sub">조직도 · 33개 안전보건 업무 · 일일 체크리스트 · 알림</div>
+  <a class="back-link" href="safety_dashboard.html">← 대시보드</a>
+  <div class="conn"><div class="conn-dot" id="conn-dot"></div><span id="conn-text">연결 중...</span></div>
+</div>
+
+<div class="container">
+
+  <!-- 1. 이행현황 요약 -->
+  <div class="card">
+    <div class="card-title"><span class="icon">📊</span> 이행 현황 요약 <span class="badge" id="summary-as-of">-</span></div>
+    <div class="summary-grid" id="summary-grid"></div>
+  </div>
+
+  <!-- 2. 알림 -->
+  <div class="card">
+    <div class="card-title">
+      <span class="icon">🔔</span> 알림 (마감 임박 + 지연)
+      <span class="badge" id="alert-count">-</span>
+      <button class="btn btn-sm btn-success" id="btn-send-mail" style="margin-left:8px;">이메일 발송</button>
+    </div>
+    <div class="alert-list" id="alert-list"></div>
+  </div>
+
+  <!-- 3. 조직도 + 역할별 업무 -->
+  <div class="card">
+    <div class="card-title"><span class="icon">🏢</span> 안전보건 관리 조직도 <span class="badge">이름 클릭 → 담당 업무</span></div>
+    <div class="org-layout">
+      <div class="org-tree" id="org-tree"></div>
+      <div class="role-detail" id="role-detail">
+        <div class="role-detail-empty">왼쪽 조직도에서 이름을 클릭하면<br>해당 인물의 담당 업무가 여기에 표시됩니다.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. 33개 업무 카드 -->
+  <div class="card">
+    <div class="card-title"><span class="icon">📋</span> 안전보건 업무 33선 (주요업무정리표)</div>
+    <div class="filter-row" id="task-filters">
+      <button class="filter-btn active" data-filter="all">전체</button>
+      <button class="filter-btn" data-filter="안전">안전</button>
+      <button class="filter-btn" data-filter="안전-도급">안전-도급</button>
+      <button class="filter-btn" data-filter="보건">보건</button>
+      <button class="filter-btn" data-filter="overdue" style="margin-left:auto;">지연만</button>
+      <button class="filter-btn" data-filter="due-soon">임박만</button>
+    </div>
+    <div class="task-grid" id="task-grid"></div>
+  </div>
+
+  <!-- 5. 관리감독자 일일 체크리스트 -->
+  <div class="card">
+    <div class="card-title"><span class="icon">✅</span> 관리감독자 일일 체크리스트</div>
+    <div class="daily-toolbar">
+      <label>날짜
+        <input type="date" id="daily-date">
+      </label>
+      <label>관리감독자
+        <select id="daily-leader">
+          <option value="">선택</option>
+          <option value="김민수 부장">김민수 부장 (사출)</option>
+          <option value="양춘향 과장">양춘향 과장 (도장)</option>
+          <option value="임문호 이사">임문호 이사 (조립)</option>
+        </select>
+      </label>
+      <button class="btn btn-sm btn-outline" id="btn-allO" type="button">모두 O</button>
+      <button class="btn btn-sm btn-success" id="btn-save-daily">저장</button>
+      <span style="font-size:11px;color:#64748b;margin-left:auto;" id="daily-status">-</span>
+    </div>
+    <div id="daily-content"></div>
+    <label style="display:block;margin-top:12px;font-size:12px;font-weight:700;color:#475569;">특이사항 및 조치사항
+      <textarea id="daily-notes" rows="3" style="width:100%;margin-top:6px;padding:8px;border:1px solid #cbd5e1;border-radius:4px;font-family:inherit;font-size:13px;" placeholder="당일 특이사항이나 조치사항 기재..."></textarea>
+    </label>
+  </div>
+
+  <!-- 6. 월별 누적 매트릭스 -->
+  <div class="card">
+    <div class="card-title"><span class="icon">📅</span> 월별 누적 (5×31 매트릭스)</div>
+    <div class="daily-toolbar">
+      <label>월
+        <input type="month" id="matrix-month">
+      </label>
+      <label>관리감독자
+        <select id="matrix-leader">
+          <option value="">전체</option>
+          <option value="김민수 부장">김민수 부장</option>
+          <option value="양춘향 과장">양춘향 과장</option>
+          <option value="임문호 이사">임문호 이사</option>
+        </select>
+      </label>
+      <span style="font-size:11px;color:#64748b;margin-left:auto;" id="matrix-status">-</span>
+    </div>
+    <div class="matrix-wrap">
+      <table class="matrix" id="matrix-table"></table>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ============================================================
+// SUPABASE / DB (대시보드와 동일 키 공간 공유)
+// ============================================================
+const DEFAULT_SUPABASE_URL = 'https://onohwrswzaiwbabiusrj.supabase.co';
+const DEFAULT_SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9ub2h3cnN3emFpd2JhYml1c3JqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyMjQ5MTgsImV4cCI6MjA4OTgwMDkxOH0.vK_l0iWBJyZmLwzNfQHob2ejEZGfg8mQ8mV-6-lXaN0';
+let supaClient = null;
+
+const DB = {
+  getObj(key){ try{return JSON.parse(localStorage.getItem('safety_'+key))||{};}catch{return {};} },
+  async set(key, val){
+    localStorage.setItem('safety_'+key, JSON.stringify(val));
+    if(!supaClient) return;
+    try{ await supaClient.from('safety_store').upsert({key, value:val}, {onConflict:'key'}); }
+    catch(e){ console.error('Supabase upsert 실패:', key, e); }
+  }
+};
+function _isEmpty(v){
+  if(v===null||v===undefined) return true;
+  if(Array.isArray(v)) return v.length===0;
+  if(typeof v==='object') return Object.keys(v).length===0;
+  return false;
+}
+async function loadFromSupabase(){
+  if(!supaClient) return;
+  try{
+    const {data, error} = await supaClient.from('safety_store').select('*');
+    if(error) throw error;
+    if(data) data.forEach(row => {
+      const localRaw = localStorage.getItem('safety_'+row.key);
+      if(_isEmpty(row.value) && localRaw){
+        try{ const lv = JSON.parse(localRaw); if(!_isEmpty(lv)) return; }catch(e){}
+      }
+      localStorage.setItem('safety_'+row.key, JSON.stringify(row.value));
+    });
+  }catch(e){ console.error('supaLoad:', e); }
+}
+function initSupabase(){
+  try{
+    supaClient = supabase.createClient(DEFAULT_SUPABASE_URL, DEFAULT_SUPABASE_KEY);
+    document.getElementById('conn-dot').className = 'conn-dot connected';
+    document.getElementById('conn-text').textContent = '실시간 공유 연결됨';
+    supaClient.channel('safety_mgr_sync')
+      .on('postgres_changes', {event:'*', schema:'public', table:'safety_store'}, async () => {
+        await loadFromSupabase(); rerenderAll();
+      }).subscribe();
+  }catch(e){
+    document.getElementById('conn-dot').className = 'conn-dot error';
+    document.getElementById('conn-text').textContent = '연결 실패';
+  }
+}
+
+// ============================================================
+// HELPERS
+// ============================================================
+function $(id){ return document.getElementById(id); }
+function ymd(d){ return d.toISOString().slice(0,10); }
+function todayISO(){ return ymd(new Date()); }
+function showToast(msg, kind){
+  const t = $('toast'); t.textContent = msg;
+  t.className = 'toast show' + (kind ? ' '+kind : '');
+  setTimeout(()=>{ t.classList.remove('show'); }, 2400);
+}
+function getTaskLog(){ return DB.getObj('safetyTaskLog'); }
+function getLastDone(taskId){
+  const log = getTaskLog()[taskId];
+  if(!log || !log.length) return null;
+  return log[log.length-1].date;
+}
+
+// ============================================================
+// 1. 이행현황 요약
+// ============================================================
+function renderSummary(){
+  const total = SAFETY_TASKS.length;
+  let overdue=0, dueSoon=0, ok=0, na=0;
+  SAFETY_TASKS.forEach(t => {
+    const last = getLastDone(t.id);
+    const st = taskStatus(t, last);
+    if(st.state==='overdue') overdue++;
+    else if(st.state==='due-soon') dueSoon++;
+    else if(st.state==='ok') ok++;
+    else na++;
+  });
+  const html = `
+    <div class="sum-stat"><div class="lbl">전체 업무</div><div class="val">${total}</div><div class="sub">건</div></div>
+    <div class="sum-stat alert"><div class="lbl">지연</div><div class="val">${overdue}</div><div class="sub">건 (마감 지남)</div></div>
+    <div class="sum-stat warn"><div class="lbl">임박 (7일내)</div><div class="val">${dueSoon}</div><div class="sub">건</div></div>
+    <div class="sum-stat ok"><div class="lbl">정상</div><div class="val">${ok}</div><div class="sub">건</div></div>
+    <div class="sum-stat"><div class="lbl">수시·해당시</div><div class="val">${na}</div><div class="sub">건 (이벤트형)</div></div>
+  `;
+  $('summary-grid').innerHTML = html;
+  $('summary-as-of').textContent = '기준일 ' + todayISO();
+}
+
+// ============================================================
+// 2. 알림 (지연/임박)
+// ============================================================
+function renderAlerts(){
+  const alerts = SAFETY_TASKS.map(t => {
+    const last = getLastDone(t.id);
+    const st = taskStatus(t, last);
+    return { task:t, ...st };
+  }).filter(a => a.state==='overdue' || a.state==='due-soon')
+    .sort((a,b) => (a.daysLeft - b.daysLeft));
+
+  $('alert-count').textContent = alerts.length + '건';
+  if(!alerts.length){
+    $('alert-list').innerHTML = '<div class="alert-empty">현재 마감 임박 또는 지연 업무 없음</div>';
+    return;
+  }
+  $('alert-list').innerHTML = alerts.map(a => `
+    <div class="alert-row ${a.state}">
+      <span class="pill">${a.state==='overdue' ? '지연' : '임박'}</span>
+      <span class="name">[${a.task.group}] ${a.task.name}</span>
+      <span class="meta">담당: ${(a.task.assignedTo||[]).slice(0,2).join(', ')}${a.task.assignedTo.length>2?' 외':''}</span>
+      <span class="due">${a.due} (${a.daysLeft<0 ? Math.abs(a.daysLeft)+'일 지남' : 'D-'+a.daysLeft})</span>
+    </div>
+  `).join('');
+}
+
+// ============================================================
+// 3. 조직도 트리
+// ============================================================
+let selectedPerson = null;
+function renderOrgTree(){
+  const html = ORG_TREE.map(n => {
+    const ext = n.external ? ' external' : '';
+    const lvl = ' lvl-' + (n.level||0);
+    const sel = (selectedPerson === n.id) ? ' active' : '';
+    return `<a class="org-node${ext}${lvl}${sel}" data-pid="${n.id}">
+      <div class="org-node-name">${n.label}</div>
+      <div class="org-node-sub">${n.sub}</div>
+    </a>`;
+  }).join('');
+  $('org-tree').innerHTML = '<div class="org-tree-title">조직 계층도</div>' + html;
+  $('org-tree').querySelectorAll('.org-node').forEach(el => {
+    el.addEventListener('click', () => selectPerson(el.dataset.pid));
+  });
+}
+function selectPerson(pid){
+  selectedPerson = pid;
+  renderOrgTree();
+  renderRoleDetail();
+}
+function renderRoleDetail(){
+  const box = $('role-detail');
+  if(!selectedPerson){
+    box.innerHTML = '<div class="role-detail-empty">왼쪽 조직도에서 이름을 클릭하면<br>해당 인물의 담당 업무가 여기에 표시됩니다.</div>';
+    return;
+  }
+  const meta = ORG_PEOPLE[selectedPerson] || {};
+  const tasks = tasksByPerson(selectedPerson);
+  const list = tasks.length ? tasks.map(t => {
+    const last = getLastDone(t.id);
+    const st = taskStatus(t, last);
+    return `<div class="role-task" data-tid="${t.id}">
+      <span class="status-dot ${st.state}"></span>
+      <span class="group ${t.group}">${t.group}</span>
+      <span class="name">${t.name}</span>
+      <span class="period">${t.period}</span>
+    </div>`;
+  }).join('') : '<div style="padding:18px;text-align:center;color:#94a3b8;font-size:12px;">이 인물에게 직접 매칭된 업무 없음 (관리감독자/근로자는 일일 체크리스트 참조)</div>';
+  box.innerHTML = `
+    <div class="role-header">
+      <div class="name">${selectedPerson}</div>
+      <div class="role">${meta.role || ''}</div>
+    </div>
+    <div class="role-task-list">${list}</div>
+  `;
+  box.querySelectorAll('.role-task').forEach(el => {
+    el.addEventListener('click', () => scrollToTask(el.dataset.tid));
+  });
+}
+function scrollToTask(tid){
+  // 카드 그리드에서 해당 업무로 스크롤 + 강조
+  const card = document.querySelector(`.task-card[data-tid="${tid}"]`);
+  if(card){
+    card.scrollIntoView({behavior:'smooth', block:'center'});
+    card.style.transition = 'box-shadow 0.3s';
+    card.style.boxShadow = '0 0 0 3px #fbbf24';
+    setTimeout(()=>{ card.style.boxShadow = ''; }, 1800);
+  }
+}
+
+// ============================================================
+// 4. 33개 업무 카드 (필터링)
+// ============================================================
+let currentFilter = 'all';
+function renderTaskGrid(){
+  let filtered = SAFETY_TASKS;
+  if(['안전','안전-도급','보건'].includes(currentFilter)){
+    filtered = SAFETY_TASKS.filter(t => t.group === currentFilter);
+  } else if(currentFilter==='overdue' || currentFilter==='due-soon'){
+    filtered = SAFETY_TASKS.filter(t => taskStatus(t, getLastDone(t.id)).state === currentFilter);
+  }
+  $('task-grid').innerHTML = filtered.map(t => {
+    const last = getLastDone(t.id);
+    const st = taskStatus(t, last);
+    const stLabel = {overdue:'지연', 'due-soon':'임박', ok:'정상', na:'수시'}[st.state];
+    const dueText = st.due ? `${st.due} (${st.daysLeft<0?Math.abs(st.daysLeft)+'일 지남':'D-'+st.daysLeft})` : '주기 없음';
+    return `<div class="task-card ${t.group}" data-tid="${t.id}">
+      <div class="tc-head">
+        <div class="tc-name">[${String(t.id).padStart(2,'0')}] ${t.name}</div>
+        <div class="tc-status ${st.state}">${stLabel}</div>
+      </div>
+      <div class="tc-meta">
+        <span class="chip">${t.group}</span>
+        <span class="chip">${t.period}</span>
+        <span class="chip">${t.vendor}</span>
+      </div>
+      <div class="tc-content">${t.content}</div>
+      <div class="tc-doc"><strong>서류:</strong> ${t.document} ${t.requirement && t.requirement!=='-' ? '· <strong>요건:</strong> '+t.requirement : ''}</div>
+      <div class="tc-doc"><strong>담당:</strong> ${(t.assignedTo||[]).join(', ') || '-'}</div>
+      <div class="tc-actions">
+        <span class="last-done">${last ? '최근 완료: '+last : '기록 없음'} · 다음: ${dueText}</span>
+        <button class="btn btn-sm btn-success" onclick="markDone(${t.id})">완료 기록</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+async function markDone(tid){
+  const log = getTaskLog();
+  if(!log[tid]) log[tid] = [];
+  const today = todayISO();
+  const by = prompt('완료자 (이름 또는 비워둘 시 시스템)', '');
+  log[tid].push({date: today, by: by || '시스템', notes:''});
+  await DB.set('safetyTaskLog', log);
+  showToast('완료 기록됨: ' + today, 'success');
+  rerenderAll();
+}
+
+// ============================================================
+// 5. 일일 체크리스트
+// ============================================================
+function renderDailyChecklist(){
+  const date = $('daily-date').value;
+  const leader = $('daily-leader').value;
+  const all = DB.getObj('safetyMgrDaily');
+  const key = `${date}__${leader}`;
+  const rec = (date && leader) ? (all[key] || {items:{}, notes:''}) : {items:{}, notes:''};
+
+  let html = '';
+  let counter = 0;
+  DAILY_CHECKLIST.forEach(g => {
+    html += `<div class="daily-group">
+      <div class="daily-group-head">${g.group}</div>`;
+    g.items.forEach(q => {
+      counter++;
+      const cur = rec.items[counter] || '';
+      html += `<div class="daily-item">
+        <span class="num">${String(counter).padStart(2,'0')}</span>
+        <span class="q">${q}</span>
+        <span class="ox">
+          <button type="button" class="ox-btn ${cur==='O'?'sel-o':''}" onclick="setOX(${counter},'O')">O</button>
+          <button type="button" class="ox-btn ${cur==='X'?'sel-x':''}" onclick="setOX(${counter},'X')">X</button>
+        </span>
+      </div>`;
+    });
+    html += `</div>`;
+  });
+  $('daily-content').innerHTML = html;
+  $('daily-notes').value = rec.notes || '';
+  updateDailyStatus();
+}
+function setOX(idx, val){
+  const date = $('daily-date').value;
+  const leader = $('daily-leader').value;
+  if(!date || !leader){ showToast('날짜와 관리감독자를 먼저 선택', 'error'); return; }
+  const all = DB.getObj('safetyMgrDaily');
+  const key = `${date}__${leader}`;
+  if(!all[key]) all[key] = {items:{}, notes:''};
+  if(all[key].items[idx] === val) delete all[key].items[idx];
+  else all[key].items[idx] = val;
+  // 임시 저장(저장 버튼 누르기 전엔 localStorage만)
+  localStorage.setItem('safety_safetyMgrDaily', JSON.stringify(all));
+  renderDailyChecklist();
+}
+function updateDailyStatus(){
+  const date = $('daily-date').value;
+  const leader = $('daily-leader').value;
+  if(!date || !leader){ $('daily-status').textContent = '날짜·감독자 선택 필요'; return; }
+  const all = DB.getObj('safetyMgrDaily');
+  const rec = all[`${date}__${leader}`] || {items:{}};
+  const total = 25;
+  const done = Object.keys(rec.items).length;
+  $('daily-status').textContent = `${date} · ${leader} — ${done}/${total} 응답 (${Math.round(done/total*100)}%)`;
+}
+async function saveDaily(){
+  const date = $('daily-date').value;
+  const leader = $('daily-leader').value;
+  if(!date || !leader){ showToast('날짜와 관리감독자를 먼저 선택', 'error'); return; }
+  const all = DB.getObj('safetyMgrDaily');
+  const key = `${date}__${leader}`;
+  if(!all[key]) all[key] = {items:{}, notes:''};
+  all[key].notes = $('daily-notes').value;
+  await DB.set('safetyMgrDaily', all);
+  showToast('저장됨', 'success');
+  renderMatrix();
+}
+function setAllO(){
+  const date = $('daily-date').value;
+  const leader = $('daily-leader').value;
+  if(!date || !leader){ showToast('날짜와 관리감독자를 먼저 선택', 'error'); return; }
+  const all = DB.getObj('safetyMgrDaily');
+  const key = `${date}__${leader}`;
+  if(!all[key]) all[key] = {items:{}, notes:''};
+  for(let i=1; i<=25; i++) all[key].items[i] = 'O';
+  localStorage.setItem('safety_safetyMgrDaily', JSON.stringify(all));
+  renderDailyChecklist();
+}
+
+// ============================================================
+// 6. 월별 매트릭스 (5×31 그리드, 항목별 일자별 O/X)
+// ============================================================
+function renderMatrix(){
+  const ym = $('matrix-month').value; // YYYY-MM
+  const leader = $('matrix-leader').value;
+  if(!ym){ $('matrix-table').innerHTML = ''; return; }
+  const [Y, M] = ym.split('-').map(Number);
+  const days = new Date(Y, M, 0).getDate();
+  const all = DB.getObj('safetyMgrDaily');
+
+  // 헤더
+  let head = '<thead><tr><th style="min-width:50px;">분류</th><th style="min-width:280px;">점검 항목</th>';
+  for(let d=1; d<=days; d++) head += `<th>${d}</th>`;
+  head += '<th>합계</th></tr></thead>';
+
+  let body = '<tbody>';
+  let counter = 0;
+  let totalO = 0, totalX = 0, totalEmpty = 0;
+  DAILY_CHECKLIST.forEach((g, gi) => {
+    g.items.forEach((q, qi) => {
+      counter++;
+      let row = `<tr>`;
+      if(qi === 0){
+        row += `<td class="group-cell" rowspan="${g.items.length}">${g.group.replace(/^\d+\.\s*/, '')}</td>`;
+      }
+      row += `<td class="label">${counter}. ${q}</td>`;
+      let oCount=0, xCount=0;
+      for(let d=1; d<=days; d++){
+        const date = `${Y}-${String(M).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+        // leader가 비어있으면 그날 어떤 감독자라도 응답한게 있으면 표시 (우선순위: O > X)
+        let val = '';
+        if(leader){
+          const rec = all[`${date}__${leader}`];
+          val = rec && rec.items ? (rec.items[counter] || '') : '';
+        } else {
+          ['김민수 부장','양춘향 과장','임문호 이사'].forEach(L => {
+            const rec = all[`${date}__${L}`];
+            const v = rec && rec.items ? (rec.items[counter] || '') : '';
+            if(v === 'O' && val !== 'O') val = 'O';
+            else if(v === 'X' && !val) val = 'X';
+          });
+        }
+        const cls = val === 'O' ? 'o' : (val === 'X' ? 'x' : 'empty');
+        row += `<td class="${cls}">${val || '·'}</td>`;
+        if(val === 'O') oCount++;
+        else if(val === 'X') xCount++;
+      }
+      row += `<td><strong style="color:#059669;">O ${oCount}</strong> / <strong style="color:#dc2626;">X ${xCount}</strong></td></tr>`;
+      body += row;
+      totalO += oCount; totalX += xCount; totalEmpty += (days - oCount - xCount);
+    });
+  });
+  body += '</tbody>';
+  $('matrix-table').innerHTML = head + body;
+  $('matrix-status').textContent = `이행 O ${totalO} · 미이행 X ${totalX} · 미응답 ${totalEmpty}`;
+}
+
+// ============================================================
+// 이메일 발송 (GAS Web App 호출)
+// ============================================================
+async function sendNotificationEmail(){
+  const settings = DB.getObj('settings');
+  const url = settings.gasNotifyUrl;
+  if(!url){
+    const ans = prompt('이메일 발송용 GAS Web App URL을 입력하세요\n(설정에 저장됩니다)\n\n예: https://script.google.com/macros/s/.../exec', '');
+    if(!ans) return;
+    settings.gasNotifyUrl = ans;
+    if(!settings.notifyEmails) settings.notifyEmails = 'ejkim2933@gmail.com';
+    await DB.set('settings', settings);
+  }
+  const finalUrl = settings.gasNotifyUrl || url;
+  const emails = settings.notifyEmails || 'ejkim2933@gmail.com';
+
+  // 알림 데이터 구성
+  const alerts = SAFETY_TASKS.map(t => {
+    const last = getLastDone(t.id);
+    const st = taskStatus(t, last);
+    return { task:t, ...st };
+  }).filter(a => a.state==='overdue' || a.state==='due-soon')
+    .sort((a,b) => (a.daysLeft - b.daysLeft));
+
+  if(!alerts.length){
+    showToast('발송할 알림이 없습니다', 'success');
+    return;
+  }
+
+  const payload = {
+    to: emails,
+    subject: `[안전보건] ${todayISO()} 마감 알림 ${alerts.length}건`,
+    alerts: alerts.map(a => ({
+      group: a.task.group,
+      name: a.task.name,
+      period: a.task.period,
+      assignedTo: a.task.assignedTo,
+      due: a.due,
+      daysLeft: a.daysLeft,
+      state: a.state,
+      document: a.task.document
+    }))
+  };
+
+  try{
+    showToast('발송 중...', '');
+    // GAS Web App은 보통 CORS 우회를 위해 text/plain로 POST
+    const res = await fetch(finalUrl, {
+      method: 'POST',
+      headers: {'Content-Type': 'text/plain;charset=utf-8'},
+      body: JSON.stringify(payload)
+    });
+    const txt = await res.text();
+    if(res.ok){ showToast('이메일 발송 완료', 'success'); }
+    else { showToast('발송 실패: '+txt.slice(0,80), 'error'); }
+  }catch(e){
+    showToast('발송 실패: '+e.message, 'error');
+  }
+}
+
+// ============================================================
+// INIT
+// ============================================================
+function rerenderAll(){
+  renderSummary();
+  renderAlerts();
+  renderTaskGrid();
+  if(selectedPerson) renderRoleDetail();
+  renderMatrix();
+  updateDailyStatus();
+}
+
+window.addEventListener('DOMContentLoaded', async () => {
+  // 초기 날짜 세팅
+  $('daily-date').value = todayISO();
+  $('matrix-month').value = todayISO().slice(0,7);
+
+  // 필터 버튼
+  document.querySelectorAll('#task-filters .filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#task-filters .filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentFilter = btn.dataset.filter;
+      renderTaskGrid();
+    });
+  });
+
+  // 일일 체크리스트 컨트롤
+  $('daily-date').addEventListener('change', renderDailyChecklist);
+  $('daily-leader').addEventListener('change', renderDailyChecklist);
+  $('btn-allO').addEventListener('click', setAllO);
+  $('btn-save-daily').addEventListener('click', saveDaily);
+  $('daily-notes').addEventListener('input', () => {
+    // 메모 임시 반영
+    const date = $('daily-date').value, leader = $('daily-leader').value;
+    if(!date || !leader) return;
+    const all = DB.getObj('safetyMgrDaily');
+    const key = `${date}__${leader}`;
+    if(!all[key]) all[key] = {items:{}, notes:''};
+    all[key].notes = $('daily-notes').value;
+    localStorage.setItem('safety_safetyMgrDaily', JSON.stringify(all));
+  });
+
+  // 매트릭스
+  $('matrix-month').addEventListener('change', renderMatrix);
+  $('matrix-leader').addEventListener('change', renderMatrix);
+
+  // 이메일
+  $('btn-send-mail').addEventListener('click', sendNotificationEmail);
+
+  // 초기 렌더 (로컬 데이터로)
+  renderOrgTree();
+  rerenderAll();
+  renderDailyChecklist();
+
+  // 슈퍼베이스 연결 후 동기화
+  initSupabase();
+  await loadFromSupabase();
+  rerenderAll();
+  renderDailyChecklist();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>운영 가이드 | 산업안전보건 시스템</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;background:#f5f5f4;color:#1c1917;font-size:14px;line-height:1.7;}
+
+.page-header{background:#0d1f3c;color:#fff;padding:32px 40px;}
+.page-header .doc-no{display:inline-block;font-size:10px;font-weight:700;letter-spacing:0.18em;padding:2px 10px;border:1px solid rgba(255,255,255,0.3);border-radius:2px;margin-bottom:10px;color:rgba(255,255,255,0.85);}
+.page-header h1{font-size:26px;font-weight:900;letter-spacing:-0.02em;}
+.page-header .sub{font-size:13px;opacity:0.7;margin-top:6px;}
+.page-header .nav-links{margin-top:14px;display:flex;flex-wrap:wrap;gap:8px;}
+.page-header .nav-links a{font-size:11px;color:#fff;background:rgba(255,255,255,0.1);padding:5px 12px;border-radius:4px;text-decoration:none;border:1px solid rgba(255,255,255,0.15);}
+.page-header .nav-links a:hover{background:rgba(255,255,255,0.2);}
+
+.container{max-width:980px;margin:0 auto;padding:32px 28px 80px;}
+
+.toc{background:#fff;border:1px solid #e5e7eb;border-left:4px solid #1a3a6e;border-radius:6px;padding:18px 24px;margin-bottom:28px;}
+.toc-title{font-size:12px;font-weight:800;color:#475569;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:10px;}
+.toc ol{padding-left:22px;}
+.toc ol li{margin-bottom:4px;font-size:13px;}
+.toc a{color:#0d1f3c;text-decoration:none;font-weight:600;}
+.toc a:hover{text-decoration:underline;}
+
+.section{background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:30px 36px;margin-bottom:24px;}
+.section h2{font-size:21px;font-weight:900;color:#0d1f3c;margin-bottom:6px;letter-spacing:-0.02em;display:flex;align-items:center;gap:12px;}
+.section h2 .num{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;background:#0d1f3c;color:#fff;border-radius:6px;font-size:14px;font-weight:900;}
+.section .subtitle{font-size:13px;color:#64748b;margin-bottom:22px;padding-bottom:14px;border-bottom:1px solid #f1f5f9;}
+.section h3{font-size:15px;font-weight:800;color:#1a3a6e;margin:22px 0 8px;padding-left:10px;border-left:3px solid #1a3a6e;}
+.section h4{font-size:14px;font-weight:800;color:#0d1f3c;margin:14px 0 6px;}
+
+.section p, .section li{font-size:14px;color:#1c1917;line-height:1.75;}
+.section ol, .section ul{padding-left:22px;margin:8px 0;}
+.section li{margin-bottom:4px;}
+
+.flow{display:grid;grid-template-columns:repeat(auto-fit, minmax(180px, 1fr));gap:10px;margin:16px 0;}
+.flow-step{background:#f8fafc;border:1px solid #e5e7eb;border-radius:6px;padding:12px 14px;position:relative;}
+.flow-step .fs-num{display:inline-block;font-size:10px;font-weight:800;color:#1a3a6e;background:#dbeafe;padding:2px 7px;border-radius:3px;letter-spacing:0.06em;margin-bottom:6px;}
+.flow-step .fs-title{font-size:13px;font-weight:800;color:#0d1f3c;}
+.flow-step .fs-desc{font-size:12px;color:#475569;margin-top:4px;line-height:1.6;}
+
+.callout{padding:14px 18px;border-radius:6px;margin:14px 0;font-size:13px;line-height:1.7;}
+.callout.info{background:#eff6ff;border-left:4px solid #1a3a6e;color:#0d1f3c;}
+.callout.warn{background:#fffbeb;border-left:4px solid #f59e0b;color:#78350f;}
+.callout.success{background:#f0fdf4;border-left:4px solid #10b981;color:#064e3b;}
+.callout strong{font-weight:800;}
+
+.code{background:#0f172a;color:#e2e8f0;padding:14px 18px;border-radius:6px;font-family:'Consolas','Monaco',monospace;font-size:12px;overflow-x:auto;line-height:1.6;}
+.code .comment{color:#64748b;}
+.code .key{color:#fbbf24;}
+
+.table-wrap{overflow-x:auto;margin:14px 0;}
+table.guide{width:100%;border-collapse:collapse;font-size:13px;}
+table.guide th, table.guide td{border:1px solid #e5e7eb;padding:9px 12px;text-align:left;vertical-align:top;}
+table.guide thead th{background:#0d1f3c;color:#fff;font-weight:700;font-size:12px;}
+table.guide tbody tr:nth-child(even){background:#fafbfc;}
+table.guide td.role{font-weight:700;color:#0d1f3c;white-space:nowrap;}
+table.guide td.url{font-family:'Consolas','Monaco',monospace;font-size:11px;color:#1a3a6e;word-break:break-all;}
+
+.btn-link{display:inline-block;padding:10px 18px;background:#1a3a6e;color:#fff;border-radius:5px;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:0.02em;margin:6px 4px 6px 0;}
+.btn-link:hover{background:#0d1f3c;}
+.btn-link.outline{background:#fff;color:#1a3a6e;border:1px solid #1a3a6e;}
+
+.diagram{background:#f8fafc;border:1px solid #e5e7eb;border-radius:6px;padding:18px;text-align:center;margin:14px 0;font-size:12px;}
+.diagram pre{font-family:'Consolas','Monaco',monospace;color:#1c1917;line-height:1.5;text-align:left;display:inline-block;}
+
+.qr-block{display:grid;grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));gap:12px;margin:14px 0;}
+.qr-card{background:#fff;border:1px solid #e5e7eb;border-radius:6px;padding:12px 14px;}
+.qr-card .qc-name{font-weight:800;color:#0d1f3c;font-size:13px;}
+.qr-card .qc-url{font-family:'Consolas','Monaco',monospace;font-size:10px;color:#475569;word-break:break-all;margin-top:4px;}
+.qr-card .qc-who{font-size:11px;color:#64748b;margin-top:4px;}
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div class="doc-no">SHM-GUIDE</div>
+  <h1>산업안전보건 관리 시스템 운영 가이드</h1>
+  <div class="sub">패트롤 · TBM · 안전보건관리자 — 누가 / 언제 / 어떻게 사용하는가</div>
+  <div class="nav-links">
+    <a href="safety_dashboard.html">📊 대시보드</a>
+    <a href="patrol.html">🔍 패트롤</a>
+    <a href="tbm.html">📋 TBM</a>
+    <a href="issues.html">⚠️ 지적사항</a>
+    <a href="safety_manager.html">👤 안전보건관리자</a>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="toc">
+    <div class="toc-title">목차</div>
+    <ol>
+      <li><a href="#overview">전체 구조 한눈에</a></li>
+      <li><a href="#patrol">패트롤 (환경운영점검) 운영법</a></li>
+      <li><a href="#tbm">TBM (작업 전 회의) 운영법</a></li>
+      <li><a href="#mgr">안전보건관리자 페이지 운영법</a></li>
+      <li><a href="#dashboard">관리자 대시보드 운영법</a></li>
+      <li><a href="#email">이메일 알림 설정 (Google Apps Script)</a></li>
+      <li><a href="#qr">담당자별 링크 / QR</a></li>
+      <li><a href="#faq">자주 묻는 질문</a></li>
+    </ol>
+  </div>
+
+  <!-- ========================================================== -->
+  <div class="section" id="overview">
+    <h2><span class="num">1</span> 전체 구조 한눈에</h2>
+    <div class="subtitle">담당자 전용 입력 페이지 + 관리자 대시보드 + Supabase 실시간 동기화</div>
+
+    <div class="diagram">
+      <pre>
+┌─────────────────────────────────────────────────────────────────────┐
+│                    산업안전보건 관리 시스템                            │
+└─────────────────────────────────────────────────────────────────────┘
+
+    [담당자 입력]                    [관리자 통합 뷰]
+  ┌──────────────┐                 ┌──────────────────┐
+  │ patrol.html  │ ─┐              │  safety_         │
+  │ (패트롤)     │  │              │  dashboard.html  │
+  ├──────────────┤  │              │                  │
+  │ tbm.html     │  ├─→ Supabase ─→│  통계 · 캘린더    │
+  │ (TBM)        │  │  safety_     │  실시간 갱신      │
+  ├──────────────┤  │  store       │                  │
+  │ issues.html  │  │              │  사이드바에서      │
+  │ (지적사항)    │  │              │  ↓ 클릭          │
+  ├──────────────┤  │              ├──────────────────┤
+  │ safety_      │  │              │  safety_         │
+  │ manager.html │ ─┘              │  manager.html    │
+  │ (관리자)      │                 │  (별도 페이지)    │
+  └──────────────┘                 └──────────────────┘
+                                          │
+                                          ↓
+                                   ┌──────────────┐
+                                   │ Google Apps  │
+                                   │ Script       │
+                                   │ → 이메일 발송 │
+                                   └──────────────┘
+      </pre>
+    </div>
+
+    <div class="callout info">
+      <strong>핵심 원칙</strong><br>
+      ① 모든 입력 페이지는 모바일 우선 + 단순한 폼<br>
+      ② 데이터는 Supabase로 실시간 공유 (브라우저 다 켜놓으면 자동 갱신)<br>
+      ③ 관리자는 대시보드에서 통합 현황 확인 + 안전보건관리자 페이지에서 업무 마감/주기 관리<br>
+      ④ 알림은 자동 이메일 (마감 임박/지연 업무를 매일 다이제스트로 발송)
+    </div>
+  </div>
+
+  <!-- ========================================================== -->
+  <div class="section" id="patrol">
+    <h2><span class="num">2</span> 패트롤 (환경운영점검) 운영법</h2>
+    <div class="subtitle">담당자: 박제성 부장 (본사) · 임문호 이사 (화성공장) — 패트롤 시 모바일 입력</div>
+
+    <h3>운영 흐름</h3>
+    <div class="flow">
+      <div class="flow-step">
+        <span class="fs-num">STEP 1</span>
+        <div class="fs-title">QR 스캔 또는 링크 접속</div>
+        <div class="fs-desc">현장에서 사이트(수원/화성) 선택</div>
+      </div>
+      <div class="flow-step">
+        <span class="fs-num">STEP 2</span>
+        <div class="fs-title">구역별 체크</div>
+        <div class="fs-desc">각 구역 OK/NG 2버튼 + 사진 첨부 (NG는 자동으로 지적사항 등록)</div>
+      </div>
+      <div class="flow-step">
+        <span class="fs-num">STEP 3</span>
+        <div class="fs-title">서명 + 저장</div>
+        <div class="fs-desc">점검자 서명 → Supabase 자동 동기화</div>
+      </div>
+      <div class="flow-step">
+        <span class="fs-num">STEP 4</span>
+        <div class="fs-title">대시보드 자동 반영</div>
+        <div class="fs-desc">관리자 대시보드 [패트롤+TBM 통합]에서 즉시 확인</div>
+      </div>
+    </div>
+
+    <h3>주기</h3>
+    <p>법규상 <strong>월 2회 이상 권장</strong>. 안전관리자(대한산업안전협회) 방문일도 월 2회.</p>
+
+    <h3>인쇄용 양식</h3>
+    <p>대시보드의 [📨 공문서 관리 대장] 또는 직접 <a href="patrol_print.html">patrol_print.html</a>에서 A4 양식 출력 가능.</p>
+  </div>
+
+  <!-- ========================================================== -->
+  <div class="section" id="tbm">
+    <h2><span class="num">3</span> TBM (Tool Box Meeting) 운영법</h2>
+    <div class="subtitle">담당자: 관리감독자 3명 (사출/도장/조립) — 매일 작업 전 5분 회의 후 입력</div>
+
+    <h3>팀별 링크 (URL 파라미터로 분기)</h3>
+    <div class="qr-block">
+      <div class="qr-card">
+        <div class="qc-name">사출 주간조</div>
+        <div class="qc-who">김민수 부장</div>
+        <div class="qc-url">tbm.html?team=injection_day</div>
+      </div>
+      <div class="qr-card">
+        <div class="qc-name">사출 야간조</div>
+        <div class="qc-who">김민수 부장 위임</div>
+        <div class="qc-url">tbm.html?team=injection_night</div>
+      </div>
+      <div class="qr-card">
+        <div class="qc-name">도장</div>
+        <div class="qc-who">양춘향 과장</div>
+        <div class="qc-url">tbm.html?team=paint</div>
+      </div>
+      <div class="qr-card">
+        <div class="qc-name">조립</div>
+        <div class="qc-who">임문호 이사</div>
+        <div class="qc-url">tbm.html?team=assembly</div>
+      </div>
+    </div>
+
+    <h3>운영 흐름</h3>
+    <ol>
+      <li><strong>작업 전 5분 TBM 회의</strong> — 당일 위험 포인트, 안전 수칙, 신규 작업자 배치 등 공유</li>
+      <li><strong>tbm.html에 입력</strong> — 일자, 참석자, 작업 내용, 위험 요인, 안전 조치, 보호구 점검</li>
+      <li><strong>저장 → 자동 동기화</strong></li>
+      <li><strong>관리자가 캘린더에서 확인</strong> — 대시보드 [패트롤+TBM 통합] → TBM 캘린더에서 일자별 클릭</li>
+      <li><strong>인쇄 양식</strong> — 캘린더에서 일자 클릭 → A4 인쇄 (작업일지로 보관)</li>
+    </ol>
+
+    <h3>주기</h3>
+    <p><strong>매 작업일 1회</strong> (휴무일 제외). 미입력 시 다음날 대시보드에서 누락 표시됨.</p>
+  </div>
+
+  <!-- ========================================================== -->
+  <div class="section" id="mgr">
+    <h2><span class="num">4</span> 안전보건관리자 페이지 운영법</h2>
+    <div class="subtitle">담당자: 박재걸 전무 + 박제성 부장 — 33개 안전보건 업무 + 일일 체크리스트 관리</div>
+
+    <h3>이 페이지에서 하는 일</h3>
+    <div class="flow">
+      <div class="flow-step">
+        <span class="fs-num">기능 1</span>
+        <div class="fs-title">이행 현황 요약</div>
+        <div class="fs-desc">전체 33건 중 지연/임박/정상/이벤트형 한눈에</div>
+      </div>
+      <div class="flow-step">
+        <span class="fs-num">기능 2</span>
+        <div class="fs-title">알림 패널</div>
+        <div class="fs-desc">마감 7일 이내 + 마감 지난 업무. 이메일 발송 버튼</div>
+      </div>
+      <div class="flow-step">
+        <span class="fs-num">기능 3</span>
+        <div class="fs-title">조직도 트리</div>
+        <div class="fs-desc">이름 클릭 → 옆 패널에 그 인물 담당 업무 목록</div>
+      </div>
+      <div class="flow-step">
+        <span class="fs-num">기능 4</span>
+        <div class="fs-title">33개 업무 카드</div>
+        <div class="fs-desc">필터(안전/도급/보건/지연/임박) + 카드별 [완료 기록] 버튼</div>
+      </div>
+      <div class="flow-step">
+        <span class="fs-num">기능 5</span>
+        <div class="fs-title">관리감독자 일일 체크</div>
+        <div class="fs-desc">25개 항목 O/X, 날짜·감독자별 저장</div>
+      </div>
+      <div class="flow-step">
+        <span class="fs-num">기능 6</span>
+        <div class="fs-title">월별 누적 매트릭스</div>
+        <div class="fs-desc">5분류 × 일자 그리드. 한 달 이행 한눈에</div>
+      </div>
+    </div>
+
+    <h3>일일 운영 흐름</h3>
+    <ol>
+      <li><strong>아침</strong> — 페이지 열기 → 알림 패널에서 오늘 마감 업무 확인</li>
+      <li><strong>업무 완료 시</strong> — 해당 업무 카드 [완료 기록] 클릭 → 다음 마감일 자동 계산</li>
+      <li><strong>관리감독자 입력</strong> — 김민수/양춘향/임문호가 각자 [관리감독자 일일 체크리스트]에서 25개 O/X 입력 → 저장</li>
+      <li><strong>월말</strong> — [월별 누적 매트릭스]에서 한달치 점검</li>
+      <li><strong>매일 오전 9시</strong> — GAS가 자동으로 마감 임박/지연 업무를 이메일 발송 (설정 후)</li>
+    </ol>
+
+    <h3>업무별 주기 코드</h3>
+    <div class="table-wrap">
+      <table class="guide">
+        <thead><tr><th>주기</th><th>다음 마감일 계산 방식</th><th>예시 업무</th></tr></thead>
+        <tbody>
+          <tr><td>1회/월</td><td>이번달 말일</td><td>산업안전보건위원회, 도급 안전보건교육</td></tr>
+          <tr><td>2회/월</td><td>15일 + 말일</td><td>안전관리자 방문</td></tr>
+          <tr><td>1회/격월</td><td>다음 짝수월(2,4,6...) 말일</td><td>보호구 지급</td></tr>
+          <tr><td>1회/분기</td><td>3·6·9·12월 말일</td><td>리프트 정기검사, 산업위생 방문, 합동 점검</td></tr>
+          <tr><td>1회/반기</td><td>6월·12월 말일</td><td>적격수급업체 평가</td></tr>
+          <tr><td>2회/년</td><td>4월·10월 말일 (위험성평가)</td><td>위험성평가</td></tr>
+          <tr><td>1회/년</td><td>특정월 말일 또는 12월 말일</td><td>안전보건예산(1월), 건강검진(8월), 아차사고 통계(12월)</td></tr>
+          <tr><td>1회/2년</td><td>마지막 완료일 + 2년</td><td>안전보건관리책임자교육, 화학물질통계</td></tr>
+          <tr><td>1회/3년</td><td>마지막 완료일 + 3년</td><td>근골격계질환예방</td></tr>
+          <tr><td>격일</td><td>마지막 완료일 + 2일</td><td>협의체 작업장 순회</td></tr>
+          <tr><td>수시 / 해당시 / 발생시</td><td>이벤트형 (마감일 없음)</td><td>안전검사, 산업재해, 법규개정, 특별교육</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout warn">
+      <strong>중요:</strong> 업무 추가/주기 변경 시 두 곳을 수정해야 합니다.<br>
+      ① <code>safety_manager_data.js</code>의 <code>SAFETY_TASKS</code><br>
+      ② <code>safety_notify.gs</code>의 <code>SAFETY_TASKS_GS</code> (자동 이메일이 사용)
+    </div>
+  </div>
+
+  <!-- ========================================================== -->
+  <div class="section" id="dashboard">
+    <h2><span class="num">5</span> 관리자 대시보드 운영법</h2>
+    <div class="subtitle"><code>safety_dashboard.html</code> — 모든 입력의 통합 뷰</div>
+
+    <h3>사이드바 메뉴 구성</h3>
+    <div class="table-wrap">
+      <table class="guide">
+        <thead><tr><th>섹션</th><th>메뉴</th><th>용도</th></tr></thead>
+        <tbody>
+          <tr><td>메인</td><td>📊 대시보드</td><td>전체 통계, 최근 패트롤/TBM, 사고 통계</td></tr>
+          <tr><td>일일관리</td><td>🔍 패트롤+TBM 통합</td><td>월별 캘린더, 일자별 상세, 인쇄 양식</td></tr>
+          <tr><td>일일관리</td><td>👤 안전보건관리자</td><td>별도 페이지 — 33개 업무 + 일일 체크 + 알림</td></tr>
+          <tr><td>교육·평가</td><td>📅 교육 & 운영 관리</td><td>교육 일정, 캘린더</td></tr>
+          <tr><td>교육·평가</td><td>📨 공문서 관리 대장</td><td>인쇄 양식, 서류 발급</td></tr>
+          <tr><td>교육·평가</td><td>⚠️ 위험성 평가</td><td>4월/10월 위험성평가 결과</td></tr>
+          <tr><td>기록·서류</td><td>📋 서류·이행 통합관리</td><td>법정 서류 보관함</td></tr>
+          <tr><td>기록·서류</td><td>🚨 아차사고 (카톡방)</td><td>오픈 카톡으로 즉시 접수</td></tr>
+          <tr><td>계획</td><td>🪧 안전 비표 관리</td><td>현장 표지 인쇄</td></tr>
+          <tr><td>교육·홍보</td><td>📢 카드뉴스 시리즈</td><td>월간 안전 이슈 카드뉴스</td></tr>
+          <tr><td>교육·홍보</td><td>🖼️ 게시판 포스터</td><td>월별 포스터</td></tr>
+          <tr><td>시스템</td><td>⚙️ 설정</td><td>비밀번호: <strong>김은진</strong> / 회사명, 연락처 등 설정</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout info">
+      <strong>접근 권한:</strong> 대시보드는 관리자 + 안전보건담당자만 사용. 현장 근로자/관리감독자에게는 절대 공유하지 마세요.<br>
+      대신 patrol.html, tbm.html, issues.html, safety_manager.html 같은 개별 페이지를 QR로 전달.
+    </div>
+  </div>
+
+  <!-- ========================================================== -->
+  <div class="section" id="email">
+    <h2><span class="num">6</span> 이메일 알림 설정 (Google Apps Script)</h2>
+    <div class="subtitle">매일 오전 마감 임박/지연 업무를 자동 이메일로 받기 — 1회 설정으로 끝</div>
+
+    <h3>왜 GAS인가?</h3>
+    <p>HTML 페이지(GitHub Pages)는 정적이라 서버에서 메일을 보낼 수 없어. Google Apps Script가:</p>
+    <ul>
+      <li>무료 (일 100건 발송 한도, 충분)</li>
+      <li>구글 계정 그대로 사용 — 별도 SMTP/API 키 불필요</li>
+      <li>시간 기반 트리거로 매일 자동 실행 가능</li>
+      <li>Supabase에서 직접 데이터 조회</li>
+    </ul>
+
+    <h3>설정 절차 (1회만)</h3>
+    <ol>
+      <li><strong>GAS 프로젝트 생성</strong> — <a href="https://script.google.com" target="_blank">script.google.com</a> 접속 → [새 프로젝트]</li>
+      <li><strong>코드 붙여넣기</strong> — 프로젝트 폴더의 <code>safety_notify.gs</code> 전체 내용 복사 → Code.gs에 붙여넣기</li>
+      <li><strong>저장</strong> — 프로젝트명: <code>SSAT_Safety_Notify</code></li>
+      <li><strong>웹 앱 배포</strong> (수동 발송용)
+        <ul>
+          <li>[배포] → [새 배포] → 유형: <strong>웹 앱</strong></li>
+          <li>실행: <strong>본인</strong> (ejkim2933@gmail.com)</li>
+          <li>액세스: <strong>모든 사용자</strong></li>
+          <li>배포 → URL 복사</li>
+          <li>safety_manager.html에서 [이메일 발송] 첫 클릭 시 URL 입력 → 자동 저장</li>
+        </ul>
+      </li>
+      <li><strong>자동 다이제스트 트리거</strong> (매일 자동)
+        <ul>
+          <li>왼쪽 시계 아이콘 [트리거] → [트리거 추가]</li>
+          <li>실행할 함수: <code>sendDailyDigest</code></li>
+          <li>이벤트 소스: <strong>시간 기반</strong></li>
+          <li>유형: <strong>일별 타이머</strong> / 시간: <strong>오전 8-9시</strong></li>
+          <li>저장 → 첫 실행 시 Gmail 발송 권한 동의</li>
+        </ul>
+      </li>
+    </ol>
+
+    <div class="callout success">
+      <strong>완료:</strong> 매일 오전 8-9시 사이 자동으로 마감 임박/지연 업무 이메일이 ejkim2933@gmail.com에 도착합니다.<br>
+      수신자 변경: <code>safety_notify.gs</code>의 <code>DEFAULT_RECIPIENTS</code> 수정 후 GAS 재저장.
+    </div>
+
+    <h3>수동 발송도 함께</h3>
+    <p>safety_manager.html의 알림 카드 [이메일 발송] 버튼을 클릭하면 즉시 이메일이 갑니다. 출장·휴가 전 사전 점검할 때 유용.</p>
+  </div>
+
+  <!-- ========================================================== -->
+  <div class="section" id="qr">
+    <h2><span class="num">7</span> 담당자별 링크 / QR</h2>
+    <div class="subtitle">현장 담당자에게 전달할 링크. <a href="https://www.qr-code-generator.com/" target="_blank">QR 생성</a> 후 게시판/명함 등에 부착</div>
+
+    <h3>입력 페이지 (담당자용)</h3>
+    <div class="qr-block">
+      <div class="qr-card">
+        <div class="qc-name">🔍 패트롤 — 수원</div>
+        <div class="qc-who">박제성 부장</div>
+        <div class="qc-url">https://ssat-corp.github.io/reports/patrol.html?site=suwon</div>
+      </div>
+      <div class="qr-card">
+        <div class="qc-name">🔍 패트롤 — 화성</div>
+        <div class="qc-who">임문호 이사</div>
+        <div class="qc-url">https://ssat-corp.github.io/reports/patrol.html?site=hwaseong</div>
+      </div>
+      <div class="qr-card">
+        <div class="qc-name">📋 TBM — 사출 주간</div>
+        <div class="qc-who">김민수 부장</div>
+        <div class="qc-url">https://ssat-corp.github.io/reports/tbm.html?team=injection_day</div>
+      </div>
+      <div class="qr-card">
+        <div class="qc-name">📋 TBM — 사출 야간</div>
+        <div class="qc-who">김민수 부장 위임</div>
+        <div class="qc-url">https://ssat-corp.github.io/reports/tbm.html?team=injection_night</div>
+      </div>
+      <div class="qr-card">
+        <div class="qc-name">📋 TBM — 도장</div>
+        <div class="qc-who">양춘향 과장</div>
+        <div class="qc-url">https://ssat-corp.github.io/reports/tbm.html?team=paint</div>
+      </div>
+      <div class="qr-card">
+        <div class="qc-name">📋 TBM — 조립</div>
+        <div class="qc-who">임문호 이사</div>
+        <div class="qc-url">https://ssat-corp.github.io/reports/tbm.html?team=assembly</div>
+      </div>
+      <div class="qr-card">
+        <div class="qc-name">⚠️ 지적사항 등록</div>
+        <div class="qc-who">전 직원 (현장에서)</div>
+        <div class="qc-url">https://ssat-corp.github.io/reports/issues.html</div>
+      </div>
+    </div>
+
+    <h3>관리자 페이지</h3>
+    <div class="qr-block">
+      <div class="qr-card" style="border-left:4px solid #dc2626;">
+        <div class="qc-name">📊 통합 대시보드</div>
+        <div class="qc-who">박재걸 전무, 박제성 부장 (관리자만)</div>
+        <div class="qc-url">https://ssat-corp.github.io/reports/safety_dashboard.html</div>
+      </div>
+      <div class="qr-card" style="border-left:4px solid #dc2626;">
+        <div class="qc-name">👤 안전보건관리자 페이지</div>
+        <div class="qc-who">박재걸 전무, 박제성 부장</div>
+        <div class="qc-url">https://ssat-corp.github.io/reports/safety_manager.html</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================== -->
+  <div class="section" id="faq">
+    <h2><span class="num">8</span> 자주 묻는 질문</h2>
+
+    <h3>Q. 인터넷 안 될 때도 입력할 수 있나요?</h3>
+    <p>네, 모든 입력 페이지는 <strong>localStorage(브라우저 저장소)에 먼저 저장</strong>한 뒤 Supabase에 동기화합니다. 오프라인 입력 후 인터넷 복구 시 자동 업로드.</p>
+
+    <h3>Q. 한 사람이 여러 페이지 동시에 켜놔도 되나요?</h3>
+    <p>네, Supabase 실시간 채널이 모든 페이지를 자동 동기화. 한쪽에서 수정하면 다른 페이지도 즉시 반영.</p>
+
+    <h3>Q. 데이터를 잘못 저장했어요. 복구 가능한가요?</h3>
+    <p>각 페이지에 [지우기]/[삭제] 버튼이 있고, Supabase에는 최근값만 저장됩니다. 과거 시점 복구는 어렵습니다. 중요 자료는 월말에 인쇄하여 보관 권장.</p>
+
+    <h3>Q. 비밀번호를 잊었어요.</h3>
+    <p>대시보드 설정 페이지 진입 비밀번호: <strong>김은진</strong> (safety_dashboard.html의 SETTINGS_PASSWORD 상수, 변경 시 수정).</p>
+
+    <h3>Q. 새로운 업무를 추가하고 싶어요.</h3>
+    <p>다음 두 파일을 함께 수정해야 합니다:</p>
+    <ol>
+      <li><code>safety_manager_data.js</code>의 <code>SAFETY_TASKS</code> 배열 끝에 새 객체 추가</li>
+      <li><code>safety_notify.gs</code>의 <code>SAFETY_TASKS_GS</code> 배열 끝에도 동일 항목 추가 (자동 이메일이 참조)</li>
+    </ol>
+    <p>주기 코드는 <a href="#mgr">위 표</a>를 참고하세요. 수정 후 GAS는 [저장] 한 번만 누르면 됩니다.</p>
+
+    <h3>Q. 관리감독자가 일일 체크리스트를 빼먹으면 어떻게 알 수 있나요?</h3>
+    <p>현재는 [월별 누적 매트릭스]에서 빈 칸으로 표시됩니다. 자동 알림 메일에는 일일 체크 누락은 포함되지 않으니, 향후 필요시 GAS 스크립트에 누락 검사 로직을 추가할 수 있습니다.</p>
+
+    <h3>Q. Supabase 무료 플랜이 정지되면?</h3>
+    <p>3일마다 자동 ping(GitHub Actions의 <code>supabase-keepalive.yml</code>)으로 정지를 방지하고 있습니다. 만약 정지되면 Supabase 대시보드에서 [Resume] 클릭으로 즉시 복구.</p>
+  </div>
+
+  <div style="text-align:center;margin-top:40px;color:#94a3b8;font-size:11px;">
+    신성오토텍(주) 산업안전보건 관리 시스템 · 운영 가이드 · 2026.04 작성
+  </div>
+
+</div>
+
+</body>
+</html>
