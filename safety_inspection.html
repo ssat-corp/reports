@@ -7,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <title>안전검사 (위험기계) | 산업안전보건</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-<script src="safety_inspection_data.js?v=20260428c"></script>
+<script src="safety_inspection_data.js?v=20260428d"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
 *{margin:0;padding:0;box-sizing:border-box;}
@@ -106,16 +106,18 @@ table.insp tbody tr.site-divider td{background:#1a3a6e !important;color:#fff;fon
 <div class="container">
 
   <div class="controls">
-    <label>연도
+    <div style="display:flex;align-items:center;gap:6px;">
+      <span style="font-size:12px;font-weight:700;color:#64748b;">연도</span>
       <div class="tabs" id="year-tabs"></div>
-    </label>
-    <label>공장
+    </div>
+    <div style="display:flex;align-items:center;gap:6px;">
+      <span style="font-size:12px;font-weight:700;color:#64748b;">공장</span>
       <select id="filter-site">
         <option value="all">전체</option>
         <option value="본사">본사</option>
         <option value="화성공장">화성공장</option>
       </select>
-    </label>
+    </div>
     <button class="btn btn-outline" id="btn-copy">📋 매트릭스 복사 (TSV)</button>
     <span class="save-status saved" id="save-status">☁ 클라우드 동기화됨</span>
     <span class="status-text" id="row-count">-</span>
@@ -123,7 +125,7 @@ table.insp tbody tr.site-divider td{background:#1a3a6e !important;color:#fff;fon
 
   <div id="year-banner" style="background:linear-gradient(90deg,#0d1f3c,#1a3a6e);color:#fff;padding:14px 20px;border-radius:8px 8px 0 0;display:flex;align-items:center;gap:12px;font-weight:900;letter-spacing:-0.02em;">
     <span style="font-size:11px;font-weight:700;opacity:0.7;letter-spacing:0.12em;text-transform:uppercase;">현재 표시 연도</span>
-    <span id="year-banner-num" style="font-size:24px;color:#fbbf24;">2018년</span>
+    <span id="year-banner-num" style="font-size:24px;color:#fbbf24;">-</span>
     <span style="font-size:11px;opacity:0.7;font-weight:600;">→ 우측 12개월 매트릭스에 결과 표시됨 (가로 스크롤)</span>
   </div>
   <div class="tbl-wrap">
@@ -230,23 +232,27 @@ async function autoCloudSave(machines){
 
 function renderYearTabs(){
   const wrap = document.getElementById('year-tabs');
+  if(!wrap){ console.error('[insp] year-tabs 요소 없음'); return; }
+  if(!Array.isArray(INSP_INIT?.years)){ console.error('[insp] INSP_INIT.years 누락'); return; }
   wrap.innerHTML = INSP_INIT.years.map(y =>
-    `<button class="tab${y===currentYear?' active':''}" data-year="${y}">${y}</button>`
+    `<button type="button" class="tab${parseInt(y,10)===parseInt(currentYear,10)?' active':''}" data-year="${y}">${y}</button>`
   ).join('');
-  wrap.querySelectorAll('.tab').forEach(t => {
-    t.addEventListener('click', () => {
-      currentYear = parseInt(t.dataset.year, 10);
+  wrap.querySelectorAll('button.tab').forEach(t => {
+    t.addEventListener('click', (ev) => {
+      ev.preventDefault();
+      ev.stopPropagation();
+      const newY = parseInt(t.dataset.year, 10);
+      if(isNaN(newY)) return;
+      currentYear = newY;
       renderYearTabs();
       render();
       updateYearBanner();
-      // 매트릭스 영역으로 자동 스크롤
-      const tw = document.querySelector('.tbl-wrap');
-      if(tw) tw.scrollTo({left: tw.scrollWidth, behavior:'smooth'});
-      // 배너 깜빡임 피드백
       const banner = document.getElementById('year-banner');
-      banner.style.transition = 'box-shadow 0.4s';
-      banner.style.boxShadow = '0 0 0 4px #fbbf24';
-      setTimeout(() => { banner.style.boxShadow = ''; }, 600);
+      if(banner){
+        banner.style.transition = 'box-shadow 0.4s';
+        banner.style.boxShadow = '0 0 0 4px #fbbf24';
+        setTimeout(() => { banner.style.boxShadow = ''; }, 600);
+      }
     });
   });
 }
