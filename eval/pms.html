@@ -2188,10 +2188,11 @@ async function gasSave(empId, stData) {
   if (!GAS_ENABLED) return;
   try {
     const emp = getEmp(empId);
+    // no-cors + text/plain: CORS preflight 없이 GAS에 전달됨
     await fetch(GAS_URL, {
       method: 'POST',
-      mode:   'cors',
-      headers:{ 'Content-Type': 'application/json' },
+      mode:   'no-cors',
+      headers:{ 'Content-Type': 'text/plain' },
       body: JSON.stringify({
         action: 'save',
         token:  GAS_TOKEN,
